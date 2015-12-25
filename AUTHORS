@@ -1,0 +1,21 @@
+Andreas Röver  roever@users.sf.net
+
+Many thanks to
+
+Bill Cutler,
+André van Kamen and
+Don E. Knuth for their documents and hints on algorithms
+
+Ronald Kint-Bruynseels for a lot of well organized feedback,
+icons, praise and criticism, and the nice new documentation ...
+
+Dic Sonneveld for explaining his burrgrowing ideas to me
+
+Derek Bosch for providing the OSX binary and implementing STL export
+
+Markus Götz for helping with implementing the spheres space grid and
+other useful hints
+
+Lee Krasnow for designing the rhombic grid
+
+Volker Grabsch for build system and other things

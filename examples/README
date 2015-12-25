@@ -1,0 +1,104 @@
+In this directory you find a few examples. Keep in mind that the puzzle designs
+are owned by their corresponding designers and that you need to ask them if you
+want to produce one of them commercially. They all have been so kind and
+allowed me to bundle them here with the program.
+Each design also demonstrates some of the features of the program so I will
+tell a few words about each of them.
+
+Additionally you find some demonstrations that are used in connection with the
+user guide. Those files start with "Demo".
+
+AlPackino: Designed by Ronald Kint-Bruynseels
+This puzzle shows how to properly make packing puzzles. You always should
+include the box as a piece so that the program can also check, if the pieces
+can be moved into the box. You can also see how to handle multiple identical
+pieces. When looking at the solution it is useful to display the box as a
+wire frame. This can be done by clicking at the blue rectangle at the lower end
+of the tools. The rectangle with the text "S1 - Box" in it.
+
+Ball Room: Designed by Stewart Coffin
+This puzzle shows the sphere gridspace. If also shows how to include more than
+one problem within one file.
+
+Bermuda: Designed by Bill Cutler
+This is a puzzle using the triangular gridspace. You can see that several layers
+of triangles can be stacked on top of one another
+
+CubeInCage: Designed by Mineyuki Uyematsu
+This file contains MINE's CUBE in CAGE 333 cube g. This file demonstrates how
+to use the grouping capabilities. The puzzle contains 3 interlocked pieces
+that construct a cage. The piece move but can not be taken apart. It needs
+to be told to the program that this is intentional. So here you have an example
+of how to do that.
+
+Draculas Dental Desaster: Designed by Ronald Kint-Bruynseels
+This puzzle demonstrated the used of colour contraints. Halve of the end result
+must be red and the other halve black. You can see the colours if you enable
+the checkbox in the statusline at the bottom right.
+
+Pelikan Burr: Designed by Dic Sonneveld
+This is a _very_ high level burr. It takes 98 moves to get the first piece out
+of the box. This is just a demonstration of what is possible.
+
+Solid 6-Piece Burr:
+This file demonstrates the usage of piece ranges. It is possible to let BurrTools
+search for all possible assemlies with a set of pieces by telling it that a piece
+might be used 0-x times within the solution. The file included contains all pieces
+that might be used in a solid 6-piece burr and says that each piece might be used
+0-6 times.
+
+
+12 Piece Separation: Designed by Stewart Coffin, USA.
+A very nice puzzle that required a lot of shifting to get
+pieces in and out.
+
+Augmented Second Stellation: Designed by Stewart Coffin, USA
+An other puzzle based on the Four Corner puzzle by
+Stewart where the added units are colourized.
+
+Broken Sticks: Designed by Stewart Coffin, USA.
+This puzzle shows off the rhombic grid. It uses colour
+to show the pieces that were added to the base pieces
+of the Four Corner Puzzle. Allso note that the result
+shape is there twice. One is the mirror of the other.
+There is really no difference except for the shape of the
+ends of the sticks. They can not be cut completely
+rectangular that is why there are 2 possible ways and
+only one has a solution.
+
+Diagonal Cube: Designed by Stewart Coffin, USA.
+Strangely shaped pieces form a cube that disassembles
+along an unexpected diagonal sliding plane.
+
+Hexsticks: Designed by Stewart Coffin, Bill Cutler, USA (both independently).
+This is an old classic. It can be seen that the pieces can
+be assembled in 33 ways, of those only 2 can really
+be assembled. It can also be seen that the shapes
+of the sticks can not be modeled correctly. The ends
+can not be cut straight. But as that doesn't destroy
+the symmetry of the whole shape it doesn't matter.
+See Broken Sticks for an example where it does matter.
+
+Permutated Third Stellation: Designed by Stewart Coffin, USA.
+A puzzle that shows the rhombic grid. The pieces are
+formed by adding additional pieces to the pieces of the
+Four Corner puzle. Those additional pieces are
+colourized.
+
+Pieces of Eight: Designed by Stewart Coffin, USA.
+A puzzle with multiple problems.
+
+Name: Prisgon
+Designed by: Markus Goetz, Germany
+This was one of the very first higher level puzzles using
+the triangular grid. It was designed manually without the
+help of computers. The puzzle design exists in 2 slightly
+different variations: one with the original box as Markus
+intended and planned which has level 9.6.4 and the other
+one with a box as it is sold by Philos which has 'only'
+level 9.5.1.
+
+Name: 4-Piece-Tetrahedron
+Designed by: Wayne Daniel, USA
+This is an example for a puzzle using the Tatrahedral-
+Octahedral-Spacegrid.
