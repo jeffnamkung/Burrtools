@@ -1,3 +1,15 @@
+set(Boost_USE_MULTITHREADED ON)
+
+find_package(Boost COMPONENTS thread system REQUIRED)
+find_package(Threads REQUIRED)
+
+add_definitions(
+    -DBOOST_ALL_DYN_LINK
+    -DBOOST_THREAD_USE_LIB
+)
+
+include_directories(${Boost_INCLUDE_DIR})
+
 set(SOURCES
 #    src/lib/tabs_0/generator_0.cpp
 #    src/lib/tabs_0/generator_mesh_0.cpp
@@ -94,3 +106,4 @@ voxeltable.h
     )
 
 add_library(burr_lib STATIC ${SOURCES})
+target_link_libraries(burr_lib ${Boost_LIBRARIES})

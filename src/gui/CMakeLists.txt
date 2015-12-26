@@ -1,3 +1,10 @@
+find_package(FLTK REQUIRED)
+find_package(PNG REQUIRED)
+
+add_definitions(${PNG_DEFINITIONS})
+
+include_directories(${FLTK_INCLUDE_DIR})
+
 set(SOURCES
     arcball.cpp
     arcball.h
@@ -87,3 +94,5 @@ set(SOURCES
     WindowWidgets.h)
 
 add_library(gui_lib STATIC ${SOURCES})
+target_link_libraries(gui_lib ${FLTK_LIBRARIES})
+target_link_libraries(gui_lib ${PNG_LIBRARIES})

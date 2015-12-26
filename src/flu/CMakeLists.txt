@@ -1,3 +1,7 @@
+find_package(FLTK REQUIRED)
+
+include_directories(${FLTK_INCLUDE_DIR})
+
 set(SOURCES
     Flu_Button.cpp
     Flu_Button.h
@@ -30,3 +34,4 @@ set(SOURCES
     FluVectorClass.h)
 
 add_library(flu_lib STATIC ${SOURCES})
+target_link_libraries(flu_lib ${FLTK_LIBRARIES})
