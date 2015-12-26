@@ -1,0 +1,7 @@
+add_subdirectory(flu)
+add_subdirectory(gui)
+add_subdirectory(halfedge)
+add_subdirectory(help)
+add_subdirectory(lib)
+add_subdirectory(lua)
+add_subdirectory(tools)

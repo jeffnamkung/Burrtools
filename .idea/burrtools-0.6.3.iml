@@ -4,8 +4,9 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/vertex.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/polyhedron.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/halfedge/modifiers.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/face.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/halfedge/polyhedron_iterators.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/halfedge/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/vertex.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/vector3.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/halfedge.h" isTestSource="false" />
@@ -15,7 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/polyhedron.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/volume.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/face.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/halfedge/modifiers.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/halfedge/polyhedron_iterators.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/halfedge/volume.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/tools/gzstream.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/tools/xml.h" isTestSource="false" />
@@ -25,42 +26,45 @@
       <sourceFolder url="file://$MODULE_DIR$/src/tools/fileexists.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/tools/intdiv.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/tools/gzstream.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tools/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/tools/homedir.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Wrap_Group.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/FluVectorClass.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Enumerations.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_pixmaps.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Separator.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_Tree.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Label.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_pixmaps.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_file_chooser_pixmaps.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Separator.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Tree_Browser.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_List.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_Box.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Tree_Browser.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_export.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_Tree.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Return_Button.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Label.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_file_chooser_pixmaps.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Return_Button.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_File_Chooser.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_List.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Button.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_Box.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Button.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/flu/FluSimpleString.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/FluVectorClass.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_File_Chooser.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_File_Chooser.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Tree_Browser.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_export.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Tree_Browser.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Label.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Separator.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Return_Button.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Wrap_Group.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_file_chooser_pixmaps.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/FluSimpleString.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Button.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_pixmaps.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Enumerations.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Return_Button.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_Tree.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/flu/FluSimpleString.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_List.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_pixmaps.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/flu_file_chooser_pixmaps.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_Tree.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_Box.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Combo_List.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Label.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/flu/Flu_Separator.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/help/Fl_Help_View.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/help/flstring.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/help/Fl_Help_Dialog.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/help/flstring.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/help/Fl_Help_Dialog.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/help/helpdata.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/help/flstring.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/help/Fl_Help_Dialog.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/help/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/help/Fl_Help_View.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler_0.cpp" isTestSource="false" />
@@ -77,9 +81,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lib/puzzle.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembly.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/thread.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembly.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/disassemblerhashes.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/movementanalysator.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassemblernode.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/burrgrower.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/gridtype.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembler_a.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembler.h" isTestSource="false" />
@@ -111,7 +116,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lib/solvethread.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/stl_2.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/bt_assert.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/burrgrower.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/puzzle.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_1.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/print.h" isTestSource="false" />
@@ -120,14 +124,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxeltable.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/millable.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler_1.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/print.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/disassemblernode.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_0.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries_0.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/stl_2.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/disassemblerhashes.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembler_0.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/movementanalysator.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembly.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/stl_0.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_3.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_1.h" isTestSource="false" />
@@ -136,13 +140,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_2.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/movementanalysator.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/grouping.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries_2.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_2.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/disassemblernode.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler_1.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disasmtomoves.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/bt_assert.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disasmtomoves.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/print.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries_1.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/ps3dloader.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries.h" isTestSource="false" />
@@ -151,27 +156,28 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lua/luaclass.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lundump.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/ldo.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lua/lcode.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lua/ldo.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/ldebug.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lauxlib.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lcode.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/ldebug.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lstring.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lua/ldo.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lua/lauxlib.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lparser.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lfunc.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/ldump.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lparser.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lua/lauxlib.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lmem.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lobject.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lmem.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lobject.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lua/luaconf.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lopcodes.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lua/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/ltable.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lopcodes.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lapi.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lua/luaconf.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lua/lcode.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/ltable.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/llimits.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lvm.h" isTestSource="false" />
@@ -192,6 +198,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lua/lzio.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lua/ltm.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/config.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/statuswindow.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/stlexport.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/assmimportwindow.h" isTestSource="false" />
@@ -213,30 +220,28 @@
       <sourceFolder url="file://$MODULE_DIR$/src/gui/constraintsgroup.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/image.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/resultviewer.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/image.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/imageexport.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/Images.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/statusline.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/Layouter.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/multilinewindow.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/assmimportwindow.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/tooltabs.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/Layouter.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/voxeleditgroup.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/convertwindow.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/statusline.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/gridtypegui.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor_1.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/guigridtype.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/configuration.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/buttongroup.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/Images.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/tooltabs.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/mainwindow.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/vectorexportwindow.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/buttongroup.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/movementbrowser.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/piececolor.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/view3dgroup.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/buttongroup.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/BlockList.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/tr.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/arcball.cpp" isTestSource="false" />
@@ -245,8 +250,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src/gui/blocklistgroup.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor_2.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/assertwindow.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/togglebutton.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/groupseditor.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/gridtypegui.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/Fl_Table.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/voxelframe.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/stlexport.h" isTestSource="false" />
@@ -257,24 +264,25 @@
       <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor_0.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/gl2ps.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/blocklistgroup.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/tooltabs.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor_1.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/constraintsgroup.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/LFl_Tile.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/guigridtype.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/view3dgroup.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/tr.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/WindowWidgets.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/arcball.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/Images.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/image.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/view3dgroup.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/BlockList.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/imageexport.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor_1.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/configuration.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/gridtypegui.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/resultviewer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/voxeleditgroup.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/assertwindow.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gui/multilinewindow.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/mainwindow.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor_3.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui/grideditor_3.cpp" isTestSource="false" />
@@ -411,8 +419,8 @@
           <root url="file:///System/Library/Frameworks/SceneKit.framework/Headers" />
           <root url="file:///System/Library/Frameworks/PhotosUI.framework/Headers" />
           <root url="file:///System/Library/Frameworks/QuickLook.framework/Headers" />
-          <root url="file:///System/Library/Frameworks/Tk.framework/Headers" />
           <root url="file:///System/Library/Frameworks/Tk.framework/PrivateHeaders" />
+          <root url="file:///System/Library/Frameworks/Tk.framework/Headers" />
           <root url="file:///System/Library/Frameworks/JavaScriptCore.framework/Headers" />
           <root url="file:///System/Library/Frameworks/IMServicePlugIn.framework/Headers" />
           <root url="file:///System/Library/Frameworks/AudioUnit.framework/Headers" />
@@ -588,8 +596,8 @@
           <root url="file:///System/Library/Frameworks/SceneKit.framework/Headers" />
           <root url="file:///System/Library/Frameworks/PhotosUI.framework/Headers" />
           <root url="file:///System/Library/Frameworks/QuickLook.framework/Headers" />
-          <root url="file:///System/Library/Frameworks/Tk.framework/Headers" />
           <root url="file:///System/Library/Frameworks/Tk.framework/PrivateHeaders" />
+          <root url="file:///System/Library/Frameworks/Tk.framework/Headers" />
           <root url="file:///System/Library/Frameworks/JavaScriptCore.framework/Headers" />
           <root url="file:///System/Library/Frameworks/IMServicePlugIn.framework/Headers" />
           <root url="file:///System/Library/Frameworks/AudioUnit.framework/Headers" />
