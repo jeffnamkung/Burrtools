@@ -1,3 +1,9 @@
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+configure_file(config.h.in config.h @ONLY)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 add_subdirectory(flu)
 add_subdirectory(gui)
 add_subdirectory(halfedge)
@@ -18,9 +24,7 @@ add_definitions(
 
 include_directories(${Boost_INCLUDE_DIR})
 
-set(SOURCE_FILES config.h)
-
-add_executable(burrGui ${SOURCE_FILES})
+add_executable(burrGui config.h)
 target_link_libraries(burrGui
     flu_lib
     gui_lib
@@ -31,7 +35,7 @@ target_link_libraries(burrGui
     tools_lib
     )
 
-add_executable(burrTxt burrTxt.cpp ${SOURCE_FILES})
+add_executable(burrTxt burrTxt.cpp)
 target_link_libraries(burrTxt
     flu_lib
     halfedge_lib
@@ -42,7 +46,7 @@ target_link_libraries(burrTxt
     ${Boost_LIBRARIES}
     )
 
-add_executable(burrTxt2 burrTxt2.cpp ${SOURCE_FILES})
+add_executable(burrTxt2 burrTxt2.cpp)
 target_link_libraries(burrTxt2
     flu_lib
     halfedge_lib
