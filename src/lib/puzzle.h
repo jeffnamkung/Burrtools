@@ -33,11 +33,11 @@
 
 #include <stdint.h>
 
-class voxel_c;
+class Voxel;
 class GridType;
 class Problem;
-class xmlWriter_c;
-class xmlParser_c;
+class XmlWriter;
+class XmlParser;
 
 /**
  * This class defines the puzzle.
@@ -58,7 +58,7 @@ private:
   /**
    * The vector with the shapes
    */
-  std::vector<voxel_c*> shapes;
+  std::vector<Voxel *> shapes;
 
   /**
    * the vector with the problems
@@ -104,12 +104,12 @@ public:
   /**
    * load the puzzle from the XML file
    */
-  Puzzle(xmlParser_c & pars);
+  Puzzle(XmlParser & pars);
 
   /**
    * save the puzzle into a XML node that is returned
    */
-  void save(xmlWriter_c & xml) const;
+  void save(XmlWriter & xml) const;
 
   /**
    * Destructor.
@@ -130,15 +130,15 @@ public:
    * The space is taken over, and freed when the puzzle is destroyed
    * Returns the index of the new shape
    */
-  unsigned int addShape(voxel_c * p);
+  unsigned int addShape(Voxel * p);
   /** add an empty shape of the given size return the index of the new shape */
   unsigned int addShape(unsigned int sx, unsigned int sy, unsigned int sz);
   /** return how many shapes there are in the puzzle */
   unsigned int shapeNumber(void) const { return shapes.size(); }
   /** get a shape */
-  const voxel_c * getShape(unsigned int idx) const { bt_assert(idx < shapes.size()); return shapes[idx]; }
+  const Voxel * getShape(unsigned int idx) const { bt_assert(idx < shapes.size()); return shapes[idx]; }
   /** get a shape */
-  voxel_c * getShape(unsigned int idx) { bt_assert(idx < shapes.size()); return shapes[idx]; }
+  Voxel * getShape(unsigned int idx) { bt_assert(idx < shapes.size()); return shapes[idx]; }
   /**
    * remove the num-th shape.
    * be careful this changes all ids and so all problems must be updated

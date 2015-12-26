@@ -27,15 +27,15 @@
  * they are in fact quite interface specific
  */
 
-class voxel_c;
+class Voxel;
 class Puzzle;
 class Problem;
-class assembly_c;
+class Assembly;
 class separation_c;
 
-void print(const voxel_c * v, char base = 'a');
+void print(const Voxel * v, char base = 'a');
 void print(const Puzzle * p);
-void print(const assembly_c * a, const Problem * p);
-void print(const separation_c * s, const assembly_c * a, const Problem * p);
+void print(const Assembly * a, const Problem * p);
+void print(const separation_c * s, const Assembly * a, const Problem * p);
 
 #endif

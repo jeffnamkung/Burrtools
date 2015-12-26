@@ -22,7 +22,7 @@
 
 #include "voxelframe.h"
 
-#include "../lib/assembler.h"
+#include "assembler-interface.h"
 #include "../lib/problem.h"
 
 #include <FL/Fl.H>

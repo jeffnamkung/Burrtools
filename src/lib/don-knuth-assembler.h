@@ -21,14 +21,14 @@
 #ifndef __DL_ASSEMBLER_H__
 #define __DL_ASSEMBLER_H__
 
-#include "assembler.h"
+#include "assembler-interface.h"
 
 #include <vector>
 #include <set>
 #include <stack>
 
 class GridType;
-class mirrorInfo_c;
+class MirrorInfo;
 
 /**
  * This is an assembler class.
@@ -132,7 +132,7 @@ private:
   /* this function checks, if the given piece can be placed
    * at the given position inside the result
    */
-  bool canPlace(const voxel_c * piece, int x, int y, int z) const;
+  bool canPlace(const Voxel * piece, int x, int y, int z) const;
 
   /* this function creates the matrix for the search function
    * because we need to know how many nodes we need to allocate the
@@ -198,7 +198,7 @@ private:
    */
   bool avoidTransformedAssemblies;
   unsigned int avoidTransformedPivot;
-  mirrorInfo_c * avoidTransformedMirror;
+  MirrorInfo * avoidTransformedMirror;
 
   /// set to true, when complete rotation analysis is requested
   bool complete;
@@ -270,7 +270,7 @@ protected:
    * rotations it should call this function. This will then add an additional check
    * for each found assembly
    */
-  void checkForTransformedAssemblies(unsigned int pivot, mirrorInfo_c * mir);
+  void checkForTransformedAssemblies(unsigned int pivot, MirrorInfo * mir);
 
 public:
 
@@ -288,7 +288,7 @@ public:
   virtual void stop() { abbort = true; }
   virtual bool stopped(void) const { return !running; }
   virtual errState setPosition(const char * string, const char * version);
-  virtual void save(xmlWriter_c & xml) const;
+  virtual void save(XmlWriter & xml) const;
   virtual void reduce(void);
   virtual unsigned int getReducePiece(void) const { return reducePiece; }
   virtual unsigned long getIterations() { return iterations; }
@@ -299,7 +299,7 @@ public:
   unsigned int getPiecePlacementCount(unsigned int piece) const;
 
   void debug_step(unsigned long num = 1);
-  assembly_c * getAssembly(void);
+  Assembly * getAssembly(void);
 
   static bool canHandle(const Problem * p);
 

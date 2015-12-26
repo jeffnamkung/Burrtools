@@ -21,7 +21,7 @@
 #ifndef __ASSEMBLER_1_H__
 #define __ASSEMBLER_1_H__
 
-#include "assembler.h"
+#include "assembler-interface.h"
 
 #include <vector>
 #include <set>
@@ -29,7 +29,7 @@
 
 class Problem;
 class GridType;
-class mirrorInfo_c;
+class MirrorInfo;
 
 /**
  * This class is an assembler class.
@@ -125,7 +125,7 @@ private:
    * this function is called by the default implementation of prepare
    * to check, if the piece fits at the given position
    */
-  bool canPlace(const voxel_c * piece, int x, int y, int z) const;
+  bool canPlace(const Voxel * piece, int x, int y, int z) const;
 
   /* this function creates the matrix for the search function
    * because we need to know how many nodes we need to allocate the
@@ -168,7 +168,7 @@ private:
    */
   bool avoidTransformedAssemblies;
   unsigned int avoidTransformedPivot;
-  mirrorInfo_c * avoidTransformedMirror;
+  MirrorInfo * avoidTransformedMirror;
 
   /// set to true, when complete analysis is requested
   bool complete;
@@ -242,7 +242,7 @@ protected:
    * rotations it should call this function. This will then add an additional check
    * for each found assembly
    */
-  void checkForTransformedAssemblies(unsigned int pivot, mirrorInfo_c * mir);
+  void checkForTransformedAssemblies(unsigned int pivot, MirrorInfo * mir);
 
   unsigned int reducePiece;
 
@@ -262,11 +262,11 @@ public:
   virtual void stop() { abbort = true; }
   virtual bool stopped(void) const { return !running; }
   virtual errState setPosition(const char * string, const char * version);
-  virtual void save(xmlWriter_c & xml) const;
+  virtual void save(XmlWriter & xml) const;
   virtual void reduce(void);
   virtual unsigned int getReducePiece(void) const { return reducePiece; }
   void debug_step(unsigned long num = 1);
-  assembly_c * getAssembly(void);
+  Assembly * getAssembly(void);
 
   static bool canHandle(const Problem * p);
 

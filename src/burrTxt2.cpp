@@ -113,7 +113,7 @@ int main(int argv, char* args[]) {
   }
 
   std::istream * str = openGzFile(args[filenumber]);
-  xmlParser_c pars(*str);
+  XmlParser pars(*str);
   Puzzle p(pars);
   delete str;
 
@@ -232,7 +232,7 @@ int main(int argv, char* args[]) {
     }
   }
 
-  xmlWriter_c xml(ostr);
+  XmlWriter xml(ostr);
   p.save(xml);
 
   return 0;

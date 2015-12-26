@@ -27,7 +27,7 @@
 #include "assembly.h"
 #include "assert.h"
 
-void print(const voxel_c * v, char base) {
+void print(const Voxel * v, char base) {
   for (unsigned int z = 0; z < v->getZ(); z++) {
     printf(" +");
     for (unsigned int x = 0; x < v->getX(); x++)
@@ -90,7 +90,7 @@ void print(const Puzzle * p) {
   }
 }
 
-static void print_rec(const separation_c * s, voxel_c ** pieces, int sx, int sy, int sz, unsigned int * pieceNum) {
+static void print_rec(const separation_c * s, Voxel ** pieces, int sx, int sy, int sz, unsigned int * pieceNum) {
 
   for (unsigned int i = 0; i <= s->getMoves(); i++) {
 
@@ -165,13 +165,13 @@ static void print_rec(const separation_c * s, voxel_c ** pieces, int sx, int sy,
   }
 }
 
-void print(const separation_c * s, const assembly_c * a, const Problem * p) {
+void print(const separation_c * s, const Assembly * a, const Problem * p) {
 
   bt_assert(p->resultValid());
 
-  const voxel_c * res = p->getResultShape();
+  const Voxel * res = p->getResultShape();
 
-  voxel_c ** pieces = new voxel_c*[a->placementCount()];
+  Voxel ** pieces = new Voxel *[a->placementCount()];
 
   unsigned int pc = 0;
 
@@ -196,13 +196,13 @@ void print(const separation_c * s, const assembly_c * a, const Problem * p) {
   delete [] pieces;
 }
 
-void print(const assembly_c * a, const Problem * p) {
+void print(const Assembly * a, const Problem * p) {
 
   bt_assert(p->resultValid());
 
-  const voxel_c * res = p->getResultShape();
+  const Voxel * res = p->getResultShape();
 
-  voxel_c ** pieces = new voxel_c*[a->placementCount()];
+  Voxel ** pieces = new Voxel *[a->placementCount()];
 
   unsigned int pc = 0;
 

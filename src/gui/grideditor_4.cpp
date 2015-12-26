@@ -308,7 +308,7 @@ static bool findCommonEdge(int xa1, int ya1, int xa2, int ya2, int xa3, int ya3,
 
 void gridEditor_4_c::drawTileCursor(int x, int y, int z, int tx, int ty, int sx, int sy) {
 
-  voxel_c * space = puzzle->getShape(piecenumber);
+  Voxel * space = puzzle->getShape(piecenumber);
 
   bool ins = inRegion(x, y);
 
@@ -397,7 +397,7 @@ void gridEditor_4_c::drawTileCursor(int x, int y, int z, int tx, int ty, int sx,
 
 bool gridEditor_4_c::calcGridPosition(int x, int y, int z, int *gx, int *gy) {
 
-  voxel_c * space = puzzle->getShape(piecenumber);
+  Voxel * space = puzzle->getShape(piecenumber);
 
   int sx, sy, tx, ty;
   calcParameters(&sx, &sy, &tx, &ty);

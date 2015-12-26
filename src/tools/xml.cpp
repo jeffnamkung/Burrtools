@@ -49,18 +49,18 @@ static void outString(std::ostream & stream, const std::string & text)
     }
 }
 
-xmlWriter_c::xmlWriter_c(std::ostream & str) : stream(str), state(StBase)
+XmlWriter::XmlWriter(std::ostream & str) : stream(str), state(StBase)
 {
   stream << "<?xml version=\"1.0\"?>\n";
 }
 
-xmlWriter_c::~xmlWriter_c(void)
+XmlWriter::~XmlWriter(void)
 {
   if (tagStack.size() > 0)
     throw xmlWriterException_c("Not all tags were closed");
 }
 
-void xmlWriter_c::newTag(const std::string & name)
+void XmlWriter::newTag(const std::string & name)
 {
   switch (state)
   {
@@ -82,7 +82,7 @@ void xmlWriter_c::newTag(const std::string & name)
   state = StInTag;
 }
 
-void xmlWriter_c::newAttrib(const std::string & attrib, const std::string & value)
+void XmlWriter::newAttrib(const std::string & attrib, const std::string & value)
 {
   switch (state)
   {
@@ -98,7 +98,7 @@ void xmlWriter_c::newAttrib(const std::string & attrib, const std::string & valu
   }
 }
 
-void xmlWriter_c::newAttrib(const std::string & attrib, unsigned long value)
+void XmlWriter::newAttrib(const std::string & attrib, unsigned long value)
 {
   switch (state)
   {
@@ -112,7 +112,7 @@ void xmlWriter_c::newAttrib(const std::string & attrib, unsigned long value)
   }
 }
 
-void xmlWriter_c::newAttrib(const std::string & attrib, signed long value)
+void XmlWriter::newAttrib(const std::string & attrib, signed long value)
 {
   switch (state)
   {
@@ -126,7 +126,7 @@ void xmlWriter_c::newAttrib(const std::string & attrib, signed long value)
   }
 }
 
-void xmlWriter_c::endTag(const std::string & name)
+void XmlWriter::endTag(const std::string & name)
 {
   if (name != *(tagStack.rbegin()))
     throw xmlWriterException_c("Try to close tag with wrong name");
@@ -149,7 +149,7 @@ void xmlWriter_c::endTag(const std::string & name)
   state = StBase;
 }
 
-void xmlWriter_c::addContent(const std::string & text)
+void XmlWriter::addContent(const std::string & text)
 {
   switch (state)
   {
@@ -168,7 +168,7 @@ void xmlWriter_c::addContent(const std::string & text)
   outString(stream, text);
 }
 
-void xmlWriter_c::addContent(unsigned long val)
+void XmlWriter::addContent(unsigned long val)
 {
   switch (state)
   {
@@ -186,7 +186,7 @@ void xmlWriter_c::addContent(unsigned long val)
   stream << val;
 }
 
-void xmlWriter_c::addContent(signed long val)
+void XmlWriter::addContent(signed long val)
 {
   switch (state)
   {
@@ -204,7 +204,7 @@ void xmlWriter_c::addContent(signed long val)
   stream << val;
 }
 
-std::ostream & xmlWriter_c::addContent(void)
+std::ostream &XmlWriter::addContent(void)
 {
   switch (state)
   {
@@ -295,7 +295,7 @@ static int parseInt(std::string s, int radix)
 
 
 
-xmlParser_c::xmlParser_c(std::istream & is) :
+XmlParser::XmlParser(std::istream & is) :
   unexpected_eof ("Unexpected EOF"),
   illegal_type ("wrong Event Type"),
   nspStack (16),
@@ -308,7 +308,7 @@ xmlParser_c::xmlParser_c(std::istream & is) :
 }
 
 
-xmlParser_c::xmlParser_c(void) :
+XmlParser::XmlParser(void) :
   unexpected_eof ("Unexpected EOF"),
   illegal_type ("wrong Event Type"),
   nspStack (16),
@@ -321,7 +321,7 @@ xmlParser_c::xmlParser_c(void) :
 }
 
 
-void xmlParser_c::initBuf(void)
+void XmlParser::initBuf(void)
 {
   srcBuf = new char[8192];
   srcBuflength = 8192;
@@ -333,7 +333,7 @@ void xmlParser_c::initBuf(void)
 
 
 //does common initializations
-void xmlParser_c::commonInit(void)
+void XmlParser::commonInit(void)
 {
   line = 1;
   column = 0;
@@ -364,7 +364,7 @@ void xmlParser_c::commonInit(void)
 }
 
 
-xmlParser_c::~xmlParser_c(void)
+XmlParser::~XmlParser(void)
 {
   delete [] srcBuf;
   delete [] txtBuf;
@@ -372,7 +372,7 @@ xmlParser_c::~xmlParser_c(void)
 }
 
 
-std::string xmlParser_c::state(int eventType)
+std::string XmlParser::state(int eventType)
 {
   switch (eventType)
   {
@@ -391,7 +391,7 @@ std::string xmlParser_c::state(int eventType)
   }
 }
 
-void xmlParser_c::exception(std::string desc)
+void XmlParser::exception(std::string desc)
 {
   xmlParserException_c e (desc, state (type), line, column);
   throw e;
@@ -402,7 +402,7 @@ void xmlParser_c::exception(std::string desc)
  * common base for next and nextToken. Clears the state, except from
  * txtPos and whitespace. Does not set the type variable
  */
-void xmlParser_c::nextImpl(void)
+void XmlParser::nextImpl(void)
 {
   if (type == END_TAG)
     depth--;
@@ -450,7 +450,7 @@ void xmlParser_c::nextImpl(void)
   }
 }
 
-int xmlParser_c::parseLegacy (bool bpush)
+int XmlParser::parseLegacy (bool bpush)
 {
   std::string req = "";
   int term;
@@ -571,7 +571,7 @@ int xmlParser_c::parseLegacy (bool bpush)
 
 
 /** precondition: &lt! consumed */
-void xmlParser_c::parseDoctype(bool bpush)
+void XmlParser::parseDoctype(bool bpush)
 {
   int nesting = 1;
   bool quoted = false;
@@ -606,7 +606,7 @@ void xmlParser_c::parseDoctype(bool bpush)
 
 
 /* precondition: &lt;/ consumed */
-void xmlParser_c::parseEndTag(void)
+void XmlParser::parseEndTag(void)
 {
   read();                                      // '<'
   read();                                      // '/'
@@ -629,7 +629,7 @@ void xmlParser_c::parseEndTag(void)
 }
 
 
-int xmlParser_c::peekType(void)
+int XmlParser::peekType(void)
 {
   switch (peekbuf (0))
   {
@@ -654,7 +654,7 @@ int xmlParser_c::peekType(void)
 }
 
 
-std::string xmlParser_c::get(int pos)
+std::string XmlParser::get(int pos)
 {
   std::string
     tmp (txtBuf);
@@ -662,7 +662,7 @@ std::string xmlParser_c::get(int pos)
 }
 
 
-void xmlParser_c::push(int c)
+void XmlParser::push(int c)
 {
   isWspace &= c <= ' ';
   if (txtPos >= txtBufSize - 1)
@@ -678,7 +678,7 @@ void xmlParser_c::push(int c)
 
 
 /** Sets name and attributes */
-void xmlParser_c::parseStartTag(bool xmldecl)
+void XmlParser::parseStartTag(bool xmldecl)
 {
   if (!xmldecl)
     read();
@@ -782,7 +782,7 @@ void xmlParser_c::parseStartTag(bool xmldecl)
 
 /** result: isWspace; if the setName parameter is set,
 the name of the entity is stored in "name" */
-void xmlParser_c::pushEntity(void)
+void XmlParser::pushEntity(void)
 {
   read();                                      // &
   int pos = txtPos;
@@ -833,7 +833,7 @@ void xmlParser_c::pushEntity(void)
 '"': parse to quote
 ' ': parse to whitespace or '>'
 */
-void xmlParser_c::pushText(int delimiter, bool resolveEntities)
+void XmlParser::pushText(int delimiter, bool resolveEntities)
 {
   int next = peekbuf (0);
   while (next != -1 && next != delimiter)       // covers eof, '<', '"'
@@ -859,7 +859,7 @@ void xmlParser_c::pushText(int delimiter, bool resolveEntities)
 }
 
 
-void xmlParser_c::read(char c)
+void XmlParser::read(char c)
 {
   int a = read();
   std::string sa (1, (char) a), sc (1, c);
@@ -868,7 +868,7 @@ void xmlParser_c::read(char c)
 }
 
 
-int xmlParser_c::read(void)
+int XmlParser::read(void)
 {
   int result;
   if (peekCount == 0)
@@ -890,7 +890,7 @@ int xmlParser_c::read(void)
 
 
 /** Does never read more than needed */
-int xmlParser_c::peekbuf(int pos)
+int XmlParser::peekbuf(int pos)
 {
   while (pos >= peekCount)
   {
@@ -930,7 +930,7 @@ int xmlParser_c::peekbuf(int pos)
 }
 
 
-std::string xmlParser_c::readName(void)
+std::string XmlParser::readName(void)
 {
   int  pos = txtPos;
   int  c = peekbuf (0);
@@ -953,7 +953,7 @@ std::string xmlParser_c::readName(void)
 }
 
 
-void xmlParser_c::skip(void)
+void XmlParser::skip(void)
 {
   while (true)
   {
@@ -968,13 +968,13 @@ void xmlParser_c::skip(void)
 //--------------- public part starts here... ---------------
 
 
-std::string xmlParser_c::getInputEncoding(void)
+std::string XmlParser::getInputEncoding(void)
 {
   return encoding;
 }
 
 
-void xmlParser_c::defineEntityReplacementText(std::string entity, std::string value)
+void XmlParser::defineEntityReplacementText(std::string entity, std::string value)
 {
   if (entityMap.empty())
     exception ("entity replacement text must be defined after setInput!");
@@ -982,12 +982,12 @@ void xmlParser_c::defineEntityReplacementText(std::string entity, std::string va
 }
 
 
-int xmlParser_c::getDepth(void)
+int XmlParser::getDepth(void)
 {
   return depth;
 }
 
-bool xmlParser_c::isWhitespace(void)
+bool XmlParser::isWhitespace(void)
 {
   if (type != TEXT && type != IGNORABLE_WHITESPACE && type != CDSECT)
     exception (illegal_type);
@@ -995,13 +995,13 @@ bool xmlParser_c::isWhitespace(void)
 }
 
 
-std::string xmlParser_c::getText(void)
+std::string XmlParser::getText(void)
 {
   return type < TEXT || (type == ENTITY_REF && unresolved) ? "" : get (0);
 }
 
 
-const char * xmlParser_c::getTextCharacters(int *poslen)
+const char *XmlParser::getTextCharacters(int *poslen)
 {
   if (type >= TEXT)
   {
@@ -1021,7 +1021,7 @@ const char * xmlParser_c::getTextCharacters(int *poslen)
 }
 
 
-bool xmlParser_c::isEmptyElementTag(void)
+bool XmlParser::isEmptyElementTag(void)
 {
   if (type != START_TAG)
     exception (illegal_type);
@@ -1029,7 +1029,7 @@ bool xmlParser_c::isEmptyElementTag(void)
 }
 
 
-std::string xmlParser_c::getAttributeName(int index)
+std::string XmlParser::getAttributeName(int index)
 {
   if (index >= attributeCount)
     exception ("IndexOutOfBoundsException()");
@@ -1037,7 +1037,7 @@ std::string xmlParser_c::getAttributeName(int index)
 }
 
 
-std::string xmlParser_c::getAttributePrefix(int index)
+std::string XmlParser::getAttributePrefix(int index)
 {
   if (index >= attributeCount)
     exception ("IndexOutOfBoundsException()");
@@ -1045,7 +1045,7 @@ std::string xmlParser_c::getAttributePrefix(int index)
 }
 
 
-std::string xmlParser_c::getAttributeValue(int index)
+std::string XmlParser::getAttributeValue(int index)
 {
   if (index >= attributeCount)
     exception ("IndexOutOfBoundsException()");
@@ -1053,7 +1053,7 @@ std::string xmlParser_c::getAttributeValue(int index)
 }
 
 
-std::string xmlParser_c::getAttributeValue(std::string nam)
+std::string XmlParser::getAttributeValue(std::string nam)
 {
   for (int i = (attributeCount << 2) - 4; i >= 0; i -= 4)
   {
@@ -1064,7 +1064,7 @@ std::string xmlParser_c::getAttributeValue(std::string nam)
 }
 
 
-int xmlParser_c::next(void)
+int XmlParser::next(void)
 {
   txtPos = 0;
   isWspace = true;
@@ -1088,7 +1088,7 @@ int xmlParser_c::next(void)
 }
 
 
-int xmlParser_c::nextToken(void)
+int XmlParser::nextToken(void)
 {
   isWspace = true;
   txtPos = 0;
@@ -1097,14 +1097,14 @@ int xmlParser_c::nextToken(void)
   return type;
 }
 
-void xmlParser_c::prevTag(void)
+void XmlParser::prevTag(void)
 {
   skipNextTag=true;
 }
 
 //----------------------------------------------------------------------
 // utility methods to make XML parsing easier ...
-int xmlParser_c::nextTag(void)
+int XmlParser::nextTag(void)
 {
   if(skipNextTag)
   {
@@ -1123,13 +1123,13 @@ int xmlParser_c::nextTag(void)
 }
 
 
-void xmlParser_c::require (int Type, std::string nam)
+void XmlParser::require (int Type, std::string nam)
 {
   if (Type != type || (!nam.empty () && nam != getName ()))
     exception ("expected: " + state(Type) + nam);
 }
 
-std::string xmlParser_c::nextText(void)
+std::string XmlParser::nextText(void)
 {
   if (type != START_TAG)
     exception ("precondition: START_TAG");
@@ -1157,7 +1157,7 @@ std::string xmlParser_c::nextText(void)
  * <br>NOTE: parser must be on START_TAG and when funtion returns
  * parser will be positioned on corresponding END_TAG.
  */
-void xmlParser_c::skipSubTree()
+void XmlParser::skipSubTree()
 {
   require(START_TAG, "");
   int level = 1;

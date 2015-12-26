@@ -28,10 +28,10 @@
 
 #include <vector>
 
-class voxel_c;
+class Voxel;
 class Puzzle;
 class Problem;
-class assembly_c;
+class Assembly;
 class piecePositions_c;
 
 class rotater_c;
@@ -118,7 +118,7 @@ class voxelFrame_c : public Fl_Gl_Window {
     void updatePositions(piecePositions_c *shifting);
     void updatePositionsOverlap(piecePositions_c *shifting);
     void dimStaticPieces(piecePositions_c *shifting);
-    void showAssemblerState(const Problem * puz, const assembly_c * assm);
+    void showAssemblerState(const Problem * puz, const Assembly * assm);
     void updateVisibility(PieceVisibility * pcvis);
     void showProblem(const Puzzle * puz, unsigned int problem, unsigned int selShape);
     void showPlacement(const Problem * puz, unsigned int piece, unsigned char trans, int x, int y, int z);
@@ -149,12 +149,12 @@ class voxelFrame_c : public Fl_Gl_Window {
 
   private:
 
-    assembly_c * curAssembly; // the currently shown assembly (if there is one)
+    Assembly * curAssembly; // the currently shown assembly (if there is one)
 
     /* Draws the voxelspace. */
     void drawVoxelSpace();
 
-    unsigned int addSpace(const voxel_c * vx);
+    unsigned int addSpace(const Voxel * vx);
     void clearSpaces(void);
 
     void setSpaceColor(unsigned int nr, float r, float g, float b, float a);
@@ -179,7 +179,7 @@ class voxelFrame_c : public Fl_Gl_Window {
     typedef struct {
 
       float r, g, b, a;
-      const voxel_c * shape;
+      const Voxel * shape;
       drawingMode mode;
       float x, y, z, scale;
       bool dim;

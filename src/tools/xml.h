@@ -52,7 +52,7 @@ class xmlWriterException_c : public std::exception
 };
 
 /** a simple class for xml file generation */
-class xmlWriter_c
+class XmlWriter
 {
   private:
 
@@ -73,10 +73,10 @@ class xmlWriter_c
   public:
 
     /** open an XML writer, wirte header */
-    xmlWriter_c(std::ostream & str);
+    XmlWriter(std::ostream & str);
 
     /** all tags must be closed by now, otherwise an exception is thrown */
-    ~xmlWriter_c(void);
+    ~XmlWriter(void);
 
     /** start a new tag */
     void newTag(const std::string & name);
@@ -145,14 +145,14 @@ class xmlParserException_c : public std::exception
  * I only comment the functions that I used...
  *
  * */
-class xmlParser_c
+class XmlParser
 {
   public:
 
-    xmlParser_c(std::istream & is);
-    xmlParser_c(void);
+    XmlParser(std::istream & is);
+    XmlParser(void);
 
-    ~xmlParser_c(void);
+    ~XmlParser(void);
 
     std::string getInputEncoding(void);
 

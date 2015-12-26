@@ -31,9 +31,9 @@
 #define UNPLACED_TRANS 0xff
 
 class Problem;
-class voxel_c;
-class xmlWriter_c;
-class xmlParser_c;
+class Voxel;
+class XmlWriter;
+class XmlParser;
 
 /**
  * this class contains the information for the placement of
@@ -42,7 +42,7 @@ class xmlParser_c;
  * That is the position and the orientation of that piece
  * Only internally used in assembly
  */
-class placement_c {
+class Placement {
 
 public:
 
@@ -55,11 +55,11 @@ public:
   int xpos, ypos, zpos;
 
   /** initialize placement with given values */
-  placement_c(unsigned char tran, int x, int y, int z) : transformation(tran), xpos(x), ypos(y), zpos(z) {}
+  Placement(unsigned char tran, int x, int y, int z) : transformation(tran), xpos(x), ypos(y), zpos(z) {}
   /** copy constructor */
-  placement_c(const placement_c * orig) : transformation(orig->transformation), xpos(orig->xpos), ypos(orig->ypos), zpos(orig->zpos) {}
+  Placement(const Placement * orig) : transformation(orig->transformation), xpos(orig->xpos), ypos(orig->ypos), zpos(orig->zpos) {}
   /** copy constructor */
-  placement_c(const placement_c & orig) : transformation(orig.transformation), xpos(orig.xpos), ypos(orig.ypos), zpos(orig.zpos) {}
+  Placement(const Placement & orig) : transformation(orig.transformation), xpos(orig.xpos), ypos(orig.ypos), zpos(orig.zpos) {}
 
   /** get x position of piece */
   int getX(void) const { return xpos; }
@@ -71,13 +71,13 @@ public:
   unsigned char getTransformation(void) const  { return transformation; }
 
   /** check if 2 placements are identical */
-  bool operator == (const placement_c & b) const {
+  bool operator == (const Placement & b) const {
     return ((transformation == b.transformation) &&
             (xpos == b.xpos) && (ypos == b.ypos) && (zpos == b.zpos));
   }
 
   /** assignment operation */
-  placement_c & operator = (const placement_c & b) {
+  Placement & operator = (const Placement & b) {
     transformation = b.transformation;
     xpos = b.xpos;
     ypos = b.ypos;
@@ -86,7 +86,7 @@ public:
   }
 
   /** comparison operation, this is an arbitrary oerder for placements */
-  bool operator < (const placement_c & b) const {
+  bool operator < (const Placement & b) const {
     if (transformation < b.transformation) return true;
     if (transformation > b.transformation) return false;
 
@@ -108,7 +108,7 @@ public:
  * this means it contains pairs of pieces that are mirror shapes
  * of one another and how one piece is transformed into the other
  */
-class mirrorInfo_c {
+class MirrorInfo {
 
   /** structure containing mirror information for one piece pair */
   typedef struct {
@@ -123,7 +123,7 @@ class mirrorInfo_c {
 
   public:
 
-    mirrorInfo_c() {};
+    MirrorInfo() {};
 
     /**
      * adds a pair of pieces that are mirrors or one another.
@@ -141,8 +141,8 @@ class mirrorInfo_c {
 private:
 
   // no copying and assigning
-  mirrorInfo_c(const mirrorInfo_c&);
-  void operator=(const mirrorInfo_c&);
+  MirrorInfo(const MirrorInfo &);
+  void operator=(const MirrorInfo &);
 };
 
 /** this class contains the assembly for a puzzle.
@@ -151,14 +151,14 @@ private:
  *
  * the transformations are the same as defined in the voxel space class
  */
-class assembly_c {
+class Assembly {
 
 private:
 
   /** the placements of all pieces of the puzzle.
    * the order here is the same as the order of problem definition
    */
-  std::vector<placement_c> placements;
+  std::vector<Placement> placements;
 
   /** pointer to the symmetry class for this puzzle */
   const symmetries_c * sym;
@@ -166,7 +166,7 @@ private:
   /** the equality operation.
    * 2 assemblies are equal, if all placements are equal
    */
-  bool operator == (const assembly_c & b) const {
+  bool operator == (const Assembly & b) const {
     /* two assemblies are equal if all placements and transformations
      * of all pieces are identical
      * Comparisons are only possible, when the two assemblies
@@ -187,7 +187,7 @@ private:
    * to compare different orientations of one and the same
    * assembly. For normalisation purposes.
    */
-  bool compare(const assembly_c & b, unsigned int pivot) const;
+  bool compare(const Assembly & b, unsigned int pivot) const;
 
   /**
    * returns true, if one of the pieces within this assembly is
@@ -207,20 +207,20 @@ private:
 
 public:
 
-  assembly_c(const GridType * gt) : sym(gt->getSymmetries()) {}
+  Assembly(const GridType * gt) : sym(gt->getSymmetries()) {}
 
   /**
    * copy constructor
    */
-  assembly_c(const assembly_c * orig);
+  Assembly(const Assembly * orig);
 
   /**
    * load the assembly from xml file
    */
-  assembly_c(xmlParser_c & pars, unsigned int pieces, const GridType * gt);
+  Assembly(XmlParser & pars, unsigned int pieces, const GridType * gt);
 
   /** used to save to XML */
-  void save(xmlWriter_c & xml) const;
+  void save(XmlWriter & xml) const;
 
   /** add placement for the next piece.
    * Pieces are added one after another with this function
@@ -228,7 +228,7 @@ public:
   void addPlacement(unsigned char tran, int x, int y, int z) {
     bt_assert(tran < sym->getNumTransformations());
     bt_assert(tran != UNPLACED_TRANS);
-    placements.push_back(placement_c(tran, x, y, z));
+    placements.push_back(Placement(tran, x, y, z));
   }
 
   /** add a non placed piece.
@@ -237,7 +237,7 @@ public:
    * assembly.
    */
   void addNonPlacement() {
-    placements.push_back(placement_c(UNPLACED_TRANS, 0, 0, 0));
+    placements.push_back(Placement(UNPLACED_TRANS, 0, 0, 0));
   }
 
   /** how many pieces are in this assembly */
@@ -293,13 +293,13 @@ public:
    * maybe some pieces have already been replaced while other are still in their
    * initial position, so you have to throw away the assembly when that happens
    */
-  bool transform(unsigned char trans, const Problem * puz, const mirrorInfo_c * mir);
+  bool transform(unsigned char trans, const Problem * puz, const MirrorInfo * mir);
 
   /**
    * return true, if this is a non-normal assembly.
    * This is used to drop rotated assemblies
    */
-  bool smallerRotationExists(const Problem * puz, unsigned int pivot, const mirrorInfo_c * mir, bool complete) const;
+  bool smallerRotationExists(const Problem * puz, unsigned int pivot, const MirrorInfo * mir, bool complete) const;
 
   /**
    * exchange 2 shapes.
@@ -313,7 +313,7 @@ public:
    * Assemblies wich use pieces with smaller indices are smaller than assemblies
    * that use pieces with bigger indices.
    */
-  int comparePieces(const assembly_c * b) const;
+  int comparePieces(const Assembly * b) const;
 
   /**
    * sort the pieces within the assembly so that multipieces are ordered by
@@ -324,7 +324,7 @@ public:
   /** calculate a voxelspace that is identical to the assembly with
    * all pieces put into the space
    */
-  voxel_c * createSpace(const Problem * puz) const;
+  Voxel * createSpace(const Problem * puz) const;
 
   void removePieces(unsigned int from, unsigned int cnt);
 
@@ -333,8 +333,8 @@ public:
 private:
 
   // no copying and assigning
-  assembly_c(const assembly_c&);
-  void operator=(const assembly_c&);
+  Assembly(const Assembly &);
+  void operator=(const Assembly &);
 
 };
 

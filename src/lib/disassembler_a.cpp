@@ -28,8 +28,8 @@
 #include "assembly.h"
 #include "disassembly.h"
 
-disassembler_a_c::disassembler_a_c(const Problem * puz) :
-  disassembler_c(), puzzle(puz) {
+BaseDisassembler::BaseDisassembler(const Problem * puz) :
+    DisassemblerInterface(), puzzle(puz) {
 
   /* initialize the grouping class */
   groups = new grouping_c();
@@ -49,7 +49,7 @@ disassembler_a_c::disassembler_a_c(const Problem * puz) :
   analyse = new movementAnalysator_c(puzzle);
 }
 
-disassembler_a_c::~disassembler_a_c() {
+BaseDisassembler::~BaseDisassembler() {
   delete groups;
   delete [] piece2shape;
 
@@ -85,7 +85,7 @@ static void create_new_params(const disassemblerNode_c * st, disassemblerNode_c 
   bt_assert(num == part);
 }
 
-separation_c * disassembler_a_c::checkSubproblem(int pieceCount, const std::vector<unsigned int> & pieces, const disassemblerNode_c * st, bool left, bool * ok) {
+separation_c *BaseDisassembler::checkSubproblem(int pieceCount, const std::vector<unsigned int> & pieces, const disassemblerNode_c * st, bool left, bool * ok) {
 
   separation_c * res = 0;
 
@@ -109,7 +109,7 @@ separation_c * disassembler_a_c::checkSubproblem(int pieceCount, const std::vect
   return res;
 }
 
-separation_c * disassembler_a_c::checkSubproblems(const disassemblerNode_c * st, const std::vector<unsigned int> &pieces) {
+separation_c *BaseDisassembler::checkSubproblems(const disassemblerNode_c * st, const std::vector<unsigned int> &pieces) {
 
   /* if we get here we have found a node that separated the puzzle into
    * 2 pieces. So we recursively solve the subpuzzles and create a tree
@@ -195,7 +195,7 @@ separation_c * disassembler_a_c::checkSubproblems(const disassemblerNode_c * st,
   return erg;
 }
 
-unsigned short disassembler_a_c::subProbGroup(const disassemblerNode_c * st, const std::vector<unsigned int> & pn, bool cond) {
+unsigned short BaseDisassembler::subProbGroup(const disassemblerNode_c * st, const std::vector<unsigned int> & pn, bool cond) {
 
   unsigned short group = 0;
 
@@ -221,7 +221,7 @@ unsigned short disassembler_a_c::subProbGroup(const disassemblerNode_c * st, con
   return group;
 }
 
-bool disassembler_a_c::subProbGrouping(const std::vector<unsigned int> & pn) {
+bool BaseDisassembler::subProbGrouping(const std::vector<unsigned int> & pn) {
 
   groups->newSet();
 
@@ -232,7 +232,7 @@ bool disassembler_a_c::subProbGrouping(const std::vector<unsigned int> & pn) {
   return true;
 }
 
-separation_c * disassembler_a_c::disassemble(const assembly_c * assembly) {
+separation_c *BaseDisassembler::disassemble(const Assembly * assembly) {
 
   bt_assert(puzzle->pieceNumber() == assembly->placementCount());
   groups->reSet();

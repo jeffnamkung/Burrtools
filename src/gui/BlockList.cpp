@@ -582,7 +582,7 @@ void PieceVisibility::setPuzzle(const Problem *pz) {
   redraw();
 }
 
-void PieceVisibility::setAssembly(assembly_c *assm) {
+void PieceVisibility::setAssembly(Assembly *assm) {
   bt_assert(assm->placementCount() == count);
 
   for (unsigned int i = 0; i < count; i++)

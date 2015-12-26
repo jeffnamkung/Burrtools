@@ -22,7 +22,7 @@
 #define __VOXEL_TABLE_H__
 
 class Puzzle;
-class voxel_c;
+class Voxel;
 
 /**
  * This class is a table containing references to voxelspaces.
@@ -89,7 +89,7 @@ class voxelTable_c {
      * you can provide NULL pointer to index and trans when you only want to know if the space
      * is inside the table
      */
-    bool getSpace(const voxel_c *v, unsigned int *index = 0, unsigned char * trans = 0, unsigned int params = 0) const;
+    bool getSpace(const Voxel *v, unsigned int *index = 0, unsigned char * trans = 0, unsigned int params = 0) const;
 
     /**
      * Add a voxel space to the table.
@@ -115,7 +115,7 @@ class voxelTable_c {
      *
      * For an actual example loot at the class voxelTablePuzzle_c
      */
-    virtual const voxel_c * findSpace(unsigned int index) const = 0;
+    virtual const Voxel * findSpace(unsigned int index) const = 0;
 
   private:
 
@@ -137,7 +137,7 @@ class voxelTablePuzzle_c : public voxelTable_c {
 
   protected:
 
-    const voxel_c * findSpace(unsigned int index) const;
+    const Voxel * findSpace(unsigned int index) const;
 
   private:
 

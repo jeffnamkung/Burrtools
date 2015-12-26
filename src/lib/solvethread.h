@@ -21,7 +21,7 @@
 #ifndef __SOLVETHREAD_H__
 #define __SOLVETHREAD_H__
 
-#include "assembler.h"
+#include "assembler-interface.h"
 #include "disassembler.h"
 #include "bt_assert.h"
 #include "thread.h"
@@ -158,7 +158,7 @@ class solveThread_c : public AssemblerCallbackInterface, public thread_c {
 
 
 
-  disassembler_c * disassm;
+  DisassemblerInterface * disassm;
   AssemblerInterface * assm;
 
 
@@ -174,7 +174,7 @@ public:
 private:
 
   // the callback
-  bool assembly(assembly_c* a);
+  bool assembly(Assembly * a);
 
 public:
 

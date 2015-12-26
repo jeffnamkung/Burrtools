@@ -127,7 +127,7 @@ bool symmetries_2_c::symmetriesLeft(symmetries_t resultSym, symmetries_t s2) con
   return s.notNull();
 }
 
-bool symmetries_2_c::symmetryKnown(const voxel_c * pp) const {
+bool symmetries_2_c::symmetryKnown(const Voxel * pp) const {
 
   int i;
   bitfield_c<NUM_TRANSFORMATIONS_MIRROR> s;
@@ -148,7 +148,7 @@ bool symmetries_2_c::symmetryKnown(const voxel_c * pp) const {
   return symmetries[i] == s;
 }
 
-symmetries_t symmetries_2_c::calculateSymmetry(const voxel_c *pp) const {
+symmetries_t symmetries_2_c::calculateSymmetry(const Voxel *pp) const {
 
   bt_assert(pp);
 

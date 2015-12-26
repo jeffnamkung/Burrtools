@@ -25,10 +25,10 @@
  * contains the classes used for the assembler
  */
 
-class voxel_c;
-class assembly_c;
+class Voxel;
+class Assembly;
 class Problem;
-class xmlWriter_c;
+class XmlWriter;
 
 /**
  * The callback class used to return found assemblies to the caller
@@ -46,7 +46,7 @@ class AssemblerCallbackInterface {
    * found by an assembler. It gets the found assembly
    * as parameter
    */
-  virtual bool assembly(assembly_c *a) = 0;
+  virtual bool assembly(Assembly *a) = 0;
 };
 
 /**
@@ -158,7 +158,7 @@ public:
    * this state must be such that the class can restore this state and continue
    * from there by getting this and the puzzle given to the constructor
    */
-  virtual void save(xmlWriter_c & xml) const;
+  virtual void save(XmlWriter & xml) const;
 
   /* some more special information to find out possible piece placements */
 
@@ -188,7 +188,7 @@ public:
   /* returns the assembly for the current state of the assembler or the solution assembly, if
    * the assembler is currently at a solution
    */
-  virtual assembly_c * getAssembly(void) = 0;
+  virtual Assembly * getAssembly(void) = 0;
 
 private:
 

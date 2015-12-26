@@ -145,7 +145,7 @@ void VoxelEditGroup_c::setZ(unsigned int val) {
 void VoxelEditGroup_c::setPuzzle(Puzzle * puzzle, unsigned int num) {
   sqedit->setPuzzle(puzzle, num);
   if (puzzle && (num < puzzle->shapeNumber())) {
-    voxel_c * v = puzzle->getShape(num);
+    Voxel * v = puzzle->getShape(num);
     if (v) {
       zselect->bounds(0, v->getZ()-1);
       zselect->value(int(zselect->maximum()-sqedit->getZ()));

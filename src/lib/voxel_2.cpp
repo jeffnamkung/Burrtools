@@ -296,7 +296,7 @@ bool voxel_2_c::getNeighbor(unsigned int idx, unsigned int typ, int x, int y, in
 void voxel_2_c::minimizePiece() {
   int move_again = (bx1 + by1 + bz1) & 1;
 
-  voxel_c::minimizePiece();
+  Voxel::minimizePiece();
 
   if (move_again) {
     resize(sx+1, sy, sz, 0);

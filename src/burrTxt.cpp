@@ -21,7 +21,7 @@
 
 #include "lib/puzzle.h"
 #include "lib/problem.h"
-#include "lib/assembler.h"
+#include "assembler-interface.h"
 #include "lib/assembly.h"
 #include "lib/disassembler.h"
 #include "lib/disassembler_0.h"
@@ -45,7 +45,7 @@ bool printDisassemble;
 bool printSolutions;
 bool quiet;
 
-disassembler_c * d;
+DisassemblerInterface * d;
 
 class asm_cb : public AssemblerCallbackInterface {
 
@@ -58,7 +58,7 @@ public:
 
   asm_cb(Problem * p) : Assemblies(0), Solutions(0), pn(p->pieceNumber()), puzzle(p) {}
 
-  bool assembly(assembly_c * a) {
+  bool assembly(Assembly * a) {
 
 
     Assemblies++;
@@ -196,7 +196,7 @@ int main(int argv, char* args[]) {
   }
 
   std::istream * str = openGzFile(args[filenumber]);
-  xmlParser_c pars(*str);
+  XmlParser pars(*str);
   Puzzle p(pars);
   delete str;
 
@@ -217,7 +217,7 @@ int main(int argv, char* args[]) {
           for (unsigned int s = 0; s < p.getProblem(i)->getNumSolutions(); s++) {
 
             printf("%03i: ", s+1);
-            const assembly_c * a = p.getProblem(i)->getSolution(s)->getAssembly();
+            const Assembly * a = p.getProblem(i)->getSolution(s)->getAssembly();
 
             unsigned int pnum = 0;
 
@@ -311,7 +311,7 @@ int main(int argv, char* args[]) {
 
       d = 0;
       if (disassemble)
-        d = new disassembler_0_c(problem);
+        d = new SimpleDisassembler(problem);
 
       assm->assemble(&a);
 
@@ -331,7 +331,7 @@ int main(int argv, char* args[]) {
 
       Problem * problem = p.getProblem(pr);
 
-      d = new disassembler_0_c(problem);
+      d = new SimpleDisassembler(problem);
 
       for (unsigned int sol = 0; sol < problem->solutionNumber(); sol++) {
 

@@ -34,7 +34,7 @@ class disassemblerNode_c;
  * tree search instead of A* which would normally be required for
  * a graph search
  */
-class disassembler_0_c : public disassembler_a_c {
+class SimpleDisassembler : public BaseDisassembler {
 
 private:
 
@@ -53,14 +53,14 @@ private:
 
 public:
 
-  disassembler_0_c(const Problem * puz) : disassembler_a_c(puz) { }
-  ~disassembler_0_c() { }
+  SimpleDisassembler(const Problem * puz) : BaseDisassembler(puz) { }
+  ~SimpleDisassembler() { }
 
 private:
 
   // no copying and assigning
-  disassembler_0_c(const disassembler_0_c&);
-  void operator=(const disassembler_0_c&);
+  SimpleDisassembler(const SimpleDisassembler &);
+  void operator=(const SimpleDisassembler &);
 };
 
 #endif

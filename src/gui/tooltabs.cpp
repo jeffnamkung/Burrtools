@@ -638,7 +638,7 @@ void ToolTab_0::cb_transform(long task) {
     }
 
     for (int s = ss; s < se; s++) {
-      voxel_c * space = puzzle->getShape(s);
+      Voxel * space = puzzle->getShape(s);
 
       switch(task) {
         case  0: space->translate( 1, 0, 0, 0); break;
@@ -657,12 +657,12 @@ void ToolTab_0::cb_transform(long task) {
         case 13: space->transform(34); break;
         case 14: space->transform(32); break;
         case 15: space->minimizePiece(); break;
-        case 16: space->actionOnSpace(voxel_c::ACT_FIXED, true); break;
-        case 17: space->actionOnSpace(voxel_c::ACT_FIXED, false); break;
-        case 18: space->actionOnSpace(voxel_c::ACT_VARIABLE, true); break;
-        case 19: space->actionOnSpace(voxel_c::ACT_VARIABLE, false); break;
-        case 20: space->actionOnSpace(voxel_c::ACT_DECOLOR, true); break;
-        case 21: space->actionOnSpace(voxel_c::ACT_DECOLOR, false); break;
+        case 16: space->actionOnSpace(Voxel::ACT_FIXED, true); break;
+        case 17: space->actionOnSpace(Voxel::ACT_FIXED, false); break;
+        case 18: space->actionOnSpace(Voxel::ACT_VARIABLE, true); break;
+        case 19: space->actionOnSpace(Voxel::ACT_VARIABLE, false); break;
+        case 20: space->actionOnSpace(Voxel::ACT_DECOLOR, true); break;
+        case 21: space->actionOnSpace(Voxel::ACT_DECOLOR, false); break;
         case 22: space->scale(2); break;
         case 23: space->scale(3); break;
         case 24: space->translate(- space->boundX1(), - space->boundY1(), - space->boundZ1(), 0); break;
@@ -788,7 +788,7 @@ void ToolTab_1::cb_transform(long task) {
     }
 
     for (int s = ss; s < se; s++) {
-      voxel_c * space = puzzle->getShape(s);
+      Voxel * space = puzzle->getShape(s);
 
       switch(task) {
         case  0: space->translate( 1, 1, 0, 0); break;
@@ -807,12 +807,12 @@ void ToolTab_1::cb_transform(long task) {
         case 13: space->transform(15); break;
         case 14: space->transform(18); break;
         case 15: space->minimizePiece(); break;
-        case 16: space->actionOnSpace(voxel_c::ACT_FIXED, true); break;
-        case 17: space->actionOnSpace(voxel_c::ACT_FIXED, false); break;
-        case 18: space->actionOnSpace(voxel_c::ACT_VARIABLE, true); break;
-        case 19: space->actionOnSpace(voxel_c::ACT_VARIABLE, false); break;
-        case 20: space->actionOnSpace(voxel_c::ACT_DECOLOR, true); break;
-        case 21: space->actionOnSpace(voxel_c::ACT_DECOLOR, false); break;
+        case 16: space->actionOnSpace(Voxel::ACT_FIXED, true); break;
+        case 17: space->actionOnSpace(Voxel::ACT_FIXED, false); break;
+        case 18: space->actionOnSpace(Voxel::ACT_VARIABLE, true); break;
+        case 19: space->actionOnSpace(Voxel::ACT_VARIABLE, false); break;
+        case 20: space->actionOnSpace(Voxel::ACT_DECOLOR, true); break;
+        case 21: space->actionOnSpace(Voxel::ACT_DECOLOR, false); break;
         case 22: space->scale(2); break;
         case 23: space->scale(3); break;
         case 24: {
@@ -946,7 +946,7 @@ void ToolTab_2::cb_transform(long task) {
     }
 
     for (int s = ss; s < se; s++) {
-      voxel_c * space = puzzle->getShape(s);
+      Voxel * space = puzzle->getShape(s);
 
       switch(task) {
         case  0: space->translate( 1, 0, 1, 0); break;
@@ -974,12 +974,12 @@ void ToolTab_2::cb_transform(long task) {
         case 13: space->transform(124); break;
         case 14: space->transform(141); break;
         case 15: space->minimizePiece(); break;
-        case 16: space->actionOnSpace(voxel_c::ACT_FIXED, true); break;
-        case 17: space->actionOnSpace(voxel_c::ACT_FIXED, false); break;
-        case 18: space->actionOnSpace(voxel_c::ACT_VARIABLE, true); break;
-        case 19: space->actionOnSpace(voxel_c::ACT_VARIABLE, false); break;
-        case 20: space->actionOnSpace(voxel_c::ACT_DECOLOR, true); break;
-        case 21: space->actionOnSpace(voxel_c::ACT_DECOLOR, false); break;
+        case 16: space->actionOnSpace(Voxel::ACT_FIXED, true); break;
+        case 17: space->actionOnSpace(Voxel::ACT_FIXED, false); break;
+        case 18: space->actionOnSpace(Voxel::ACT_VARIABLE, true); break;
+        case 19: space->actionOnSpace(Voxel::ACT_VARIABLE, false); break;
+        case 20: space->actionOnSpace(Voxel::ACT_DECOLOR, true); break;
+        case 21: space->actionOnSpace(Voxel::ACT_DECOLOR, false); break;
         case 24: {
                    int dx = -space->boundX1();
                    int dy = -space->boundY1();
@@ -1116,7 +1116,7 @@ void ToolTab_3::cb_transform(long task) {
     }
 
     for (int s = ss; s < se; s++) {
-      voxel_c * space = puzzle->getShape(s);
+      Voxel * space = puzzle->getShape(s);
 
       switch(task) {
         case  0: space->translate( 5, 0, 0, 0); break;
@@ -1135,12 +1135,12 @@ void ToolTab_3::cb_transform(long task) {
         case 13: space->transform(34); break;
         case 14: space->transform(32); break;
         case 15: space->minimizePiece(); break;
-        case 16: space->actionOnSpace(voxel_c::ACT_FIXED, true); break;
-        case 17: space->actionOnSpace(voxel_c::ACT_FIXED, false); break;
-        case 18: space->actionOnSpace(voxel_c::ACT_VARIABLE, true); break;
-        case 19: space->actionOnSpace(voxel_c::ACT_VARIABLE, false); break;
-        case 20: space->actionOnSpace(voxel_c::ACT_DECOLOR, true); break;
-        case 21: space->actionOnSpace(voxel_c::ACT_DECOLOR, false); break;
+        case 16: space->actionOnSpace(Voxel::ACT_FIXED, true); break;
+        case 17: space->actionOnSpace(Voxel::ACT_FIXED, false); break;
+        case 18: space->actionOnSpace(Voxel::ACT_VARIABLE, true); break;
+        case 19: space->actionOnSpace(Voxel::ACT_VARIABLE, false); break;
+        case 20: space->actionOnSpace(Voxel::ACT_DECOLOR, true); break;
+        case 21: space->actionOnSpace(Voxel::ACT_DECOLOR, false); break;
         case 22: space->scale(2); break;
         case 23: space->scale(3); break;
         case 24: space->translate(- (space->boundX1()/5)*5, - (space->boundY1()/5)*5, - (space->boundZ1()/5)*5, 0); break;
@@ -1258,7 +1258,7 @@ void ToolTab_4::cb_transform(long task) {
     }
 
     for (int s = ss; s < se; s++) {
-      voxel_c * space = puzzle->getShape(s);
+      Voxel * space = puzzle->getShape(s);
 
       switch(task) {
         case  0: space->translate( 6, 0, 0, 0); break;
@@ -1277,12 +1277,12 @@ void ToolTab_4::cb_transform(long task) {
         case 13: space->transform(34); break;
         case 14: space->transform(32); break;
         case 15: space->minimizePiece(); break;
-        case 16: space->actionOnSpace(voxel_c::ACT_FIXED, true); break;
-        case 17: space->actionOnSpace(voxel_c::ACT_FIXED, false); break;
-        case 18: space->actionOnSpace(voxel_c::ACT_VARIABLE, true); break;
-        case 19: space->actionOnSpace(voxel_c::ACT_VARIABLE, false); break;
-        case 20: space->actionOnSpace(voxel_c::ACT_DECOLOR, true); break;
-        case 21: space->actionOnSpace(voxel_c::ACT_DECOLOR, false); break;
+        case 16: space->actionOnSpace(Voxel::ACT_FIXED, true); break;
+        case 17: space->actionOnSpace(Voxel::ACT_FIXED, false); break;
+        case 18: space->actionOnSpace(Voxel::ACT_VARIABLE, true); break;
+        case 19: space->actionOnSpace(Voxel::ACT_VARIABLE, false); break;
+        case 20: space->actionOnSpace(Voxel::ACT_DECOLOR, true); break;
+        case 21: space->actionOnSpace(Voxel::ACT_DECOLOR, false); break;
         case 22: space->scale(2); break;
         case 23: space->scale(3); break;
         case 24: space->translate(- (space->boundX1()/6)*6, - (space->boundY1()/6)*6, - (space->boundZ1()/6)*6, 0); break;

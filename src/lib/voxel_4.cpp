@@ -361,7 +361,7 @@ void voxel_4_c::minimizePiece() {
   int y = by1 % 6;
   int z = bz1 % 6;
 
-  voxel_c::minimizePiece();
+  Voxel::minimizePiece();
 
   if (x || y || z) {
     resize(sx+x, sy+y, sz+z, 0);
@@ -402,13 +402,13 @@ bool voxel_4_c::validCoordinate(int x, int y, int z) const {
   }
 }
 
-bool voxel_4_c::identicalInBB(const voxel_c * op, bool includeColors) const {
+bool voxel_4_c::identicalInBB(const Voxel * op, bool includeColors) const {
 
   // only when the lower corner of the bounding box is within the right box type and within that 3x3x3 box within the
   // same place can we have an identical shape
   return bx1 % 3 == op->boundX1() % 3 && by1 % 3 == op->boundY1() % 3 && bz1 % 3 == op->boundZ1() % 3 &&
     ((bx1/3 + by1/3 + bz1/3) & 1) == ((op->boundX1()/3 + op->boundY1()/3 + op->boundZ1()/3) & 1) &&
-    voxel_c::identicalInBB(op, includeColors);
+    Voxel::identicalInBB(op, includeColors);
 }
 
 bool voxel_4_c::onGrid(int x, int y, int z) const {

@@ -26,7 +26,7 @@
 class Problem;
 class disassemblerNode_c;
 class movementCache_c;
-class assembly_c;
+class Assembly;
 class countingNodeHash;
 
 /**

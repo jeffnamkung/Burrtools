@@ -27,7 +27,7 @@
 
 class Puzzle;
 class Problem;
-class assembly_c;
+class Assembly;
 /**
  * blocklist is a widget that displays a list of items in blocks. These blocks
  * have the size, so that the label of the item fits. The blocks are arranged
@@ -348,7 +348,7 @@ public:
   }
 
   void setPuzzle(const Problem *pz);
-  void setAssembly(assembly_c * assm);
+  void setAssembly(Assembly * assm);
   virtual unsigned int blockNumber(void);
   virtual void blockDraw(unsigned int block, int x, int y);
   virtual void blockSize(unsigned int block, unsigned int *w, unsigned int *h);

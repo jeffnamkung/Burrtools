@@ -43,36 +43,35 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lib/stl.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/assembly.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassemblerhashes.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_3.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembler_a.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/movementcache_0.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler-interface.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/grouping.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/stl.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/solvethread.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/solution.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_4.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/puzzle.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembly.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/thread.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassemblernode.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/burrgrower.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembler_a.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries_1.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries_0.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/bt_assert.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_4.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/burrgrower.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/movementcache_1.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/solution.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/movementcache.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/grid-type.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/movementcache_0.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/ps3dloader.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/problem.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/movementcache_0.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_0.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_3.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/print.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_2_mesh.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/thread.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/problem.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/bitfield.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/types.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/millable.cpp" isTestSource="false" />
@@ -91,13 +90,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lib/puzzle.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_1.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembler.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/movementcache.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/assembler-interface.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/disassemblerhashes.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxeltable.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/millable.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/grouping.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/print.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_0.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries_0.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/stl_2.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/movementanalysator.h" isTestSource="false" />
@@ -109,7 +109,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/lib/problem.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/voxel_2.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/movementanalysator.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries_0.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lib/disassembler_a.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/don-knuth-assembler.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lib/symmetries_2.h" isTestSource="false" />

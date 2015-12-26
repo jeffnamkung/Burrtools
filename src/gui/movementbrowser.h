@@ -28,7 +28,7 @@
 class LView3dGroup;
 class LFlatButton_c;
 
-class assembly_c;
+class Assembly;
 class Problem;
 class disassemblerNode_c;
 

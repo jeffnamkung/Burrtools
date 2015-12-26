@@ -744,7 +744,7 @@ void voxelFrame_c::drawVoxelSpace() {
   glDepthMask(GL_TRUE);
 }
 
-unsigned int voxelFrame_c::addSpace(const voxel_c * vx) {
+unsigned int voxelFrame_c::addSpace(const Voxel * vx) {
   shapeInfo i;
 
   i.r = i.g = i.b = 1;
@@ -1078,8 +1078,8 @@ void voxelFrame_c::showAssembly(const Problem * puz, unsigned int solNum) {
 
     unsigned int num;
 
-    curAssembly = new assembly_c(puz->getSolution(solNum)->getAssembly());
-    const assembly_c * assm = curAssembly;
+    curAssembly = new Assembly(puz->getSolution(solNum)->getAssembly());
+    const Assembly * assm = curAssembly;
 
     unsigned int piece = 0;
 
@@ -1089,7 +1089,7 @@ void voxelFrame_c::showAssembly(const Problem * puz, unsigned int solNum) {
 
         if (assm->isPlaced(piece)) {
 
-          voxel_c * vx = puz->getGridType()->getVoxel(puz->getShapeShape(p));
+          Voxel * vx = puz->getGridType()->getVoxel(puz->getShapeShape(p));
 
           bt_assert2(vx->transform(assm->getTransformation(piece)));
 
@@ -1104,7 +1104,7 @@ void voxelFrame_c::showAssembly(const Problem * puz, unsigned int solNum) {
 
         } else {
 
-          voxel_c * vx = puz->getGridType()->getVoxel(puz->getShapeShape(p));
+          Voxel * vx = puz->getGridType()->getVoxel(puz->getShapeShape(p));
 
           num = addSpace(vx);
 
@@ -1117,7 +1117,7 @@ void voxelFrame_c::showAssembly(const Problem * puz, unsigned int solNum) {
       }
 
     /* at the end add an empty voxel space that might be used for intersections */
-    num = addSpace(puz->getGridType()->getVoxel(1, 1, 1, voxel_c::VX_EMPTY));
+    num = addSpace(puz->getGridType()->getVoxel(1, 1, 1, Voxel::VX_EMPTY));
     setSpacePosition(num, 0, 0, 0, 1);
     setSpaceColor(num, 1, 0, 0, 1);   // bright red
     setDrawingMode(num, invisible);
@@ -1132,7 +1132,7 @@ void voxelFrame_c::showAssembly(const Problem * puz, unsigned int solNum) {
   redraw();
 }
 
-void voxelFrame_c::showAssemblerState(const Problem * puz, const assembly_c * assm) {
+void voxelFrame_c::showAssemblerState(const Problem * puz, const Assembly * assm) {
 
   bt_assert(puz->resultValid());
 
@@ -1150,7 +1150,7 @@ void voxelFrame_c::showAssemblerState(const Problem * puz, const assembly_c * as
 
         if (assm->isPlaced(piece)) {
 
-          voxel_c * vx = puz->getGridType()->getVoxel(puz->getShapeShape(p));
+          Voxel * vx = puz->getGridType()->getVoxel(puz->getShapeShape(p));
 
           bt_assert2(vx->transform(assm->getTransformation(piece)));
 
@@ -1230,7 +1230,7 @@ void voxelFrame_c::showPlacement(const Problem * puz, unsigned int piece, unsign
       shape++;
     }
 
-    voxel_c * vx = puz->getGridType()->getVoxel(puz->getShapeShape(shape));
+    Voxel * vx = puz->getGridType()->getVoxel(puz->getShapeShape(shape));
     bt_assert2(vx->transform(t));
 
     // 2 cases, we either add the shape, when we cleared everything
@@ -1318,8 +1318,8 @@ void voxelFrame_c::updatePositionsOverlap(piecePositions_c *shifting) {
   /* now find all the voxels where something overlaps
    * we do this with the last piece within the piece list
    */
-  voxel_c * inter = const_cast<voxel_c*>(shapes.rbegin()->shape);
-  inter->setAll(voxel_c::VX_EMPTY);
+  Voxel * inter = const_cast<Voxel *>(shapes.rbegin()->shape);
+  inter->setAll(Voxel::VX_EMPTY);
 
   bool involved[shapes.size()];
   for (unsigned int p = 0; p < shapes.size(); p++)
@@ -1356,7 +1356,7 @@ void voxelFrame_c::updatePositionsOverlap(piecePositions_c *shifting) {
   }
 
   /* now there are 2 possibilities */
-  if (inter->countState(voxel_c::VX_FILLED) > 0) {
+  if (inter->countState(Voxel::VX_FILLED) > 0) {
 
     /* we have some intersection then all involved pieces will be drawn as wireframe
      * not involved pieces will become invisible

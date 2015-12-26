@@ -26,7 +26,7 @@ void voxel_1_c::minimizePiece() {
 
   bool move_again = (bx1 + by1) & 1;
 
-  voxel_c::minimizePiece();
+  Voxel::minimizePiece();
 
   if (move_again) {
     resize(sx+1, sy, sz, 0);
@@ -215,8 +215,8 @@ bool voxel_1_c::transform(unsigned int nr) {
 
 
 
-bool voxel_1_c::identicalInBB(const voxel_c * op, bool includeColors) const {
-  return (((bx1+by1) & 1) == ((op->boundX1() + op->boundY1()) & 1)) && voxel_c::identicalInBB(op, includeColors);
+bool voxel_1_c::identicalInBB(const Voxel * op, bool includeColors) const {
+  return (((bx1+by1) & 1) == ((op->boundX1() + op->boundY1()) & 1)) && Voxel::identicalInBB(op, includeColors);
 }
 
 void voxel_1_c::transformPoint(int * x, int * y, int * z, unsigned int trans) const {

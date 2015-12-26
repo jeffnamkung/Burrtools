@@ -21,7 +21,7 @@
 #ifndef __MOVEMENTCACHE_H__
 #define __MOVEMENTCACHE_H__
 
-class voxel_c;
+class Voxel;
 class Problem;
 class GridType;
 
@@ -84,7 +84,7 @@ class movementCache_c {
    * The voxel spaces are calculated on demand. The entry at the zero-th position are
    * pointers into the puzzle, so we must not free them
    */
-  const voxel_c *** shapes;
+  const Voxel *** shapes;
 
   /** the mapping of piece numbers to shape ids */
   unsigned int * pieces;
@@ -98,13 +98,13 @@ class movementCache_c {
   void moRehash(void); ///< this function resizes the hash table to roughly twice the size
 
   /** when the entry is not inside the table, this function calculates the values for the movement info */
-  virtual unsigned int* moCalcValues(const voxel_c * sh1, const voxel_c * sh2, int dx, int dy, int dz) = 0;
+  virtual unsigned int* moCalcValues(const Voxel * sh1, const Voxel * sh2, int dx, int dy, int dz) = 0;
 
   /// the gridtype used. We need this to make copies and transformations of the shapes
   const GridType * gt;
 
   /// get the transformed shape from the shapes array, calculating missing ones
-  const voxel_c * getTransformedShape(unsigned int s, unsigned char t);
+  const Voxel * getTransformedShape(unsigned int s, unsigned char t);
 
 public:
 

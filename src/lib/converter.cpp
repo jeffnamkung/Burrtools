@@ -52,14 +52,14 @@ Puzzle * doConvert(Puzzle * p, GridType::gridType type) {
   // now convert all shapes
   for (unsigned int i = 0; i < p->shapeNumber(); i++)
   {
-    const voxel_c * v = p->getShape(i);
+    const Voxel * v = p->getShape(i);
 
-    voxel_c * vn = 0;
+    Voxel * vn = 0;
     // this is now conversion specific....
 
     if (p->getGridType()->getType() == GridType::GT_BRICKS && type == GridType::GT_RHOMBIC)
     {
-      vn = gt->getVoxel(v->getX()*5, v->getY()*5, v->getZ()*5, voxel_c::VX_EMPTY);
+      vn = gt->getVoxel(v->getX()*5, v->getY()*5, v->getZ()*5, Voxel::VX_EMPTY);
       vn->skipRecalcBoundingBox(true);
 
       for (unsigned int x = 0; x < v->getX(); x++)
@@ -77,7 +77,7 @@ Puzzle * doConvert(Puzzle * p, GridType::gridType type) {
     }
     else if (p->getGridType()->getType() == GridType::GT_BRICKS && type == GridType::GT_TETRA_OCTA)
     {
-      vn = gt->getVoxel(v->getX()*3, v->getY()*3, v->getZ()*3, voxel_c::VX_EMPTY);
+      vn = gt->getVoxel(v->getX()*3, v->getY()*3, v->getZ()*3, Voxel::VX_EMPTY);
       vn->skipRecalcBoundingBox(true);
 
       for (unsigned int x = 0; x < v->getX(); x++)

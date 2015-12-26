@@ -501,7 +501,7 @@ void voxel_3_c::minimizePiece() {
   int y = by1 % 5;
   int z = bz1 % 5;
 
-  voxel_c::minimizePiece();
+  Voxel::minimizePiece();
 
   if (x || y || z) {
     resize(sx+x, sy+y, sz+z, 0);
@@ -530,8 +530,8 @@ bool voxel_3_c::validCoordinate(int x, int y, int z) const {
   return true;
 }
 
-bool voxel_3_c::identicalInBB(const voxel_c * op, bool includeColors) const {
-  return bx1 % 5 == op->boundX1() % 5 && by1 % 5 == op->boundY1() % 5 && bz1 % 5 == op->boundZ1() % 5 && voxel_c::identicalInBB(op, includeColors);
+bool voxel_3_c::identicalInBB(const Voxel * op, bool includeColors) const {
+  return bx1 % 5 == op->boundX1() % 5 && by1 % 5 == op->boundY1() % 5 && bz1 % 5 == op->boundZ1() % 5 && Voxel::identicalInBB(op, includeColors);
 }
 
 bool voxel_3_c::onGrid(int x, int y, int z) const {

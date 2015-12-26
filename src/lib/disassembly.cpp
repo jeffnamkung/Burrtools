@@ -103,7 +103,7 @@ void getNumbers(std::string str, iter start, iter end, bool neg_allowed) {
  * State
  ************************************************************************/
 
-void state_c::save(xmlWriter_c & xml, unsigned int piecenumber) const
+void state_c::save(XmlWriter & xml, unsigned int piecenumber) const
 {
   xml.newTag("state");
 
@@ -146,9 +146,9 @@ void state_c::save(xmlWriter_c & xml, unsigned int piecenumber) const
   xml.endTag("state");
 }
 
-state_c::state_c(xmlParser_c & pars, unsigned int pn)
+state_c::state_c(XmlParser & pars, unsigned int pn)
 {
-  pars.require(xmlParser_c::START_TAG, "state");
+  pars.require(XmlParser::START_TAG, "state");
 
 #ifndef NDEBUG
   piecenumber = pn;
@@ -162,8 +162,8 @@ state_c::state_c(xmlParser_c & pars, unsigned int pn)
     {
       int state = pars.nextTag();
 
-      if (state == xmlParser_c::END_TAG) break;
-      if (state != xmlParser_c::START_TAG)
+      if (state == XmlParser::END_TAG) break;
+      if (state != XmlParser::START_TAG)
         pars.exception("expected new tag but dounf something else");
 
       if (pars.getName() == "dx")
@@ -172,7 +172,7 @@ state_c::state_c(xmlParser_c & pars, unsigned int pn)
         pars.next();
         getNumbers(pars.getText(), dx, dx+pn, true);
         pars.next();
-        pars.require(xmlParser_c::END_TAG, "dx");
+        pars.require(XmlParser::END_TAG, "dx");
       }
       else if (pars.getName() == "dy")
       {
@@ -180,7 +180,7 @@ state_c::state_c(xmlParser_c & pars, unsigned int pn)
         pars.next();
         getNumbers(pars.getText(), dy, dy+pn, true);
         pars.next();
-        pars.require(xmlParser_c::END_TAG, "dy");
+        pars.require(XmlParser::END_TAG, "dy");
       }
       else if (pars.getName() == "dz")
       {
@@ -188,7 +188,7 @@ state_c::state_c(xmlParser_c & pars, unsigned int pn)
         pars.next();
         getNumbers(pars.getText(), dz, dz+pn, true);
         pars.next();
-        pars.require(xmlParser_c::END_TAG, "dz");
+        pars.require(XmlParser::END_TAG, "dz");
       }
     } while (true);
 
@@ -204,7 +204,7 @@ state_c::state_c(xmlParser_c & pars, unsigned int pn)
     pars.exception(e.what());
   }
 
-  pars.require(xmlParser_c::END_TAG, "state");
+  pars.require(XmlParser::END_TAG, "state");
 }
 
 state_c::state_c(const state_c * cpy, unsigned int pn)
@@ -271,7 +271,7 @@ int disassembly_c::compare(const disassembly_c * s2) const
  * Separation
  ************************************************************************/
 
-void separation_c::save(xmlWriter_c & xml, int type) const
+void separation_c::save(XmlWriter & xml, int type) const
 {
   xml.newTag("separation");
 
@@ -307,9 +307,9 @@ void separation_c::save(xmlWriter_c & xml, int type) const
   xml.endTag("separation");
 }
 
-separation_c::separation_c(xmlParser_c & pars, unsigned int pieceCnt)
+separation_c::separation_c(XmlParser & pars, unsigned int pieceCnt)
 {
-  pars.require(xmlParser_c::START_TAG, "separation");
+  pars.require(XmlParser::START_TAG, "separation");
 
   unsigned int piecenumber = 0;
   std::string str;
@@ -320,8 +320,8 @@ separation_c::separation_c(xmlParser_c & pars, unsigned int pieceCnt)
   {
     int state = pars.nextTag();
 
-    if (state == xmlParser_c::END_TAG) break;
-    pars.require(xmlParser_c::START_TAG, "");
+    if (state == XmlParser::END_TAG) break;
+    pars.require(XmlParser::START_TAG, "");
 
     if (pars.getName() == "pieces")
     {
@@ -338,10 +338,10 @@ separation_c::separation_c(xmlParser_c & pars, unsigned int pieceCnt)
       pieces.resize(piecenumber);
 
       pars.next();
-      pars.require(xmlParser_c::TEXT, "");
+      pars.require(XmlParser::TEXT, "");
       getNumbers(pars.getText(), pieces.begin(), pieces.begin()+piecenumber, false);
       pars.next();
-      pars.require(xmlParser_c::END_TAG, "pieces");
+      pars.require(XmlParser::END_TAG, "pieces");
     }
     else if (pars.getName() == "state")
     {
@@ -397,7 +397,7 @@ separation_c::separation_c(xmlParser_c & pars, unsigned int pieceCnt)
   if (states.size() == 0)
     pars.exception("there are no state nodes in the separation");
 
-  pars.require(xmlParser_c::END_TAG, "separation");
+  pars.require(XmlParser::END_TAG, "separation");
 
   numSequences = left?left->numSequences:0 + removed?removed->numSequences:0 + 1;
 }
@@ -564,12 +564,12 @@ void separation_c::addNonPlacedPieces(unsigned int from, unsigned int cnt)
  * SeparationInfo
  ************************************************************************/
 
-separationInfo_c::separationInfo_c(xmlParser_c & pars)
+separationInfo_c::separationInfo_c(XmlParser & pars)
 {
-  pars.require(xmlParser_c::START_TAG, "separationInfo");
+  pars.require(XmlParser::START_TAG, "separationInfo");
 
   pars.next();
-  pars.require(xmlParser_c::TEXT, "");
+  pars.require(XmlParser::TEXT, "");
 
   std::string str = pars.getText();
 
@@ -592,7 +592,7 @@ separationInfo_c::separationInfo_c(xmlParser_c & pars)
   values.push_back(num);
 
   pars.next();
-  pars.require(xmlParser_c::END_TAG, "separationInfo");
+  pars.require(XmlParser::END_TAG, "separationInfo");
 
   // check consistency of the tree (does it end?)
 
@@ -639,7 +639,7 @@ separationInfo_c::separationInfo_c(const separation_c * sep) {
   recursiveConstruction(sep);
 }
 
-void separationInfo_c::save(xmlWriter_c & xml) const
+void separationInfo_c::save(XmlWriter & xml) const
 {
   xml.newTag("separationInfo");
 

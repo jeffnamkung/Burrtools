@@ -53,9 +53,9 @@ class voxel_4_c : public voxel_0_c {
   public:
 
     voxel_4_c(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0) : voxel_0_c(x, y, z, gt, init) {}
-    voxel_4_c(xmlParser_c & pars, const GridType * gt) : voxel_0_c(pars, gt) {}
-    voxel_4_c(const voxel_c & orig) : voxel_0_c(orig) { }
-    voxel_4_c(const voxel_c * orig) : voxel_0_c(orig) { }
+    voxel_4_c(XmlParser & pars, const GridType * gt) : voxel_0_c(pars, gt) {}
+    voxel_4_c(const Voxel & orig) : voxel_0_c(orig) { }
+    voxel_4_c(const Voxel * orig) : voxel_0_c(orig) { }
 
     virtual bool transform(unsigned int nr);
 
@@ -67,7 +67,7 @@ class voxel_4_c : public voxel_0_c {
     void minimizePiece(void);
 
     virtual bool validCoordinate(int x, int y, int z) const;
-    bool identicalInBB(const voxel_c * op, bool includeColors = true) const;
+    bool identicalInBB(const Voxel * op, bool includeColors = true) const;
     bool onGrid(int x, int y, int z) const;
 
     virtual bool meshParamsValid(double bevel, double offset) const;

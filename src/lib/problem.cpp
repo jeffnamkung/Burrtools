@@ -107,7 +107,7 @@ Problem::Problem(const Problem * orig, Puzzle & puz) :
   // likely give a new name any way
 }
 
-void Problem::save(xmlWriter_c & xml) const
+void Problem::save(XmlWriter & xml) const
 {
   xml.newTag("problem");
 
@@ -211,9 +211,9 @@ void Problem::save(xmlWriter_c & xml) const
   xml.endTag("problem");
 }
 
-Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFFFFF), assm(0)
+Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFFF), assm(0)
 {
-  pars.require(xmlParser_c::START_TAG, "problem");
+  pars.require(XmlParser::START_TAG, "problem");
 
   name = pars.getAttributeValue("name");
   solveState = SS_UNSOLVED;
@@ -249,8 +249,8 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
   {
     int state = pars.nextTag();
 
-    if (state == xmlParser_c::END_TAG) break;
-    pars.require(xmlParser_c::START_TAG, "");
+    if (state == XmlParser::END_TAG) break;
+    pars.require(XmlParser::START_TAG, "");
 
     if (pars.getName() == "shapes")  // parts are saved in this tag for historical reasons
     {
@@ -258,8 +258,8 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
       {
         int state = pars.nextTag();
 
-        if (state == xmlParser_c::END_TAG) break;
-        pars.require(xmlParser_c::START_TAG, "");
+        if (state == XmlParser::END_TAG) break;
+        pars.require(XmlParser::START_TAG, "");
 
         if (pars.getName() == "shape")
         {
@@ -311,8 +311,8 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
             {
               int state = pars.nextTag();
 
-              if (state == xmlParser_c::END_TAG) break;
-              pars.require(xmlParser_c::START_TAG, "");
+              if (state == XmlParser::END_TAG) break;
+              pars.require(XmlParser::START_TAG, "");
 
               if (pars.getName() == "group")
               {
@@ -337,11 +337,11 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
         else
           pars.skipSubTree();
 
-        pars.require(xmlParser_c::END_TAG, "shape");
+        pars.require(XmlParser::END_TAG, "shape");
 
       } while (true);
 
-      pars.require(xmlParser_c::END_TAG, "shapes");
+      pars.require(XmlParser::END_TAG, "shapes");
     }
     else if (pars.getName() == "result")
     {
@@ -357,19 +357,19 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
       {
         int state = pars.nextTag();
 
-        if (state == xmlParser_c::END_TAG) break;
-        pars.require(xmlParser_c::START_TAG, "");
+        if (state == XmlParser::END_TAG) break;
+        pars.require(XmlParser::START_TAG, "");
 
         if (pars.getName() == "solution")
           solutions.push_back(new solution_c(pars, pieces, puzzle.getGridType()));
         else
           pars.skipSubTree();
 
-        pars.require(xmlParser_c::END_TAG, "solution");
+        pars.require(XmlParser::END_TAG, "solution");
 
       } while (true);
 
-      pars.require(xmlParser_c::END_TAG, "solutions");
+      pars.require(XmlParser::END_TAG, "solutions");
     }
     else if (pars.getName() == "bitmap")
     {
@@ -377,8 +377,8 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
       {
         int state = pars.nextTag();
 
-        if (state == xmlParser_c::END_TAG) break;
-        pars.require(xmlParser_c::START_TAG, "");
+        if (state == XmlParser::END_TAG) break;
+        pars.require(XmlParser::START_TAG, "");
 
         if (pars.getName() == "pair")
         {
@@ -399,7 +399,7 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
 
       } while (true);
 
-      pars.require(xmlParser_c::END_TAG, "bitmap");
+      pars.require(XmlParser::END_TAG, "bitmap");
     }
     else if (pars.getName() == "assembler")
     {
@@ -410,12 +410,12 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
         pars.next();
         assemblerState = pars.getText();
         pars.next();
-        pars.require(xmlParser_c::END_TAG, "assembler");
+        pars.require(XmlParser::END_TAG, "assembler");
       }
       else
         pars.skipSubTree();
 
-      pars.require(xmlParser_c::END_TAG, "assembler");
+      pars.require(XmlParser::END_TAG, "assembler");
     }
     else
     {
@@ -430,7 +430,7 @@ Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFF
   if (result >= puzzle.shapeNumber())
     result = 0xFFFFFFFF;
 
-  pars.require(xmlParser_c::END_TAG, "problem");
+  pars.require(XmlParser::END_TAG, "problem");
 }
 
 /************** PROBLEM ****************/
@@ -582,12 +582,12 @@ bool Problem::resultValid(void) const {
 }
 
 /* get the result shape voxel space */
-const voxel_c *Problem::getResultShape(void) const {
+const Voxel *Problem::getResultShape(void) const {
   bt_assert(result < puzzle.shapeNumber());
   return puzzle.getShape(result);
 }
 
-voxel_c *Problem::getResultShape() {
+Voxel *Problem::getResultShape() {
   bt_assert(result < puzzle.shapeNumber());
   return puzzle.getShape(result);
 }
@@ -788,12 +788,12 @@ bool Problem::usesShape(unsigned int shape) const {
   return false;
 }
 
-const voxel_c *Problem::getShapeShape(unsigned int shapeID) const {
+const Voxel *Problem::getShapeShape(unsigned int shapeID) const {
   bt_assert(shapeID < parts.size());
   return puzzle.getShape(parts[shapeID]->shapeId);
 }
 
-voxel_c *Problem::getShapeShape(unsigned int shapeID) {
+Voxel *Problem::getShapeShape(unsigned int shapeID) {
   bt_assert(shapeID < parts.size());
   return puzzle.getShape(parts[shapeID]->shapeId);
 }
@@ -810,14 +810,14 @@ unsigned int Problem::getShapeMax(unsigned int shapeID) const {
   return parts[shapeID]->max;
 }
 
-void Problem::addSolution(assembly_c * assm) {
+void Problem::addSolution(Assembly * assm) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 
   solutions.push_back(new solution_c(assm, numAssemblies));
 }
 
-void Problem::addSolution(assembly_c * assm, separation_c * disasm, unsigned int pos) {
+void Problem::addSolution(Assembly * assm, separation_c * disasm, unsigned int pos) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 
@@ -828,7 +828,7 @@ void Problem::addSolution(assembly_c * assm, separation_c * disasm, unsigned int
     solutions.push_back(new solution_c(assm, numAssemblies, disasm, numSolutions));
 }
 
-void Problem::addSolution(assembly_c * assm, separationInfo_c * disasm, unsigned int pos) {
+void Problem::addSolution(Assembly * assm, separationInfo_c * disasm, unsigned int pos) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 

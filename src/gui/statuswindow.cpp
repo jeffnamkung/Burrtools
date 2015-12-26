@@ -149,7 +149,7 @@ statusWindow_c::statusWindow_c(Puzzle * p) : LFl_Double_Window(true), puz(p), ag
       b->box(FL_FLAT_BOX);
     }
 
-    const voxel_c * v = p->getShape(s);
+    const Voxel * v = p->getShape(s);
 
     unsigned int col = 0;
 
@@ -168,15 +168,16 @@ statusWindow_c::statusWindow_c(Puzzle * p) : LFl_Double_Window(true), puz(p), ag
     b->box(FL_FLAT_BOX);
     col += 2;
 
-    snprintf(tmp, 200, "%i", v->countState(voxel_c::VX_FILLED));
+    snprintf(tmp, 200, "%i", v->countState(Voxel::VX_FILLED));
     (new LFl_Box("", col, s+head))->copy_label(tmp);
     col += 2;
 
-    snprintf(tmp, 200, "%i", v->countState(voxel_c::VX_VARIABLE));
+    snprintf(tmp, 200, "%i", v->countState(Voxel::VX_VARIABLE));
     (new LFl_Box("", col, s+head))->copy_label(tmp);
     col += 2;
 
-    snprintf(tmp, 200, "%i", v->countState(voxel_c::VX_VARIABLE) + v->countState(voxel_c::VX_FILLED));
+    snprintf(tmp, 200, "%i", v->countState(Voxel::VX_VARIABLE) + v->countState(
+        Voxel::VX_FILLED));
     (new LFl_Box("", col, s+head))->copy_label(tmp);
     col += 2;
     Fl::wait(0);

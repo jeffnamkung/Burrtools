@@ -38,7 +38,7 @@ disassemblerNode_c::disassemblerNode_c(unsigned int pn) :
 {
 }
 
-disassemblerNode_c::disassemblerNode_c(const assembly_c * assm) :
+disassemblerNode_c::disassemblerNode_c(const Assembly * assm) :
     comefrom(0), piecenumber(0), refcount(1), dir(0), amount(0), hashValue(0), waylength(0)
 {
   /* create the first node with the start state

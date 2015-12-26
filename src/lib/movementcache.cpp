@@ -87,10 +87,10 @@ movementCache_c::movementCache_c(const Problem * puzzle) : gt(puzzle->getGridTyp
 
   num_transformations = puzzle->getGridType()->getSymmetries()->getNumTransformations();
 
-  shapes = new const voxel_c ** [num_shapes];
+  shapes = new const Voxel ** [num_shapes];
   for (unsigned int s = 0; s < num_shapes; s++) {
-    shapes[s] = new const voxel_c * [num_transformations];
-    memset(shapes[s], 0, num_transformations * sizeof(voxel_c*));
+    shapes[s] = new const Voxel * [num_transformations];
+    memset(shapes[s], 0, num_transformations * sizeof(Voxel *));
     shapes[s][0] = puzzle->getShapeShape(s);
   }
 
@@ -136,13 +136,13 @@ movementCache_c::~movementCache_c() {
   delete [] pieces;
 }
 
-const voxel_c * movementCache_c::getTransformedShape(unsigned int s, unsigned char t) {
+const Voxel * movementCache_c::getTransformedShape(unsigned int s, unsigned char t) {
 
   if (!shapes[s][t])
   {
     // our required orientation doesn't exist, so we calculate it
 
-    voxel_c * sh = gt->getVoxel(shapes[s][0]);
+    Voxel * sh = gt->getVoxel(shapes[s][0]);
     bt_assert2(sh->transform(t));
 
     // in the single threaded case simply enter our new shape

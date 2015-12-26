@@ -22,7 +22,7 @@
 #define __DISASSEMBLER_H__
 
 class separation_c;
-class assembly_c;
+class Assembly;
 
 /**
  * Base class for a disassembler.
@@ -34,13 +34,13 @@ class assembly_c;
  * some subclasses may be able to handle several assemblies, others may only
  * disassemble one, that depends on the concrete disassembler you use
  */
-class disassembler_c {
+class DisassemblerInterface {
 
 public:
 
-  disassembler_c() {}
+  DisassemblerInterface() {}
 
-  virtual ~disassembler_c() {}
+  virtual ~DisassemblerInterface() {}
 
   /**
    * Try to disassemble an assembly.
@@ -51,13 +51,13 @@ public:
    * you need to take care of freeing the disassembly sequence after
    * doing with it whatever you want
    */
-  virtual separation_c * disassemble(const assembly_c * /*assembly*/) { return 0; }
+  virtual separation_c * disassemble(const Assembly * /*assembly*/) { return 0; }
 
 private:
 
   // no copying and assigning
-  disassembler_c(const disassembler_c&);
-  void operator=(const disassembler_c&);
+  DisassemblerInterface(const DisassemblerInterface &);
+  void operator=(const DisassemblerInterface &);
 
 };
 

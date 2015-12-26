@@ -40,9 +40,9 @@
 
 #include <stdlib.h>
 
-GridType::GridType(xmlParser_c & pars)
+GridType::GridType(XmlParser & pars)
 {
-  pars.require(xmlParser_c::START_TAG, "gridType");
+  pars.require(XmlParser::START_TAG, "gridType");
 
   std::string typeStr = pars.getAttributeValue("type");
 
@@ -74,7 +74,7 @@ GridType::GridType(const GridType & orig) : type(orig.type), sym(0)
 {
 }
 
-void GridType::save(xmlWriter_c & xml) const
+void GridType::save(XmlWriter & xml) const
 {
   xml.newTag("gridType");
 
@@ -130,7 +130,7 @@ movementCache_c *GridType::getMovementCache(const Problem * puz) const
   }
 }
 
-voxel_c *GridType::getVoxel(unsigned int x, unsigned int y, unsigned int z, voxel_type init) const
+Voxel *GridType::getVoxel(unsigned int x, unsigned int y, unsigned int z, voxel_type init) const
 {
   switch (type) {
     case GT_BRICKS:           return new voxel_0_c(x, y, z, this, init);
@@ -142,7 +142,7 @@ voxel_c *GridType::getVoxel(unsigned int x, unsigned int y, unsigned int z, voxe
   }
 }
 
-voxel_c *GridType::getVoxel(xmlParser_c & pars) const
+Voxel *GridType::getVoxel(XmlParser & pars) const
 {
   switch (type) {
     case GT_BRICKS:           return new voxel_0_c(pars, this);
@@ -154,7 +154,7 @@ voxel_c *GridType::getVoxel(xmlParser_c & pars) const
   }
 }
 
-voxel_c *GridType::getVoxel(const voxel_c & orig) const
+Voxel *GridType::getVoxel(const Voxel & orig) const
 {
   switch (type) {
     case GT_BRICKS:           return new voxel_0_c(orig);
@@ -166,7 +166,7 @@ voxel_c *GridType::getVoxel(const voxel_c & orig) const
   }
 }
 
-voxel_c *GridType::getVoxel(const voxel_c * orig) const
+Voxel *GridType::getVoxel(const Voxel * orig) const
 {
   switch (type) {
     case GT_BRICKS:           return new voxel_0_c(orig);

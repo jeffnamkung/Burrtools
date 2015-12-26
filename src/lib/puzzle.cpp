@@ -129,7 +129,7 @@ void Puzzle::removeColor(unsigned int col) {
   // go through all shapes and remove the deleted colour
   for (unsigned int i = 0; i < shapes.size(); i++)
     for (unsigned int p = 0; p < shapes[i]->getXYZ(); p++)
-      if (shapes[i]->getState(p) != voxel_c::VX_EMPTY) {
+      if (shapes[i]->getState(p) != Voxel::VX_EMPTY) {
         if (shapes[i]->getColor(p) == col)
           shapes[i]->setColor(p, 0);
         else if (shapes[i]->getColor(p) > col)
@@ -178,7 +178,7 @@ void Puzzle::getColor(unsigned int idx, unsigned char * r, unsigned char * g, un
   *b = (colors[idx] >> 16) & 0xFF;
 }
 
-void Puzzle::save(xmlWriter_c & xml) const
+void Puzzle::save(XmlWriter & xml) const
 {
   xml.newTag("puzzle");
   xml.newAttrib("version", "2");
@@ -220,11 +220,11 @@ void Puzzle::save(xmlWriter_c & xml) const
   xml.endTag("puzzle");
 }
 
-Puzzle::Puzzle(xmlParser_c & pars)
+Puzzle::Puzzle(XmlParser & pars)
 {
   pars.nextTag();
 
-  pars.require(xmlParser_c::START_TAG, "puzzle");
+  pars.require(XmlParser::START_TAG, "puzzle");
 
   std::string versionStr = pars.getAttributeValue("version");
   if (!versionStr.length())
@@ -241,8 +241,8 @@ Puzzle::Puzzle(xmlParser_c & pars)
   do {
     int state = pars.nextTag();
 
-    if (state == xmlParser_c::END_TAG) break;
-    pars.require(xmlParser_c::START_TAG, "");
+    if (state == XmlParser::END_TAG) break;
+    pars.require(XmlParser::START_TAG, "");
 
     if (pars.getName() == "gridType")
     {
@@ -257,8 +257,8 @@ Puzzle::Puzzle(xmlParser_c & pars)
       {
         state = pars.nextTag();
 
-        if (state == xmlParser_c::END_TAG) break;
-        pars.require(xmlParser_c::START_TAG, "");
+        if (state == XmlParser::END_TAG) break;
+        pars.require(XmlParser::START_TAG, "");
 
         if (pars.getName() == "color")
         {
@@ -272,7 +272,7 @@ Puzzle::Puzzle(xmlParser_c & pars)
 
       } while (true);
 
-      pars.require(xmlParser_c::END_TAG, "colors");
+      pars.require(XmlParser::END_TAG, "colors");
     }
     else if (pars.getName() == "shapes")
     {
@@ -283,20 +283,20 @@ Puzzle::Puzzle(xmlParser_c & pars)
       {
         state = pars.nextTag();
 
-        if (state == xmlParser_c::END_TAG) break;
-        pars.require(xmlParser_c::START_TAG, "");
+        if (state == XmlParser::END_TAG) break;
+        pars.require(XmlParser::START_TAG, "");
 
         if (pars.getName() == "voxel")
         {
           shapes.push_back(gt->getVoxel(pars));
-          pars.require(xmlParser_c::END_TAG, "voxel");
+          pars.require(XmlParser::END_TAG, "voxel");
         }
         else
           pars.skipSubTree();
 
       } while (true);
 
-      pars.require(xmlParser_c::END_TAG, "shapes");
+      pars.require(XmlParser::END_TAG, "shapes");
     }
     else if (pars.getName() == "problems")
     {
@@ -304,21 +304,21 @@ Puzzle::Puzzle(xmlParser_c & pars)
       {
         state = pars.nextTag();
 
-        if (state == xmlParser_c::END_TAG) break;
-        if (state != xmlParser_c::START_TAG)
+        if (state == XmlParser::END_TAG) break;
+        if (state != XmlParser::START_TAG)
           pars.exception("a new tag required, but something else found");
 
         if (pars.getName() == "problem")
         {
           problems.push_back(new Problem(*this, pars));
-          pars.require(xmlParser_c::END_TAG, "problem");
+          pars.require(XmlParser::END_TAG, "problem");
         }
         else
           pars.skipSubTree();
 
       } while (true);
 
-      pars.require(xmlParser_c::END_TAG, "problems");
+      pars.require(XmlParser::END_TAG, "problems");
     }
     else if (pars.getName() == "comment")
     {
@@ -327,25 +327,25 @@ Puzzle::Puzzle(xmlParser_c & pars)
           commentPopup = true;
 
       state = pars.next();
-      if (state == xmlParser_c::TEXT)
+      if (state == XmlParser::TEXT)
       {
         comment = pars.getText();
         state = pars.next();
       }
 
-      pars.require(xmlParser_c::END_TAG, "comment");
+      pars.require(XmlParser::END_TAG, "comment");
     }
     else
       pars.skipSubTree();
 
-    pars.require(xmlParser_c::END_TAG, "");
+    pars.require(XmlParser::END_TAG, "");
 
   } while (true);
 
-  pars.require(xmlParser_c::END_TAG, "puzzle");
+  pars.require(XmlParser::END_TAG, "puzzle");
 }
 
-unsigned int Puzzle::addShape(voxel_c * p) {
+unsigned int Puzzle::addShape(Voxel * p) {
   bt_assert(gt->getType() == p->getGridType()->getType());
   shapes.push_back(p);
   return shapes.size()-1;
@@ -353,7 +353,7 @@ unsigned int Puzzle::addShape(voxel_c * p) {
 
 /* add empty shape of given size */
 unsigned int Puzzle::addShape(unsigned int sx, unsigned int sy, unsigned int sz) {
-  shapes.push_back(gt->getVoxel(sx, sy, sz, voxel_c::VX_EMPTY));
+  shapes.push_back(gt->getVoxel(sx, sy, sz, Voxel::VX_EMPTY));
   return shapes.size()-1;
 }
 
@@ -377,7 +377,7 @@ void Puzzle::exchangeShape(unsigned int s1, unsigned int s2) {
   bt_assert(s1 < shapes.size());
   bt_assert(s2 < shapes.size());
 
-  voxel_c * v = shapes[s1];
+  Voxel * v = shapes[s1];
   shapes[s1] = shapes[s2];
   shapes[s2] = v;
 

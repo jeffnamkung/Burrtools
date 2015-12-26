@@ -93,7 +93,7 @@ int main(int argc, char ** argv) {
 
     if (ostr)
     {
-      xmlWriter_c xml(ostr);
+      XmlWriter xml(ostr);
       ui->getPuzzle()->save(xml);
     }
 

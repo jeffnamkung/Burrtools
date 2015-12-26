@@ -41,7 +41,7 @@
  * A lof of stuff happens automatically, e.g the disassemblerNode_c class is reference counted
  * and the nodeHashs will automatically decrease that count and free the nodes
  */
-separation_c * disassembler_0_c::disassemble_rec(const std::vector<unsigned int> &pieces, disassemblerNode_c * start) {
+separation_c *SimpleDisassembler::disassemble_rec(const std::vector<unsigned int> &pieces, disassemblerNode_c * start) {
 
   // openlist is a list of nodes that need to be analyzed. They wew found
   // as neighbours of nodes that were analyzed and not yet known

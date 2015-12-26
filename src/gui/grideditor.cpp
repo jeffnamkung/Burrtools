@@ -70,7 +70,7 @@ void gridEditor_c::clearPuzzle() {
 bool gridEditor_c::setRecursive(unsigned char tools, int x, int y, int z) {
 
   bool changed = false;
-  voxel_c * space = puzzle->getShape(piecenumber);
+  Voxel * space = puzzle->getShape(piecenumber);
 
   if (tools == 0) {
 
@@ -80,16 +80,16 @@ bool gridEditor_c::setRecursive(unsigned char tools, int x, int y, int z) {
     // if not don't change anything
     if (space->validCoordinate(x, y, z)) {
 
-      voxel_type v = voxel_c::VX_EMPTY;
+      voxel_type v = Voxel::VX_EMPTY;
 
       enTask todo = (state == 1) ? (task) : (TSK_RESET);
 
       switch (todo) {
         case gridEditor_c::TSK_SET:
-          v = voxel_c::VX_FILLED;
+          v = Voxel::VX_FILLED;
           break;
         case gridEditor_c::TSK_VAR:
-          v = voxel_c::VX_VARIABLE;
+          v = Voxel::VX_VARIABLE;
           break;
         default:
           break;
@@ -101,12 +101,12 @@ bool gridEditor_c::setRecursive(unsigned char tools, int x, int y, int z) {
         space->setState(x, y, z, v);
 
         // when emptying a cube, also clear the colour away
-        if (v == voxel_c::VX_EMPTY)
+        if (v == Voxel::VX_EMPTY)
           space->setColor(x, y, z, 0);
       }
 
       // this is for the colour change task
-      if ((space->getState(x, y, z) != voxel_c::VX_EMPTY) && (space->getColor(x, y, z) != currentColor)) {
+      if ((space->getState(x, y, z) != Voxel::VX_EMPTY) && (space->getColor(x, y, z) != currentColor)) {
         changed = true;
         space->setColor(x, y, z, currentColor);
       }
@@ -145,7 +145,7 @@ bool gridEditor_c::setRecursive(unsigned char tools, int x, int y, int z) {
 bool gridEditor_c::setLayer(unsigned int z) {
   int x1, x2, y1, y2;
 
-  voxel_c * space = puzzle->getShape(piecenumber);
+  Voxel * space = puzzle->getShape(piecenumber);
 
   // sort start and end
   if (mX < startX) {
@@ -197,7 +197,7 @@ int gridEditor_c::handle(int event) {
   if (!active())
     return 0;
 
-  voxel_c * space = puzzle->getShape(piecenumber);
+  Voxel * space = puzzle->getShape(piecenumber);
 
   // if there is no valid space, we do nothing
   if ((space->getX() == 0) || (space->getY() == 0) || (space->getZ() == 0))
@@ -331,7 +331,7 @@ void gridEditor_c::draw() {
   if (piecenumber >= puzzle->shapeNumber())
     return;
 
-  voxel_c * space = puzzle->getShape(piecenumber);
+  Voxel * space = puzzle->getShape(piecenumber);
 
   // if there is no voxelspace or the space is of column 0 return
   if ((space->getX() == 0) || (space->getY() == 0) || (space->getZ() == 0))
@@ -366,7 +366,7 @@ void gridEditor_c::draw() {
 
       // for empty squares we check the layer below and if the square below is
       // not empty draw a very dimmed square
-      if ((currentZ > 0) && (space->getState(x, y, currentZ-1) != voxel_c::VX_EMPTY)) {
+      if ((currentZ > 0) && (space->getState(x, y, currentZ-1) != Voxel::VX_EMPTY)) {
         fl_color(((int)bgr*5+r)/6, ((int)bgg*5+g)/6, ((int)bgb*5+b)/6);
         drawNormalTile(x, y, currentZ-1, tx, ty, sx, sy);
       }
@@ -391,11 +391,11 @@ void gridEditor_c::draw() {
 
       // draw the square depending on the state
       switch(space->getState(x, y, currentZ)) {
-      case voxel_c::VX_FILLED:
+      case Voxel::VX_FILLED:
         fl_color(r, g, b);
         drawNormalTile(x, y, currentZ, tx, ty, sx, sy);
         break;
-      case voxel_c::VX_VARIABLE:
+      case Voxel::VX_VARIABLE:
         fl_color(r, g, b);
         drawVariableTile(x, y, currentZ, tx, ty, sx, sy);
         break;
@@ -403,7 +403,7 @@ void gridEditor_c::draw() {
 
       // if the voxel is not empty and has a colour assigned, draw a marker in the
       // upper left corner with the colour of the constraint colour
-      if ((space->getState(x, y, currentZ) != voxel_c::VX_EMPTY) &&
+      if ((space->getState(x, y, currentZ) != Voxel::VX_EMPTY) &&
           space->getColor(x, y, currentZ)) {
 
         puzzle->getColor(space->getColor(x, y, currentZ)-1, &r, &g, &b);
@@ -511,7 +511,7 @@ static bool inRegionRec(int x, int y, int x1, int x2, int y1, int y2, int sx, in
 }
 
 bool gridEditor_c::inRegion(int x, int y) {
-  voxel_c * space = puzzle->getShape(piecenumber);
+  Voxel * space = puzzle->getShape(piecenumber);
   return space->validCoordinate(x, y, currentZ) && inRegionRec(x, y, markX1, markX2, markY1, markY2, space->getX(), space->getY(), activeTools);
 }
 

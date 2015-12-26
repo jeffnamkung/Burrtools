@@ -18,8 +18,8 @@ set(SOURCES
 #    src/lib/tabs_2/generator_2.cpp
 #    src/lib/tabs_3/generator_mesh_3.cpp
 #    src/lib/tabs_4/generator_mesh_4.cpp
-assembler.cpp
-assembler.h
+    assembler-interface.cpp
+    assembler-interface.h
     don-knuth-assembler.cpp
     don-knuth-assembler.h
     wei_hwa_huang_assembler.cpp

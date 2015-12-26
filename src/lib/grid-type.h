@@ -27,12 +27,12 @@
 
 class AssemblerInterface;
 class symmetries_c;
-class voxel_c;
+class Voxel;
 class Problem;
 class stlExporter_c;
 class movementCache_c;
-class xmlWriter_c;
-class xmlParser_c;
+class XmlWriter;
+class XmlParser;
 
 /**
  * This class encapsulates all information required to handle the different grid types.
@@ -84,13 +84,13 @@ class GridType {
     /**
      * load from xml node
      */
-    GridType(xmlParser_c & pars);
+    GridType(XmlParser & pars);
 
     /** copy constructor */
     GridType(const GridType &);
 
     /** used to save to XML */
-    void save(xmlWriter_c & xml) const;
+    void save(XmlWriter & xml) const;
 
     /* some specializes constructors */
 
@@ -111,13 +111,13 @@ class GridType {
     movementCache_c * getMovementCache(const Problem * puz) const;
 
     /// create a new voxel space of this grid type with the given dimensions
-    voxel_c * getVoxel(unsigned int x, unsigned int y, unsigned int z, voxel_type init) const;
+    Voxel * getVoxel(unsigned int x, unsigned int y, unsigned int z, voxel_type init) const;
     /// create a new voxel space of this grid type, which is loaded from the XML node
-    voxel_c * getVoxel(xmlParser_c & pars) const;
+    Voxel * getVoxel(XmlParser & pars) const;
     /// create a new voxel space of this grid type, which is a copy of the given space
-    voxel_c * getVoxel(const voxel_c & orig) const;
+    Voxel * getVoxel(const Voxel & orig) const;
     /// create a new voxel space of this grid type, which is a copy of the given space
-    voxel_c * getVoxel(const voxel_c * orig) const;
+    Voxel * getVoxel(const Voxel * orig) const;
 
     /**
      * Return a pointer to the symmetry class for this grid.

@@ -29,7 +29,7 @@
 class grouping_c;
 class Problem;
 class disassemblerNode_c;
-class assembly_c;
+class Assembly;
 
 /**
  * this class is a baseclass for disassemblers.
@@ -44,7 +44,7 @@ class assembly_c;
  * All that the real disassemblers need to to is implement the disassemble_rec function
  * which analyzes one piece of the puzzle until it falls apart
  */
-class disassembler_a_c : public disassembler_c {
+class BaseDisassembler : public DisassemblerInterface {
 
   private:
 
@@ -105,8 +105,8 @@ class disassembler_a_c : public disassembler_c {
      * The problem can not be changed, once you done that but
      * you can analyse many assemblies for disassembability
      */
-    disassembler_a_c(const Problem *puz);
-    ~disassembler_a_c(void);
+    BaseDisassembler(const Problem *puz);
+    ~BaseDisassembler(void);
 
     /**
      * Disassemble an assembly of the puzzle.
@@ -117,13 +117,13 @@ class disassembler_a_c : public disassembler_c {
      * you need to take care of deleting the disassembly sequence after
      * doing with it whatever you want.
      */
-    separation_c * disassemble(const assembly_c * assembly);
+    separation_c * disassemble(const Assembly * assembly);
 
   private:
 
     // no copying and assigning
-    disassembler_a_c(const disassembler_a_c&);
-    void operator=(const disassembler_a_c&);
+    BaseDisassembler(const BaseDisassembler &);
+    void operator=(const BaseDisassembler &);
 };
 
 #endif

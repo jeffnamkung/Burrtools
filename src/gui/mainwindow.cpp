@@ -58,7 +58,7 @@
 #include "../lib/voxel.h"
 #include "../lib/puzzle.h"
 #include "../lib/problem.h"
-#include "../lib/assembler.h"
+#include "assembler-interface.h"
 #include "../lib/solvethread.h"
 #include "../lib/disassembly.h"
 #include "../lib/disassembler_0.h"
@@ -184,7 +184,7 @@ static void cb_NewShape_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb
 void mainWindow_c::cb_NewShape() {
 
   if (PcSel->getSelection() < puzzle->shapeNumber()) {
-    const voxel_c * v = puzzle->getShape(PcSel->getSelection());
+    const Voxel * v = puzzle->getShape(PcSel->getSelection());
     PcSel->setSelection(puzzle->addShape(v->getX(), v->getY(), v->getZ()));
   } else
     PcSel->setSelection(puzzle->addShape(ggt->defaultSize(), ggt->defaultSize(), ggt->defaultSize()));
@@ -263,7 +263,7 @@ void mainWindow_c::cb_WeightChange(int by) {
 
   if (PcSel->getSelection() < puzzle->shapeNumber()) {
 
-    voxel_c * v = puzzle->getShape(PcSel->getSelection());
+    Voxel * v = puzzle->getShape(PcSel->getSelection());
     v->setWeight(v->getWeight() + by);
     changed = true;
     updateInterface();
@@ -1186,7 +1186,7 @@ void mainWindow_c::cb_AddDisasm() {
     return;
   }
 
-  disassembler_c * dis = new disassembler_0_c(pr);
+  DisassemblerInterface * dis = new SimpleDisassembler(pr);
 
   separation_c * d = dis->disassemble(pr->getSolution(sol)->getAssembly());
 
@@ -1218,7 +1218,7 @@ void mainWindow_c::cb_AddAllDisasm(bool all) {
 
   changed = true;
 
-  disassembler_c * dis = new disassembler_0_c(pr);
+  DisassemblerInterface * dis = new SimpleDisassembler(pr);
 
   Fl_Double_Window * w = new Fl_Double_Window(20, 20, 300, 30);
   Fl_Box * b = new Fl_Box(0, 0, 300, 30);
@@ -1272,12 +1272,12 @@ void mainWindow_c::cb_3dClick() {
       unsigned int shape, face;
       unsigned long voxel;
 
-      voxel_c * sh = puzzle->getShape(PcSel->getSelection());
+      Voxel * sh = puzzle->getShape(PcSel->getSelection());
 
       if (View3D->getView()->pickShape(Fl::event_x(),
             View3D->getView()->h()-Fl::event_y(),
             &shape, &voxel, &face))
-        sh->setState(voxel, voxel_c::VX_EMPTY);
+        sh->setState(voxel, Voxel::VX_EMPTY);
 
       View3D->getView()->showSingleShape(puzzle, PcSel->getSelection());
       StatPieceInfo(PcSel->getSelection());
@@ -1290,7 +1290,7 @@ void mainWindow_c::cb_3dClick() {
       unsigned int shape, face;
       unsigned long voxel;
 
-      voxel_c * sh = puzzle->getShape(PcSel->getSelection());
+      Voxel * sh = puzzle->getShape(PcSel->getSelection());
 
       if (View3D->getView()->pickShape(Fl::event_x(),
             View3D->getView()->h()-Fl::event_y(),
@@ -1306,9 +1306,9 @@ void mainWindow_c::cb_3dClick() {
             sh->resizeInclude(nx, ny, nz);
 
             if (Fl::event_alt())
-              sh->setState(nx, ny, nz, voxel_c::VX_VARIABLE);
+              sh->setState(nx, ny, nz, Voxel::VX_VARIABLE);
             else
-              sh->setState(nx, ny, nz, voxel_c::VX_FILLED);
+              sh->setState(nx, ny, nz, Voxel::VX_FILLED);
 
             sh->setColor(nx, ny, nz, colorSelector->getSelection());
 
@@ -1448,7 +1448,7 @@ void mainWindow_c::cb_Save() {
       ogzstream ostr(fname);
 
       if (ostr) {
-        xmlWriter_c xml(ostr);
+        XmlWriter xml(ostr);
         puzzle->save(xml);
       }
 
@@ -1488,15 +1488,15 @@ class voxelTableVector_c : public voxelTable_c
 {
   private:
 
-    const std::vector<voxel_c *> *shapes;
+    const std::vector<Voxel *> *shapes;
 
   public:
 
-    voxelTableVector_c(const std::vector<voxel_c *> *s) : shapes(s) {}
+    voxelTableVector_c(const std::vector<Voxel *> *s) : shapes(s) {}
 
   protected:
 
-    const voxel_c * findSpace(unsigned int index) const { return (*shapes)[index]; }
+    const Voxel * findSpace(unsigned int index) const { return (*shapes)[index]; }
 };
 
 static void cb_AssembliesToShapes_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AssembliesToShapes(); }
@@ -1513,7 +1513,7 @@ void mainWindow_c::cb_AssembliesToShapes() {
   {
     Problem * pr = puzzle->getProblem(win.getSrcProblem());
 
-    std::vector<voxel_c *> sh;
+    std::vector<Voxel *> sh;
 
     unsigned int filter = win.getFilter();
 
@@ -1521,9 +1521,9 @@ void mainWindow_c::cb_AssembliesToShapes() {
 
     for (unsigned int s = 0; s < pr->solutionNumber(); s++)
     {
-      voxel_c * shape = pr->getSolution(s)->getAssembly()->createSpace(pr);
+      Voxel * shape = pr->getSolution(s)->getAssembly()->createSpace(pr);
 
-      if ((filter & assmImportWindow_c::dropDisconnected) && !shape->connected(0, true, voxel_c::VX_EMPTY))
+      if ((filter & assmImportWindow_c::dropDisconnected) && !shape->connected(0, true, Voxel::VX_EMPTY))
       {
         delete shape;
         continue;
@@ -1555,7 +1555,7 @@ void mainWindow_c::cb_AssembliesToShapes() {
         continue;
       }
 
-      unsigned int voxels = shape->countState(voxel_c::VX_FILLED);
+      unsigned int voxels = shape->countState(Voxel::VX_FILLED);
       if (voxels < win.getShapeMin() || voxels > win.getShapeMax())
       {
         delete shape;
@@ -1631,7 +1631,7 @@ void mainWindow_c::cb_SaveAs() {
 
         if (ostr)
         {
-          xmlWriter_c xml(ostr);
+          XmlWriter xml(ostr);
           puzzle->save(xml);
         }
 
@@ -1804,8 +1804,8 @@ void mainWindow_c::StatPieceInfo(unsigned int pc) {
   if (pc < puzzle->shapeNumber()) {
     char txt[100];
 
-    unsigned int fx = puzzle->getShape(pc)->countState(voxel_c::VX_FILLED);
-    unsigned int vr = puzzle->getShape(pc)->countState(voxel_c::VX_VARIABLE);
+    unsigned int fx = puzzle->getShape(pc)->countState(Voxel::VX_FILLED);
+    unsigned int vr = puzzle->getShape(pc)->countState(Voxel::VX_VARIABLE);
 
     snprintf(txt, 100, "Shape S%i has %i voxels (%i fixed, %i variable)", pc+1, fx+vr, fx, vr);
     StatusLine->setText(txt);
@@ -1824,24 +1824,24 @@ void mainWindow_c::StatProblemInfo(unsigned int prob) {
     unsigned int cntMin = 0;
 
     for (unsigned int i = 0; i < pr->partNumber(); i++) {
-      cnt += pr->getShapeShape(i)->countState(voxel_c::VX_FILLED) * pr->getShapeMax(i);
-      cntMin += pr->getShapeShape(i)->countState(voxel_c::VX_FILLED) * pr->getShapeMin(i);
+      cnt += pr->getShapeShape(i)->countState(Voxel::VX_FILLED) * pr->getShapeMax(i);
+      cntMin += pr->getShapeShape(i)->countState(Voxel::VX_FILLED) * pr->getShapeMin(i);
     }
 
     if (cnt == cntMin) {
 
       snprintf(txt, 100, "Problem P%i result can contain %i - %i voxels, pieces (n = %i) contain %i voxels", prob+1,
-          pr->getResultShape()->countState(voxel_c::VX_FILLED),
-          pr->getResultShape()->countState(voxel_c::VX_FILLED) +
-          pr->getResultShape()->countState(voxel_c::VX_VARIABLE),
+          pr->getResultShape()->countState(Voxel::VX_FILLED),
+               pr->getResultShape()->countState(Voxel::VX_FILLED) +
+               pr->getResultShape()->countState(Voxel::VX_VARIABLE),
           pr->pieceNumber(), cnt);
 
     } else {
 
       snprintf(txt, 100, "Problem P%i result can contain %i - %i voxels, pieces (n = %i) contain %i-%i voxels", prob+1,
-          pr->getResultShape()->countState(voxel_c::VX_FILLED),
-          pr->getResultShape()->countState(voxel_c::VX_FILLED) +
-          pr->getResultShape()->countState(voxel_c::VX_VARIABLE),
+          pr->getResultShape()->countState(Voxel::VX_FILLED),
+               pr->getResultShape()->countState(Voxel::VX_FILLED) +
+               pr->getResultShape()->countState(Voxel::VX_VARIABLE),
           pr->pieceNumber(), cntMin, cnt);
     }
 
@@ -1890,7 +1890,7 @@ bool mainWindow_c::tryToLoad(const char * f) {
   if (!fileExists(f)) return false;
 
   std::istream * str = openGzFile(f);
-  xmlParser_c pars(*str);
+  XmlParser pars(*str);
 
   Puzzle * newPuzzle;
 

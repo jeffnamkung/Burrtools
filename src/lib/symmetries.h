@@ -78,7 +78,7 @@ typedef uint8_t symmetries_t;
  */
 #define isSymmetryInvalid(s) ((s) == 0xFF)
 
-class voxel_c;
+class Voxel;
 
 /**
  * this class contains all kinds of functions to handle symmetry groups
@@ -164,7 +164,7 @@ class symmetries_c {
     virtual bool symmetryContainsMirror(symmetries_t sym) const = 0;
 
     /** calculate the symmetry group for the given voxel space */
-    virtual symmetries_t calculateSymmetry(const voxel_c * pp) const = 0;
+    virtual symmetries_t calculateSymmetry(const Voxel * pp) const = 0;
 
     /**
      * find out if the shape has an unknown symmetry group. This was especially useful
@@ -172,7 +172,7 @@ class symmetries_c {
      * symmetry groups were known. Nowadays there should be very little chance
      * of finding new symmetry groups. I still leave this extra check in just in case
      */
-    virtual bool symmetryKnown(const voxel_c * pp) const = 0;
+    virtual bool symmetryKnown(const Voxel * pp) const = 0;
 
   private:
 

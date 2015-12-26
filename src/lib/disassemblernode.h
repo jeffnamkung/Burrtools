@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-class assembly_c;
+class Assembly;
 
 /**
  * The node structure used by the disassembler.
@@ -145,7 +145,7 @@ public:
   disassemblerNode_c(unsigned int pn, disassemblerNode_c * comf, int _dir, int _amount, int step = 1);
 
   /** creates a root node from an assembly */
-  disassemblerNode_c(const assembly_c * assm);
+  disassemblerNode_c(const Assembly * assm);
 
   /** create a new root node with pn pieces */
   disassemblerNode_c(unsigned int pn);

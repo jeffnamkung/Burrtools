@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-#include "assembler.h"
+#include "assembler-interface.h"
 
 #include "../tools/xml.h"
 
@@ -32,7 +32,7 @@ AssemblerInterface::errState AssemblerInterface::setPosition(const char * /*stri
   return ERR_CAN_NOT_RESTORE_VERSION;
 }
 
-void AssemblerInterface::save(xmlWriter_c & xml) const
+void AssemblerInterface::save(XmlWriter & xml) const
 {
   xml.newTag("assembler");
   xml.endTag("assembler");

@@ -21,11 +21,11 @@
 #ifndef __SOLUTION_H__
 #define __SOLUTION_H__
 
-class assembly_c;
+class Assembly;
 class separation_c;
 class separationInfo_c;
-class xmlParser_c;
-class xmlWriter_c;
+class XmlParser;
+class XmlWriter;
 class GridType;
 class disassembly_c;
 
@@ -37,7 +37,7 @@ class solution_c
 {
   /* the assembly contains the pieces so that they
    * do assemble into the result shape */
-  assembly_c * assembly;
+  Assembly * assembly;
 
   /* the disassembly tree, only not NULL, if we
    * have disassembled the puzzle
@@ -62,28 +62,28 @@ class solution_c
 public:
 
   /** create a solution with a proper separation */
-  solution_c(assembly_c * assm, unsigned int assmNum, separation_c * t, unsigned int solNum) :
+  solution_c(Assembly * assm, unsigned int assmNum, separation_c * t, unsigned int solNum) :
     assembly(assm), tree(t), treeInfo(0), assemblyNum(assmNum), solutionNum(solNum) {}
 
   /** create a solution with only separation information */
-  solution_c(assembly_c * assm, unsigned int assmNum, separationInfo_c * ti, unsigned int solNum) :
+  solution_c(Assembly * assm, unsigned int assmNum, separationInfo_c * ti, unsigned int solNum) :
     assembly(assm), tree(0), treeInfo(ti), assemblyNum(assmNum), solutionNum(solNum) {}
 
   /** creat a solution with assembly only, no disassembly */
-  solution_c(assembly_c * assm, unsigned int assmNum) :
+  solution_c(Assembly * assm, unsigned int assmNum) :
     assembly(assm), tree(0), treeInfo(0), assemblyNum(assmNum), solutionNum(0) {}
 
   /** load a solution from file */
-  solution_c(xmlParser_c & pars, unsigned int pieces, const GridType * gt);
+  solution_c(XmlParser & pars, unsigned int pieces, const GridType * gt);
 
   ~solution_c(void);
 
   /** save the solution to the XML file */
-  void save(xmlWriter_c & xml) const;
+  void save(XmlWriter & xml) const;
 
   /** get the assembly from this solution, it will always be not NULL */
-  assembly_c * getAssembly() { return assembly; }
-  const assembly_c * getAssembly(void) const { return assembly; }
+  Assembly * getAssembly() { return assembly; }
+  const Assembly * getAssembly(void) const { return assembly; }
 
   /** get the full disassembly or 0 if there is none */
   separation_c * getDisassembly() { return tree; }

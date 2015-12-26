@@ -28,10 +28,10 @@
 
 #include <stdlib.h>
 
-solution_c::solution_c(xmlParser_c & pars, unsigned int pieces, const GridType * gt) :
+solution_c::solution_c(XmlParser & pars, unsigned int pieces, const GridType * gt) :
   tree(0), treeInfo(0), assemblyNum(0), solutionNum(0)
 {
-  pars.require(xmlParser_c::START_TAG, "solution");
+  pars.require(XmlParser::START_TAG, "solution");
 
   std::string str;
 
@@ -46,13 +46,13 @@ solution_c::solution_c(xmlParser_c & pars, unsigned int pieces, const GridType *
   do {
     int state = pars.nextTag();
 
-    if (state == xmlParser_c::END_TAG) break;
-    pars.require(xmlParser_c::START_TAG, "");
+    if (state == XmlParser::END_TAG) break;
+    pars.require(XmlParser::START_TAG, "");
 
     if (pars.getName() == "assembly")
     {
-      assembly = new assembly_c(pars, pieces, gt);
-      pars.require(xmlParser_c::END_TAG, "assembly");
+      assembly = new Assembly(pars, pieces, gt);
+      pars.require(XmlParser::END_TAG, "assembly");
     }
     else if (pars.getName() == "separation")
     {
@@ -66,21 +66,21 @@ solution_c::solution_c(xmlParser_c & pars, unsigned int pieces, const GridType *
           pl++;
       tree = new separation_c(pars, pl);
 
-      pars.require(xmlParser_c::END_TAG, "separation");
+      pars.require(XmlParser::END_TAG, "separation");
     }
     else if (pars.getName() == "separationInfo")
     {
       treeInfo = new separationInfo_c(pars);
-      pars.require(xmlParser_c::END_TAG, "separationInfo");
+      pars.require(XmlParser::END_TAG, "separationInfo");
     }
     else
       pars.skipSubTree();
 
-    pars.require(xmlParser_c::END_TAG, "");
+    pars.require(XmlParser::END_TAG, "");
 
   } while (true);
 
-  pars.require(xmlParser_c::END_TAG, "solution");
+  pars.require(XmlParser::END_TAG, "solution");
 
   if (!assembly)
     pars.exception("no assembly in solution");
@@ -92,7 +92,7 @@ solution_c::solution_c(xmlParser_c & pars, unsigned int pieces, const GridType *
   }
 }
 
-void solution_c::save(xmlWriter_c & xml) const
+void solution_c::save(XmlWriter & xml) const
 {
   xml.newTag("solution");
 

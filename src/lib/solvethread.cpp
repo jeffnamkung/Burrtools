@@ -119,7 +119,7 @@ assm(0)
 {
 
   if (par & PAR_DISASSM)
-    disassm = new disassembler_0_c(puz);
+    disassm = new SimpleDisassembler(puz);
 }
 
 solveThread_c::~solveThread_c() {
@@ -132,7 +132,7 @@ solveThread_c::~solveThread_c() {
   }
 }
 
-bool solveThread_c::assembly(assembly_c * a) {
+bool solveThread_c::assembly(Assembly * a) {
 
   enum {
     SOL_COUNT_ASM,

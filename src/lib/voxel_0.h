@@ -37,14 +37,14 @@
  * is special as it implements many functions in a more efficient way because
  * the cubic grid is so simple
  */
-class voxel_0_c : public voxel_c {
+class voxel_0_c : public Voxel {
 
   public:
 
-    voxel_0_c(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0) : voxel_c(x, y, z, gt, init) {}
-    voxel_0_c(xmlParser_c & pars, const GridType * gt) : voxel_c(pars, gt) {}
-    voxel_0_c(const voxel_c & orig) : voxel_c(orig) { }
-    voxel_0_c(const voxel_c * orig) : voxel_c(orig) { }
+    voxel_0_c(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0) : Voxel(x, y, z, gt, init) {}
+    voxel_0_c(XmlParser & pars, const GridType * gt) : Voxel(pars, gt) {}
+    voxel_0_c(const Voxel & orig) : Voxel(orig) { }
+    voxel_0_c(const Voxel * orig) : Voxel(orig) { }
 
     void transformPoint(int * x, int * y, int * z, unsigned int trans) const;
     bool transform(unsigned int nr);

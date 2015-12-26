@@ -25,7 +25,7 @@
 #include "grid-type.h"
 
 /* a piece is notchable, if it can be made purely by cutting */
-bool isNotchable(const voxel_c * v)
+bool isNotchable(const Voxel * v)
 {
   GridType gt(GridType::GT_BRICKS);
 
@@ -38,9 +38,9 @@ bool isNotchable(const voxel_c * v)
       for (unsigned int z = 0; z < v->getZ(); z++)
         if (v->isFilled(x, y, z))
         {
-          vxy.set(x, y, 0, voxel_c::VX_FILLED);
-          vxz.set(x, 0, z, voxel_c::VX_FILLED);
-          vyz.set(0, y, z, voxel_c::VX_FILLED);
+          vxy.set(x, y, 0, Voxel::VX_FILLED);
+          vxz.set(x, 0, z, Voxel::VX_FILLED);
+          vyz.set(0, y, z, Voxel::VX_FILLED);
         }
 
   for (unsigned int x = 0; x < v->getX(); x++)
@@ -59,7 +59,7 @@ bool isNotchable(const voxel_c * v)
 }
 
 /* a piece is millable, if it contains no inside corners */
-bool isMillable(const voxel_c * v)
+bool isMillable(const Voxel * v)
 {
   for (int x = 0; x < (int)v->getX(); x++)
     for (int y = 0; y < (int)v->getY(); y++)

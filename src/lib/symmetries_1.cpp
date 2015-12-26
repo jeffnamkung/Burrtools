@@ -121,7 +121,7 @@ bool symmetries_1_c::symmetriesLeft(symmetries_t resultSym, symmetries_t s2) con
   return symmetries[resultSym] & unifiedSymmetries[s2] & ~((unsigned long long)1);
 }
 
-bool symmetries_1_c::symmetryKnown(const voxel_c * pp) const {
+bool symmetries_1_c::symmetryKnown(const Voxel * pp) const {
   unsigned long long s = 1;
   int i;
 
@@ -139,7 +139,7 @@ bool symmetries_1_c::symmetryKnown(const voxel_c * pp) const {
   return symmetries[i] == s;
 }
 
-symmetries_t symmetries_1_c::calculateSymmetry(const voxel_c *pp) const {
+symmetries_t symmetries_1_c::calculateSymmetry(const Voxel *pp) const {
 
   bt_assert(pp);
 

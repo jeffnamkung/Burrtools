@@ -397,7 +397,7 @@ void stlExport_c::exportSTL(int shape)
 {
   char name[1000];
 
-  voxel_c *v = puzzle->getShape(shape);
+  Voxel *v = puzzle->getShape(shape);
 
   updateParameters(stl, params);
 

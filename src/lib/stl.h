@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 
-class voxel_c;
+class Voxel;
 class Polyhedron;
 
 /** this class gets thrown when something in the export went wrong */
@@ -60,7 +60,7 @@ class stlExporter_c {
     /**
      * This function exports one shape.
      */
-    void write(const char * basename, const voxel_c & shape, const faceList_c & holes);
+    void write(const char * basename, const Voxel & shape, const faceList_c & holes);
 
     /** parameters can have different type
      * this enum lists all supported types
@@ -95,7 +95,7 @@ class stlExporter_c {
     /** find out if binary mode is active */
     bool getBinaryMode() { return binaryMode; }
 
-    virtual Polyhedron * getMesh(const voxel_c & v, const faceList_c & holes) const = 0;
+    virtual Polyhedron * getMesh(const Voxel & v, const faceList_c & holes) const = 0;
 
   private:
 

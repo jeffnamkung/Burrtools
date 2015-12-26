@@ -30,8 +30,8 @@
 #include <deque>
 #include <vector>
 
-class xmlWriter_c;
-class xmlParser_c;
+class XmlWriter;
+class XmlParser;
 
 
 /** the disassembly is a common base class for the
@@ -117,12 +117,12 @@ public:
   state_c(const state_c * cpy, unsigned int pn);
 
   /** load from an xml node */
-  state_c(xmlParser_c & pars, unsigned int pn);
+  state_c(XmlParser & pars, unsigned int pn);
 
   ~state_c();
 
   /** save into an xml node */
-  void save(xmlWriter_c & xml, unsigned int piecenumber) const;
+  void save(XmlWriter & xml, unsigned int piecenumber) const;
 
   /** set the position of a piece */
   void set(unsigned int piece, int x, int y, int z);
@@ -217,13 +217,13 @@ public:
   separation_c(separation_c * r, separation_c * l, const std::vector<unsigned int> & pcs);
 
   /** load a separation from an xml node */
-  separation_c(xmlParser_c & pars, unsigned int pieces);
+  separation_c(XmlParser & pars, unsigned int pieces);
 
   /** copy constructor */
   separation_c(const separation_c * cpy);
 
   /* save into an xml node, please always call with just xml, the type is for internal use */
-  void save(xmlWriter_c & xml, int type = 0) const;
+  void save(XmlWriter & xml, int type = 0) const;
 
   ~separation_c();
 
@@ -320,13 +320,13 @@ class separationInfo_c : public disassembly_c {
   public:
 
     /** load separationInfo from parser */
-    separationInfo_c(xmlParser_c & pars);
+    separationInfo_c(XmlParser & pars);
 
     /** create a separation infor from a normal separation */
     separationInfo_c(const separation_c * sep);
 
     /** save into an xml node */
-    void save(xmlWriter_c & xml) const;
+    void save(XmlWriter & xml) const;
 
     /* implement abstract functions */
     virtual unsigned int sumMoves(void) const;

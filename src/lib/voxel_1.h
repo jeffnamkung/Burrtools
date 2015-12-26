@@ -36,20 +36,20 @@
  * This means that you can move along the z-axis (the stacking direction) in one voxel
  * steps, but in teh other directions only in 2 voxel steps.
  */
-class voxel_1_c : public voxel_c {
+class voxel_1_c : public Voxel {
 
   public:
 
-    voxel_1_c(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0) : voxel_c(x, y, z, gt, init) {}
-    voxel_1_c(xmlParser_c & pars, const GridType * gt) : voxel_c(pars, gt) {}
-    voxel_1_c(const voxel_c & orig) : voxel_c(orig) { }
-    voxel_1_c(const voxel_c * orig) : voxel_c(orig) { }
+    voxel_1_c(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0) : Voxel(x, y, z, gt, init) {}
+    voxel_1_c(XmlParser & pars, const GridType * gt) : Voxel(pars, gt) {}
+    voxel_1_c(const Voxel & orig) : Voxel(orig) { }
+    voxel_1_c(const Voxel * orig) : Voxel(orig) { }
 
     void transformPoint(int * x, int * y, int * z, unsigned int trans) const;
     bool transform(unsigned int nr);
 
     void minimizePiece(void);
-    bool identicalInBB(const voxel_c * op, bool includeColors = true) const;
+    bool identicalInBB(const Voxel * op, bool includeColors = true) const;
 
     bool getNeighbor(unsigned int idx, unsigned int typ, int x, int y, int z, int * xn, int *yn, int *zn) const;
 

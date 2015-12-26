@@ -21,7 +21,7 @@
 #ifndef __MILLABLE_H__
 #define __MILLABLE_H__
 
-class voxel_c;
+class Voxel;
 
 /**
  * Check, if a piece is notchable.
@@ -29,7 +29,7 @@ class voxel_c;
  *
  * This function only works for cube voxel spaces right now
  */
-bool isNotchable(const voxel_c * v);
+bool isNotchable(const Voxel * v);
 
 /**
  * Check, if a shape is millable.
@@ -37,6 +37,6 @@ bool isNotchable(const voxel_c * v);
  *
  * This function only works for cube voxel spaces right now
  */
-bool isMillable(const voxel_c * v);
+bool isMillable(const Voxel * v);
 
 #endif

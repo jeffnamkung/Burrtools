@@ -82,7 +82,7 @@
 /// due to an undefined orientation of the piece
 #define BBHSCACHE_NOT_DEF -30001
 
-voxel_c::voxel_c(unsigned int x, unsigned int y, unsigned int z, const GridType * g, voxel_type init) : gt(g), sx(x), sy(y), sz(z), voxels(x * y * z), hx(0), hy(0), hz(0), weight(1) {
+Voxel::Voxel(unsigned int x, unsigned int y, unsigned int z, const GridType * g, voxel_type init) : gt(g), sx(x), sy(y), sz(z), voxels(x * y * z), hx(0), hy(0), hz(0), weight(1) {
 
   space = new voxel_type[voxels];
   bt_assert(space);
@@ -112,8 +112,8 @@ voxel_c::voxel_c(unsigned int x, unsigned int y, unsigned int z, const GridType 
     BbHsCache[9*i+0] = BbHsCache[9*i+3] = BBHSCACHE_UNINIT;
 }
 
-voxel_c::voxel_c(const voxel_c & orig) : gt(orig.gt), sx(orig.sx), sy(orig.sy), sz(orig.sz),
-voxels(orig.voxels), hx(orig.hx), hy(orig.hy), hz(orig.hz), weight(orig.weight) {
+Voxel::Voxel(const Voxel & orig) : gt(orig.gt), sx(orig.sx), sy(orig.sy), sz(orig.sz),
+                                   voxels(orig.voxels), hx(orig.hx), hy(orig.hy), hz(orig.hz), weight(orig.weight) {
 
   space = new voxel_type[voxels];
   bt_assert(space);
@@ -137,8 +137,8 @@ voxels(orig.voxels), hx(orig.hx), hy(orig.hy), hz(orig.hz), weight(orig.weight) 
     BbHsCache[9*i+0] = BbHsCache[9*i+3] = BBHSCACHE_UNINIT;
 }
 
-voxel_c::voxel_c(const voxel_c * orig) : gt(orig->gt), sx(orig->sx), sy(orig->sy), sz(orig->sz),
-voxels(orig->voxels), hx(orig->hx), hy(orig->hy), hz(orig->hz), weight(orig->weight) {
+Voxel::Voxel(const Voxel * orig) : gt(orig->gt), sx(orig->sx), sy(orig->sy), sz(orig->sz),
+                                   voxels(orig->voxels), hx(orig->hx), hy(orig->hy), hz(orig->hz), weight(orig->weight) {
 
   space = new voxel_type[voxels];
   bt_assert(space);
@@ -162,12 +162,12 @@ voxels(orig->voxels), hx(orig->hx), hy(orig->hy), hz(orig->hz), weight(orig->wei
     BbHsCache[9*i+0] = BbHsCache[9*i+3] = BBHSCACHE_UNINIT;
 }
 
-voxel_c::~voxel_c() {
+Voxel::~Voxel() {
   delete [] space;
   delete [] BbHsCache;
 }
 
-void voxel_c::recalcBoundingBox() {
+void Voxel::recalcBoundingBox() {
 
   if (!doRecalc)
     return;
@@ -207,7 +207,7 @@ void voxel_c::recalcBoundingBox() {
     BbHsCache[9*i+0] = BbHsCache[9*i+3] = BBHSCACHE_UNINIT;
 }
 
-bool voxel_c::operator ==(const voxel_c & op) const {
+bool Voxel::operator ==(const Voxel & op) const {
 
   if (sx != op.sx) return false;
   if (sy != op.sy) return false;
@@ -220,7 +220,7 @@ bool voxel_c::operator ==(const voxel_c & op) const {
   return true;
 }
 
-bool voxel_c::identicalInBB(const voxel_c * op, bool includeColors) const {
+bool Voxel::identicalInBB(const Voxel * op, bool includeColors) const {
 
   if (bx2-bx1 != op->bx2-op->bx1) return false;
   if (by2-by1 != op->by2-op->by1) return false;
@@ -241,14 +241,14 @@ bool voxel_c::identicalInBB(const voxel_c * op, bool includeColors) const {
   return true;
 }
 
-bool voxel_c::identicalWithRots(const voxel_c * op, bool includeMirror, bool includeColors) const {
+bool Voxel::identicalWithRots(const Voxel * op, bool includeMirror, bool includeColors) const {
 
   const symmetries_c * sym = gt->getSymmetries();
 
   unsigned int maxTrans = includeMirror ? sym->getNumTransformationsMirror() : sym->getNumTransformations();
 
   for (unsigned int t = 0; t < maxTrans; t++) {
-    voxel_c * v = gt->getVoxel(op);
+    Voxel * v = gt->getVoxel(op);
 
     if (v->transform(t) && identicalInBB(v, includeColors)) {
       delete v;
@@ -261,12 +261,12 @@ bool voxel_c::identicalWithRots(const voxel_c * op, bool includeMirror, bool inc
   return false;
 }
 
-unsigned char voxel_c::getMirrorTransform(const voxel_c * op) const {
+unsigned char Voxel::getMirrorTransform(const Voxel * op) const {
 
   const symmetries_c * sym = gt->getSymmetries();
 
   for (unsigned int t = sym->getNumTransformations(); t < sym->getNumTransformationsMirror(); t++) {
-    voxel_c * v = gt->getVoxel(this);
+    Voxel * v = gt->getVoxel(this);
 
     if (v->transform(t) && v->identicalInBB(op, true)) {
       delete v;
@@ -279,7 +279,7 @@ unsigned char voxel_c::getMirrorTransform(const voxel_c * op) const {
   return 0;
 }
 
-bool voxel_c::getHotspot(unsigned char trans, int * x, int * y, int * z) const {
+bool Voxel::getHotspot(unsigned char trans, int * x, int * y, int * z) const {
 
   bt_assert(trans < gt->getSymmetries()->getNumTransformationsMirror());
   bt_assert(x && y && z);
@@ -289,7 +289,7 @@ bool voxel_c::getHotspot(unsigned char trans, int * x, int * y, int * z) const {
 
     /* this version always works, but also is quite slow
     */
-    voxel_c * tmp = gt->getVoxel(this);
+    Voxel * tmp = gt->getVoxel(this);
 
     if (!tmp->transform(trans))
     {
@@ -317,7 +317,7 @@ bool voxel_c::getHotspot(unsigned char trans, int * x, int * y, int * z) const {
   }
 }
 
-bool voxel_c::getBoundingBox(unsigned char trans, int * x1, int * y1, int * z1, int * x2, int * y2, int * z2) const {
+bool Voxel::getBoundingBox(unsigned char trans, int * x1, int * y1, int * z1, int * x2, int * y2, int * z2) const {
 
   bt_assert(trans < gt->getSymmetries()->getNumTransformationsMirror());
 
@@ -325,7 +325,7 @@ bool voxel_c::getBoundingBox(unsigned char trans, int * x1, int * y1, int * z1, 
   if (BbHsCache[9*trans+3] == BBHSCACHE_UNINIT) {
 
     /* this version always works, but it is quite slow */
-    voxel_c * tmp = gt->getVoxel(this);
+    Voxel * tmp = gt->getVoxel(this);
 
     if (!tmp->transform(trans))
     {
@@ -361,7 +361,7 @@ bool voxel_c::getBoundingBox(unsigned char trans, int * x1, int * y1, int * z1, 
   }
 }
 
-void voxel_c::resize(unsigned int nsx, unsigned int nsy, unsigned int nsz, voxel_type filler) {
+void Voxel::resize(unsigned int nsx, unsigned int nsy, unsigned int nsz, voxel_type filler) {
 
   // if size doesn't change, do nothing
   if (nsx == sx && nsy == sy && nsz == sz) return;
@@ -389,16 +389,16 @@ void voxel_c::resize(unsigned int nsx, unsigned int nsy, unsigned int nsz, voxel
   recalcBoundingBox();
 }
 
-void voxel_c::scale(unsigned int /*amount*/, bool /*grid*/) {
+void Voxel::scale(unsigned int /*amount*/, bool /*grid*/) {
   // do nothing by default
 }
 
-bool voxel_c::scaleDown(unsigned char /*by*/, bool /*action*/) {
+bool Voxel::scaleDown(unsigned char /*by*/, bool /*action*/) {
   return false;
 }
 
 
-unsigned int voxel_c::count(voxel_type val) const {
+unsigned int Voxel::count(voxel_type val) const {
   unsigned int count = 0;
   for (unsigned int i = 0; i < getXYZ(); i++)
     if (get(i) == val)
@@ -406,7 +406,7 @@ unsigned int voxel_c::count(voxel_type val) const {
   return count;
 }
 
-unsigned int voxel_c::countState(int state) const {
+unsigned int Voxel::countState(int state) const {
   unsigned int count = 0;
   for (unsigned int i = 0; i < getXYZ(); i++)
     if ((get(i) & 3) == state)
@@ -414,7 +414,7 @@ unsigned int voxel_c::countState(int state) const {
   return count;
 }
 
-void voxel_c::translate(int dx, int dy, int dz, voxel_type filler) {
+void Voxel::translate(int dx, int dy, int dz, voxel_type filler) {
   voxel_type * s2 = new voxel_type[sx*sy*sz];
   memset(s2, filler, sx*sy*sz);
 
@@ -463,7 +463,7 @@ void voxel_c::translate(int dx, int dy, int dz, voxel_type filler) {
  */
 
 /** \ref unionfinddetails */
-void voxel_c::unionFind(int * tree, char type, bool inverse, voxel_type value, bool outsideZ) const {
+void Voxel::unionFind(int * tree, char type, bool inverse, voxel_type value, bool outsideZ) const {
 
   /* union find algorithm:
    * 1. put all voxels that matter in an own set
@@ -526,7 +526,7 @@ void voxel_c::unionFind(int * tree, char type, bool inverse, voxel_type value, b
         }
 }
 
-bool voxel_c::connected(char type, bool inverse, voxel_type value, bool outsideZ) const {
+bool Voxel::connected(char type, bool inverse, voxel_type value, bool outsideZ) const {
 
   /* allocate enough space for all voxels plus one for the outside */
   int * tree = new int[voxels+1];
@@ -575,7 +575,7 @@ bool voxel_c::connected(char type, bool inverse, voxel_type value, bool outsideZ
   return true;
 }
 
-void voxel_c::fillHoles(char type) {
+void Voxel::fillHoles(char type) {
 
   /* allocate enough space for all voxels plus one for the outside */
   int * tree = new int[voxels+1];
@@ -604,7 +604,7 @@ void voxel_c::fillHoles(char type) {
   delete [] tree;
 }
 
-void voxel_c::copy(const voxel_c * orig) {
+void Voxel::copy(const Voxel * orig) {
 
   delete [] space;
 
@@ -634,7 +634,7 @@ void voxel_c::copy(const voxel_c * orig) {
   weight = orig->weight;
 }
 
-bool voxel_c::neighbour(unsigned int p, voxel_type val) const {
+bool Voxel::neighbour(unsigned int p, voxel_type val) const {
 
   unsigned int x = p % sx;
   unsigned int y = ((p - x) / sx) % sy;
@@ -654,7 +654,7 @@ bool voxel_c::neighbour(unsigned int p, voxel_type val) const {
   return false;
 }
 
-symmetries_t voxel_c::selfSymmetries(void) const {
+symmetries_t Voxel::selfSymmetries(void) const {
 
   // if we have not calculated the symmetries, yet we calclate it
   if (isSymmetryInvalid(symmetries))
@@ -665,7 +665,7 @@ symmetries_t voxel_c::selfSymmetries(void) const {
   return symmetries;
 }
 
-void voxel_c::minimizePiece() {
+void Voxel::minimizePiece() {
 
   unsigned int x1, x2, y1, y2, z1, z2;
 
@@ -697,7 +697,7 @@ void voxel_c::minimizePiece() {
   }
 }
 
-void voxel_c::actionOnSpace(VoxelAction action, bool inside) {
+void Voxel::actionOnSpace(VoxelAction action, bool inside) {
 
   if (!getX() || !getY() ||!getZ())
     return;
@@ -725,7 +725,7 @@ void voxel_c::actionOnSpace(VoxelAction action, bool inside) {
         }
 }
 
-void voxel_c::save(xmlWriter_c & xml) const {
+void Voxel::save(XmlWriter & xml) const {
 
   xml.newTag("voxel");
 
@@ -776,9 +776,9 @@ void voxel_c::save(xmlWriter_c & xml) const {
   xml.endTag("voxel");
 }
 
-voxel_c::voxel_c(xmlParser_c & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0), weight(1)
+Voxel::Voxel(XmlParser & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0), weight(1)
 {
-  pars.require(xmlParser_c::START_TAG, "voxel");
+  pars.require(XmlParser::START_TAG, "voxel");
 
   skipRecalcBoundingBox(true);
 
@@ -823,7 +823,7 @@ voxel_c::voxel_c(xmlParser_c & pars, const GridType * g) : gt(g), hx(0), hy(0), 
 
   space = new voxel_type[voxels];
 
-  if (pars.next() != xmlParser_c::TEXT)
+  if (pars.next() != XmlParser::TEXT)
     pars.exception("voxel space requires content");
 
   std::string c = pars.getText();
@@ -884,21 +884,21 @@ voxel_c::voxel_c(xmlParser_c & pars, const GridType * g) : gt(g), hx(0), hy(0), 
   skipRecalcBoundingBox(false);
 
   pars.next();
-  pars.require(xmlParser_c::END_TAG, "voxel");
+  pars.require(XmlParser::END_TAG, "voxel");
 }
 
-void voxel_c::setHotspot(int x, int y, int z) {
+void Voxel::setHotspot(int x, int y, int z) {
   hx = x; hy = y; hz = z;
 
   for (unsigned int i = 0; i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
     BbHsCache[9*i+0] = BBHSCACHE_UNINIT;
 }
 
-void voxel_c::initHotspot() {
+void Voxel::initHotspot() {
   setHotspot(0, 0, 0);
 }
 
-bool voxel_c::indexToXYZ(unsigned int index, unsigned int *x, unsigned int *y, unsigned int *z) const {
+bool Voxel::indexToXYZ(unsigned int index, unsigned int *x, unsigned int *y, unsigned int *z) const {
 
   *x = index % sx;
   index -= *x;
@@ -913,9 +913,9 @@ bool voxel_c::indexToXYZ(unsigned int index, unsigned int *x, unsigned int *y, u
   return *z < sz;
 }
 
-bool voxel_c::unionintersect(
-      const voxel_c * va, int xa, int ya, int za,
-      const voxel_c * vb, int xb, int yb, int zb
+bool Voxel::unionintersect(
+    const Voxel * va, int xa, int ya, int za,
+    const Voxel * vb, int xb, int yb, int zb
       ) {
 
   /* first make sure that the 2 given voxels bounding boxes do overlap
@@ -956,7 +956,7 @@ bool voxel_c::unionintersect(
   return result;
 }
 
-Polyhedron * voxel_c::getMeshInternal(double bevel, double offset, bool fast) const
+Polyhedron *Voxel::getMeshInternal(double bevel, double offset, bool fast) const
 {
   Polyhedron * res = new Polyhedron();
 
@@ -1160,17 +1160,17 @@ Polyhedron * voxel_c::getMeshInternal(double bevel, double offset, bool fast) co
   return res;
 }
 
-Polyhedron * voxel_c::getMesh(double bevel, double offset) const
+Polyhedron *Voxel::getMesh(double bevel, double offset) const
 {
   return getMeshInternal(bevel, offset, false);
 }
 
-Polyhedron * voxel_c::getDrawingMesh(void) const
+Polyhedron *Voxel::getDrawingMesh(void) const
 {
   return getMeshInternal(0.03, 0.005, true);
 }
 
-Polyhedron * voxel_c::getWireframeMesh(void) const
+Polyhedron *Voxel::getWireframeMesh(void) const
 {
   Polyhedron * p = getMeshInternal(0.03, 0.005, false);
   fillPolyhedronHoles(*p, 1);

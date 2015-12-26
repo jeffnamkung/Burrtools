@@ -29,8 +29,8 @@
 #include <stdio.h>
 #include <string>
 
-class xmlWriter_c;
-class xmlParser_c;
+class XmlWriter;
+class XmlParser;
 class Polyhedron;
 
 /** \file voxel.h
@@ -48,7 +48,7 @@ class Polyhedron;
  * Each voxel has 2 information: its state and its color. State is one of the
  * VoxelState enums values. And color can right now be one of 64 possible values
  */
-class voxel_c {
+class Voxel {
 
 protected:
 
@@ -215,36 +215,36 @@ public:
    * Creates a new voxel space. Its of given size and
    * initializes all values to init.
    */
-  voxel_c(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0);
+  Voxel(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0);
 
   /**
    * Load a voxel space from xml node
    */
-  voxel_c(xmlParser_c & pars, const GridType * gt);
+  Voxel(XmlParser & pars, const GridType * gt);
 
   /**
    * Copy constructor using reference. Transformation allows to
    * have a rotated version of this voxel space
    */
-  voxel_c(const voxel_c & orig);
+  Voxel(const Voxel & orig);
 
   /**
    * Copy constructor using pointer. Transformation allows to
    * have a rotated version of this voxel space
    */
-  voxel_c(const voxel_c * orig);
+  Voxel(const Voxel * orig);
 
   /**
    * Destructor.
    * Free the space
    */
-  virtual ~voxel_c();
+  virtual ~Voxel();
 
   /**
    * make this voxelspace be identical to the one given. except for the name field
    * everything is copied
    */
-  void copy(const voxel_c * orig);
+  void copy(const Voxel * orig);
 
   unsigned int getX(void) const { return sx; } ///< Return x-size of the voxel space
   unsigned int getY(void) const { return sy; } ///< Return y-size of the voxel space
@@ -421,7 +421,7 @@ public:
    * their sizes are the same and
    * all their voxel values are identical
    */
-  bool operator == (const voxel_c & op) const;
+  bool operator == (const Voxel & op) const;
 
   /**
    * Comparison of two voxel spaces.
@@ -437,7 +437,7 @@ public:
    * alignment along a bigger grid) so this function can be overloaded.
    * The default implementation simply treats all voxels equal
    */
-  virtual bool identicalInBB(const voxel_c * op, bool includeColors = true) const;
+  virtual bool identicalInBB(const Voxel * op, bool includeColors = true) const;
 
   /**
    * comparison of 2 voxel spaces.
@@ -455,7 +455,7 @@ public:
    * comparison, meaning when the colours differ the
    * shapes are not equal
    */
-  bool identicalWithRots(const voxel_c * op, bool includeMirror, bool includeColors) const;
+  bool identicalWithRots(const Voxel * op, bool includeMirror, bool includeColors) const;
 
   /**
    * this function returns the transformation, that transforms this voxel space into the
@@ -465,7 +465,7 @@ public:
    *
    * if no transformation can be found, return 0
    */
-  unsigned char getMirrorTransform(const voxel_c * op) const;
+  unsigned char getMirrorTransform(const Voxel * op) const;
 
   /**
    * resizes the voxelspace. preserving the lower part
@@ -648,7 +648,7 @@ public:
   /**
    *  used to save to XML
    */
-  void save(xmlWriter_c & xml) const;
+  void save(XmlWriter & xml) const;
 
   int getHx(void) const { return hx; } ///< Get the hotspot
   int getHy(void) const { return hy; } ///< Get the hotspot
@@ -699,8 +699,8 @@ public:
    * it returns true, if there were voxels added
    */
   bool unionintersect(
-      const voxel_c * va, int xa, int ya, int za,
-      const voxel_c * vb, int xb, int yb, int zb
+      const Voxel * va, int xa, int ya, int za,
+      const Voxel * vb, int xb, int yb, int zb
       );
 
   /**
@@ -762,7 +762,7 @@ private:
   virtual Polyhedron * getMeshInternal(double bevel, double offset, bool fast) const;
 
   // no copying and assigning
-  void operator=(const voxel_c&);
+  void operator=(const Voxel &);
 
 };
 

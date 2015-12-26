@@ -26,7 +26,7 @@
 
 #include "../tools/xml.h"
 
-void mirrorInfo_c::addPieces(unsigned int p1, unsigned int p2, unsigned char trans) {
+void MirrorInfo::addPieces(unsigned int p1, unsigned int p2, unsigned char trans) {
   entry e;
   e.pc1 = p1;
   e.pc2 = p2;
@@ -34,7 +34,7 @@ void mirrorInfo_c::addPieces(unsigned int p1, unsigned int p2, unsigned char tra
   entries.push_back(e);
 }
 
-bool mirrorInfo_c::getPieceInfo(unsigned int p, unsigned int * p_out, unsigned char * trans) const {
+bool MirrorInfo::getPieceInfo(unsigned int p, unsigned int * p_out, unsigned char * trans) const {
 
   for (unsigned int i = 0; i < entries.size(); i++)
     if (entries[i].pc1 == p) {
@@ -47,15 +47,15 @@ bool mirrorInfo_c::getPieceInfo(unsigned int p, unsigned int * p_out, unsigned c
 }
 
 
-assembly_c::assembly_c(xmlParser_c & pars, unsigned int pieces, const GridType * gt) : sym(gt->getSymmetries())
+Assembly::Assembly(XmlParser & pars, unsigned int pieces, const GridType * gt) : sym(gt->getSymmetries())
 {
-  pars.require(xmlParser_c::START_TAG, "assembly");
+  pars.require(XmlParser::START_TAG, "assembly");
 
   pars.next();
-  pars.require(xmlParser_c::TEXT, "");
+  pars.require(XmlParser::TEXT, "");
   std::string str = pars.getText();
   pars.next();
-  pars.require(xmlParser_c::END_TAG, "assembly");
+  pars.require(XmlParser::END_TAG, "assembly");
 
   int x, y, z, trans, state, sign;
 
@@ -72,7 +72,7 @@ assembly_c::assembly_c(xmlParser_c & pars, unsigned int pieces, const GridType *
         if ((trans != UNPLACED_TRANS) && ((trans < 0) || ((unsigned int)trans >= sym->getNumTransformations())))
           pars.exception("transformations need to be between 0 and NUM_TRANSFORMATIONS");
 
-        placements.push_back(placement_c(trans, x, y, z));
+        placements.push_back(Placement(trans, x, y, z));
         x = y = z = trans = state = 0;
       } else {
         sign = 1;
@@ -137,17 +137,17 @@ assembly_c::assembly_c(xmlParser_c & pars, unsigned int pieces, const GridType *
   if ((trans != UNPLACED_TRANS) && ((trans < 0) || ((unsigned int)trans >= sym->getNumTransformations())))
     pars.exception("transformations need to be between 0 and NUM_TRANSFORMATIONS");
 
-  placements.push_back(placement_c(trans, x, y, z));
+  placements.push_back(Placement(trans, x, y, z));
 
   if (placements.size() != pieces)
     pars.exception("not the right number of placements in assembly");
 }
 
-assembly_c::assembly_c(const assembly_c * orig) : placements(orig->placements), sym(orig->sym) {
+Assembly::Assembly(const Assembly * orig) : placements(orig->placements), sym(orig->sym) {
 }
 
 
-void assembly_c::save(xmlWriter_c & xml) const
+void Assembly::save(XmlWriter & xml) const
 {
   xml.newTag("assembly");
 
@@ -174,7 +174,7 @@ void assembly_c::save(xmlWriter_c & xml) const
   xml.endTag("assembly");
 }
 
-void assembly_c::sort(const Problem * puz) {
+void Assembly::sort(const Problem * puz) {
 
   int p = 0;
 
@@ -200,7 +200,7 @@ void assembly_c::sort(const Problem * puz) {
         for (unsigned int b = cnt2-1; b > a; b--)
           if (placements[p+b] < placements[p+b-1]) {
 
-            placement_c tmp(placements[p+b]);
+            Placement tmp(placements[p + b]);
             placements[p+b] = placements[p+b-1];
             placements[p+b-1] = tmp;
 
@@ -216,7 +216,7 @@ void assembly_c::sort(const Problem * puz) {
   }
 }
 
-bool assembly_c::transform(unsigned char trans, const Problem * puz, const mirrorInfo_c * mir) {
+bool Assembly::transform(unsigned char trans, const Problem * puz, const MirrorInfo * mir) {
 
   if (trans == 0) return true;
 
@@ -565,7 +565,7 @@ bool assembly_c::transform(unsigned char trans, const Problem * puz, const mirro
   return true;
 }
 
-bool assembly_c::compare(const assembly_c & b, unsigned int pivot) const {
+bool Assembly::compare(const Assembly & b, unsigned int pivot) const {
 
   bt_assert(placements.size() == b.placements.size());
 
@@ -593,7 +593,7 @@ bool assembly_c::compare(const assembly_c & b, unsigned int pivot) const {
   return false;
 }
 
-bool assembly_c::containsMirroredPieces(void) const {
+bool Assembly::containsMirroredPieces(void) const {
 
   for (unsigned int i = 0; i < placements.size(); i++) {
 
@@ -604,7 +604,7 @@ bool assembly_c::containsMirroredPieces(void) const {
   return false;
 }
 
-bool assembly_c::validSolution(const Problem * puz) const {
+bool Assembly::validSolution(const Problem * puz) const {
 
   unsigned int pos = 0;
 
@@ -624,7 +624,7 @@ bool assembly_c::validSolution(const Problem * puz) const {
   return true;
 }
 
-bool assembly_c::smallerRotationExists(const Problem * puz, unsigned int pivot, const mirrorInfo_c * mir, bool complete) const {
+bool Assembly::smallerRotationExists(const Problem * puz, unsigned int pivot, const MirrorInfo * mir, bool complete) const {
 
   /* we only need to check for mirrored transformations, if mirrorInfo is given
    * if not we assume that the piece set contains at least one piece that has no
@@ -636,7 +636,7 @@ bool assembly_c::smallerRotationExists(const Problem * puz, unsigned int pivot, 
   {
     for (unsigned char t = 0; t < endTrans; t++)
     {
-      assembly_c tmp(this);
+      Assembly tmp(this);
 
       // if we can not create the transformation we can continue to
       // the next orientation
@@ -658,8 +658,8 @@ bool assembly_c::smallerRotationExists(const Problem * puz, unsigned int pivot, 
       // if that is the case we don't keep the stuff
 
       // now we create a voxel space of the given assembly shape/ and shift that one around
-      voxel_c * assm = tmp.createSpace(puz);
-      const voxel_c * res = puz->getResultShape();
+      Voxel * assm = tmp.createSpace(puz);
+      const Voxel * res = puz->getResultShape();
 
       for (int x = (int)res->boundX1()-(int)assm->boundX1(); (int)assm->boundX2()+x <= (int)res->boundX2(); x++)
         for (int y = (int)res->boundY1()-(int)assm->boundY1(); (int)assm->boundY2()+y <= (int)res->boundY2(); y++)
@@ -675,12 +675,12 @@ bool assembly_c::smallerRotationExists(const Problem * puz, unsigned int pivot, 
                   {
                     if (
                         // the piece can not be place if the result is empty and the piece is filled at a given voxel
-                        ((assm->getState(px, py, pz) == voxel_c::VX_FILLED) &&
-                         (res->getState2(x+px, y+py, z+pz) == voxel_c::VX_EMPTY)) ||
+                        ((assm->getState(px, py, pz) == Voxel::VX_FILLED) &&
+                         (res->getState2(x+px, y+py, z+pz) == Voxel::VX_EMPTY)) ||
 
                         // the placement is also invalid, when not all "must be filled" voxels are filled
-                        ((assm->getState(px, py, pz) == voxel_c::VX_EMPTY) &&
-                         (res->getState2(x+px, y+py, z+pz) == voxel_c::VX_FILLED)) ||
+                        ((assm->getState(px, py, pz) == Voxel::VX_EMPTY) &&
+                         (res->getState2(x+px, y+py, z+pz) == Voxel::VX_FILLED)) ||
 
 
                         // the piece can also not be placed when the colour constraints don't fit
@@ -726,7 +726,7 @@ bool assembly_c::smallerRotationExists(const Problem * puz, unsigned int pivot, 
 
       if (sym->symmetrieContainsTransformation(s, t))
       {
-        assembly_c tmp(this);
+        Assembly tmp(this);
         bt_assert2(tmp.transform(t, puz, mir));
 
         // if the assembly orientation requires mirrored pieces
@@ -757,16 +757,16 @@ bool assembly_c::smallerRotationExists(const Problem * puz, unsigned int pivot, 
   return false;
 }
 
-void assembly_c::exchangeShape(unsigned int s1, unsigned int s2) {
+void Assembly::exchangeShape(unsigned int s1, unsigned int s2) {
   bt_assert(s1 < placements.size());
   bt_assert(s2 < placements.size());
 
-  placement_c p = placements[s1];
+  Placement p = placements[s1];
   placements[s1] = placements[s2];
   placements[s2] = p;
 }
 
-int assembly_c::comparePieces(const assembly_c * b) const {
+int Assembly::comparePieces(const Assembly * b) const {
 
   // returns 0 if both assemblies use the same pieces
   // 1 if the piece string (AAABBCDE) of this is smaller
@@ -788,9 +788,9 @@ int assembly_c::comparePieces(const assembly_c * b) const {
   return 0;
 }
 
-voxel_c * assembly_c::createSpace(const Problem * puz) const {
+Voxel *Assembly::createSpace(const Problem * puz) const {
 
-  std::vector<voxel_c *>pieces;
+  std::vector<Voxel *>pieces;
   pieces.resize(placements.size());
 
   int maxX = 1;
@@ -804,7 +804,7 @@ voxel_c * assembly_c::createSpace(const Problem * puz) const {
 
       unsigned int j = puz->pieceToShape(i);
 
-      voxel_c * pc = puz->getGridType()->getVoxel(puz->getShapeShape(j));
+      Voxel * pc = puz->getGridType()->getVoxel(puz->getShapeShape(j));
 
       bt_assert(pc->transform(placements[i].transformation));
 
@@ -820,14 +820,14 @@ voxel_c * assembly_c::createSpace(const Problem * puz) const {
     }
 
   // create a shape identical in size with the result shape of the problem
-  voxel_c * res = puz->getGridType()->getVoxel(maxX, maxY, maxZ, 0);
+  Voxel * res = puz->getGridType()->getVoxel(maxX, maxY, maxZ, 0);
   res->skipRecalcBoundingBox(true);
 
   // now iterate over all shapes in the assembly and place them into the result
   for (unsigned int i = 0; i < placements.size(); i++)
     if (placements[i].transformation != UNPLACED_TRANS) {
 
-      voxel_c * pc = pieces[i];
+      Voxel * pc = pieces[i];
 
       int dx = (int)placements[i].xpos - (int)pc->getHx();
       int dy = (int)placements[i].ypos - (int)pc->getHy();
@@ -836,7 +836,7 @@ voxel_c * assembly_c::createSpace(const Problem * puz) const {
       for (unsigned int x = 0; x < pc->getX(); x++)
         for (unsigned int y = 0; y < pc->getY(); y++)
           for (unsigned int z = 0; z < pc->getZ(); z++) {
-            if (pc->getState(x, y, z) != voxel_c::VX_EMPTY)
+            if (pc->getState(x, y, z) != Voxel::VX_EMPTY)
               res->set(x+dx, y+dy, z+dz, pc->get(x, y, z));
           }
 
@@ -848,7 +848,7 @@ voxel_c * assembly_c::createSpace(const Problem * puz) const {
   return res;
 }
 
-void assembly_c::removePieces(unsigned int from, unsigned int cnt)
+void Assembly::removePieces(unsigned int from, unsigned int cnt)
 {
   if (cnt == 0) return;
 
@@ -864,12 +864,12 @@ void assembly_c::removePieces(unsigned int from, unsigned int cnt)
   placements.erase(placements.begin()+from, placements.begin()+from+cnt);
 }
 
-void assembly_c::addNonPlacedPieces(unsigned int from, unsigned int cnt)
+void Assembly::addNonPlacedPieces(unsigned int from, unsigned int cnt)
 {
   if (cnt == 0) return;
 
   bt_assert(from <= placements.size());
 
-  placements.insert(placements.begin()+from, cnt, placement_c(UNPLACED_TRANS, 0, 0, 0));
+  placements.insert(placements.begin()+from, cnt, Placement(UNPLACED_TRANS, 0, 0, 0));
 }
 

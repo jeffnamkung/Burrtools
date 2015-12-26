@@ -66,7 +66,7 @@ movementCache_1_c::movementCache_1_c(const Problem * puz) : movementCache_c(puz)
 }
 
 /* calculate the required movement possibilities */
-unsigned int* movementCache_1_c::moCalcValues(const voxel_c * sh1, const voxel_c * sh2, int dx, int dy, int dz) {
+unsigned int* movementCache_1_c::moCalcValues(const Voxel * sh1, const Voxel * sh2, int dx, int dy, int dz) {
 
   /* because the dx, dy and dz values are calculated using the hotspot we need to reverse
    * that process

@@ -124,7 +124,7 @@ void gridEditor_2_c::drawTileCursor(int x, int y, int /*z*/, int tx, int ty, int
 
 bool gridEditor_2_c::calcGridPosition(int x, int y, int /*z*/, int *gx, int *gy) {
 
-  voxel_c * space = puzzle->getShape(piecenumber);
+  Voxel * space = puzzle->getShape(piecenumber);
 
   int sx, sy, tx, ty;
   calcParameters(&sx, &sy, &tx, &ty);

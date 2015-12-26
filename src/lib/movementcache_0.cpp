@@ -31,7 +31,7 @@ static int min(int a, int b) { if (a < b) return a; else return b; }
 static int max(int a, int b) { if (a > b) return a; else return b; }
 
 /* calculate the required movement possibilities */
-unsigned int* movementCache_0_c::moCalcValues(const voxel_c * sh1, const voxel_c * sh2, int dx, int dy, int dz) {
+unsigned int* movementCache_0_c::moCalcValues(const Voxel * sh1, const Voxel * sh2, int dx, int dy, int dz) {
 
   /* because the dx, dy and dz values are calculated using the hotspot we need to reverse
    * that process

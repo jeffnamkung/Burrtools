@@ -57,7 +57,7 @@ const char * basename(const char * name) {
 #endif
 
 
-void stlExporter_c::write(const char * fname, const voxel_c & v, const faceList_c & holes)
+void stlExporter_c::write(const char * fname, const Voxel & v, const faceList_c & holes)
 {
   FILE * f;
   unsigned long triangleCount = 0;

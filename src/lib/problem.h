@@ -24,7 +24,7 @@
 /** @ file
  * Contains the definitions for the puzzle problem class
  */
-#include "assembler.h"
+#include "assembler-interface.h"
 #include "bt_assert.h"
 
 #include <stdint.h>
@@ -34,17 +34,17 @@
 
 #include <stdint.h>
 
-class voxel_c;
+class Voxel;
 class separation_c;
 class separationInfo_c;
 class disassembly_c;
-class assembly_c;
+class Assembly;
 class GridType;
 class Puzzle;
 class part_c;
 class solution_c;
-class xmlWriter_c;
-class xmlParser_c;
+class XmlWriter;
+class XmlParser;
 
 /**
  * this state reflects how far we are with solving this problem
@@ -176,7 +176,7 @@ public:
   /**
    * constructor: load a problem from the given XML node for the given puzzle
    */
-  Problem(Puzzle & puz, xmlParser_c & pars);
+  Problem(Puzzle & puz, XmlParser & pars);
   /**
    * constructor: copy the given problem, except for label and solutions
    */
@@ -190,7 +190,7 @@ public:
   /**
    * save the problem into the returned XML node
    */
-  void save(xmlWriter_c & xml) const;
+  void save(XmlWriter & xml) const;
 
   /**
    * return the current set grid type for this puzzle.
@@ -233,12 +233,12 @@ public:
    * get the voxel space of the result shape.
    * Make sure to only call getResultId[Shape] when you know that the shape is valid
    */
-  const voxel_c * getResultShape(void) const;
+  const Voxel * getResultShape(void) const;
   /**
    * get the voxel space of the result shape.
    * Make sure to only call getResultId[Shape] when you know that the shape is valid
    */
-  voxel_c * getResultShape(void);
+  Voxel * getResultShape(void);
   //@}
 
   /** \name problem piece handling
@@ -297,9 +297,9 @@ public:
   /** piece number that shape has in this problem */
   unsigned int getShapeId(unsigned int shape) const;
   /** get the voxel space for a given piece */
-  const voxel_c * getShapeShape(unsigned int piece) const;
+  const Voxel * getShapeShape(unsigned int piece) const;
   /** get the voxel space for a given piece */
-  voxel_c * getShapeShape(unsigned int piece);
+  Voxel * getShapeShape(unsigned int piece);
   /** swap the 2 pieces in the piece list of the problem */
   void exchangeShape(unsigned int p1, unsigned int p2);
   /** the 2 shapes have been swapped in the puzzle, swap them here as well */
@@ -421,15 +421,15 @@ public:
   /** add time used to solve the puzzle (in seconds) the value is added to the already accumulated time. */
   void addTime(unsigned long time) { bt_assert(solveState == SS_SOLVING); usedTime += time; }
   /** add an assembly as a solution */
-  void addSolution(assembly_c * assm);
+  void addSolution(Assembly * assm);
   /** add an assembly with disassembly information as a solution.
    * You can give the index, where to add it. This defaults to the end of the list
    */
-  void addSolution(assembly_c * assm, separationInfo_c * disasm, unsigned int pos = 0xFFFFFFFF);
+  void addSolution(Assembly * assm, separationInfo_c * disasm, unsigned int pos = 0xFFFFFFFF);
   /** add an assembly with disassembly proper as a solution.
    * You can give the index, where to add it. This defaults to the end of the list
    */
-  void addSolution(assembly_c * assm, separation_c * disasm, unsigned int pos = 0xFFFFFFFF);
+  void addSolution(Assembly * assm, separation_c * disasm, unsigned int pos = 0xFFFFFFFF);
   /** once finished analysing call finishedSolving for finish off all actions.
    * After that call no more modifications are possible, no more addSOlution, incNumAssemblies and so on.
    * */
