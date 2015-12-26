@@ -24,7 +24,7 @@
 
 #define NUM_DIRECTIONS 3
 
-movementCache_0_c::movementCache_0_c(const problem_c * puz) : movementCache_c(puz) {
+movementCache_0_c::movementCache_0_c(const Problem * puz) : movementCache_c(puz) {
 }
 
 static int min(int a, int b) { if (a < b) return a; else return b; }
@@ -156,7 +156,7 @@ unsigned int* movementCache_0_c::moCalcValues(const voxel_c * sh1, const voxel_c
 }
 
 
-unsigned int movementCache_0_c::numDirections(void) { return NUM_DIRECTIONS; }
+unsigned int movementCache_0_c::numDirections() { return NUM_DIRECTIONS; }
 void movementCache_0_c::getDirection(unsigned int dir, int * x, int * y, int * z) {
 
   switch (dir) {

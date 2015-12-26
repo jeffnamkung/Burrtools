@@ -24,7 +24,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Widget.H>
 
-class puzzle_c;
+class Puzzle;
 
 /**
  * this widget allows to edit voxel spaces. It shows one Z-Layer of the space as a grid
@@ -76,7 +76,7 @@ public:
 
 protected:
 
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
 
   // the edit state
   int state;
@@ -119,29 +119,29 @@ protected:
 
 public:
 
-  gridEditor_c(int x, int y, int w, int h, puzzle_c * p) : Fl_Widget(x, y, w, h), puzzle(p), state(0), currentZ(0), piecenumber(0), mX(0xFFFF), mY(0xFFFF), mZ(0xFFFF), startX(0), startY(0), inside(false), callbackReason(0), currentColor(0), task(TSK_SET), activeTools(0), editType(0) {}
+  gridEditor_c(int x, int y, int w, int h, Puzzle * p) : Fl_Widget(x, y, w, h), puzzle(p), state(0), currentZ(0), piecenumber(0), mX(0xFFFF), mY(0xFFFF), mZ(0xFFFF), startX(0), startY(0), inside(false), callbackReason(0), currentColor(0), task(TSK_SET), activeTools(0), editType(0) {}
 
   // sets the z layer to edit the value is clamped to valid values
   void setZ(unsigned int z);
 
   // get the current Z value
-  unsigned int getZ(void) { return currentZ; }
+  unsigned int getZ() { return currentZ; }
 
   // sets the colour to use for editing voxels
   void setColor(unsigned int col) { currentColor = col; }
 
   // sets the voxel space to edit, the widget doesn't take over the space
   // the voxelspace must not be deleted while this is set here
-  void setPuzzle(puzzle_c * p, unsigned int piecenum);
+  void setPuzzle(Puzzle * p, unsigned int piecenum);
   void clearPuzzle();
 
   // get the mouse position so that the cursor can be shown in 3d view
-  bool getMouse(void) { return inside; }
-  int getMouseX1(void) { return (startX < mX)?(startX):(mX); }
-  int getMouseY1(void) { return (startY < mY)?(startY):(mY); }
-  int getMouseX2(void) { return (startX > mX)?(startX):(mX); }
-  int getMouseY2(void) { return (startY > mY)?(startY):(mY); }
-  int getMouseZ(void) { return mZ; }
+  bool getMouse() { return inside; }
+  int getMouseX1() { return (startX < mX)?(startX):(mX); }
+  int getMouseY1() { return (startY < mY)?(startY):(mY); }
+  int getMouseX2() { return (startX > mX)?(startX):(mX); }
+  int getMouseY2() { return (startY > mY)?(startY):(mY); }
+  int getMouseZ() { return mZ; }
 
   // find out the reason why this widget called the callback
   enum {
@@ -149,7 +149,7 @@ public:
     RS_CHANGESQUARE   // something was edited, 3D view must be redrawn
   };
 
-  int getReason(void) { return callbackReason; }
+  int getReason() { return callbackReason; }
 
   /* each grid editor has to provide this function
    * is calculates the grid position gx and gy inside the voxel

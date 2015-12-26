@@ -59,7 +59,7 @@ void print(const voxel_c * v, char base) {
   printf("\n");
 }
 
-void print(const puzzle_c * p) {
+void print(const Puzzle * p) {
 
   for (unsigned int s = 0; s < p->shapeNumber(); s++) {
     printf("shape %i:\n", s);
@@ -70,7 +70,7 @@ void print(const puzzle_c * p) {
 
   for (unsigned int pr = 0; pr < p->problemNumber(); pr++) {
 
-    const problem_c * prob = p->getProblem(pr);
+    const Problem * prob = p->getProblem(pr);
 
     printf("problem %i (%s):\n", pr, prob->getName().c_str());
     if (!prob->resultValid())
@@ -165,7 +165,7 @@ static void print_rec(const separation_c * s, voxel_c ** pieces, int sx, int sy,
   }
 }
 
-void print(const separation_c * s, const assembly_c * a, const problem_c * p) {
+void print(const separation_c * s, const assembly_c * a, const Problem * p) {
 
   bt_assert(p->resultValid());
 
@@ -196,7 +196,7 @@ void print(const separation_c * s, const assembly_c * a, const problem_c * p) {
   delete [] pieces;
 }
 
-void print(const assembly_c * a, const problem_c * p) {
+void print(const assembly_c * a, const Problem * p) {
 
   bt_assert(p->resultValid());
 

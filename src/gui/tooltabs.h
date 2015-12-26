@@ -25,7 +25,7 @@
 #include "Layouter.h"
 
 class ChangeSize;
-class puzzle_c;
+class Puzzle;
 class guiGridType_c;
 
 // the class that contains the tool tab
@@ -35,8 +35,8 @@ public:
 
   ToolTab(int x, int y, int w, int h) : LFl_Tabs(x, y, w, h) {}
 
-  virtual void setVoxelSpace(puzzle_c * puz, unsigned int sh) = 0;
-  bool operationToAll(void) { return toAll->value() != 0; }
+  virtual void setVoxelSpace(Puzzle * puz, unsigned int sh) = 0;
+  bool operationToAll() { return toAll->value() != 0; }
 
 protected:
 
@@ -47,7 +47,7 @@ protected:
 class ToolTab_0 : public ToolTab {
 
   ChangeSize * changeSize;
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   unsigned int shape;
   pixmapList_c pm;
 
@@ -55,7 +55,7 @@ public:
 
   ToolTab_0(int x, int y, int w, int h);
 
-  void setVoxelSpace(puzzle_c * puz, unsigned int sh);
+  void setVoxelSpace(Puzzle * puz, unsigned int sh);
 
   void cb_size(void);
   void cb_transform(long task);
@@ -65,7 +65,7 @@ public:
 class ToolTab_1 : public ToolTab {
 
   ChangeSize * changeSize;
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   unsigned int shape;
   pixmapList_c pm;
 
@@ -73,7 +73,7 @@ public:
 
   ToolTab_1(int x, int y, int w, int h);
 
-  void setVoxelSpace(puzzle_c * puz, unsigned int sh);
+  void setVoxelSpace(Puzzle * puz, unsigned int sh);
 
   void cb_size(void);
   void cb_transform(long task);
@@ -83,7 +83,7 @@ public:
 class ToolTab_2 : public ToolTab {
 
   ChangeSize * changeSize;
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   unsigned int shape;
   pixmapList_c pm;
 
@@ -91,7 +91,7 @@ public:
 
   ToolTab_2(int x, int y, int w, int h);
 
-  void setVoxelSpace(puzzle_c * puz, unsigned int sh);
+  void setVoxelSpace(Puzzle * puz, unsigned int sh);
 
   void cb_size(void);
   void cb_transform(long task);
@@ -101,7 +101,7 @@ public:
 class ToolTab_3 : public ToolTab {
 
   ChangeSize * changeSize;
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   unsigned int shape;
   pixmapList_c pm;
 
@@ -109,7 +109,7 @@ public:
 
   ToolTab_3(int x, int y, int w, int h);
 
-  void setVoxelSpace(puzzle_c * puz, unsigned int sh);
+  void setVoxelSpace(Puzzle * puz, unsigned int sh);
 
   void cb_size(void);
   void cb_transform(long task);
@@ -118,7 +118,7 @@ public:
 class ToolTab_4 : public ToolTab {
 
   ChangeSize * changeSize;
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   unsigned int shape;
   pixmapList_c pm;
 
@@ -126,7 +126,7 @@ public:
 
   ToolTab_4(int x, int y, int w, int h);
 
-  void setVoxelSpace(puzzle_c * puz, unsigned int sh);
+  void setVoxelSpace(Puzzle * puz, unsigned int sh);
 
   void cb_size(void);
   void cb_transform(long task);
@@ -140,8 +140,8 @@ class ToolTabContainer : public layouter_c {
 
   ToolTabContainer(int x, int y, int w, int h, const guiGridType_c * ggt);
 
-  void setVoxelSpace(puzzle_c * puz, unsigned int sh) { if (tt) tt->setVoxelSpace(puz, sh); }
-  bool operationToAll(void) { if (tt) return tt->operationToAll(); else return false; }
+  void setVoxelSpace(Puzzle * puz, unsigned int sh) { if (tt) tt->setVoxelSpace(puz, sh); }
+  bool operationToAll() { if (tt) return tt->operationToAll(); else return false; }
 
   void newGridType(const guiGridType_c * ggt);
 };

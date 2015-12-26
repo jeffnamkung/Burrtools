@@ -21,7 +21,7 @@
 #include "symmetries_0.h"
 
 #include "voxel_0.h"
-#include "gridtype.h"
+#include "grid-type.h"
 
 #include "bt_assert.h"
 
@@ -57,7 +57,7 @@ static const unsigned long long uniqueSymmetries[NUM_SYMMETRY_GROUPS] = {
 #include "tabs_0/uniquesym.inc"
 };
 
-symmetries_0_c::symmetries_0_c(void) {
+symmetries_0_c::symmetries_0_c() {
 }
 
 unsigned int symmetries_0_c::getNumTransformations(void) const { return NUM_TRANSFORMATIONS; }

@@ -22,7 +22,7 @@
 
 #include <math.h>
 
-void voxel_1_c::minimizePiece(void) {
+void voxel_1_c::minimizePiece() {
 
   bool move_again = (bx1 + by1) & 1;
 

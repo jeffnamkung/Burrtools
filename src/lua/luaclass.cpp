@@ -24,12 +24,12 @@ extern "C" {
 
 #include <string.h>
 
-luaClass_c::luaClass_c(void) {
+luaClass_c::luaClass_c() {
 
   L = luaL_newstate();
 
 }
-luaClass_c::~luaClass_c(void) {
+luaClass_c::~luaClass_c() {
 
   lua_close(L);
 

@@ -43,7 +43,7 @@ class LineSpacer : Fl_Widget {
 
     LineSpacer(int x, int y, int w, int h, int borderSpace) : Fl_Widget(x, y, w, h), lines(2), vertical(true), gap(borderSpace) {}
 
-    void draw(void) {
+    void draw() {
 
       fl_color(color());
       fl_rectf(x(), y(), w(), h());
@@ -80,7 +80,7 @@ class LineSpacer : Fl_Widget {
 static void cb_VoxelEditGroupZselect_stub(Fl_Widget* o, void* v) { ((VoxelEditGroup_c*)v)->cb_Zselect((Fl_Slider*)o); }
 static void cb_VoxelEditGroupSqedit_stub(Fl_Widget* /*o*/, void* v) { ((VoxelEditGroup_c*)v)->cb_Sqedit(); }
 
-VoxelEditGroup_c::VoxelEditGroup_c(int x, int y, int w, int h, puzzle_c * puzzle, const guiGridType_c * ggt) : Fl_Group(0, 0, 300, 300), layoutable_c(x, y, w, h) {
+VoxelEditGroup_c::VoxelEditGroup_c(int x, int y, int w, int h, Puzzle * puzzle, const guiGridType_c * ggt) : Fl_Group(0, 0, 300, 300), layoutable_c(x, y, w, h) {
 
   x = 0;
   y = 0;
@@ -116,7 +116,7 @@ VoxelEditGroup_c::VoxelEditGroup_c(int x, int y, int w, int h, puzzle_c * puzzle
   resizable(sqedit);
 }
 
-void VoxelEditGroup_c::newGridType(const guiGridType_c * ggt, puzzle_c * puzzle) {
+void VoxelEditGroup_c::newGridType(const guiGridType_c * ggt, Puzzle * puzzle) {
 
   gridEditor_c * nsq;
 
@@ -142,7 +142,7 @@ void VoxelEditGroup_c::setZ(unsigned int val) {
   sqedit->setZ(val);
 }
 
-void VoxelEditGroup_c::setPuzzle(puzzle_c * puzzle, unsigned int num) {
+void VoxelEditGroup_c::setPuzzle(Puzzle * puzzle, unsigned int num) {
   sqedit->setPuzzle(puzzle, num);
   if (puzzle && (num < puzzle->shapeNumber())) {
     voxel_c * v = puzzle->getShape(num);

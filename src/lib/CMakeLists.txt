@@ -20,10 +20,10 @@ set(SOURCES
 #    src/lib/tabs_4/generator_mesh_4.cpp
 assembler.cpp
 assembler.h
-assembler_0.cpp
-assembler_0.h
-assembler_1.cpp
-assembler_1.h
+    don-knuth-assembler.cpp
+    don-knuth-assembler.h
+    wei_hwa_huang_assembler.cpp
+    wei_hwa_huang_assembler.h
 assembly.cpp
 assembly.h
 bitfield.h
@@ -46,8 +46,8 @@ disassemblernode.cpp
 disassemblernode.h
 disassembly.cpp
 disassembly.h
-gridtype.cpp
-gridtype.h
+    grid-type.cpp
+    grid-type.h
 grouping.cpp
 grouping.h
 millable.cpp

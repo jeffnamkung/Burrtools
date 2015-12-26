@@ -27,7 +27,7 @@
 #include <vector>
 
 class grouping_c;
-class problem_c;
+class Problem;
 class disassemblerNode_c;
 class assembly_c;
 
@@ -56,7 +56,7 @@ class disassembler_a_c : public disassembler_c {
     /**
      * the problem we solve
      */
-    const problem_c * puzzle;
+    const Problem * puzzle;
 
     /**
      * Converts piece number to the corresponding shape number.
@@ -85,7 +85,7 @@ class disassembler_a_c : public disassembler_c {
     }
 
     /** get one possible next position for the currently running analysis */
-    disassemblerNode_c * find(void) { return analyse->find(); }
+    disassemblerNode_c * find() { return analyse->find(); }
 
     /**
      * Analyze a sub-problem.
@@ -105,7 +105,7 @@ class disassembler_a_c : public disassembler_c {
      * The problem can not be changed, once you done that but
      * you can analyse many assemblies for disassembability
      */
-    disassembler_a_c(const problem_c *puz);
+    disassembler_a_c(const Problem *puz);
     ~disassembler_a_c(void);
 
     /**

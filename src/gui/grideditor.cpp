@@ -44,7 +44,7 @@ void gridEditor_c::setZ(unsigned int z) {
 
 }
 
-void gridEditor_c::setPuzzle(puzzle_c * p, unsigned int piecenum) {
+void gridEditor_c::setPuzzle(Puzzle * p, unsigned int piecenum) {
 
   puzzle = p;
   piecenumber = piecenum;

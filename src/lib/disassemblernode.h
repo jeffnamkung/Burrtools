@@ -172,7 +172,7 @@ public:
    *
    * if the function returs true, delete the node
    */
-  bool decRefCount(void) {
+  bool decRefCount() {
     bt_assert(refcount > 0);
     refcount--;
     return refcount == 0;
@@ -181,7 +181,7 @@ public:
   /**
    * Tell this node that you now have a pointer to it
    */
-  void incRefCount(void) {
+  void incRefCount() {
     refcount++;
   }
 

@@ -21,7 +21,7 @@
 
 #include "thread.h"
 
-thread_c::~thread_c(void) {
+thread_c::~thread_c() {
   kill();
 }
 

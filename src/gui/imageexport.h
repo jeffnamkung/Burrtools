@@ -54,14 +54,14 @@ class LView3dGroup;
 class LBlockListGroup;
 class ImageInfo;
 class image_c;
-class puzzle_c;
+class Puzzle;
 
 class imageExport_c : public LFl_Double_Window, public VoxelViewCallbacks {
 
   private:
 
     /* the puzzle that is going to be exported */
-    puzzle_c * puzzle;
+    Puzzle * puzzle;
 
     /* The different window elements */
     LView3dGroup *view3D;
@@ -99,16 +99,16 @@ class imageExport_c : public LFl_Double_Window, public VoxelViewCallbacks {
 
     void nextImage(bool finish);
 
-    voxelFrame_c::colorMode getColorMode(void) {
+    voxelFrame_c::colorMode getColorMode() {
       return (ColConst->value() == 1)?(voxelFrame_c::paletteColor):(voxelFrame_c::pieceColor);
     }
 
   public:
 
-    imageExport_c(puzzle_c * p);
+    imageExport_c(Puzzle * p);
 
     /* returns true, when there is currently a image export in progress */
-    bool isWorking(void) { return working; }
+    bool isWorking() { return working; }
 
     /* this must be called cyclically, this updates the buttons activation
      * status and also it sets up a new redraw cycle, and thus getting the next tile

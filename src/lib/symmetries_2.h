@@ -23,7 +23,7 @@
 
 #include "symmetries.h"
 
-class gridType_c;
+class GridType;
 
 /** this is the symmetries class for spheres.
  * Internally this class differs a bit from the other implementations

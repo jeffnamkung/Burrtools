@@ -57,7 +57,7 @@ static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> uniqueSymmetries[NUM_SYMMETR
 #include "tabs_2/uniquesym.inc"
 };
 
-symmetries_2_c::symmetries_2_c(void) {
+symmetries_2_c::symmetries_2_c() {
 }
 
 unsigned int symmetries_2_c::getNumTransformations(void) const { return NUM_TRANSFORMATIONS; }

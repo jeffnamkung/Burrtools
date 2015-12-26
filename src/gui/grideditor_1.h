@@ -23,7 +23,7 @@
 
 #include "grideditor.h"
 
-class puzzle_c;
+class Puzzle;
 
 /**
  * implements the grid editor functions for the triangle grid
@@ -46,7 +46,7 @@ private:
 
 public:
 
-  gridEditor_1_c(int x, int y, int w, int h, puzzle_c * p) : gridEditor_c(x, y, w, h, p) {}
+  gridEditor_1_c(int x, int y, int w, int h, Puzzle * p) : gridEditor_c(x, y, w, h, p) {}
 };
 
 #endif

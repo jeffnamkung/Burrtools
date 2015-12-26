@@ -28,7 +28,7 @@
 #include "assembly.h"
 #include "disassembly.h"
 
-disassembler_a_c::disassembler_a_c(const problem_c * puz) :
+disassembler_a_c::disassembler_a_c(const Problem * puz) :
   disassembler_c(), puzzle(puz) {
 
   /* initialize the grouping class */

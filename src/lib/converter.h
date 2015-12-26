@@ -21,15 +21,15 @@
 #ifndef __CONVERTER_H__
 #define __CONVERTER_H__
 
-#include "gridtype.h"
+#include "grid-type.h"
 
-class puzzle_c;
+class Puzzle;
 
 /**
  * returns true, if it is possible to convert this puzzle to the
  * given gridType
  */
-bool canConvert(gridType_c::gridType src, gridType_c::gridType dst);
+bool canConvert(GridType::gridType src, GridType::gridType dst);
 
 /**
  * Create a new puzzle with a new gridtype but identical shapes.
@@ -37,6 +37,6 @@ bool canConvert(gridType_c::gridType src, gridType_c::gridType dst);
  * If the conversion can't be done (you should check first with canConvert)
  * a NULL pointer will be returned
  */
-puzzle_c * doConvert(puzzle_c * p, gridType_c::gridType type);
+Puzzle * doConvert(Puzzle * p, GridType::gridType type);
 
 #endif

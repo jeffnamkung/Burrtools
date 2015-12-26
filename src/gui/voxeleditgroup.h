@@ -44,32 +44,32 @@ class VoxelEditGroup_c : public Fl_Group, public layoutable_c {
 
 public:
 
-  VoxelEditGroup_c(int x, int y, int w, int h, puzzle_c * puzzle, const guiGridType_c * ggt);
+  VoxelEditGroup_c(int x, int y, int w, int h, Puzzle * puzzle, const guiGridType_c * ggt);
 
-  void newGridType(const guiGridType_c * ggt, puzzle_c * puzzle);
+  void newGridType(const guiGridType_c * ggt, Puzzle * puzzle);
 
   void draw();
 
   void cb_Zselect(Fl_Slider* o);
 
   void setZ(unsigned int val);
-  int getZ(void) { return sqedit->getZ(); }
+  int getZ() { return sqedit->getZ(); }
 
-  void cb_Sqedit(void) { do_callback(this, user_data()); }
+  void cb_Sqedit() { do_callback(this, user_data()); }
 
-  int getReason(void) { return sqedit->getReason(); }
+  int getReason() { return sqedit->getReason(); }
 
-  bool getMouse(void) { return sqedit->getMouse(); }
+  bool getMouse() { return sqedit->getMouse(); }
 
-  int getMouseX1(void) { return sqedit->getMouseX1(); }
-  int getMouseY1(void) { return sqedit->getMouseY1(); }
-  int getMouseX2(void) { return sqedit->getMouseX2(); }
-  int getMouseY2(void) { return sqedit->getMouseY2(); }
-  int getMouseZ(void) { return sqedit->getMouseZ(); }
+  int getMouseX1() { return sqedit->getMouseX1(); }
+  int getMouseY1() { return sqedit->getMouseY1(); }
+  int getMouseX2() { return sqedit->getMouseX2(); }
+  int getMouseY2() { return sqedit->getMouseY2(); }
+  int getMouseZ() { return sqedit->getMouseZ(); }
 
-  void setPuzzle(puzzle_c * puzzle, unsigned int num);
+  void setPuzzle(Puzzle * puzzle, unsigned int num);
 
-  void clearPuzzle(void) {
+  void clearPuzzle() {
     sqedit->clearPuzzle();
   }
 
@@ -77,11 +77,11 @@ public:
     sqedit->setColor(num);
   }
 
-  void deactivate(void) {
+  void deactivate() {
     sqedit->deactivate();
   }
 
-  void activate(void) {
+  void activate() {
     sqedit->activate();
   }
 

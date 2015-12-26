@@ -28,7 +28,7 @@
 
 #include <stdlib.h>
 
-solution_c::solution_c(xmlParser_c & pars, unsigned int pieces, const gridType_c * gt) :
+solution_c::solution_c(xmlParser_c & pars, unsigned int pieces, const GridType * gt) :
   tree(0), treeInfo(0), assemblyNum(0), solutionNum(0)
 {
   pars.require(xmlParser_c::START_TAG, "solution");
@@ -112,7 +112,7 @@ void solution_c::save(xmlWriter_c & xml) const
   xml.endTag("solution");
 }
 
-solution_c::~solution_c(void) {
+solution_c::~solution_c() {
   if (tree)
     delete tree;
 

@@ -33,12 +33,12 @@
 
 static void cb_WindowButton_stub(Fl_Widget * /*o*/, void *v) { ((Fl_Double_Window*)(v))->hide(); }
 static void cb_WindowButton_stub2(Fl_Widget * /*o*/, void *v) { ((assmImportWindow_c*)(v))->okay_cb(); }
-void assmImportWindow_c::okay_cb(void) {
+void assmImportWindow_c::okay_cb() {
   _ok = true;
   hide();
 }
 
-assmImportWindow_c::assmImportWindow_c(const puzzle_c * puzzle) : LFl_Double_Window(false), _ok(false)
+assmImportWindow_c::assmImportWindow_c(const Puzzle * puzzle) : LFl_Double_Window(false), _ok(false)
 {
   if (puzzle->problemNumber() == 0)
   {
@@ -95,7 +95,7 @@ assmImportWindow_c::assmImportWindow_c(const puzzle_c * puzzle) : LFl_Double_Win
   ckDrpDisconnected->value(1);
   ckDrpMirror = new LFl_Check_Button("Drop shapes with mirror symmetry", 0, ypos++, 1, 1);
   ckDrpSymm = new LFl_Check_Button("Drop all shapes with a symmetry", 0, ypos++, 1, 1);
-  if (puzzle->getGridType()->getType() == gridType_c::GT_BRICKS)
+  if (puzzle->getGridType()->getType() == GridType::GT_BRICKS)
   {
     ckDrpMillable = new LFl_Check_Button("Drop non millable shapes", 0, ypos++, 1, 1);
     ckDrpNotchable = new LFl_Check_Button("Drop non notchable shapes", 0, ypos++, 1, 1);
@@ -141,10 +141,10 @@ assmImportWindow_c::assmImportWindow_c(const puzzle_c * puzzle) : LFl_Double_Win
 
 }
 
-int assmImportWindow_c::getSrcProblem(void) { return problemSelectorSrc->getSelection(); }
-int assmImportWindow_c::getDstProblem(void) { return problemSelectorDst->getSelection(); }
+int assmImportWindow_c::getSrcProblem() { return problemSelectorSrc->getSelection(); }
+int assmImportWindow_c::getDstProblem() { return problemSelectorDst->getSelection(); }
 
-int assmImportWindow_c::getAction(void) {
+int assmImportWindow_c::getAction() {
 
   if (rdDontAdd->value()) return A_DONT_ADD;
   if (rdAddNew->value()) return A_ADD_NEW;
@@ -167,9 +167,9 @@ unsigned int assmImportWindow_c::getFilter(void)
   return filter;
 }
 
-unsigned int assmImportWindow_c::getMin(void) { return atoi(min->value()); }
-unsigned int assmImportWindow_c::getMax(void) { return atoi(max->value()); }
+unsigned int assmImportWindow_c::getMin() { return atoi(min->value()); }
+unsigned int assmImportWindow_c::getMax() { return atoi(max->value()); }
 
-unsigned int assmImportWindow_c::getShapeMin(void) { return atoi(shapeMin->value()); }
-unsigned int assmImportWindow_c::getShapeMax(void) { return atoi(shapeMax->value()); }
+unsigned int assmImportWindow_c::getShapeMin() { return atoi(shapeMin->value()); }
+unsigned int assmImportWindow_c::getShapeMax() { return atoi(shapeMax->value()); }
 

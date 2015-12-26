@@ -169,7 +169,7 @@ class pixmapList_c {
 
   public:
 
-    pixmapList_c(void) {}
+    pixmapList_c() {}
 
     ~pixmapList_c(void);
 

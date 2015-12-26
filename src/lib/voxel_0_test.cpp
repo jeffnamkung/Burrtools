@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 #include "voxel_0.h"
-#include "gridtype.h"
+#include "grid-type.h"
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE( voxel_0_test )

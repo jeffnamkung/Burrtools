@@ -78,12 +78,12 @@ class bitfield_c {
     }
 
     /// set all bits to zero
-    void clear(void) {
+    void clear() {
       memset(field, 0, 8*((bits+63)/64));
     }
 
     /// check, if at least one bit is set to 1
-    bool notNull(void) {
+    bool notNull() {
       for (int i = 0; i < ((bits+63)/64); i++)
         if (field[i] > 0)
           return true;

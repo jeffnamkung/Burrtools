@@ -52,7 +52,7 @@ class thread_c {
     void kill();
 
     /** return true, if the thread is running */
-    bool isRunning(void) { return running; }
+    bool isRunning() { return running; }
 
   protected:
 

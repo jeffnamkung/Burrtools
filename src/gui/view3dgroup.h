@@ -41,12 +41,12 @@ public:
 
   void cb_slider(void);
 
-  double getZoom(void) { return slider->value(); }
+  double getZoom() { return slider->value(); }
   void setZoom(double v) { slider->value(v); cb_slider(); }
 
   void redraw(void);
 
-  voxelFrame_c * getView(void) { return View3D; }
+  voxelFrame_c * getView() { return View3D; }
 
   virtual void getMinSize(int * w, int *h) const {
     *w = 40;

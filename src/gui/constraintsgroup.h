@@ -40,7 +40,7 @@ class LConstraintsGroup_c : public Fl_Group, public layoutable_c {
   void cb_slider(void);
   void cb_list(void);
 
-  int getReason(void) { return callbackReason; }
+  int getReason() { return callbackReason; }
 
   virtual void getMinSize(int *width, int *height) const {
     *width = 30;

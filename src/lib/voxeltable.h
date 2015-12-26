@@ -21,7 +21,7 @@
 #ifndef __VOXEL_TABLE_H__
 #define __VOXEL_TABLE_H__
 
-class puzzle_c;
+class Puzzle;
 class voxel_c;
 
 /**
@@ -129,11 +129,11 @@ class voxelTablePuzzle_c : public voxelTable_c {
 
   private:
 
-    const puzzle_c * puzzle;
+    const Puzzle * puzzle;
 
   public:
 
-    voxelTablePuzzle_c(const puzzle_c * puz) : puzzle(puz) {}
+    voxelTablePuzzle_c(const Puzzle * puz) : puzzle(puz) {}
 
   protected:
 

@@ -27,7 +27,7 @@
 
 class voxel_c;
 class assembly_c;
-class problem_c;
+class Problem;
 class xmlWriter_c;
 
 /**
@@ -38,17 +38,15 @@ class xmlWriter_c;
  * method inside this class. I decided to use this approach because
  * inheritance doesn't allow to change the actions to be taken quickly
  */
-class assembler_cb {
-
-public:
+class AssemblerCallbackInterface {
+ public:
+  virtual ~AssemblerCallbackInterface() = default;
 
   /* this function gets called once for every assembly
    * found by an assembler. It gets the found assembly
    * as parameter
    */
-  virtual bool assembly(assembly_c * a) = 0;
-
-  virtual ~assembler_cb(void) {}
+  virtual bool assembly(assembly_c *a) = 0;
 };
 
 /**
@@ -60,7 +58,7 @@ public:
  * But all must provide the same interface: as describes here. All must
  * use the callback for each found assembly.
  */
-class assembler_c {
+class AssemblerInterface {
 
 public:
 
@@ -78,22 +76,22 @@ public:
   /**
    * initialisation, only the things that can be done quickly are done here
    */
-  assembler_c(void) {}
+  AssemblerInterface() {}
 
-  virtual ~assembler_c(void) { }
+  virtual ~AssemblerInterface() { }
 
   /**
    * the part of the initialisation that may take a while.
    * when keep mirror is true, the assembler must not throw away mirror solutions
    * but it still removes solutions that are rotations.
    */
-  virtual errState createMatrix(const problem_c * /*puz*/, bool /*keepMirror*/, bool /*keepRotations*/, bool /*complete*/);
+  virtual errState createMatrix(const Problem * /*puz*/, bool /*keepMirror*/, bool /*keepRotations*/, bool /*complete*/);
 
   /**
    * when createMatrix returns an error you can call this function to
    * find out which piece is involved, or other additional information
    */
-  virtual int getErrorsParam(void) { return 0; }
+  virtual int getErrorsParam() const = 0;
 
   /**
    * Try to optimize piece placement.
@@ -104,7 +102,7 @@ public:
    *
    * it is not necessary for an assembler to implement this function
    */
-  virtual void reduce(void) { }
+  virtual void reduce() { }
 
   /**
    * Then running in an extra thread it is possible to find out which piece is worked on by reduce.
@@ -123,14 +121,14 @@ public:
    * call stop to make the assembly thread stop working. It will then return
    * from this function but can be resumed any time
    */
-  virtual void assemble(assembler_cb * /*callback*/) {}
+  virtual void assemble(AssemblerCallbackInterface * /*callback*/) {}
 
   /**
    * this function returns a number reflecting the complexity of the
    * puzzle. This could be the number of placements tried, or
    * some other value
    */
-  virtual unsigned long getIterations(void) { return 0; }
+  virtual unsigned long getIterations() { return 0; }
 
   /**
    * a function that returns the finished percentage in the range
@@ -140,7 +138,7 @@ public:
   virtual float getFinished(void) const { return 0; }
 
   /** stops the assembly process sometimes in the near future. */
-  virtual void stop(void) {}
+  virtual void stop() {}
 
   /** returns true, as soon as the process really has stopped */
   virtual bool stopped(void) const { return false; }
@@ -195,8 +193,8 @@ public:
 private:
 
     // no copying and assigning
-    assembler_c(const assembler_c&);
-    void operator=(const assembler_c&);
+    AssemblerInterface(const AssemblerInterface &);
+    void operator=(const AssemblerInterface &);
 
 };
 

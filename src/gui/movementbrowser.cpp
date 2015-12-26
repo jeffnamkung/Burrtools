@@ -58,10 +58,10 @@ class AddMovementDialog : public LFl_Double_Window {
       hide();
     }
 
-    AddMovementDialog(movementCache_c * c, const std::vector<unsigned int> & pieces, const problem_c * puz);
+    AddMovementDialog(movementCache_c * c, const std::vector<unsigned int> & pieces, const Problem * puz);
 
 
-    unsigned int getDir(void) {
+    unsigned int getDir() {
       for (unsigned int i = 0; i < dirs.size(); i++)
         if (dirs[i]->value())
           return i;
@@ -74,13 +74,13 @@ class AddMovementDialog : public LFl_Double_Window {
       return pces[i]->value() != 0;
     }
 
-    bool done(void) { return donePressed; }
+    bool done() { return donePressed; }
 };
 
 static void cb_BtnDone_stub(Fl_Widget* /*o*/, void* v) { ((AddMovementDialog*)v)->cb_Buttons(0); }
 static void cb_BtnCancel_stub(Fl_Widget* /*o*/, void* v) { ((AddMovementDialog*)v)->cb_Buttons(1); }
 
-AddMovementDialog::AddMovementDialog(movementCache_c * c, const std::vector<unsigned int> & pieces, const problem_c * puz) : LFl_Double_Window(false) {
+AddMovementDialog::AddMovementDialog(movementCache_c * c, const std::vector<unsigned int> & pieces, const Problem * puz) : LFl_Double_Window(false) {
 
   layouter_c * o = new layouter_c(0, 0, 1, 1);
 
@@ -248,7 +248,7 @@ LTreeBrowser::Node * movementBrowser_c::addNode(LTreeBrowser::Node *nd, disassem
 }
 
 static void cb_NodeChange_stub(Fl_Widget* /*o*/, void* v) { ((movementBrowser_c*)v)->cb_NodeChange(); }
-void movementBrowser_c::cb_NodeChange(void) {
+void movementBrowser_c::cb_NodeChange() {
 
   if (tree->callback_reason() != FLU_SELECTED) return;
   if (!tree->get_selected(1)) return;
@@ -263,7 +263,7 @@ void movementBrowser_c::cb_NodeChange(void) {
 }
 
 static void cb_Prune_stub(Fl_Widget* /*o*/, void* v) { ((movementBrowser_c*)v)->cb_Prune(); }
-void movementBrowser_c::cb_Prune(void) {
+void movementBrowser_c::cb_Prune() {
 
   LTreeBrowser::Node * nd = tree->get_selected(1);
 
@@ -286,7 +286,7 @@ void movementBrowser_c::cb_Prune(void) {
 }
 
 static void cb_AddMovement_stub(Fl_Widget* /*o*/, void* v) { ((movementBrowser_c*)v)->cb_AddMovement(); }
-void movementBrowser_c::cb_AddMovement(void) {
+void movementBrowser_c::cb_AddMovement() {
 
   LTreeBrowser::Node * nd = tree->get_selected(1);
   if (!nd) return;
@@ -381,7 +381,7 @@ void movementBrowser_c::selectSpecificMovement(unsigned int piece, int x, int y,
 }
 
 static void cb_StepBack_stub(Fl_Widget* /*o*/, void* v) { ((movementBrowser_c*)v)->cb_StepBack(); }
-void movementBrowser_c::cb_StepBack(void) {
+void movementBrowser_c::cb_StepBack() {
   LTreeBrowser::Node * nd = tree->get_selected(1);
   if (!nd) return;
   LTreeBrowser::Node * pn = nd->parent();
@@ -416,7 +416,7 @@ void movementBrowser_c::cb_NodeAnalyze(unsigned int level) {
 }
 
 static void cb_3dClick_movementBrowser_stub(Fl_Widget* /*o*/, void * v) { ((movementBrowser_c*)v)->cb_3dClick(); }
-void movementBrowser_c::cb_3dClick(void) {
+void movementBrowser_c::cb_3dClick() {
   if (Fl::event_shift() || Fl::event_ctrl()) {
 
     // determine the shape and face clicked
@@ -462,7 +462,7 @@ void movementBrowser_c::cb_3dClick(void) {
 }
 
 
-movementBrowser_c::movementBrowser_c(problem_c * puzzle, unsigned int solNum) : LFl_Double_Window(true) , puz(puzzle) {
+movementBrowser_c::movementBrowser_c(Problem * puzzle, unsigned int solNum) : LFl_Double_Window(true) , puz(puzzle) {
 
   LFl_Tile * tile = new LFl_Tile(0, 0, 1, 1);
 

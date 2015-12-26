@@ -27,8 +27,8 @@
 #include <set>
 #include <stack>
 
-class problem_c;
-class gridType_c;
+class Problem;
+class GridType;
 class mirrorInfo_c;
 
 /**
@@ -44,11 +44,11 @@ class mirrorInfo_c;
  * end it is getting very fast and the time-left value dropping really fast.
  */
 
-class assembler_1_c : public assembler_c {
+class WeiHwaHuangAssembler : public AssemblerInterface {
 
 protected:
 
-  const problem_c * puzzle;
+  const Problem * puzzle;
 
 private:
 
@@ -145,7 +145,7 @@ private:
   unsigned int piecenumber;
 
   /* the message object that gets called with the solutions as param */
-  assembler_cb * asm_bc;
+  AssemblerCallbackInterface * asm_bc;
 
   /* this vector contains the placement (transformation and position) for
    * a piece in a row
@@ -228,9 +228,9 @@ protected:
    * information you need to call the callback of the user, use this function to get the
    * callback class
    */
-  assembler_cb * getCallback(void) { return asm_bc; }
+  AssemblerCallbackInterface * getCallback() { return asm_bc; }
 
-  unsigned int getPiecenumber(void) { return piecenumber; }
+  unsigned int getPiecenumber() { return piecenumber; }
 
   /* call this function if you think that there might be
    * rotated assemblies found. Here a description of how the whole aspect of
@@ -248,15 +248,18 @@ protected:
 
 public:
 
-  assembler_1_c(void);
-  ~assembler_1_c(void);
+  WeiHwaHuangAssembler(void);
+  ~WeiHwaHuangAssembler(void);
 
-  /* functions that are overloaded from assembler_c, for comments see there */
-  errState createMatrix(const problem_c * puz, bool keepMirror, bool keepRotations, bool complete);
-  void assemble(assembler_cb * callback);
-  int getErrorsParam(void) { return errorsParam; }
+  /* functions that are overloaded from AssemblerInterface, for comments see there */
+  errState createMatrix(const Problem * puz, bool keepMirror, bool keepRotations, bool complete);
+  void assemble(AssemblerCallbackInterface * callback);
+
+  // See AssemblerInterface.
+  int getErrorsParam() const override { return errorsParam; }
+
   virtual float getFinished(void) const;
-  virtual void stop(void) { abbort = true; }
+  virtual void stop() { abbort = true; }
   virtual bool stopped(void) const { return !running; }
   virtual errState setPosition(const char * string, const char * version);
   virtual void save(xmlWriter_c & xml) const;
@@ -265,19 +268,19 @@ public:
   void debug_step(unsigned long num = 1);
   assembly_c * getAssembly(void);
 
-  static bool canHandle(const problem_c * p);
+  static bool canHandle(const Problem * p);
 
   /* some more special information to find out possible piece placements */
   bool getPiecePlacementSupported(void) const { return true; }
   unsigned int getPiecePlacement(unsigned int node, int delta, unsigned int piece, unsigned char *tran, int *x, int *y, int *z) const;
   unsigned int getPiecePlacementCount(unsigned int piece) const;
-  unsigned long getIterations(void) { return iterations; }
+  unsigned long getIterations() { return iterations; }
 
 private:
 
   // no copying and assigning
-  assembler_1_c(const assembler_1_c&);
-  void operator=(const assembler_1_c&);
+  WeiHwaHuangAssembler(const WeiHwaHuangAssembler &);
+  void operator=(const WeiHwaHuangAssembler &);
 };
 
 #endif

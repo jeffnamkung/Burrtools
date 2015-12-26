@@ -325,7 +325,7 @@ fixedPositions_c::fixedPositions_c(const fixedPositions_c * nd) {
   }
 }
 
-fixedPositions_c::~fixedPositions_c(void) {
+fixedPositions_c::~fixedPositions_c() {
   delete [] x;
   delete [] y;
   delete [] z;

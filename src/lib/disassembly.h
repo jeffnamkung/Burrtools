@@ -42,8 +42,8 @@ class disassembly_c
 
   public:
 
-    disassembly_c(void) {}
-    virtual ~disassembly_c(void) {}
+    disassembly_c() {}
+    virtual ~disassembly_c() {}
 
     /**
      * the number of moves to completely disassemble the puzzle, including

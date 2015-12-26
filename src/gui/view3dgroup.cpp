@@ -34,7 +34,7 @@
 
 static void cb_View3dGroupSlider_stub(Fl_Widget* o, void* /*v*/) { ((LView3dGroup*)(o->parent()))->cb_slider(); }
 
-void LView3dGroup::cb_slider(void) {
+void LView3dGroup::cb_slider() {
   View3D->setSize(exp(6-slider->value()));
 }
 

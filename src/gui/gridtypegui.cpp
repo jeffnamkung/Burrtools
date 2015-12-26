@@ -24,12 +24,12 @@
 #include "guigridtype.h"
 #include "Layouter.h"
 
-#include "../lib/gridtype.h"
+#include "grid-type.h"
 
 #include <FL/Fl_Browser_.H>
 #include <FL/Fl_Image.H>
 
-gridTypeGui_0_c::gridTypeGui_0_c(int x, int y, int w, int h, gridType_c * /*gt*/) {
+gridTypeGui_0_c::gridTypeGui_0_c(int x, int y, int w, int h, GridType * /*gt*/) {
 
   new LFl_Box("In a distant future there might be parameters\n"
       "to stretch and shear the cube into a parallelepiped\n"
@@ -38,14 +38,14 @@ gridTypeGui_0_c::gridTypeGui_0_c(int x, int y, int w, int h, gridType_c * /*gt*/
   end();
 }
 
-gridTypeGui_1_c::gridTypeGui_1_c(int x, int y, int w, int h, gridType_c * /*gt*/) {
+gridTypeGui_1_c::gridTypeGui_1_c(int x, int y, int w, int h, GridType * /*gt*/) {
   new LFl_Box("There are no parameters for this space grid!\n"
       "This space grid also has no disassembler (yet)", x, y, w, h);
 
   end();
 }
 
-gridTypeGui_2_c::gridTypeGui_2_c(int x, int y, int w, int h, gridType_c * /*gt*/) {
+gridTypeGui_2_c::gridTypeGui_2_c(int x, int y, int w, int h, GridType * /*gt*/) {
 
   new LFl_Box("There are no parameters for this space grid!\n"
       "This space grid has no disassembler", x, y, w, h);
@@ -57,12 +57,12 @@ gridTypeGui_2_c::gridTypeGui_2_c(int x, int y, int w, int h, gridType_c * /*gt*/
 class gridTypeInfos_c {
   public:
 
-    gridType_c * gt;
+    GridType * gt;
     guiGridType_c * ggt;
     LFl_Radio_Button * btn;
     gridTypeGui_c * gui;
 
-    gridTypeInfos_c(gridType_c * g) : gt(g), ggt(new guiGridType_c(g)) {}
+    gridTypeInfos_c(GridType * g) : gt(g), ggt(new guiGridType_c(g)) {}
 };
 
 static void cb_WindowButton_stub(Fl_Widget * /*o*/, void *v) { ((Fl_Double_Window*)(v))->hide(); }
@@ -78,7 +78,7 @@ gridTypeParameterWindow_c::gridTypeParameterWindow_c(guiGridType_c * ggt) : LFl_
 }
 
 static void cb_gridTypeSelectorSelect_stub(Fl_Widget * /*o*/, void *v) { ((gridTypeSelectorWindow_c*)(v))->select_cb(); }
-void gridTypeSelectorWindow_c::select_cb(void) {
+void gridTypeSelectorWindow_c::select_cb() {
   for (unsigned int i = 0; i < gti.size(); i++) {
     if (gti[i]->btn->value()) {
 
@@ -97,8 +97,8 @@ gridTypeSelectorWindow_c::gridTypeSelectorWindow_c(void) : LFl_Double_Window(fal
    * vector. This vector will be later on the one
    * with all required information
    */
-  for (int i = 0; i < gridType_c::GT_NUM_GRIDS; i++)
-    gti.push_back(new gridTypeInfos_c(new gridType_c(gridType_c::gridType(i))));
+  for (int i = 0; i < GridType::GT_NUM_GRIDS; i++)
+    gti.push_back(new gridTypeInfos_c(new GridType(GridType::gridType(i))));
 
   /* from here on the code should not need changes when new grid types are added */
 
@@ -159,7 +159,7 @@ gridTypeSelectorWindow_c::gridTypeSelectorWindow_c(void) : LFl_Double_Window(fal
   current = 0;
 }
 
-gridTypeSelectorWindow_c::~gridTypeSelectorWindow_c(void) {
+gridTypeSelectorWindow_c::~gridTypeSelectorWindow_c() {
   for (unsigned int i = 0; i < gti.size(); i++) {
     if (gti[i]->gt)
       delete gti[i]->gt;
@@ -169,8 +169,8 @@ gridTypeSelectorWindow_c::~gridTypeSelectorWindow_c(void) {
 }
 
 
-gridType_c * gridTypeSelectorWindow_c::getGridType(void) {
-  gridType_c * tmp = gti[current]->gt;
+GridType * gridTypeSelectorWindow_c::getGridType() {
+  GridType * tmp = gti[current]->gt;
   gti[current]->gt = 0;
   return tmp;
 }

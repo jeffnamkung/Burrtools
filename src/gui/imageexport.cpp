@@ -54,7 +54,7 @@ class ImageInfo {
     // the parameters to set up the image
     functions setupFunction;
 
-    puzzle_c * puzzle;
+    Puzzle * puzzle;
 
     // parameters for single
     unsigned int shape;
@@ -78,17 +78,17 @@ class ImageInfo {
   public:
 
     /* create image info to create a single shape image */
-    ImageInfo(puzzle_c * p, voxelFrame_c::colorMode color,
-        unsigned int s, voxelFrame_c * v) : setupFunction(SHOW_SINGLE), puzzle(p),
+    ImageInfo(Puzzle * p, voxelFrame_c::colorMode color,
+              unsigned int s, voxelFrame_c * v) : setupFunction(SHOW_SINGLE), puzzle(p),
                                           shape(s), showColors(color),
                                           i(new image_c(600, 200)), i2(0), vv(v) { }
 
     /* image info for an assembly, if you don't give pos, you will get the standard assembly with
      * no piece shifted
      */
-    ImageInfo(puzzle_c * p, voxelFrame_c::colorMode color, unsigned int prob,
-        unsigned int sol, voxelFrame_c * v,
-        disasmToMoves_c * pos = 0, bool d = false) : setupFunction(SHOW_ASSEMBLY), puzzle(p),
+    ImageInfo(Puzzle * p, voxelFrame_c::colorMode color, unsigned int prob,
+              unsigned int sol, voxelFrame_c * v,
+              disasmToMoves_c * pos = 0, bool d = false) : setupFunction(SHOW_ASSEMBLY), puzzle(p),
                                                    showColors(color), problem(prob),
                                                    solution(sol), dim(d), positions(pos),
                                                    i(new image_c(600, 200)),
@@ -109,13 +109,13 @@ class ImageInfo {
     bool getPreviewImage(void);
 
     /* get the width / height ratio of the preview image */
-    double ratio(void) { return ((double)(i->w()))/i->h(); }
+    double ratio() { return ((double)(i->w()))/i->h(); }
 
     /* start a new image */
     void generateImage(unsigned int w, unsigned int h, unsigned char aa);
 
     /* returns true, if the image has been started */
-    bool imageStarted(void) { return i2; }
+    bool imageStarted() { return i2; }
 
     /* prepare for a new tile of the image */
     void prepareImage(void);
@@ -124,7 +124,7 @@ class ImageInfo {
     image_c * getImage(void);
 };
 
-void ImageInfo::setupContent(void) {
+void ImageInfo::setupContent() {
 
   switch (setupFunction) {
     case SHOW_SINGLE:
@@ -145,7 +145,7 @@ void ImageInfo::setupContent(void) {
 }
 
 /* preparation to get a tile for the preview image */
-void ImageInfo::preparePreviewImage(void) {
+void ImageInfo::preparePreviewImage() {
 
   setupContent();
   i->prepareOpenGlImagePart(vv);
@@ -153,7 +153,7 @@ void ImageInfo::preparePreviewImage(void) {
 }
 
 /* get a tile of the preview image */
-bool ImageInfo::getPreviewImage(void) {
+bool ImageInfo::getPreviewImage() {
 
   if (!i->getOpenGlImagePart()) {
 
@@ -174,7 +174,7 @@ void ImageInfo::generateImage(unsigned int /*w*/, unsigned int h, unsigned char 
 }
 
 /* prepare for a new tile of the image */
-void ImageInfo::prepareImage(void) {
+void ImageInfo::prepareImage() {
 
   setupContent();
   i2->prepareOpenGlImagePart(vv);
@@ -182,7 +182,7 @@ void ImageInfo::prepareImage(void) {
 }
 
 /* get a new tile for the image */
-image_c * ImageInfo::getImage(void) {
+image_c * ImageInfo::getImage() {
 
   if (!i2->getOpenGlImagePart()) {
 
@@ -200,11 +200,11 @@ image_c * ImageInfo::getImage(void) {
 
 
 static void cb_ImageExportAbort_stub(Fl_Widget* /*o*/, void* v) { ((imageExport_c*)(v))->cb_Abort(); }
-void imageExport_c::cb_Abort(void) {
+void imageExport_c::cb_Abort() {
   hide();
 }
 
-bool imageExport_c::PreDraw(void) {
+bool imageExport_c::PreDraw() {
 
   static char statText[50];
 
@@ -279,7 +279,7 @@ void imageExport_c::nextImage(bool finish) {
   }
 }
 
-void imageExport_c::PostDraw(void) {
+void imageExport_c::PostDraw() {
 
   switch(state) {
     case 0:
@@ -402,7 +402,7 @@ void imageExport_c::PostDraw(void) {
 
 
 static void cb_ImageExportExport_stub(Fl_Widget* /*o*/, void* v) { ((imageExport_c*)(v))->cb_Export(); }
-void imageExport_c::cb_Export(void) {
+void imageExport_c::cb_Export() {
 
   /* this vector contains all the information of all images that need to appear in the output */
   images.clear();
@@ -420,7 +420,7 @@ void imageExport_c::cb_Export(void) {
   } else if (ExpSolutionDisassm->value()) {
 
     unsigned int prob = ProblemSelect->getSelection();
-    problem_c * pr = puzzle->getProblem(prob);
+    Problem * pr = puzzle->getProblem(prob);
 
     // generate an image for each step (for the moment only for the last solution)
     unsigned int s = pr->solutionNumber() - 1;
@@ -437,7 +437,7 @@ void imageExport_c::cb_Export(void) {
   } else if (ExpSolution->value()) {
 
     unsigned int prob = ProblemSelect->getSelection();
-    problem_c * pr = puzzle->getProblem(prob);
+    Problem * pr = puzzle->getProblem(prob);
 
     // generate an image for each step (for the moment only for the last solution)
     unsigned int s = pr->solutionNumber() - 1;
@@ -459,7 +459,7 @@ void imageExport_c::cb_Export(void) {
   } else if (ExpProblem->value()) {
     // generate an image for each piece in the problem
     unsigned int prob = ProblemSelect->getSelection();
-    problem_c * pr = puzzle->getProblem(prob);
+    Problem * pr = puzzle->getProblem(prob);
 
     if (pr->resultValid())
       images.push_back(new ImageInfo(puzzle, getColorMode(),
@@ -483,13 +483,13 @@ void imageExport_c::cb_Export(void) {
 }
 
 static void cb_ImageExport3DUpdate_stub(Fl_Widget* /*o*/, void* v) { ((imageExport_c*)(v))->cb_Update3DView(); }
-void imageExport_c::cb_Update3DView(void) {
+void imageExport_c::cb_Update3DView() {
 
   bool assemblies = false;
   bool solutions = false;
 
   unsigned int prob = ProblemSelect->getSelection();
-  problem_c * pr = puzzle->getProblem(prob);
+  Problem * pr = puzzle->getProblem(prob);
 
   if (prob < puzzle->problemNumber())
     if (pr->solutionNumber() > 0) {
@@ -541,7 +541,7 @@ void imageExport_c::cb_Update3DView(void) {
 }
 
 static void cb_ImageExportSzUpdate_stub(Fl_Widget * /*o*/, void *v) { ((imageExport_c*)(v))->cb_SzUpdate(); }
-void imageExport_c::cb_SzUpdate(void) {
+void imageExport_c::cb_SzUpdate() {
 
   if (SzA4Land->value()) {
     SzX->value("297");
@@ -578,7 +578,7 @@ void imageExport_c::cb_SzUpdate(void) {
   }
 }
 
-imageExport_c::imageExport_c(puzzle_c * p) : LFl_Double_Window(false), puzzle(p), working(false), state(0), i(0) {
+imageExport_c::imageExport_c(Puzzle * p) : LFl_Double_Window(false), puzzle(p), working(false), state(0), i(0) {
 
   label("Export Images");
 
@@ -770,7 +770,7 @@ imageExport_c::imageExport_c(puzzle_c * p) : LFl_Double_Window(false), puzzle(p)
   set_modal();
 }
 
-void imageExport_c::update(void) {
+void imageExport_c::update() {
   if (working) {
     BtnStart->deactivate();
     BtnAbbort->deactivate();

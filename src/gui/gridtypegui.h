@@ -24,7 +24,7 @@
 
 #include "Layouter.h"
 
-class gridType_c;
+class GridType;
 class guiGridType_c;
 
 /* this is a fltk group that contains all elements to change the
@@ -41,21 +41,21 @@ class gridTypeGui_0_c : public gridTypeGui_c {
 
   public:
 
-    gridTypeGui_0_c(int x, int y, int w, int h, gridType_c * gt);
+    gridTypeGui_0_c(int x, int y, int w, int h, GridType * gt);
 };
 
 class gridTypeGui_1_c : public gridTypeGui_c {
 
   public:
 
-    gridTypeGui_1_c(int x, int y, int w, int h, gridType_c * gt);
+    gridTypeGui_1_c(int x, int y, int w, int h, GridType * gt);
 };
 
 class gridTypeGui_2_c : public gridTypeGui_c {
 
   public:
 
-    gridTypeGui_2_c(int x, int y, int w, int h, gridType_c * gt);
+    gridTypeGui_2_c(int x, int y, int w, int h, GridType * gt);
 };
 
 /* this window allows you to edit the parameters of one
@@ -94,7 +94,7 @@ class gridTypeSelectorWindow_c : public LFl_Double_Window {
 
     /* after the window has been close you can get the created grid type with this function
      */
-    gridType_c * getGridType(void);
+    GridType * getGridType(void);
 
 
     void select_cb(void);

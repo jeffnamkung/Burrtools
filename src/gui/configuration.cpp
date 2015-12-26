@@ -34,7 +34,7 @@
 #include "../lua/luaclass.h"
 
 
-static FILE *create_local_config_file(void) {
+static FILE *create_local_config_file() {
 
   char n[200];
   snprintf(n, 199, "%s.burrtools.rc", homedir().c_str());
@@ -126,7 +126,7 @@ void configuration_c::register_entry(const char *cnf_name, cnf_type cnf_typ, voi
 #define CNF_CHAR_D(a,b,c,text, def) register_entry(a, CT_STRING, b, c, true, text, def)
 #define CNF_INT_D(a,b,text, def) register_entry(a, CT_INT, b, 0, true, text, def)
 
-configuration_c::configuration_c(void) {
+configuration_c::configuration_c() {
 
   first_data = 0;
 
@@ -144,7 +144,7 @@ configuration_c::configuration_c(void) {
   parse();
 }
 
-configuration_c::~configuration_c(void) {
+configuration_c::~configuration_c() {
 
   FILE * f = create_local_config_file();
 
@@ -188,7 +188,7 @@ configuration_c::~configuration_c(void) {
 
 static void cb_ConfigDialog_stub(Fl_Widget* /*o*/, void* v) { ((Fl_Double_Window*)v)->hide(); }
 
-void configuration_c::dialog(void) {
+void configuration_c::dialog() {
 
   LFl_Double_Window * win = new LFl_Double_Window(false);
 

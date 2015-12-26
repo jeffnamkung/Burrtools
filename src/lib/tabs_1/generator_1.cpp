@@ -69,7 +69,7 @@ unsigned char ssss(unsigned int trans, unsigned long long s) {
 
 
 /* this function creates the lookup table for the function in the symmetry c-file */
-void outputMinimumSymmetries(void) {
+void outputMinimumSymmetries() {
 
   FILE * out = fopen("transformmini.inc", "w");
 
@@ -94,7 +94,7 @@ void outputMinimumSymmetries(void) {
 * are set that where the shape reproduces itself in one of the 48 possible
 * rotations
 */
-void outputCompleteSymmetries(void) {
+void outputCompleteSymmetries() {
 
   FILE * fout = fopen("unifiedsym.inc", "w");
 
@@ -182,7 +182,7 @@ void makeSymmetryTree(unsigned long long taken, unsigned long long val, FILE * o
 /* this function only one bit is set for each possible transformation that results in one possible orientation
  * of the shape
  */
-void outputUniqueSymmetries(void) {
+void outputUniqueSymmetries() {
 
   FILE * fout = fopen("uniquesym.inc", "w");
 
@@ -242,7 +242,7 @@ bool mequal(double *m, int num) {
 }
 
 
-void multTranformationsMatrix(void) {
+void multTranformationsMatrix() {
 
   FILE * out = fopen("transmult.inc", "w");
 

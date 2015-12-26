@@ -28,7 +28,7 @@
 #include "buttongroup.h"
 
 #include "../lib/puzzle.h"
-#include "../lib/gridtype.h"
+#include "grid-type.h"
 #include "../lib/bt_assert.h"
 #include "../lib/voxel.h"
 
@@ -54,13 +54,13 @@ class inputField_c
 
 static void cb_stlExportAbort_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)(v))->cb_Abort(); }
 
-void stlExport_c::cb_Abort(void) {
+void stlExport_c::cb_Abort() {
   hide();
 }
 
 static void cb_stlExportExport_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)(v))->cb_Export(); }
 
-void stlExport_c::cb_Export(void) {
+void stlExport_c::cb_Export() {
 
   exportSTL(ShapeSelect->getSelection());
 
@@ -206,7 +206,7 @@ void stlExport_c::cb_3dClick(void)
   }
 }
 
-stlExport_c::stlExport_c(puzzle_c * p) : LFl_Double_Window(true), puzzle(p) {
+stlExport_c::stlExport_c(Puzzle * p) : LFl_Double_Window(true), puzzle(p) {
 
   label("Export STL");
 

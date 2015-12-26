@@ -34,7 +34,7 @@ static void cb_close_stub(Fl_Widget* /*o*/, void* v) { ((placementBrowser_c*)v)-
 static void cb_piece_stub(Fl_Widget* /*o*/, void* v) { ((placementBrowser_c*)v)->cb_piece(); }
 static void cb_placement_stub(Fl_Widget* o, void* v) { ((placementBrowser_c*)v)->cb_placement((Fl_Value_Slider*)o); }
 
-void placementBrowser_c::cb_piece(void) {
+void placementBrowser_c::cb_piece() {
 
   placementSelector->value(0);
 
@@ -76,7 +76,7 @@ void placementBrowser_c::cb_placement(Fl_Value_Slider* o) {
 }
 
 
-placementBrowser_c::placementBrowser_c(problem_c * p) :
+placementBrowser_c::placementBrowser_c(Problem * p) :
   LFl_Double_Window(true), puzzle(p) {
 
   bt_assert(puzzle->getAssembler());

@@ -34,7 +34,7 @@ voxelTable_c::voxelTable_c(void)
   tableEntries = 0;
 }
 
-voxelTable_c::~voxelTable_c(void) {
+voxelTable_c::~voxelTable_c() {
 
   for (unsigned int i = 0; i < tableSize; i++) {
     while (hashTable[i]) {

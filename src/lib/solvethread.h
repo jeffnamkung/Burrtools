@@ -28,13 +28,13 @@
 
 #include <time.h>
 
-class problem_c;
+class Problem;
 
 /* this class will handle the solving of one problem of the puzzle, it can also
  * be used to continue an already started solution, so that you can save you results
  * and continue later on
  */
-class solveThread_c : public assembler_cb, public thread_c {
+class solveThread_c : public AssemblerCallbackInterface, public thread_c {
 
   public:
 
@@ -56,23 +56,23 @@ class solveThread_c : public assembler_cb, public thread_c {
 
   public:
     /* return the current activity */
-    unsigned int currentAction(void) { return action; }
+    unsigned int currentAction() { return action; }
 
     /* some activities might have a parameter, return that */
     unsigned int currentActionParameter(void);
 
   private:
 
-    assembler_c::errState errState;
+    AssemblerInterface::errState errState;
     int errParam;
 
   public:
 
-    assembler_c::errState getErrorState(void) {
+    AssemblerInterface::errState getErrorState() {
       bt_assert(action == ACT_ERROR);
       return errState;
     }
-    int getErrorParam(void) {
+    int getErrorParam() {
       bt_assert(action == ACT_ERROR);
       return errParam;
     }
@@ -84,11 +84,11 @@ class solveThread_c : public assembler_cb, public thread_c {
   public:
 
     /* how much time has passed since calling start */
-    unsigned long getTime(void) { return time(0) - startTime; }
+    unsigned long getTime() { return time(0) - startTime; }
 
   private:
 
-    problem_c * puzzle;
+    Problem * puzzle;
     int parameters;
 
   public:
@@ -102,8 +102,8 @@ class solveThread_c : public assembler_cb, public thread_c {
     static const int PAR_COMPLETE_ROTATIONS = 0x40;  // do a thorough rotation check
 
     // create all the necessary data structures to start the thread later on
-    solveThread_c(problem_c * puz, int par);
-    const problem_c * getProblem(void) const { return puzzle; }
+    solveThread_c(Problem * puz, int par);
+    const Problem * getProblem(void) const { return puzzle; }
 
   private:
 
@@ -145,7 +145,7 @@ class solveThread_c : public assembler_cb, public thread_c {
 
   public:
 
-    const assert_exception & getAssertException(void) {
+    const assert_exception & getAssertException() {
       return ae;
     }
 
@@ -159,7 +159,7 @@ class solveThread_c : public assembler_cb, public thread_c {
 
 
   disassembler_c * disassm;
-  assembler_c * assm;
+  AssemblerInterface * assm;
 
 
 

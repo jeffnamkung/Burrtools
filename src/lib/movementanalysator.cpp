@@ -26,7 +26,7 @@
 #include "disassemblernode.h"
 #include "voxel.h"
 #include "disassemblerhashes.h"
-#include "gridtype.h"
+#include "grid-type.h"
 
 #include <string.h>
 
@@ -35,7 +35,7 @@
  * pairs of pieces
  * this is done using the movement cache
  */
-void movementAnalysator_c::prepare(void) {
+void movementAnalysator_c::prepare() {
 
   unsigned int * idx = matrix;
 
@@ -302,7 +302,7 @@ bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int ne
   return true;
 }
 
-movementAnalysator_c::movementAnalysator_c(const problem_c * puz) :
+movementAnalysator_c::movementAnalysator_c(const Problem * puz) :
   piecenumber(puz->pieceNumber()), maxstep((unsigned int) -1) {
 
   cache = puz->getGridType()->getMovementCache(puz);
@@ -527,7 +527,7 @@ void movementAnalysator_c::init_find(disassemblerNode_c * nd, const std::vector<
  * the next thing to do is to check if something can be removed, and finally we look for longer
  * movements in the actual direction
  */
-disassemblerNode_c * movementAnalysator_c::find(void) {
+disassemblerNode_c * movementAnalysator_c::find() {
 
   disassemblerNode_c * n = 0;
 

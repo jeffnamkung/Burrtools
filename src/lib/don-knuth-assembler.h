@@ -27,7 +27,7 @@
 #include <set>
 #include <stack>
 
-class gridType_c;
+class GridType;
 class mirrorInfo_c;
 
 /**
@@ -39,11 +39,11 @@ class mirrorInfo_c;
  * All involved pieces must be there exactly one time. But in that case it is a bit
  * faster than assembler_1.
  */
-class assembler_0_c : public assembler_c {
+class DonKnuthAssembler : public AssemblerInterface {
 
 protected:
 
-  const problem_c * puzzle;
+  const Problem * puzzle;
 
 private:
 
@@ -170,7 +170,7 @@ private:
   unsigned int piecenumber;
 
   /* the message object that gets called with the solutions as param */
-  assembler_cb * asm_bc;
+  AssemblerCallbackInterface * asm_bc;
 
   /* this value contains the piecenumber that the reduce procedure is currently working on
    * the value is only valid, when reduce is running
@@ -249,16 +249,16 @@ protected:
   unsigned int getRows(int pos) { return rows[pos]; }
   unsigned int getRight(int pos) { return right[pos]; }
   unsigned int getColCount(int pos) { return colCount[pos]; }
-  unsigned int getVarivoxelStart(void) { return varivoxelStart; }
-  unsigned int getPos(void) { return pos; }
+  unsigned int getVarivoxelStart() { return varivoxelStart; }
+  unsigned int getPos() { return pos; }
 
   /* finally after assembling a puzzle and creating something meaningful from the cover
    * information you need to call the callback of the user, use this function to get the
    * callback class
    */
-  assembler_cb * getCallback(void) { return asm_bc; }
+  AssemblerCallbackInterface * getCallback() { return asm_bc; }
 
-  unsigned int getPiecenumber(void) { return piecenumber; }
+  unsigned int getPiecenumber() { return piecenumber; }
 
   /* call this function if you think that there might be
    * rotated assemblies found. Here a description of how the whole aspect of
@@ -274,21 +274,24 @@ protected:
 
 public:
 
-  assembler_0_c(void);
-  ~assembler_0_c(void);
+  DonKnuthAssembler(void);
+  ~DonKnuthAssembler(void);
 
-  /* functions that are overloaded from assembler_c, for comments see there */
-  errState createMatrix(const problem_c * puz, bool keepMirror, bool keepRotations, bool complete);
-  void assemble(assembler_cb * callback);
-  int getErrorsParam(void) { return errorsParam; }
+  /* functions that are overloaded from AssemblerInterface, for comments see there */
+  errState createMatrix(const Problem * puz, bool keepMirror, bool keepRotations, bool complete);
+  void assemble(AssemblerCallbackInterface * callback);
+
+  // See AssemblerInterface.
+  int getErrorsParam() const override { return errorsParam; }
+
   virtual float getFinished(void) const;
-  virtual void stop(void) { abbort = true; }
+  virtual void stop() { abbort = true; }
   virtual bool stopped(void) const { return !running; }
   virtual errState setPosition(const char * string, const char * version);
   virtual void save(xmlWriter_c & xml) const;
   virtual void reduce(void);
   virtual unsigned int getReducePiece(void) const { return reducePiece; }
-  virtual unsigned long getIterations(void) { return iterations; }
+  virtual unsigned long getIterations() { return iterations; }
 
   /* some more special information to find out possible piece placements */
   bool getPiecePlacementSupported(void) const { return true; }
@@ -298,13 +301,13 @@ public:
   void debug_step(unsigned long num = 1);
   assembly_c * getAssembly(void);
 
-  static bool canHandle(const problem_c * p);
+  static bool canHandle(const Problem * p);
 
 private:
 
   // no copying and assigning
-  assembler_0_c(const assembler_0_c&);
-  void operator=(const assembler_0_c&);
+  DonKnuthAssembler(const DonKnuthAssembler &);
+  void operator=(const DonKnuthAssembler &);
 };
 
 #endif

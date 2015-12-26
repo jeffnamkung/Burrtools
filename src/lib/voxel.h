@@ -23,7 +23,7 @@
 
 #include "bt_assert.h"
 #include "symmetries.h"
-#include "gridtype.h"
+#include "grid-type.h"
 #include "types.h"
 
 #include <stdio.h>
@@ -55,7 +55,7 @@ protected:
   /**
    * each voxel needs to know the parameters for its space grid
    */
-  const gridType_c *gt;
+  const GridType *gt;
 
   unsigned int sx; ///< The x size of the space.
   unsigned int sy; ///< The y size of the space.
@@ -215,12 +215,12 @@ public:
    * Creates a new voxel space. Its of given size and
    * initializes all values to init.
    */
-  voxel_c(unsigned int x, unsigned int y, unsigned int z, const gridType_c * gt, voxel_type init = 0);
+  voxel_c(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0);
 
   /**
    * Load a voxel space from xml node
    */
-  voxel_c(xmlParser_c & pars, const gridType_c * gt);
+  voxel_c(xmlParser_c & pars, const GridType * gt);
 
   /**
    * Copy constructor using reference. Transformation allows to
@@ -251,7 +251,7 @@ public:
   unsigned int getZ(void) const { return sz; } ///< Return z-size of the voxel space
 
   /** get the gridtype of this voxel space */
-  const gridType_c * getGridType(void) const { return gt; }
+  const GridType * getGridType(void) const { return gt; }
 
   /**
    * Returns the squared diagonal of the space

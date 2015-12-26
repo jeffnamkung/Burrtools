@@ -28,7 +28,7 @@
 #include <time.h>
 
 #include "../lib/bt_assert.h"
-#include "../lib/gridtype.h"
+#include "grid-type.h"
 #include "../lib/puzzle.h"
 
 #include "../tools/xml.h"
@@ -65,7 +65,7 @@ int main(int argc, char ** argv) {
 
   Fl::get_system_colors();
 
-  mainWindow_c *ui = new mainWindow_c(new gridType_c());
+  mainWindow_c *ui = new mainWindow_c(new GridType());
 
   int res = 0;
 

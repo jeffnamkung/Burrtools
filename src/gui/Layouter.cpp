@@ -468,7 +468,7 @@ void LFl_Scroll::resize(int x, int y, int w, int h) {
   Fl_Scroll::resize(x, y, w, h);
 }
 
-void LFl_Double_Window::show(void) {
+void LFl_Double_Window::show() {
 
   if (!shown()) {
 

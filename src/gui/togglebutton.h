@@ -37,13 +37,13 @@ class LToggleButton_c : public Fl_Button, public layoutable_c {
   public:
     LToggleButton_c(int x, int y, int w, int h, Fl_Callback *cb, void * cb_para, long para);
 
-    void toggle(void) {
+    void toggle() {
       value(1-value());
       if (callback)
         callback(this, callback_para);
     }
 
-    long ButtonVal(void) { return para; }
+    long ButtonVal() { return para; }
 
     virtual void getMinSize(int *width, int *height) const {
       *width = 0;

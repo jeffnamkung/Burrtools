@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-#include "assembler_0.h"
+#include "don-knuth-assembler.h"
 
 #include "bt_assert.h"
 #include "problem.h"
 #include "voxel.h"
 #include "assembly.h"
-#include "gridtype.h"
+#include "grid-type.h"
 
 #include "../tools/xml.h"
 
@@ -168,7 +168,7 @@ void printMatrix(
 
 
 
-void assembler_0_c::GenerateFirstRow(void) {
+void DonKnuthAssembler::GenerateFirstRow() {
 
   for (unsigned int i = 0; i < varivoxelStart; i++) {
     right.push_back(i+1);
@@ -198,7 +198,7 @@ void assembler_0_c::GenerateFirstRow(void) {
   right[varivoxelEnd] = varivoxelStart;
 }
 
-int assembler_0_c::AddPieceNode(unsigned int piece, unsigned int rot, unsigned int x, unsigned int y, unsigned int z) {
+int DonKnuthAssembler::AddPieceNode(unsigned int piece, unsigned int rot, unsigned int x, unsigned int y, unsigned int z) {
   unsigned long piecenode = left.size();
 
   left.push_back(piecenode);
@@ -217,7 +217,7 @@ int assembler_0_c::AddPieceNode(unsigned int piece, unsigned int rot, unsigned i
   return piecenode;
 }
 
-void assembler_0_c::getPieceInformation(unsigned int node, unsigned char *tran, int *x, int *y, int *z, unsigned int *piece) const {
+void DonKnuthAssembler::getPieceInformation(unsigned int node, unsigned char *tran, int *x, int *y, int *z, unsigned int *piece) const {
 
   for (int i = piecePositions.size()-1; i >= 0; i--)
     if (piecePositions[i].row <= node) {
@@ -239,7 +239,7 @@ void assembler_0_c::getPieceInformation(unsigned int node, unsigned char *tran, 
  *
  * returns the number of columns that were removed
  */
-unsigned int assembler_0_c::clumpify(void) {
+unsigned int DonKnuthAssembler::clumpify() {
 
   unsigned int col = right[0];
   unsigned int removed = 0;
@@ -312,7 +312,7 @@ unsigned int assembler_0_c::clumpify(void) {
   return removed;
 }
 
-void assembler_0_c::AddVoxelNode(unsigned int col, unsigned int piecenode) {
+void DonKnuthAssembler::AddVoxelNode(unsigned int col, unsigned int piecenode) {
   unsigned long newnode = left.size();
 
   right.push_back(piecenode);
@@ -329,15 +329,15 @@ void assembler_0_c::AddVoxelNode(unsigned int col, unsigned int piecenode) {
   colCount[col]++;
 }
 
-assembler_0_c::assembler_0_c(void) :
-  assembler_c(),
+DonKnuthAssembler::DonKnuthAssembler(void) :
+  AssemblerInterface(),
   pos(0), rows(0), columns(0),
   reducePiece(0),
   avoidTransformedAssemblies(0), avoidTransformedMirror(0)
 {
 }
 
-assembler_0_c::~assembler_0_c() {
+DonKnuthAssembler::~DonKnuthAssembler() {
   if (rows) delete [] rows;
   if (columns) delete [] columns;
 
@@ -361,7 +361,7 @@ static voxel_c * addToCache(voxel_c * cache[], unsigned int * fill, voxel_c * pi
 }
 
 
-bool assembler_0_c::canPlace(const voxel_c * piece, int x, int y, int z) const {
+bool DonKnuthAssembler::canPlace(const voxel_c * piece, int x, int y, int z) const {
 
   if (!piece->onGrid(x, y, z))
     return false;
@@ -407,7 +407,7 @@ bool assembler_0_c::canPlace(const voxel_c * piece, int x, int y, int z) const {
  * negative result show there is something wrong: the place -result has not
  * possible position inside the result
  */
-int assembler_0_c::prepare(void) {
+int DonKnuthAssembler::prepare() {
 
   const voxel_c * result = puzzle->getResultShape();
 
@@ -461,7 +461,7 @@ int assembler_0_c::prepare(void) {
    * that are present in the piece
    */
   symmetries_t resultSym = result->selfSymmetries();
-  const gridType_c * gt = puzzle->getGridType();
+  const GridType * gt = puzzle->getGridType();
   const symmetries_c * sym = puzzle->getGridType()->getSymmetries();
   unsigned int symBreakerShape = 0xFFFFFFFF;
 
@@ -678,7 +678,7 @@ int assembler_0_c::prepare(void) {
 
 
 
-assembler_0_c::errState assembler_0_c::createMatrix(const problem_c * puz, bool keepMirror, bool keepRotations, bool comp) {
+DonKnuthAssembler::errState DonKnuthAssembler::createMatrix(const Problem * puz, bool keepMirror, bool keepRotations, bool comp) {
 
   bt_assert(puz->resultValid());
 
@@ -752,7 +752,7 @@ assembler_0_c::errState assembler_0_c::createMatrix(const problem_c * puz, bool 
 }
 
 /* remove column from array, and also all the rows, where the column is one */
-void assembler_0_c::cover(unsigned int col)
+void DonKnuthAssembler::cover(unsigned int col)
 {
   {
     unsigned int l = left[col];
@@ -837,7 +837,7 @@ void assembler_0_c::cover(unsigned int col)
 
 }
 
-void assembler_0_c::uncover(unsigned int col) {
+void DonKnuthAssembler::uncover(unsigned int col) {
 
 #if 0
   // the assembly code below is ca 20% faster than the gcc code
@@ -916,12 +916,12 @@ void assembler_0_c::uncover(unsigned int col) {
 /* remove all the columns from the matrix in which the given
  * row contains ones
  */
-void assembler_0_c::cover_row(register unsigned int r) {
+void DonKnuthAssembler::cover_row(register unsigned int r) {
   for (unsigned int j = right[r]; j != r; j = right[j])
     cover(colCount[j]);
 }
 
-bool assembler_0_c::try_cover_row(register unsigned int r, unsigned int * columns) {
+bool DonKnuthAssembler::try_cover_row(register unsigned int r, unsigned int * columns) {
 
   memset(columns, 0, varivoxelEnd * sizeof(unsigned int));
 
@@ -948,12 +948,12 @@ bool assembler_0_c::try_cover_row(register unsigned int r, unsigned int * column
   return true;
 }
 
-void assembler_0_c::uncover_row(register unsigned int r) {
+void DonKnuthAssembler::uncover_row(register unsigned int r) {
   for (unsigned int j = left[r]; j != r; j = left[j])
     uncover(colCount[j]);
 }
 
-void assembler_0_c::remove_row(register unsigned int r) {
+void DonKnuthAssembler::remove_row(register unsigned int r) {
   register unsigned int j = r;
   do {
     register unsigned int u, d;
@@ -970,7 +970,7 @@ void assembler_0_c::remove_row(register unsigned int r) {
   } while (j != r);
 }
 
-void assembler_0_c::remove_column(register unsigned int c) {
+void DonKnuthAssembler::remove_column(register unsigned int c) {
   register unsigned int j = c;
   do {
     right[left[j]] = right[j];
@@ -980,7 +980,7 @@ void assembler_0_c::remove_column(register unsigned int c) {
   } while (j != c);
 }
 
-void assembler_0_c::reinsert_row(register unsigned int r) {
+void DonKnuthAssembler::reinsert_row(register unsigned int r) {
   register unsigned int j = r;
   do {
     up(down(j)) = j;
@@ -992,7 +992,7 @@ void assembler_0_c::reinsert_row(register unsigned int r) {
   } while (j != r);
 }
 
-bool assembler_0_c::checkmatrix(void) {
+bool DonKnuthAssembler::checkmatrix() {
 
   /* check the number of holes, if they are larger than allowed return */
   unsigned int count = holes;
@@ -1006,7 +1006,7 @@ bool assembler_0_c::checkmatrix(void) {
   return false;
 }
 
-void assembler_0_c::reduce(void) {
+void DonKnuthAssembler::reduce() {
 
   /* this array is used in several occasions, where we need to
    * keep some information for all columns
@@ -1165,7 +1165,7 @@ void assembler_0_c::reduce(void) {
   fprintf(stderr, "removed %i rows and %i columns\n", removed, remCol);
 }
 
-assembly_c * assembler_0_c::getAssembly(void) {
+assembly_c *DonKnuthAssembler::getAssembly() {
 
   assembly_c * assembly = new assembly_c(puzzle->getGridType());
 
@@ -1222,7 +1222,7 @@ assembly_c * assembler_0_c::getAssembly(void) {
   return assembly;
 }
 
-void assembler_0_c::checkForTransformedAssemblies(unsigned int pivot, mirrorInfo_c * mir) {
+void DonKnuthAssembler::checkForTransformedAssemblies(unsigned int pivot, mirrorInfo_c * mir) {
   avoidTransformedAssemblies = true;
   avoidTransformedPivot = pivot;
   avoidTransformedMirror = mir;
@@ -1230,7 +1230,7 @@ void assembler_0_c::checkForTransformedAssemblies(unsigned int pivot, mirrorInfo
 
 /* this function handles the assemblies found by the assembler engine
  */
-void assembler_0_c::solution(void) {
+void DonKnuthAssembler::solution() {
 
   if (getCallback()) {
 
@@ -1247,7 +1247,7 @@ void assembler_0_c::solution(void) {
 /* to understand this function you need to first completely understand the
  * dancing link algorithm.
  */
-void assembler_0_c::iterativeMultiSearch(void) {
+void DonKnuthAssembler::iterativeMultiSearch() {
 
   abbort = false;
   running = true;
@@ -1397,7 +1397,7 @@ void assembler_0_c::iterativeMultiSearch(void) {
   running = false;
 }
 
-void assembler_0_c::assemble(assembler_cb * callback) {
+void DonKnuthAssembler::assemble(AssemblerCallbackInterface * callback) {
 
   debug = false;
 
@@ -1407,7 +1407,7 @@ void assembler_0_c::assemble(assembler_cb * callback) {
   }
 }
 
-float assembler_0_c::getFinished(void) const {
+float DonKnuthAssembler::getFinished(void) const {
 
   /* we don't need locking, as I hope that I have written the
    * code in a way that updated the data so, that it will never
@@ -1464,7 +1464,7 @@ static unsigned int getLong(const char * s, unsigned long * i) {
     return 500000;
 }
 
-assembler_c::errState assembler_0_c::setPosition(const char * string, const char * version) {
+AssemblerInterface::errState DonKnuthAssembler::setPosition(const char * string, const char * version) {
 
   /* we assert that the matrix is in the initial position
    * otherwise we would have to clean the stack
@@ -1531,7 +1531,7 @@ assembler_c::errState assembler_0_c::setPosition(const char * string, const char
   return ERR_NONE;
 }
 
-void assembler_0_c::save(xmlWriter_c & xml) const
+void DonKnuthAssembler::save(xmlWriter_c & xml) const
 {
   xml.newTag("assembler");
   xml.newAttrib("version", ASSEMBLER_VERSION);
@@ -1551,7 +1551,7 @@ void assembler_0_c::save(xmlWriter_c & xml) const
   xml.endTag("assembler");
 }
 
-unsigned int assembler_0_c::getPiecePlacement(unsigned int node, int delta, unsigned int piece, unsigned char *tran, int *x, int *y, int *z) const {
+unsigned int DonKnuthAssembler::getPiecePlacement(unsigned int node, int delta, unsigned int piece, unsigned char *tran, int *x, int *y, int *z) const {
 
   unsigned int pi;
 
@@ -1575,20 +1575,20 @@ unsigned int assembler_0_c::getPiecePlacement(unsigned int node, int delta, unsi
   return node;
 }
 
-unsigned int assembler_0_c::getPiecePlacementCount(unsigned int piece) const {
+unsigned int DonKnuthAssembler::getPiecePlacementCount(unsigned int piece) const {
 
   return colCount[piece+1];
 }
 
 
-void assembler_0_c::debug_step(unsigned long num) {
+void DonKnuthAssembler::debug_step(unsigned long num) {
   debug = true;
   debug_loops = num;
   asm_bc = 0;
   iterativeMultiSearch();
 }
 
-bool assembler_0_c::canHandle(const problem_c * p) {
+bool DonKnuthAssembler::canHandle(const Problem * p) {
 
   // we can not handle if there is one shape having not a counter of 1
   for (unsigned int s = 0; s < p->partNumber(); s++)

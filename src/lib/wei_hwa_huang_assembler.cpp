@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-#include "assembler_1.h"
+#include "wei_hwa_huang_assembler.h"
 
 #include "bt_assert.h"
 #include "problem.h"
 #include "voxel.h"
 #include "assembly.h"
-#include "gridtype.h"
+#include "grid-type.h"
 
 #include "../tools/xml.h"
 
@@ -154,7 +154,7 @@ void printMatrix(
   }
 }
 
-void assembler_1_c::GenerateFirstRow(unsigned int columns) {
+void WeiHwaHuangAssembler::GenerateFirstRow(unsigned int columns) {
 
   for (unsigned int i = 0; i < columns+1; i++) {
     right.push_back(i+1);
@@ -174,7 +174,7 @@ void assembler_1_c::GenerateFirstRow(unsigned int columns) {
   headerNodes = columns + 1;
 }
 
-int assembler_1_c::AddPieceNode(unsigned int piece, unsigned int rot, unsigned int x, unsigned int y, unsigned int z) {
+int WeiHwaHuangAssembler::AddPieceNode(unsigned int piece, unsigned int rot, unsigned int x, unsigned int y, unsigned int z) {
   unsigned long piecenode = left.size();
 
   left.push_back(piecenode);
@@ -194,7 +194,7 @@ int assembler_1_c::AddPieceNode(unsigned int piece, unsigned int rot, unsigned i
   return piecenode;
 }
 
-void assembler_1_c::getPieceInformation(unsigned int node, unsigned int * piece, unsigned char *tran, int *x, int *y, int *z) const {
+void WeiHwaHuangAssembler::getPieceInformation(unsigned int node, unsigned int * piece, unsigned char *tran, int *x, int *y, int *z) const {
 
   for (int i = piecePositions.size()-1; i >= 0; i--)
     if (piecePositions[i].row <= node) {
@@ -210,7 +210,7 @@ void assembler_1_c::getPieceInformation(unsigned int node, unsigned int * piece,
   bt_assert(0);
 }
 
-void assembler_1_c::AddVoxelNode(unsigned int col, unsigned int piecenode) {
+void WeiHwaHuangAssembler::AddVoxelNode(unsigned int col, unsigned int piecenode) {
 
   bt_assert(left.size() == right.size() &&
       left.size() == up.size() &&
@@ -236,7 +236,7 @@ void assembler_1_c::AddVoxelNode(unsigned int col, unsigned int piecenode) {
   colCount[col]++;
 }
 
-void assembler_1_c::AddRangeNode(unsigned int col, unsigned int piecenode, unsigned int wg) {
+void WeiHwaHuangAssembler::AddRangeNode(unsigned int col, unsigned int piecenode, unsigned int wg) {
 
   unsigned long newnode = left.size();
 
@@ -256,8 +256,8 @@ void assembler_1_c::AddRangeNode(unsigned int col, unsigned int piecenode, unsig
   colCount[col] += wg;
 }
 
-assembler_1_c::assembler_1_c(void) :
-  assembler_c(),
+WeiHwaHuangAssembler::WeiHwaHuangAssembler(void) :
+  AssemblerInterface(),
   avoidTransformedAssemblies(0), avoidTransformedMirror(0),
   iterations(0),
   reducePiece(0)
@@ -266,7 +266,7 @@ assembler_1_c::assembler_1_c(void) :
   task_stack.push_back(0);
 }
 
-assembler_1_c::~assembler_1_c() {
+WeiHwaHuangAssembler::~WeiHwaHuangAssembler() {
   if (avoidTransformedMirror) delete avoidTransformedMirror;
 }
 
@@ -286,7 +286,7 @@ static voxel_c * addToCache(voxel_c * cache[], unsigned int * fill, voxel_c * pi
   return piece;
 }
 
-bool assembler_1_c::canPlace(const voxel_c * piece, int x, int y, int z) const {
+bool WeiHwaHuangAssembler::canPlace(const voxel_c * piece, int x, int y, int z) const {
 
   if (!piece->onGrid(x, y, z))
     return false;
@@ -331,7 +331,7 @@ bool assembler_1_c::canPlace(const voxel_c * piece, int x, int y, int z) const {
  * negative result show there is something wrong: the place -result has not
  * possible position inside the result
  */
-int assembler_1_c::prepare(bool hasRange, unsigned int rangeMin, unsigned int rangeMax) {
+int WeiHwaHuangAssembler::prepare(bool hasRange, unsigned int rangeMin, unsigned int rangeMax) {
 
   if (hasRange) {
     fprintf(stderr, "range optimisation used min %i, max %i\n", rangeMin, rangeMax);
@@ -393,7 +393,7 @@ int assembler_1_c::prepare(bool hasRange, unsigned int rangeMin, unsigned int ra
    * that are present in the piece
    */
   symmetries_t resultSym = result->selfSymmetries();
-  const gridType_c * gt = puzzle->getGridType();
+  const GridType * gt = puzzle->getGridType();
   const symmetries_c * sym = puzzle->getGridType()->getSymmetries();
   unsigned int symBreakerShape = 0xFFFFFFFF;
 
@@ -645,7 +645,7 @@ int assembler_1_c::prepare(bool hasRange, unsigned int rangeMin, unsigned int ra
   return 1;
 }
 
-assembler_1_c::errState assembler_1_c::createMatrix(const problem_c * puz, bool keepMirror, bool keepRotations, bool comp) {
+WeiHwaHuangAssembler::errState WeiHwaHuangAssembler::createMatrix(const Problem * puz, bool keepMirror, bool keepRotations, bool comp) {
 
   bt_assert(puz->resultValid());
 
@@ -739,7 +739,7 @@ assembler_1_c::errState assembler_1_c::createMatrix(const problem_c * puz, bool 
   return errorsState;
 }
 
-void assembler_1_c::remove_column(register unsigned int c) {
+void WeiHwaHuangAssembler::remove_column(register unsigned int c) {
   register unsigned int j = c;
   do {
     right[left[j]] = right[j];
@@ -755,7 +755,7 @@ void assembler_1_c::remove_column(register unsigned int c) {
  *
  * returns the number of columns that were removed
  */
-unsigned int assembler_1_c::clumpify(void) {
+unsigned int WeiHwaHuangAssembler::clumpify() {
 
   unsigned int col = right[0];
   unsigned int removed = 0;
@@ -831,7 +831,7 @@ unsigned int assembler_1_c::clumpify(void) {
   return removed;
 }
 
-void assembler_1_c::remove_row(register unsigned int r) {
+void WeiHwaHuangAssembler::remove_row(register unsigned int r) {
   register unsigned int j = r;
   do {
     register unsigned int u, d;
@@ -848,7 +848,7 @@ void assembler_1_c::remove_row(register unsigned int r) {
   } while (j != r);
 }
 
-void assembler_1_c::reduce(void) {
+void WeiHwaHuangAssembler::reduce() {
 
   std::vector<unsigned int> toRemove;
 
@@ -998,13 +998,13 @@ void assembler_1_c::reduce(void) {
   fprintf(stderr, "removed %i rows and %i columns\n", row_rem, col_rem);
 }
 
-void assembler_1_c::checkForTransformedAssemblies(unsigned int pivot, mirrorInfo_c * mir) {
+void WeiHwaHuangAssembler::checkForTransformedAssemblies(unsigned int pivot, mirrorInfo_c * mir) {
   avoidTransformedAssemblies = true;
   avoidTransformedPivot = pivot;
   avoidTransformedMirror = mir;
 }
 
-assembly_c * assembler_1_c::getAssembly(void) {
+assembly_c *WeiHwaHuangAssembler::getAssembly() {
 
   assembly_c * assembly = new assembly_c(puzzle->getGridType());
 
@@ -1043,7 +1043,7 @@ assembly_c * assembler_1_c::getAssembly(void) {
 
 /* this function handles the assemblies found by the assembler engine
  */
-void assembler_1_c::solution(void) {
+void WeiHwaHuangAssembler::solution() {
 
   if (getCallback()) {
 
@@ -1073,7 +1073,7 @@ void assembler_1_c::solution(void) {
   }
 }
 
-bool assembler_1_c::open_column_conditions_fulfillable(void) {
+bool WeiHwaHuangAssembler::open_column_conditions_fulfillable() {
 
   for (int col = right[0]; col; col = right[col]) {
 
@@ -1100,7 +1100,7 @@ static bool betterParams(int n_sum, int /*n_min*/, int n_max, int o_sum, int /*o
   return n_sum*n_max < o_sum*o_max;
 }
 
-int assembler_1_c::find_best_unclosed_column(void) {
+int WeiHwaHuangAssembler::find_best_unclosed_column() {
   int col = right[0];
 
   // if we have no column -> return no column
@@ -1125,17 +1125,17 @@ int assembler_1_c::find_best_unclosed_column(void) {
   return bestcol;
 }
 
-void assembler_1_c::cover_column_only(int col) {
+void WeiHwaHuangAssembler::cover_column_only(int col) {
   right[left[col]] = right[col];
   left[right[col]] = left[col];
 }
 
-void assembler_1_c::uncover_column_only(int col) {
+void WeiHwaHuangAssembler::uncover_column_only(int col) {
   right[left[col]] = col;
   left[right[col]] = col;
 }
 
-void assembler_1_c::cover_column_rows(int col) {
+void WeiHwaHuangAssembler::cover_column_rows(int col) {
 
   for (int r = down[col]; r != col; r = down[r]) {
     colCount[col] -= weight[r];
@@ -1147,7 +1147,7 @@ void assembler_1_c::cover_column_rows(int col) {
   }
 }
 
-void assembler_1_c::uncover_column_rows(int col) {
+void WeiHwaHuangAssembler::uncover_column_rows(int col) {
 
   for (int r = up[col]; r != col; r = up[r]) {
     for (int c = left[r]; c != r; c = left[c]) {
@@ -1159,7 +1159,7 @@ void assembler_1_c::uncover_column_rows(int col) {
   }
 }
 
-void assembler_1_c::hiderow(int r) {
+void WeiHwaHuangAssembler::hiderow(int r) {
 
   for (int rr = right[r]; rr != r; rr = right[rr]) {
     up[down[rr]] = up[rr];
@@ -1173,7 +1173,7 @@ void assembler_1_c::hiderow(int r) {
   colCount[colCount[r]] -= weight[r];
 }
 
-void assembler_1_c::unhiderow(int r) {
+void WeiHwaHuangAssembler::unhiderow(int r) {
 
   up[down[r]] = r;
   down[up[r]] = r;
@@ -1196,7 +1196,7 @@ void assembler_1_c::unhiderow(int r) {
 // each time the function is called the hidden rows are saved and
 // can be unhidden by calling the unhiderows function below
 // they must come in pairs but can be stacked
-void assembler_1_c::hiderows(unsigned int row) {
+void WeiHwaHuangAssembler::hiderows(unsigned int row) {
 
   // put in the separator
   hidden_rows.push_back(0);
@@ -1218,7 +1218,7 @@ void assembler_1_c::hiderows(unsigned int row) {
   }
 }
 
-void assembler_1_c::unhiderows(void) {
+void WeiHwaHuangAssembler::unhiderows() {
 
   while (hidden_rows.back()) {
     unhiderow(hidden_rows.back());
@@ -1229,11 +1229,11 @@ void assembler_1_c::unhiderows(void) {
   hidden_rows.pop_back();
 }
 
-bool assembler_1_c::column_condition_fulfilled(int col) {
+bool WeiHwaHuangAssembler::column_condition_fulfilled(int col) {
   return (weight[col] >= min[col]) && (weight[col] <= max[col]);
 }
 
-bool assembler_1_c::column_condition_fulfillable(int col) {
+bool WeiHwaHuangAssembler::column_condition_fulfillable(int col) {
   if (weight[col] > max[col]) return false;
   if (weight[col] + colCount[col] < min[col]) return false;
   return true;
@@ -1251,7 +1251,7 @@ bool assembler_1_c::column_condition_fulfillable(int col) {
 // if the node is not 0 then it is the node in the selected column and
 // in the row that has to be worked on next
 
-void assembler_1_c::rec(unsigned int next_row) {
+void WeiHwaHuangAssembler::rec(unsigned int next_row) {
 
   //-------> case 0
 
@@ -1458,7 +1458,7 @@ void assembler_1_c::rec(unsigned int next_row) {
 
 #endif
 
-void assembler_1_c::iterative(void) {
+void WeiHwaHuangAssembler::iterative() {
 
   unsigned int row, col;
 
@@ -1801,7 +1801,7 @@ void assembler_1_c::iterative(void) {
   }
 }
 
-void assembler_1_c::assemble(assembler_cb * callback) {
+void WeiHwaHuangAssembler::assemble(AssemblerCallbackInterface * callback) {
 
   running = true;
   abbort = false;
@@ -1819,7 +1819,7 @@ void assembler_1_c::assemble(assembler_cb * callback) {
   running = false;
 }
 
-float assembler_1_c::getFinished(void) const {
+float WeiHwaHuangAssembler::getFinished(void) const {
 
   if (next_row_stack.size() == 0) return 1;
 
@@ -1868,7 +1868,7 @@ static int stringToVector(const char * string, std::vector<unsigned int> & v) {
   return pos;
 }
 
-assembler_c::errState assembler_1_c::setPosition(const char * string, const char * /* version*/) {
+AssemblerInterface::errState WeiHwaHuangAssembler::setPosition(const char * string, const char * /* version*/) {
 
   unsigned int len = strlen(string);
 
@@ -1936,7 +1936,7 @@ static void vectorToStream(const std::vector<unsigned int> & v, std::ostream & s
     str << v[i] << " ";
 }
 
-void assembler_1_c::save(xmlWriter_c & xml) const
+void WeiHwaHuangAssembler::save(xmlWriter_c & xml) const
 {
   xml.newTag("assembler");
   xml.newAttrib("version", ASSEMBLER_VERSION);
@@ -1954,7 +1954,7 @@ void assembler_1_c::save(xmlWriter_c & xml) const
   xml.endTag("assembler");
 }
 
-unsigned int assembler_1_c::getPiecePlacement(unsigned int node, int delta, unsigned int piece, unsigned char *tran, int *x, int *y, int *z) const {
+unsigned int WeiHwaHuangAssembler::getPiecePlacement(unsigned int node, int delta, unsigned int piece, unsigned char *tran, int *x, int *y, int *z) const {
 
   /* piece 2 shape */
   unsigned int pp = 0;
@@ -1985,7 +1985,7 @@ unsigned int assembler_1_c::getPiecePlacement(unsigned int node, int delta, unsi
   return node;
 }
 
-unsigned int assembler_1_c::getPiecePlacementCount(unsigned int piece) const {
+unsigned int WeiHwaHuangAssembler::getPiecePlacementCount(unsigned int piece) const {
 
   /* piece 2 shape */
   unsigned int pp = 0;
@@ -1998,7 +1998,7 @@ unsigned int assembler_1_c::getPiecePlacementCount(unsigned int piece) const {
   return colCount[shape+1];
 }
 
-void assembler_1_c::debug_step(unsigned long num) {
+void WeiHwaHuangAssembler::debug_step(unsigned long num) {
   debug = true;
   debug_loops = num;
   abbort = false;
@@ -2007,7 +2007,7 @@ void assembler_1_c::debug_step(unsigned long num) {
   debug = false;
 }
 
-bool assembler_1_c::canHandle(const problem_c *) {
+bool WeiHwaHuangAssembler::canHandle(const Problem *) {
 
   // right now there are no limits
 

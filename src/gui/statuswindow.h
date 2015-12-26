@@ -25,24 +25,24 @@
 
 #include <vector>
 
-class puzzle_c;
+class Puzzle;
 
 class statusWindow_c : public LFl_Double_Window {
 
   private:
 
-    puzzle_c * puz;
+    Puzzle * puz;
 
     std::vector<LFl_Check_Button*> selection;
     bool again;
 
   public:
 
-    statusWindow_c(puzzle_c * p);
+    statusWindow_c(Puzzle * p);
 
     void cb_removeSelected(void);
 
-    bool getAgain(void) { return again; }
+    bool getAgain() { return again; }
 
 };
 

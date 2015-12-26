@@ -23,7 +23,7 @@
 
 #include "symmetries.h"
 
-class gridType_c;
+class GridType;
 
 /** this is the symmetries class for triangles */
 class symmetries_1_c : public symmetries_c {

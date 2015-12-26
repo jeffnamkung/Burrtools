@@ -41,7 +41,7 @@ class multiLineWindow_c : public Fl_Double_Window {
       Fl_Double_Window::hide();
     }
 
-    bool saveChanges(void) { return _saveChanges; }
+    bool saveChanges() { return _saveChanges; }
 };
 
 

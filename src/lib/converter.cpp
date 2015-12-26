@@ -24,12 +24,12 @@
 #include "problem.h"
 #include "voxel.h"
 
-bool canConvert(gridType_c::gridType src, gridType_c::gridType dst)
+bool canConvert(GridType::gridType src, GridType::gridType dst)
 {
   return (
-          (src == gridType_c::GT_BRICKS && dst == gridType_c::GT_RHOMBIC)
+          (src == GridType::GT_BRICKS && dst == GridType::GT_RHOMBIC)
           ||
-          (src == gridType_c::GT_BRICKS && dst == gridType_c::GT_TETRA_OCTA)
+          (src == GridType::GT_BRICKS && dst == GridType::GT_TETRA_OCTA)
          );
 }
 
@@ -38,16 +38,16 @@ bool canConvert(gridType_c::gridType src, gridType_c::gridType dst)
  * the shapes inside the puzzle will be converted and then the
  * gridtype within the puzzle will be changed
  */
-puzzle_c * doConvert(puzzle_c * p, gridType_c::gridType type) {
+Puzzle * doConvert(Puzzle * p, GridType::gridType type) {
 
   if (!canConvert(p->getGridType()->getType(), type)) return 0;
 
   // for now only the conversion from brick to rhombic is available
 
   // create a gridType for the target grid
-  gridType_c * gt = new gridType_c(type);
+  GridType * gt = new GridType(type);
 
-  puzzle_c * pNew = new puzzle_c(gt);
+  Puzzle * pNew = new Puzzle(gt);
 
   // now convert all shapes
   for (unsigned int i = 0; i < p->shapeNumber(); i++)
@@ -57,7 +57,7 @@ puzzle_c * doConvert(puzzle_c * p, gridType_c::gridType type) {
     voxel_c * vn = 0;
     // this is now conversion specific....
 
-    if (p->getGridType()->getType() == gridType_c::GT_BRICKS && type == gridType_c::GT_RHOMBIC)
+    if (p->getGridType()->getType() == GridType::GT_BRICKS && type == GridType::GT_RHOMBIC)
     {
       vn = gt->getVoxel(v->getX()*5, v->getY()*5, v->getZ()*5, voxel_c::VX_EMPTY);
       vn->skipRecalcBoundingBox(true);
@@ -75,7 +75,7 @@ puzzle_c * doConvert(puzzle_c * p, gridType_c::gridType type) {
                       vn->set(5*x+ax, 5*y+ay, 5*z+az, st);
           }
     }
-    else if (p->getGridType()->getType() == gridType_c::GT_BRICKS && type == gridType_c::GT_TETRA_OCTA)
+    else if (p->getGridType()->getType() == GridType::GT_BRICKS && type == GridType::GT_TETRA_OCTA)
     {
       vn = gt->getVoxel(v->getX()*3, v->getY()*3, v->getZ()*3, voxel_c::VX_EMPTY);
       vn->skipRecalcBoundingBox(true);
@@ -116,8 +116,8 @@ puzzle_c * doConvert(puzzle_c * p, gridType_c::gridType type) {
   // create the problems as copies from the old puzzle
   for (unsigned int i = 0; i < p->problemNumber(); i++)
   {
-    const problem_c * prob = p->getProblem(i);
-    problem_c * probNew = pNew->getProblem(pNew->addProblem(prob));
+    const Problem * prob = p->getProblem(i);
+    Problem * probNew = pNew->getProblem(pNew->addProblem(prob));
 
     probNew->setName(prob->getName());
   }

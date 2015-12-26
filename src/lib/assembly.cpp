@@ -47,7 +47,7 @@ bool mirrorInfo_c::getPieceInfo(unsigned int p, unsigned int * p_out, unsigned c
 }
 
 
-assembly_c::assembly_c(xmlParser_c & pars, unsigned int pieces, const gridType_c * gt) : sym(gt->getSymmetries())
+assembly_c::assembly_c(xmlParser_c & pars, unsigned int pieces, const GridType * gt) : sym(gt->getSymmetries())
 {
   pars.require(xmlParser_c::START_TAG, "assembly");
 
@@ -174,7 +174,7 @@ void assembly_c::save(xmlWriter_c & xml) const
   xml.endTag("assembly");
 }
 
-void assembly_c::sort(const problem_c * puz) {
+void assembly_c::sort(const Problem * puz) {
 
   int p = 0;
 
@@ -216,7 +216,7 @@ void assembly_c::sort(const problem_c * puz) {
   }
 }
 
-bool assembly_c::transform(unsigned char trans, const problem_c * puz, const mirrorInfo_c * mir) {
+bool assembly_c::transform(unsigned char trans, const Problem * puz, const mirrorInfo_c * mir) {
 
   if (trans == 0) return true;
 
@@ -604,7 +604,7 @@ bool assembly_c::containsMirroredPieces(void) const {
   return false;
 }
 
-bool assembly_c::validSolution(const problem_c * puz) const {
+bool assembly_c::validSolution(const Problem * puz) const {
 
   unsigned int pos = 0;
 
@@ -624,7 +624,7 @@ bool assembly_c::validSolution(const problem_c * puz) const {
   return true;
 }
 
-bool assembly_c::smallerRotationExists(const problem_c * puz, unsigned int pivot, const mirrorInfo_c * mir, bool complete) const {
+bool assembly_c::smallerRotationExists(const Problem * puz, unsigned int pivot, const mirrorInfo_c * mir, bool complete) const {
 
   /* we only need to check for mirrored transformations, if mirrorInfo is given
    * if not we assume that the piece set contains at least one piece that has no
@@ -788,7 +788,7 @@ int assembly_c::comparePieces(const assembly_c * b) const {
   return 0;
 }
 
-voxel_c * assembly_c::createSpace(const problem_c * puz) const {
+voxel_c * assembly_c::createSpace(const Problem * puz) const {
 
   std::vector<voxel_c *>pieces;
   pieces.resize(placements.size());

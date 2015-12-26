@@ -45,7 +45,7 @@
  * To get started it is best to begin reading the userguide. This document will explain
  * basic concepts of the whole software, even though this is done in a GUI centric way.
  * Next read the information for the voxel voxel_c classes.
- * Then continue to the assembly assembly_c. The assemblers assembler_c are probably not
+ * Then continue to the assembly assembly_c. The assemblers AssemblerInterface are probably not
  * necessary to read. They contain too much complicated stuff. Then read the disassembly
  * disassembly_c class documentation. Finally the grid type gridType_c class will
  * glue things together.
@@ -53,7 +53,7 @@
  * You should now be able to use the library.
  *
  * If you want to understand how things work you will need to read the documentation for the
- * assembler \ref assembler_c and disassembler \ref disassembler_c classses.
+ * assembler \ref AssemblerInterface and disassembler \ref disassembler_c classses.
  */
 
 /** \file voxel.cpp
@@ -82,7 +82,7 @@
 /// due to an undefined orientation of the piece
 #define BBHSCACHE_NOT_DEF -30001
 
-voxel_c::voxel_c(unsigned int x, unsigned int y, unsigned int z, const gridType_c * g, voxel_type init) : gt(g), sx(x), sy(y), sz(z), voxels(x*y*z), hx(0), hy(0), hz(0), weight(1) {
+voxel_c::voxel_c(unsigned int x, unsigned int y, unsigned int z, const GridType * g, voxel_type init) : gt(g), sx(x), sy(y), sz(z), voxels(x * y * z), hx(0), hy(0), hz(0), weight(1) {
 
   space = new voxel_type[voxels];
   bt_assert(space);
@@ -167,7 +167,7 @@ voxel_c::~voxel_c() {
   delete [] BbHsCache;
 }
 
-void voxel_c::recalcBoundingBox(void) {
+void voxel_c::recalcBoundingBox() {
 
   if (!doRecalc)
     return;
@@ -665,7 +665,7 @@ symmetries_t voxel_c::selfSymmetries(void) const {
   return symmetries;
 }
 
-void voxel_c::minimizePiece(void) {
+void voxel_c::minimizePiece() {
 
   unsigned int x1, x2, y1, y2, z1, z2;
 
@@ -776,7 +776,7 @@ void voxel_c::save(xmlWriter_c & xml) const {
   xml.endTag("voxel");
 }
 
-voxel_c::voxel_c(xmlParser_c & pars, const gridType_c * g) : gt(g), hx(0), hy(0), hz(0), weight(1)
+voxel_c::voxel_c(xmlParser_c & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0), weight(1)
 {
   pars.require(xmlParser_c::START_TAG, "voxel");
 
@@ -894,7 +894,7 @@ void voxel_c::setHotspot(int x, int y, int z) {
     BbHsCache[9*i+0] = BBHSCACHE_UNINIT;
 }
 
-void voxel_c::initHotspot(void) {
+void voxel_c::initHotspot() {
   setHotspot(0, 0, 0);
 }
 

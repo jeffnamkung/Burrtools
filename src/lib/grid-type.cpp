@@ -18,10 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-#include "gridtype.h"
+#include "grid-type.h"
 
-#include "assembler_0.h"
-#include "assembler_1.h"
+#include "don-knuth-assembler.h"
+#include "wei_hwa_huang_assembler.h"
 #include "movementcache_0.h"
 #include "movementcache_1.h"
 #include "voxel_0.h"
@@ -40,7 +40,7 @@
 
 #include <stdlib.h>
 
-gridType_c::gridType_c(xmlParser_c & pars)
+GridType::GridType(xmlParser_c & pars)
 {
   pars.require(xmlParser_c::START_TAG, "gridType");
 
@@ -70,11 +70,11 @@ gridType_c::gridType_c(xmlParser_c & pars)
   sym = 0;
 }
 
-gridType_c::gridType_c(const gridType_c & orig) : type(orig.type), sym(0)
+GridType::GridType(const GridType & orig) : type(orig.type), sym(0)
 {
 }
 
-void gridType_c::save(xmlWriter_c & xml) const
+void GridType::save(xmlWriter_c & xml) const
 {
   xml.newTag("gridType");
 
@@ -83,13 +83,13 @@ void gridType_c::save(xmlWriter_c & xml) const
   xml.endTag("gridType");
 }
 
-gridType_c::gridType_c(void) {
+GridType::GridType() {
   type = GT_BRICKS;
 
   sym = 0;
 }
 
-gridType_c::gridType_c(gridType gt) {
+GridType::GridType(gridType gt) {
 
   type = gt;
 
@@ -116,12 +116,12 @@ gridType_c::gridType_c(gridType gt) {
   sym = 0;
 }
 
-gridType_c::~gridType_c(void) {
+GridType::~GridType() {
   if (sym)
     delete sym;
 }
 
-movementCache_c * gridType_c::getMovementCache(const problem_c * puz) const
+movementCache_c *GridType::getMovementCache(const Problem * puz) const
 {
   switch (type) {
     case GT_BRICKS:           return new movementCache_0_c(puz);
@@ -130,7 +130,7 @@ movementCache_c * gridType_c::getMovementCache(const problem_c * puz) const
   }
 }
 
-voxel_c * gridType_c::getVoxel(unsigned int x, unsigned int y, unsigned int z, voxel_type init) const
+voxel_c *GridType::getVoxel(unsigned int x, unsigned int y, unsigned int z, voxel_type init) const
 {
   switch (type) {
     case GT_BRICKS:           return new voxel_0_c(x, y, z, this, init);
@@ -142,7 +142,7 @@ voxel_c * gridType_c::getVoxel(unsigned int x, unsigned int y, unsigned int z, v
   }
 }
 
-voxel_c * gridType_c::getVoxel(xmlParser_c & pars) const
+voxel_c *GridType::getVoxel(xmlParser_c & pars) const
 {
   switch (type) {
     case GT_BRICKS:           return new voxel_0_c(pars, this);
@@ -154,7 +154,7 @@ voxel_c * gridType_c::getVoxel(xmlParser_c & pars) const
   }
 }
 
-voxel_c * gridType_c::getVoxel(const voxel_c & orig) const
+voxel_c *GridType::getVoxel(const voxel_c & orig) const
 {
   switch (type) {
     case GT_BRICKS:           return new voxel_0_c(orig);
@@ -166,7 +166,7 @@ voxel_c * gridType_c::getVoxel(const voxel_c & orig) const
   }
 }
 
-voxel_c * gridType_c::getVoxel(const voxel_c * orig) const
+voxel_c *GridType::getVoxel(const voxel_c * orig) const
 {
   switch (type) {
     case GT_BRICKS:           return new voxel_0_c(orig);
@@ -178,7 +178,7 @@ voxel_c * gridType_c::getVoxel(const voxel_c * orig) const
   }
 }
 
-const symmetries_c * gridType_c::getSymmetries(void) const
+const symmetries_c *GridType::getSymmetries(void) const
 {
   if (!sym) {
     switch(type) {
@@ -201,7 +201,7 @@ const symmetries_c * gridType_c::getSymmetries(void) const
   return sym;
 }
 
-unsigned int gridType_c::getCapabilities(void) const
+unsigned int GridType::getCapabilities(void) const
 {
   switch (type)
   {
@@ -230,21 +230,21 @@ unsigned int gridType_c::getCapabilities(void) const
   }
 }
 
-assembler_c * gridType_c::findAssembler(const problem_c * p)
+AssemblerInterface *GridType::findAssembler(const Problem * p)
 {
-  if (assembler_0_c::canHandle(p)) {
+  if (DonKnuthAssembler::canHandle(p)) {
     fprintf(stderr, "using assembler 0\n");
-    return new assembler_0_c();
+    return new DonKnuthAssembler();
   }
-  if (assembler_1_c::canHandle(p)) {
+  if (WeiHwaHuangAssembler::canHandle(p)) {
     fprintf(stderr, "using assembler 1\n");
-    return new assembler_1_c();
+    return new WeiHwaHuangAssembler();
   }
 
   return 0;
 }
 
-stlExporter_c * gridType_c::getStlExporter(void) const
+stlExporter_c *GridType::getStlExporter(void) const
 {
   switch (type) {
     case GT_BRICKS:           return new stlExporter_0_c();

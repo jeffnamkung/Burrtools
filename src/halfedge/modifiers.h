@@ -37,14 +37,14 @@ class faceList_c {
 
   public:
 
-    faceList_c(void) {}
+    faceList_c() {}
 
     void addFace(long voxel, int face);
     void removeFace(long voxel, int face);
 
     bool containsFace(long voxel, int face) const;
 
-    void clear(void) { faces.clear(); }
+    void clear() { faces.clear(); }
 };
 
 void scalePolyhedron(Polyhedron & poly, float val);

@@ -6639,7 +6639,7 @@ Sat Dec  4 16:17:56 CET 2004  Andreas R?ver <roever@users.sourceforge.net>
   * Split dancing link assembler from matrix creation
   
   This should allow to have serveral differen Puzzle piece types.
-  For each type you can write a new frontend to assembler_0_c that
+  For each type you can write a new frontend to DonKnuthAssembler that
   handles the creation of the matrix and the generation of the solution
   
   currently only one frontend, for cube spaces, is defined

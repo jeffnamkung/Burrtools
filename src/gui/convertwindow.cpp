@@ -26,7 +26,7 @@
 #include "../lib/converter.h"
 
 static void cb_convertSelect_stub(Fl_Widget * /*o*/, void *v) { ((convertWindow_c*)(v))->select_cb(); }
-void convertWindow_c::select_cb(void) {
+void convertWindow_c::select_cb() {
   for (unsigned int i = 0; i < gti.size(); i++) {
     if (gti[i]->value()) {
       current = i;
@@ -36,12 +36,13 @@ void convertWindow_c::select_cb(void) {
 
 static void cb_WindowButton_stub(Fl_Widget * /*o*/, void *v) { ((Fl_Double_Window*)(v))->hide(); }
 static void cb_WindowButton_stub2(Fl_Widget * /*o*/, void *v) { ((convertWindow_c*)(v))->okay_cb(); }
-void convertWindow_c::okay_cb(void) {
+void convertWindow_c::okay_cb() {
   _ok = true;
   hide();
 }
 
-convertWindow_c::convertWindow_c(gridType_c::gridType srcType) : LFl_Double_Window(false), _ok(false), current(0)
+convertWindow_c::convertWindow_c(
+    GridType::gridType srcType) : LFl_Double_Window(false), _ok(false), current(0)
 {
   bool found = false;
   unsigned int yPos = 0;
@@ -49,19 +50,19 @@ convertWindow_c::convertWindow_c(gridType_c::gridType srcType) : LFl_Double_Wind
   layouter_c * o = new layouter_c(0, 1, 1, 1);
   o->pitch(5);
 
-  for (int i = 0; i < gridType_c::GT_NUM_GRIDS; i++)
+  for (int i = 0; i < GridType::GT_NUM_GRIDS; i++)
   {
-    if (canConvert(srcType, (gridType_c::gridType)i))
+    if (canConvert(srcType, (GridType::gridType)i))
     {
       found = true;
 
-      gridType_c::gridType g = (gridType_c::gridType)i;
-      gridType_c gt(g);
+      GridType::gridType g = (GridType::gridType)i;
+      GridType gt(g);
       guiGridType_c ggt(&gt);
 
 
       gti.push_back(new LFl_Radio_Button(ggt.getName(), 0, yPos, 1, 1));
-      gridTypes.push_back(gridType_c::gridType(i));
+      gridTypes.push_back(GridType::gridType(i));
 
       gti[yPos]->callback(cb_convertSelect_stub, this);
 
@@ -97,7 +98,7 @@ convertWindow_c::convertWindow_c(gridType_c::gridType srcType) : LFl_Double_Wind
   }
 }
 
-gridType_c::gridType convertWindow_c::getTargetType(void)
+GridType::gridType convertWindow_c::getTargetType(void)
 {
   return gridTypes[current];
 }

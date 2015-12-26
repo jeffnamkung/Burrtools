@@ -22,17 +22,17 @@
 
 #include "../tools/xml.h"
 
-assembler_c::errState assembler_c::createMatrix(const problem_c * /*puz*/, bool /*keepMirror*/, bool /*keepRotations*/, bool /*complete*/)
+AssemblerInterface::errState AssemblerInterface::createMatrix(const Problem * /*puz*/, bool /*keepMirror*/, bool /*keepRotations*/, bool /*complete*/)
 {
   return ERR_NONE;
 }
 
-assembler_c::errState assembler_c::setPosition(const char * /*string*/, const char * /*version*/)
+AssemblerInterface::errState AssemblerInterface::setPosition(const char * /*string*/, const char * /*version*/)
 {
   return ERR_CAN_NOT_RESTORE_VERSION;
 }
 
-void assembler_c::save(xmlWriter_c & xml) const
+void AssemblerInterface::save(xmlWriter_c & xml) const
 {
   xml.newTag("assembler");
   xml.endTag("assembler");

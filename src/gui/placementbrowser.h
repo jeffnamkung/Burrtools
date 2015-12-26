@@ -23,7 +23,7 @@
 
 #include "Layouter.h"
 
-class problem_c;
+class Problem;
 
 class LView3dGroup;
 
@@ -34,14 +34,14 @@ class placementBrowser_c : public LFl_Double_Window {
   LFl_Value_Slider * pieceSelector;
   LFl_Value_Slider * placementSelector;
 
-  problem_c * puzzle;
+  Problem * puzzle;
 
   unsigned int node;
   unsigned int placement;
 
 public:
 
-  placementBrowser_c(problem_c * p);
+  placementBrowser_c(Problem * p);
 
   int handle(int event);
 

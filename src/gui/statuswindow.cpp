@@ -86,7 +86,7 @@ class StatusProgress : public LFl_Double_Window {
     }
 };
 
-void statusWindow_c::cb_removeSelected(void) {
+void statusWindow_c::cb_removeSelected() {
 
   bt_assert(selection.size() <= puz->shapeNumber());
 
@@ -112,7 +112,7 @@ void statusWindow_c::cb_removeSelected(void) {
   hide();
 }
 
-statusWindow_c::statusWindow_c(puzzle_c * p) : LFl_Double_Window(true), puz(p), again(false) {
+statusWindow_c::statusWindow_c(Puzzle * p) : LFl_Double_Window(true), puz(p), again(false) {
 
   StatusProgress *  stp = new StatusProgress;
   stp->show();
@@ -134,7 +134,7 @@ statusWindow_c::statusWindow_c(puzzle_c * p) : LFl_Double_Window(true), puz(p), 
   unsigned int cols = 27;
 
   // 2 more columns for notchable and millable
-  if (p->getGridType()->getType() == gridType_c::GT_BRICKS)
+  if (p->getGridType()->getType() == GridType::GT_BRICKS)
     cols += 4;
 
   voxelTablePuzzle_c shapeTab(p);
@@ -273,7 +273,7 @@ statusWindow_c::statusWindow_c(puzzle_c * p) : LFl_Double_Window(true), puz(p), 
     col += 2;
     Fl::wait(0);
 
-    if (p->getGridType()->getType() == gridType_c::GT_BRICKS) {
+    if (p->getGridType()->getType() == GridType::GT_BRICKS) {
       if (isNotchable(v))
         b = new LFl_Box("X", col, s+head);
 
@@ -347,7 +347,7 @@ statusWindow_c::statusWindow_c(puzzle_c * p) : LFl_Double_Window(true), puz(p), 
   (new LFl_Box("3D", col++, 1))->pitch(2);
   new LFl_Line(col++, 0, 1, lines+head, 2);
 
-  if (p->getGridType()->getType() == gridType_c::GT_BRICKS) {
+  if (p->getGridType()->getType() == GridType::GT_BRICKS) {
 
     (new LFl_Box("Tools", col, 0, 3))->pitch(2);
     (new LFl_Box("Notch", col++, 1))->pitch(2);

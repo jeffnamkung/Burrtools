@@ -22,12 +22,12 @@
 
 #include "voxel.h"
 #include "voxel_0.h"
-#include "gridtype.h"
+#include "grid-type.h"
 
 /* a piece is notchable, if it can be made purely by cutting */
 bool isNotchable(const voxel_c * v)
 {
-  gridType_c gt(gridType_c::GT_BRICKS);
+  GridType gt(GridType::GT_BRICKS);
 
   voxel_0_c vxy(v->getX(), v->getY(), 1u, &gt, 0);
   voxel_0_c vxz(v->getX(), 1u, v->getZ(), &gt, 0);

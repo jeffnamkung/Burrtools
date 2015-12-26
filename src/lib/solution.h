@@ -26,7 +26,7 @@ class separation_c;
 class separationInfo_c;
 class xmlParser_c;
 class xmlWriter_c;
-class gridType_c;
+class GridType;
 class disassembly_c;
 
 /**
@@ -74,7 +74,7 @@ public:
     assembly(assm), tree(0), treeInfo(0), assemblyNum(assmNum), solutionNum(0) {}
 
   /** load a solution from file */
-  solution_c(xmlParser_c & pars, unsigned int pieces, const gridType_c * gt);
+  solution_c(xmlParser_c & pars, unsigned int pieces, const GridType * gt);
 
   ~solution_c(void);
 
@@ -82,11 +82,11 @@ public:
   void save(xmlWriter_c & xml) const;
 
   /** get the assembly from this solution, it will always be not NULL */
-  assembly_c * getAssembly(void) { return assembly; }
+  assembly_c * getAssembly() { return assembly; }
   const assembly_c * getAssembly(void) const { return assembly; }
 
   /** get the full disassembly or 0 if there is none */
-  separation_c * getDisassembly(void) { return tree; }
+  separation_c * getDisassembly() { return tree; }
   const separation_c * getDisassembly(void) const { return tree; }
 
   /** get either the disassembly or the disassembly information or nothing */

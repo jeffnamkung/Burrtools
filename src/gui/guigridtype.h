@@ -21,24 +21,24 @@
 #ifndef __GUI_GRID_TYPE__
 #define __GUI_GRID_TYPE__
 
-#include "../lib/gridtype.h"
+#include "grid-type.h"
 
 class gridEditor_c;
 class gridTypeGui_c;
 class ToolTab;
-class puzzle_c;
+class Puzzle;
 
 class guiGridType_c {
 
   private:
 
-    gridType_c * gt;
+    GridType * gt;
 
   public:
 
-    guiGridType_c(gridType_c * gt);
+    guiGridType_c(GridType * gt);
 
-    gridEditor_c * getGridEditor(int x, int y, int w, int h, puzzle_c * puzzle) const;
+    gridEditor_c * getGridEditor(int x, int y, int w, int h, Puzzle * puzzle) const;
 
     /* returns a group to edit the parameters for this grid type
      * is is used in the new puzzle grid selection dialogue
@@ -50,7 +50,7 @@ class guiGridType_c {
     char * getIcon(void) const;
     const char * getName(void) const;
 
-    const gridType_c * getGridType(void) const { return gt; }
+    const GridType * getGridType(void) const { return gt; }
 
     /* return the tool tab for the current grid type */
     ToolTab * getToolTab(int x, int y, int w, int h) const;

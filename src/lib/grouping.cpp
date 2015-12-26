@@ -46,12 +46,12 @@ void grouping_c::addPieces(unsigned int pc, unsigned int group, unsigned int cou
   }
 }
 
-void grouping_c::reSet(void) {
+void grouping_c::reSet() {
   sets.clear();
   failed = false;
 }
 
-void grouping_c::newSet(void) {
+void grouping_c::newSet() {
 
   if (!failed) {
 

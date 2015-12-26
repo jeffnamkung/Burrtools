@@ -30,12 +30,12 @@ ResultViewer_c::ResultViewer_c(int x, int y, int w, int h) : Fl_Box(0, 0, 10, 10
   clear_visible_focus();
 }
 
-void ResultViewer_c::setPuzzle(problem_c * p) {
+void ResultViewer_c::setPuzzle(Problem * p) {
   puzzle = p;
   redraw();
 }
 
-void ResultViewer_c::draw(void) {
+void ResultViewer_c::draw() {
   if (!puzzle || !puzzle->resultValid()) {
     label("No Result");
     color(bg);

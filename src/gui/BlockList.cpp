@@ -155,7 +155,7 @@ int BlockList::handle(int event) {
   return 0;
 }
 
-unsigned int SelectableList::getSelection(void) {
+unsigned int SelectableList::getSelection() {
   if (currentSelect == (unsigned int)-1)
     if (blockNumber() > 0)
       currentSelect = 0;
@@ -265,13 +265,13 @@ void TextList::blockSize(unsigned int block, unsigned int *w, unsigned int *h) {
   *h = hi + 4;
 }
 
-void ColorSelector::setPuzzle(puzzle_c *pz) {
+void ColorSelector::setPuzzle(Puzzle *pz) {
   bt_assert(pz);
   puzzle = pz;
   setSelection(0);
 }
 
-unsigned int ColorSelector::blockNumber(void) {
+unsigned int ColorSelector::blockNumber() {
   if (includeNeutral)
     return puzzle->colorNumber() + 1;
   else
@@ -304,7 +304,7 @@ void ColorSelector::getText(unsigned int block, char * text) {
     snprintf(text, 200, "C%i", block);
 }
 
-void PieceSelector::setPuzzle(puzzle_c *pz) {
+void PieceSelector::setPuzzle(Puzzle *pz) {
   bt_assert(pz);
   puzzle = pz;
   if (pz->shapeNumber())
@@ -313,7 +313,7 @@ void PieceSelector::setPuzzle(puzzle_c *pz) {
     setSelection((unsigned int)-1);
 }
 
-unsigned int PieceSelector::blockNumber(void) {
+unsigned int PieceSelector::blockNumber() {
   return puzzle->shapeNumber();
 }
 
@@ -336,13 +336,13 @@ void PieceSelector::getColor(unsigned int block, unsigned char *r,  unsigned cha
   *b = pieceColorBi(block);
 }
 
-void ProblemSelector::setPuzzle(const puzzle_c *pz) {
+void ProblemSelector::setPuzzle(const Puzzle *pz) {
   bt_assert(pz);
   puzzle = pz;
   setSelection(0);
 }
 
-unsigned int ProblemSelector::blockNumber(void) {
+unsigned int ProblemSelector::blockNumber() {
   return puzzle->problemNumber();
 }
 
@@ -359,12 +359,12 @@ void ProblemSelector::getColor(unsigned int block, unsigned char *r,  unsigned c
   *b = pieceColorBi(block);
 }
 
-void PiecesList::setPuzzle(const problem_c *pz) {
+void PiecesList::setPuzzle(const Problem *pz) {
   puzzle = pz;
   redraw();
 }
 
-unsigned int PiecesList::blockNumber(void) {
+unsigned int PiecesList::blockNumber() {
   if (!puzzle)
     return 0;
 
@@ -421,7 +421,7 @@ PieceVisibility::PieceVisibility(int x, int y, int w, int h) : BlockList(x, y, w
   useState = 0;
 }
 
-unsigned int PieceVisibility::blockNumber(void) {
+unsigned int PieceVisibility::blockNumber() {
   if (puzzle)
     return puzzle->pieceNumber();
   else
@@ -546,7 +546,7 @@ void PieceVisibility::blockSize(unsigned int block, unsigned int *w, unsigned in
   *h = hi + 4;
 }
 
-void PieceVisibility::setPuzzle(const problem_c *pz) {
+void PieceVisibility::setPuzzle(const Problem *pz) {
 
   unsigned int c = pz ? pz->pieceNumber() : 0;
 
@@ -622,7 +622,7 @@ void PieceVisibility::hidePiece(unsigned int s) {
 #define CC_ARROW_LENGTH 8
 #define CC_ARROW_WIDTH 2
 
-void ColorConstraintsEdit::draw(void) {
+void ColorConstraintsEdit::draw() {
 
   /* no valid problem -> exit */
   if (problem >= puzzle->problemNumber())
@@ -853,7 +853,7 @@ void ColorConstraintsEdit::setSelection(unsigned int num) {
   redraw();
 }
 
-void ColorConstraintsEdit::setPuzzle(puzzle_c *pz, unsigned int prob) {
+void ColorConstraintsEdit::setPuzzle(Puzzle *pz, unsigned int prob) {
   bt_assert(pz);
   if ((puzzle != pz) || (problem != prob)) {
     puzzle = pz;

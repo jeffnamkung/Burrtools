@@ -57,5 +57,5 @@ multiLineWindow_c::multiLineWindow_c(const char * tit, const char *lab, const ch
   _saveChanges = false;
 }
 
-const char * multiLineWindow_c::getText(void) { return inp->value(); }
+const char * multiLineWindow_c::getText() { return inp->value(); }
 

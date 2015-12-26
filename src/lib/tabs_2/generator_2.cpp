@@ -74,7 +74,7 @@ unsigned char ssss(int trans, const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> & s) 
 
 
 /* this function creates the lookup table for the function in the symmetry c-file */
-void outputMinimumSymmetries(void) {
+void outputMinimumSymmetries() {
 
   FILE * out = fopen("transformmini.inc", "w");
 
@@ -100,7 +100,7 @@ void outputMinimumSymmetries(void) {
 * rotations
 */
 
-void outputCompleteSymmetries(void) {
+void outputCompleteSymmetries() {
 
   FILE * fout = fopen("unifiedsym.inc", "w");
 
@@ -149,7 +149,7 @@ void outputCompleteSymmetries(void) {
 /* this function only one bit is set for each possible transformation that results in one possible orientation
  * of the shape
  */
-void outputUniqueSymmetries(void) {
+void outputUniqueSymmetries() {
 
   FILE * fout = fopen("uniquesym.inc", "w");
 
@@ -265,7 +265,7 @@ bool mequal(double *m, int num) {
 }
 
 
-void multTranformationsMatrix(void) {
+void multTranformationsMatrix() {
 
   FILE * out = fopen("transmult.inc", "w");
 

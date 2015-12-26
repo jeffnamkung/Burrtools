@@ -23,7 +23,7 @@
 
 #include "Layouter.h"
 
-class puzzle_c;
+class Puzzle;
 class ProblemSelector;
 class Fl_Round_Button;
 class Fl_Check_Button;
@@ -49,9 +49,9 @@ class assmImportWindow_c : public LFl_Double_Window {
 
   public:
 
-    assmImportWindow_c(const puzzle_c * puzzle);
+    assmImportWindow_c(const Puzzle * puzzle);
 
-    bool okSelected(void) { return _ok; }
+    bool okSelected() { return _ok; }
 
     void okay_cb(void);
 

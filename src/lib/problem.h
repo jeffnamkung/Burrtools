@@ -39,8 +39,8 @@ class separation_c;
 class separationInfo_c;
 class disassembly_c;
 class assembly_c;
-class gridType_c;
-class puzzle_c;
+class GridType;
+class Puzzle;
 class part_c;
 class solution_c;
 class xmlWriter_c;
@@ -67,14 +67,14 @@ typedef enum {
  * occurrences are possible) that need to be assembles into the given solution
  * shape the class also handles the solutions that belong to the problem
  */
-class problem_c {
+class Problem {
 
 private:
 
   /**
    * the puzzle this problem belongs to, it must always be there
    */
-  puzzle_c & puzzle;
+  Puzzle & puzzle;
 
   /**
    * the pieces for this problem and how many of the pieces
@@ -108,7 +108,7 @@ private:
    * if the pointer is 0 we have never started an assembly process within this session
    * statistics can be found in the assembler, too
    */
-  assembler_c * assm;
+  AssemblerInterface * assm;
 
   /**
    * the name of the problem, so that the user can easily select one
@@ -172,20 +172,20 @@ public:
   /**
    * constructor: create new empty problem for the given puzzle
    */
-  problem_c(puzzle_c & puz);
+  Problem(Puzzle & puz);
   /**
    * constructor: load a problem from the given XML node for the given puzzle
    */
-  problem_c(puzzle_c & puz, xmlParser_c & pars);
+  Problem(Puzzle & puz, xmlParser_c & pars);
   /**
    * constructor: copy the given problem, except for label and solutions
    */
-  problem_c(const problem_c * prob, puzzle_c & puz);
+  Problem(const Problem * prob, Puzzle & puz);
 
   /**
    * destructor: free all resources
    */
-  ~problem_c(void);
+  ~Problem(void);
 
   /**
    * save the problem into the returned XML node
@@ -196,12 +196,12 @@ public:
    * return the current set grid type for this puzzle.
    * the grid type is taken from the puzzle this problem belongs to
    */
-  const gridType_c * getGridType(void) const;
+  const GridType * getGridType(void) const;
   /**
    * return the current set grid type for this puzzle.
    * the grid type is taken from the puzzle this problem belongs to
    */
-  gridType_c * getGridType(void);
+  GridType * getGridType(void);
 
   /**
    * get the name of the problem.
@@ -364,7 +364,7 @@ public:
   /** set the number to a valid value */
   void setMaxHoles(unsigned int value) { bt_assert(value < 0xFFFFFFFF); maxHoles = value; }
   /** invalidate the value */
-  void setMaxHolesInvalid(void) { maxHoles = 0xFFFFFFFF; }
+  void setMaxHolesInvalid() { maxHoles = 0xFFFFFFFF; }
   //@}
 
   /**
@@ -409,15 +409,15 @@ public:
    * The set assembler will be reset to a saved state, when that information is
    * available. If not simply set the assembler
    */
-  assembler_c::errState setAssembler(assembler_c * assm);
+  AssemblerInterface::errState setAssembler(AssemblerInterface * assm);
   /** get the assembler */
-  assembler_c * getAssembler(void) { return assm; }
+  AssemblerInterface * getAssembler() { return assm; }
   /** get the assembler */
-  const assembler_c * getAssembler(void) const { return assm; }
+  const AssemblerInterface * getAssembler(void) const { return assm; }
   /** call this for each found assembly */
-  void incNumAssemblies(void) { bt_assert(solveState == SS_SOLVING); numAssemblies++; }
+  void incNumAssemblies() { bt_assert(solveState == SS_SOLVING); numAssemblies++; }
   /** call this for each found solution */
-  void incNumSolutions(void) { bt_assert(solveState == SS_SOLVING); numSolutions++; }
+  void incNumSolutions() { bt_assert(solveState == SS_SOLVING); numSolutions++; }
   /** add time used to solve the puzzle (in seconds) the value is added to the already accumulated time. */
   void addTime(unsigned long time) { bt_assert(solveState == SS_SOLVING); usedTime += time; }
   /** add an assembly as a solution */
@@ -433,7 +433,7 @@ public:
   /** once finished analysing call finishedSolving for finish off all actions.
    * After that call no more modifications are possible, no more addSOlution, incNumAssemblies and so on.
    * */
-  void finishedSolving(void) { solveState = SS_SOLVED; }
+  void finishedSolving() { solveState = SS_SOLVED; }
 
   /** transfer the problem into the unknown state */
   void makeUnknown(void);
@@ -481,8 +481,8 @@ public:
 private:
 
   // no copying and assigning
-  problem_c(const problem_c&);
-  void operator=(const problem_c&);
+  Problem(const Problem &);
+  void operator=(const Problem &);
 
 };
 

@@ -75,7 +75,7 @@ void voxelFrame_c::setRotaterMethod(int method)
   rotMethod = method;
 }
 
-voxelFrame_c::~voxelFrame_c(void) {
+voxelFrame_c::~voxelFrame_c() {
   clearSpaces();
   if (curAssembly) {
     delete curAssembly;
@@ -767,7 +767,7 @@ unsigned int voxelFrame_c::addSpace(const voxel_c * vx) {
   return shapes.size()-1;
 }
 
-void voxelFrame_c::clearSpaces(void) {
+void voxelFrame_c::clearSpaces() {
 
   for (unsigned int i = 0; i < shapes.size(); i++) {
     if (shapes[i].list) glDeleteLists(shapes[i].list, 1);
@@ -861,12 +861,12 @@ void voxelFrame_c::setMarker(int x1, int y1, int x2, int y2, int z, int mT) {
   redraw();
 }
 
-void voxelFrame_c::hideMarker(void) {
+void voxelFrame_c::hideMarker() {
   markerType = -1;
   redraw();
 }
 
-void voxelFrame_c::showNothing(void) {
+void voxelFrame_c::showNothing() {
   clearSpaces();
 }
 
@@ -882,7 +882,7 @@ void voxelFrame_c::setInsideVisible(bool on)
   redraw();
 }
 
-void voxelFrame_c::showSingleShape(const puzzle_c * puz, unsigned int shapeNum) {
+void voxelFrame_c::showSingleShape(const Puzzle * puz, unsigned int shapeNum) {
 
   hideMarker();
   clearSpaces();
@@ -943,14 +943,14 @@ void voxelFrame_c::showMesh(Polyhedron * poly)
   redraw();
 }
 
-void voxelFrame_c::showProblem(const puzzle_c * puz, unsigned int problem, unsigned int selShape) {
+void voxelFrame_c::showProblem(const Puzzle * puz, unsigned int problem, unsigned int selShape) {
 
   hideMarker();
   clearSpaces();
 
   if (puz && problem < puz->problemNumber()) {
 
-    const problem_c * pr = puz->getProblem(problem);
+    const Problem * pr = puz->getProblem(problem);
 
     float diagonal = 1;
 
@@ -1035,7 +1035,7 @@ void voxelFrame_c::showProblem(const puzzle_c * puz, unsigned int problem, unsig
   redraw();
 }
 
-void voxelFrame_c::showColors(const puzzle_c * puz, colorMode mode) {
+void voxelFrame_c::showColors(const Puzzle * puz, colorMode mode) {
 
   if (mode == paletteColor) {
 
@@ -1061,7 +1061,7 @@ void voxelFrame_c::showColors(const puzzle_c * puz, colorMode mode) {
   redraw();
 }
 
-void voxelFrame_c::showAssembly(const problem_c * puz, unsigned int solNum) {
+void voxelFrame_c::showAssembly(const Problem * puz, unsigned int solNum) {
 
   bt_assert(puz->resultValid());
 
@@ -1132,7 +1132,7 @@ void voxelFrame_c::showAssembly(const problem_c * puz, unsigned int solNum) {
   redraw();
 }
 
-void voxelFrame_c::showAssemblerState(const problem_c * puz, const assembly_c * assm) {
+void voxelFrame_c::showAssemblerState(const Problem * puz, const assembly_c * assm) {
 
   bt_assert(puz->resultValid());
 
@@ -1186,7 +1186,7 @@ void voxelFrame_c::showAssemblerState(const problem_c * puz, const assembly_c * 
   redraw();
 }
 
-void voxelFrame_c::showPlacement(const problem_c * puz, unsigned int piece, unsigned char t, int x, int y, int z)
+void voxelFrame_c::showPlacement(const Problem * puz, unsigned int piece, unsigned char t, int x, int y, int z)
 {
   bt_assert(puz->resultValid());
 

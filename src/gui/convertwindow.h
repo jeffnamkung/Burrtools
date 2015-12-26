@@ -23,7 +23,7 @@
 
 #include "Layouter.h"
 
-#include "../lib/gridtype.h"
+#include "grid-type.h"
 
 #include <vector>
 
@@ -40,16 +40,16 @@ class convertWindow_c : public LFl_Double_Window {
 
     bool _ok;
     unsigned int current;
-    std::vector<gridType_c::gridType> gridTypes;
+    std::vector<GridType::gridType> gridTypes;
     std::vector<LFl_Radio_Button*> gti;
 
   public:
 
-    convertWindow_c(gridType_c::gridType srcType);
+    convertWindow_c(GridType::gridType srcType);
 
-    gridType_c::gridType getTargetType(void);
+    GridType::gridType getTargetType(void);
 
-    bool okSelected(void) { return _ok; }
+    bool okSelected() { return _ok; }
 
     void select_cb(void);
     void okay_cb(void);

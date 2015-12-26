@@ -33,7 +33,7 @@ static void cb_Button1_stub(Fl_Widget* /*o*/, void* v) {
 static void cb_Button2_stub(Fl_Widget* /*o*/, void* v) { ((vectorExportWindow_c*)v)->hide(); }
 
 static void cb_FileChoose_stub(Fl_Widget* /*o*/, void* v) { ((vectorExportWindow_c*)v)->cb_FileChoose(); }
-void vectorExportWindow_c::cb_FileChoose(void) {
+void vectorExportWindow_c::cb_FileChoose() {
 
   const char * newFile = flu_file_chooser("File to save image to", "", inp->value());
 
@@ -95,12 +95,12 @@ vectorExportWindow_c::vectorExportWindow_c(void) : LFl_Double_Window(false) {
   cancelled = true;
 }
 
-const char * vectorExportWindow_c::getFileName(void) {
+const char * vectorExportWindow_c::getFileName() {
 
   return inp->value();
 }
 
-voxelFrame_c::VectorFiletype vectorExportWindow_c::getVectorType(void) {
+voxelFrame_c::VectorFiletype vectorExportWindow_c::getVectorType() {
 
   for (int i = 0; i < radGroup->children(); i++)
     if (((LFl_Radio_Button*)radGroup->child(i))->value() > 0)

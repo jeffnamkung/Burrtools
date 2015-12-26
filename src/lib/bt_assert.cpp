@@ -28,7 +28,7 @@
 assert_log_c * assert_log;
 
 
-void bt_assert_init(void) {
+void bt_assert_init() {
   assert_log = new assert_log_c();
 }
 

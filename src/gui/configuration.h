@@ -34,26 +34,26 @@ public:
   configuration_c(void);
   ~configuration_c(void);
 
-  bool useTooltips(void) { return i_use_tooltips; }
+  bool useTooltips() { return i_use_tooltips; }
   void useTooltips(bool val) { i_use_tooltips = val; }
 
-  bool useLightning(void) { return i_use_lightning; }
+  bool useLightning() { return i_use_lightning; }
   void useLightning(bool val) { i_use_lightning = val; }
 
-  bool useRubberband(void) { return i_use_rubberband; }
+  bool useRubberband() { return i_use_rubberband; }
   void useRubberband(bool val) { i_use_rubberband = val; }
 
-  bool useBlendedRemoving(void) { return i_use_blendedRemoving; }
+  bool useBlendedRemoving() { return i_use_blendedRemoving; }
   void useBlendedRemoving(bool val) { i_use_blendedRemoving = val; }
 
-  bool useDisplayLists(void) { return i_use_displayLists; }
+  bool useDisplayLists() { return i_use_displayLists; }
 
-  int rotationMethod(void) { return i_rotationMethod?1:0; }
+  int rotationMethod() { return i_rotationMethod?1:0; }
 
-  int windowPosX(void) { return i_window_pos_x; }
-  int windowPosY(void) { return i_window_pos_y; }
-  int windowPosW(void) { return i_window_pos_w; }
-  int windowPosH(void) { return i_window_pos_h; }
+  int windowPosX() { return i_window_pos_x; }
+  int windowPosY() { return i_window_pos_y; }
+  int windowPosW() { return i_window_pos_w; }
+  int windowPosH() { return i_window_pos_h; }
   void windowPos(int x, int y, int w, int h) {
     i_window_pos_x = x;
     i_window_pos_y = y;

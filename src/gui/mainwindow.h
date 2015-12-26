@@ -28,10 +28,10 @@
 class VoxelEditGroup_c;
 class ChangeSize;
 class ToolTab;
-class puzzle_c;
+class Puzzle;
 class solveThread_c;
 class disasmToMoves_c;
-class gridType_c;
+class GridType;
 class guiGridType_c;
 class layouter_c;
 
@@ -62,7 +62,7 @@ class Fl_Progress;
 
 class mainWindow_c : public LFl_Double_Window {
 
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   guiGridType_c * ggt;  // this is the guigridtype for the puzzle, is must always be in sync
   char * fname;
   disasmToMoves_c * disassemble;
@@ -163,7 +163,7 @@ class mainWindow_c : public LFl_Double_Window {
   void changeProblem(unsigned int nr);
   void changeColor(unsigned int nr);
 
-  void ReplacePuzzle(puzzle_c * newPuzzle);
+  void ReplacePuzzle(Puzzle * newPuzzle);
 
   void activateShape(unsigned int number);
   void activateProblem(unsigned int prob);
@@ -176,7 +176,7 @@ class mainWindow_c : public LFl_Double_Window {
 
 public:
 
-  mainWindow_c(gridType_c * gt);
+  mainWindow_c(GridType * gt);
   virtual ~mainWindow_c();
 
   int handle(int event);
@@ -187,7 +187,7 @@ public:
   void hide(void);
 
   /* this is used on assert to save the current puzzle */
-  const puzzle_c * getPuzzle(void) const { return puzzle; }
+  const Puzzle * getPuzzle(void) const { return puzzle; }
 
   /* update the interface to represent the latest state of
    * the solving progress, that works in background

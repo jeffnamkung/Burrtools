@@ -69,13 +69,13 @@ class part_c {
     std::vector<group_c> groups;
 };
 
-problem_c::problem_c(puzzle_c & puz) :
+Problem::Problem(Puzzle & puz) :
   puzzle(puz), result(0xFFFFFFFF),
   assm(0),solveState(SS_UNSOLVED), numAssemblies(0),
   numSolutions(0), usedTime(0), maxHoles(0xFFFFFFFF)
 {}
 
-problem_c::~problem_c(void) {
+Problem::~Problem() {
   for (unsigned int i = 0; i < solutions.size(); i++)
     delete solutions[i];
 
@@ -86,7 +86,7 @@ problem_c::~problem_c(void) {
     delete assm;
 }
 
-problem_c::problem_c(const problem_c * orig, puzzle_c & puz) :
+Problem::Problem(const Problem * orig, Puzzle & puz) :
   puzzle(puz), result(orig->result),
   solveState(SS_UNSOLVED), numAssemblies(0), numSolutions(0), usedTime(0)
 {
@@ -107,7 +107,7 @@ problem_c::problem_c(const problem_c * orig, puzzle_c & puz) :
   // likely give a new name any way
 }
 
-void problem_c::save(xmlWriter_c & xml) const
+void Problem::save(xmlWriter_c & xml) const
 {
   xml.newTag("problem");
 
@@ -211,7 +211,7 @@ void problem_c::save(xmlWriter_c & xml) const
   xml.endTag("problem");
 }
 
-problem_c::problem_c(puzzle_c & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFFFFF), assm(0)
+Problem::Problem(Puzzle & puz, xmlParser_c & pars) : puzzle(puz), result(0xFFFFFFFF), assm(0)
 {
   pars.require(xmlParser_c::START_TAG, "problem");
 
@@ -435,7 +435,7 @@ problem_c::problem_c(puzzle_c & puz, xmlParser_c & pars) : puzzle(puz), result(0
 
 /************** PROBLEM ****************/
 
-void problem_c::removeShape(unsigned short idx) {
+void Problem::removeShape(unsigned short idx) {
 
   if (result == idx)
   {
@@ -456,7 +456,7 @@ void problem_c::removeShape(unsigned short idx) {
     result--;
 }
 
-void problem_c::exchangeShapeId(unsigned int s1, unsigned int s2) {
+void Problem::exchangeShapeId(unsigned int s1, unsigned int s2) {
 
   if (result == s1) result = s2;
   else if (result == s2) result = s1;
@@ -466,7 +466,7 @@ void problem_c::exchangeShapeId(unsigned int s1, unsigned int s2) {
     else if (parts[i]->shapeId == s2) parts[i]->shapeId = s1;
 }
 
-void problem_c::allowPlacement(unsigned int pc, unsigned int res) {
+void Problem::allowPlacement(unsigned int pc, unsigned int res) {
   bt_assert(pc <= puzzle.colorNumber());
   bt_assert(res <= puzzle.colorNumber());
 
@@ -476,7 +476,7 @@ void problem_c::allowPlacement(unsigned int pc, unsigned int res) {
   colorConstraints.insert((pc-1) << 16 | (res-1));
 }
 
-void problem_c::disallowPlacement(unsigned int pc, unsigned int res) {
+void Problem::disallowPlacement(unsigned int pc, unsigned int res) {
   bt_assert(pc <= puzzle.colorNumber());
   bt_assert(res <= puzzle.colorNumber());
 
@@ -488,7 +488,7 @@ void problem_c::disallowPlacement(unsigned int pc, unsigned int res) {
     colorConstraints.erase(i);
 }
 
-bool problem_c::placementAllowed(unsigned int pc, unsigned int res) const {
+bool Problem::placementAllowed(unsigned int pc, unsigned int res) const {
   bt_assert(pc <= puzzle.colorNumber());
   bt_assert(res <= puzzle.colorNumber());
 
@@ -499,7 +499,7 @@ bool problem_c::placementAllowed(unsigned int pc, unsigned int res) const {
 }
 
 
-void problem_c::exchangeShape(unsigned int s1, unsigned int s2) {
+void Problem::exchangeShape(unsigned int s1, unsigned int s2) {
   bt_assert(s1 < parts.size());
   bt_assert(s2 < parts.size());
 
@@ -562,7 +562,7 @@ void problem_c::exchangeShape(unsigned int s1, unsigned int s2) {
     }
 }
 
-void problem_c::setResultId(unsigned int shape)
+void Problem::setResultId(unsigned int shape)
 {
   bt_assert(shape < puzzle.shapeNumber());
 
@@ -573,26 +573,26 @@ void problem_c::setResultId(unsigned int shape)
   }
 }
 
-unsigned int problem_c::getResultId(void) const {
+unsigned int Problem::getResultId(void) const {
   bt_assert(result < puzzle.shapeNumber());
   return result;
 }
-bool problem_c::resultValid(void) const {
+bool Problem::resultValid(void) const {
   return result < puzzle.shapeNumber();
 }
 
 /* get the result shape voxel space */
-const voxel_c * problem_c::getResultShape(void) const {
+const voxel_c *Problem::getResultShape(void) const {
   bt_assert(result < puzzle.shapeNumber());
   return puzzle.getShape(result);
 }
 
-voxel_c * problem_c::getResultShape(void) {
+voxel_c *Problem::getResultShape() {
   bt_assert(result < puzzle.shapeNumber());
   return puzzle.getShape(result);
 }
 
-void problem_c::setShapeMinimum(unsigned int shape, unsigned int count)
+void Problem::setShapeMinimum(unsigned int shape, unsigned int count)
 {
   bt_assert(shape < puzzle.shapeNumber());
 
@@ -641,7 +641,7 @@ void problem_c::setShapeMinimum(unsigned int shape, unsigned int count)
   }
 }
 
-void problem_c::setShapeMaximum(unsigned int shape, unsigned int count)
+void Problem::setShapeMaximum(unsigned int shape, unsigned int count)
 {
   bt_assert(shape < puzzle.shapeNumber());
 
@@ -729,7 +729,7 @@ void problem_c::setShapeMaximum(unsigned int shape, unsigned int count)
   }
 }
 
-unsigned int problem_c::getShapeMinimum(unsigned int shape) const {
+unsigned int Problem::getShapeMinimum(unsigned int shape) const {
   bt_assert(shape < puzzle.shapeNumber());
 
   for (unsigned int id = 0; id < parts.size(); id++)
@@ -739,7 +739,7 @@ unsigned int problem_c::getShapeMinimum(unsigned int shape) const {
   return 0;
 }
 
-unsigned int problem_c::getShapeMaximum(unsigned int shape) const {
+unsigned int Problem::getShapeMaximum(unsigned int shape) const {
   bt_assert(shape < puzzle.shapeNumber());
 
   for (unsigned int id = 0; id < parts.size(); id++)
@@ -750,7 +750,7 @@ unsigned int problem_c::getShapeMaximum(unsigned int shape) const {
 }
 
 /* return the number of pieces in the problem (sum of all counts of all shapes */
-unsigned int problem_c::pieceNumber(void) const {
+unsigned int Problem::pieceNumber(void) const {
   unsigned int result = 0;
 
   for (unsigned int i = 0; i < parts.size(); i++)
@@ -760,13 +760,13 @@ unsigned int problem_c::pieceNumber(void) const {
 }
 
 /* return the shape id of the given shape (index into the shape array of the puzzle */
-unsigned int problem_c::getShape(unsigned int shapeID) const {
+unsigned int Problem::getShape(unsigned int shapeID) const {
   bt_assert(shapeID < parts.size());
 
   return parts[shapeID]->shapeId;
 }
 
-unsigned int problem_c::getShapeId(unsigned int shape) const {
+unsigned int Problem::getShapeId(unsigned int shape) const {
   bt_assert(shape < puzzle.shapeNumber());
 
   for (unsigned int i = 0; i < parts.size(); i++)
@@ -777,7 +777,7 @@ unsigned int problem_c::getShapeId(unsigned int shape) const {
   return 0;
 }
 
-bool problem_c::usesShape(unsigned int shape) const {
+bool Problem::usesShape(unsigned int shape) const {
   if (result == shape)
     return true;
 
@@ -788,36 +788,36 @@ bool problem_c::usesShape(unsigned int shape) const {
   return false;
 }
 
-const voxel_c * problem_c::getShapeShape(unsigned int shapeID) const {
+const voxel_c *Problem::getShapeShape(unsigned int shapeID) const {
   bt_assert(shapeID < parts.size());
   return puzzle.getShape(parts[shapeID]->shapeId);
 }
 
-voxel_c * problem_c::getShapeShape(unsigned int shapeID) {
+voxel_c *Problem::getShapeShape(unsigned int shapeID) {
   bt_assert(shapeID < parts.size());
   return puzzle.getShape(parts[shapeID]->shapeId);
 }
 
 /* return the instance count for one shape of the problem */
-unsigned int problem_c::getShapeMin(unsigned int shapeID) const {
+unsigned int Problem::getShapeMin(unsigned int shapeID) const {
   bt_assert(shapeID < parts.size());
 
   return parts[shapeID]->min;
 }
-unsigned int problem_c::getShapeMax(unsigned int shapeID) const {
+unsigned int Problem::getShapeMax(unsigned int shapeID) const {
   bt_assert(shapeID < parts.size());
 
   return parts[shapeID]->max;
 }
 
-void problem_c::addSolution(assembly_c * assm) {
+void Problem::addSolution(assembly_c * assm) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 
   solutions.push_back(new solution_c(assm, numAssemblies));
 }
 
-void problem_c::addSolution(assembly_c * assm, separation_c * disasm, unsigned int pos) {
+void Problem::addSolution(assembly_c * assm, separation_c * disasm, unsigned int pos) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 
@@ -828,7 +828,7 @@ void problem_c::addSolution(assembly_c * assm, separation_c * disasm, unsigned i
     solutions.push_back(new solution_c(assm, numAssemblies, disasm, numSolutions));
 }
 
-void problem_c::addSolution(assembly_c * assm, separationInfo_c * disasm, unsigned int pos) {
+void Problem::addSolution(assembly_c * assm, separationInfo_c * disasm, unsigned int pos) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 
@@ -839,7 +839,7 @@ void problem_c::addSolution(assembly_c * assm, separationInfo_c * disasm, unsign
     solutions.push_back(new solution_c(assm, numAssemblies, disasm, numSolutions));
 }
 
-void problem_c::removeAllSolutions(void) {
+void Problem::removeAllSolutions() {
   for (unsigned int i = 0; i < solutions.size(); i++)
     delete solutions[i];
   solutions.clear();
@@ -852,13 +852,13 @@ void problem_c::removeAllSolutions(void) {
   usedTime = 0;
 }
 
-void problem_c::removeSolution(unsigned int sol) {
+void Problem::removeSolution(unsigned int sol) {
   bt_assert(sol < solutions.size());
   delete solutions[sol];
   solutions.erase(solutions.begin()+sol);
 }
 
-assembler_c::errState problem_c::setAssembler(assembler_c * assm) {
+AssemblerInterface::errState Problem::setAssembler(AssemblerInterface * assm) {
 
 
   if (assemblerState.length()) {
@@ -866,10 +866,10 @@ assembler_c::errState problem_c::setAssembler(assembler_c * assm) {
     bt_assert(solveState == SS_SOLVING);
 
     // if we have some assembler position data, try to load that
-    assembler_c::errState err = assm->setPosition(assemblerState.c_str(), assemblerVersion.c_str());
+    AssemblerInterface::errState err = assm->setPosition(assemblerState.c_str(), assemblerVersion.c_str());
 
     // when we could not load, return with error and reset to unsolved
-    if (err != assembler_c::ERR_NONE) {
+    if (err != AssemblerInterface::ERR_NONE) {
       solveState = SS_UNSOLVED;
       return err;
     }
@@ -889,10 +889,10 @@ assembler_c::errState problem_c::setAssembler(assembler_c * assm) {
   }
 
   this->assm = assm;
-  return assembler_c::ERR_NONE;
+  return AssemblerInterface::ERR_NONE;
 }
 
-void problem_c::setShapeGroup(unsigned int shapeID, unsigned short group, unsigned short count) {
+void Problem::setShapeGroup(unsigned int shapeID, unsigned short group, unsigned short count) {
   bt_assert(shapeID < parts.size());
 
   // not first look, if we already have this group number in our list
@@ -912,27 +912,27 @@ void problem_c::setShapeGroup(unsigned int shapeID, unsigned short group, unsign
     parts[shapeID]->addGroup(group, count);
 }
 
-unsigned short problem_c::getShapeGroupNumber(unsigned int shapeID) const {
+unsigned short Problem::getShapeGroupNumber(unsigned int shapeID) const {
   bt_assert(shapeID < parts.size());
 
   return parts[shapeID]->groups.size();
 }
 
-unsigned short problem_c::getShapeGroup(unsigned int shapeID, unsigned int groupID) const {
+unsigned short Problem::getShapeGroup(unsigned int shapeID, unsigned int groupID) const {
   bt_assert(shapeID < parts.size());
   bt_assert(groupID < parts[shapeID]->groups.size());
 
   return parts[shapeID]->groups[groupID].group;
 }
 
-unsigned short problem_c::getShapeGroupCount(unsigned int shapeID, unsigned int groupID) const {
+unsigned short Problem::getShapeGroupCount(unsigned int shapeID, unsigned int groupID) const {
   bt_assert(shapeID < parts.size());
   bt_assert(groupID < parts[shapeID]->groups.size());
 
   return parts[shapeID]->groups[groupID].count;
 }
 
-unsigned int problem_c::pieceToShape(unsigned int piece) const {
+unsigned int Problem::pieceToShape(unsigned int piece) const {
 
   unsigned int shape = 0;
 
@@ -947,7 +947,7 @@ unsigned int problem_c::pieceToShape(unsigned int piece) const {
   return shape;
 }
 
-unsigned int problem_c::pieceToSubShape(unsigned int piece) const {
+unsigned int Problem::pieceToSubShape(unsigned int piece) const {
 
   unsigned int shape = 0;
 
@@ -962,8 +962,8 @@ unsigned int problem_c::pieceToSubShape(unsigned int piece) const {
   return piece;
 }
 
-const gridType_c * problem_c::getGridType(void) const { return puzzle.getGridType(); }
-gridType_c * problem_c::getGridType(void) { return puzzle.getGridType(); }
+const GridType *Problem::getGridType(void) const { return puzzle.getGridType(); }
+GridType *Problem::getGridType() { return puzzle.getGridType(); }
 
 
 static bool comp_0_assembly(const solution_c * s1, const solution_c * s2)
@@ -988,7 +988,7 @@ static bool comp_3_pieces(const solution_c * s1, const solution_c * s2)
   return s1->getAssembly()->comparePieces(s2->getAssembly()) > 0;
 }
 
-void problem_c::sortSolutions(int by) {
+void Problem::sortSolutions(int by) {
   switch (by) {
     case 0: stable_sort(solutions.begin(), solutions.end(), comp_0_assembly); break;
     case 1: stable_sort(solutions.begin(), solutions.end(), comp_1_level   ); break;
@@ -997,13 +997,13 @@ void problem_c::sortSolutions(int by) {
   }
 }
 
-void problem_c::editProblem(void)
+void Problem::editProblem(void)
 {
   if (solveState == SS_SOLVING || solveState == SS_SOLVED)
     makeUnknown();
 }
 
-void problem_c::makeUnknown(void)
+void Problem::makeUnknown(void)
 {
   solveState = SS_UNKNOWN;
 

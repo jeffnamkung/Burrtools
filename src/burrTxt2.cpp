@@ -40,7 +40,7 @@
 
 using namespace std;
 
-void usage(void) {
+void usage() {
 
   cout << "burrTxt [options] file [options]\n\n";
   cout << "  file: puzzle file with the puzzle definition to solve\n\n";
@@ -114,7 +114,7 @@ int main(int argv, char* args[]) {
 
   std::istream * str = openGzFile(args[filenumber]);
   xmlParser_c pars(*str);
-  puzzle_c p(pars);
+  Puzzle p(pars);
   delete str;
 
   std::string outname = args[filenumber];
@@ -197,28 +197,28 @@ int main(int argv, char* args[]) {
         case solveThread_c::ACT_ERROR:
           cout << "\rerror: ";
           switch (assmThread.getErrorState()) {
-            case assembler_c::ERR_TOO_MANY_UNITS:
+            case AssemblerInterface::ERR_TOO_MANY_UNITS:
               cout << "Pieces contain " << assmThread.getErrorParam() << " units too many\n";
               break;
-            case assembler_c::ERR_TOO_FEW_UNITS:
+            case AssemblerInterface::ERR_TOO_FEW_UNITS:
               cout << "Pieces contain " << assmThread.getErrorParam() << " units less than required\n";
               break;
-            case assembler_c::ERR_CAN_NOT_PLACE:
+            case AssemblerInterface::ERR_CAN_NOT_PLACE:
               cout << "Piece " << assmThread.getErrorParam()+1 << " can be placed nowhere within the result";
               break;
-            case assembler_c::ERR_CAN_NOT_RESTORE_VERSION:
+            case AssemblerInterface::ERR_CAN_NOT_RESTORE_VERSION:
               cout << "Impossible to restore the saved state because the internal format changed.\n";
               cout << "You either have to start from the beginning or finish with the old version of BurrTools, sorry";
               break;
-            case assembler_c::ERR_CAN_NOT_RESTORE_SYNTAX:
+            case AssemblerInterface::ERR_CAN_NOT_RESTORE_SYNTAX:
               cout << "Impossible to restore the saved state because something with the data is wrong.\n";
               cout << "You have to start from the beginning, sorry";
               break;
-            case assembler_c::ERR_PUZZLE_UNHANDABLE:
+            case AssemblerInterface::ERR_PUZZLE_UNHANDABLE:
               cout << "Something went wrong the program can not solve your puzzle definitions.\n";
               cout << "You should send the puzzle file to the programmer!";
               break;
-            case assembler_c::ERR_NONE:
+            case AssemblerInterface::ERR_NONE:
               break;
           }
           break;

@@ -44,7 +44,7 @@ void solveThread_c::run(void){
       assm = puzzle->getGridType()->findAssembler(puzzle);
 
       errState = assm->createMatrix(puzzle, parameters & PAR_KEEP_MIRROR, parameters & PAR_KEEP_ROTATIONS, parameters & PAR_COMPLETE_ROTATIONS);
-      if (errState != assembler_c::ERR_NONE) {
+      if (errState != AssemblerInterface::ERR_NONE) {
 
         errParam = assm->getErrorsParam();
 
@@ -68,7 +68,7 @@ void solveThread_c::run(void){
        * be saved within the problem
        */
       errState = puzzle->setAssembler(assm);
-      if (errState != assembler_c::ERR_NONE) {
+      if (errState != AssemblerInterface::ERR_NONE) {
         action = solveThread_c::ACT_ERROR;
         return;
       }
@@ -107,7 +107,7 @@ void solveThread_c::run(void){
   }
 }
 
-solveThread_c::solveThread_c(problem_c * puz, int par) :
+solveThread_c::solveThread_c(Problem * puz, int par) :
 action(ACT_PREPARATION),
 puzzle(puz),
 parameters(par),
@@ -122,7 +122,7 @@ assm(0)
     disassm = new disassembler_0_c(puz);
 }
 
-solveThread_c::~solveThread_c(void) {
+solveThread_c::~solveThread_c() {
 
   kill();
 
@@ -315,7 +315,7 @@ bool solveThread_c::assembly(assembly_c * a) {
   return true;
 }
 
-void solveThread_c::stop(void) {
+void solveThread_c::stop() {
 
   if ((action != ACT_ASSEMBLING) &&
       (action != ACT_REDUCE) &&
@@ -367,7 +367,7 @@ bool solveThread_c::start(bool stop_after_prep) {
   return thread_c::start();
 }
 
-unsigned int solveThread_c::currentActionParameter(void) {
+unsigned int solveThread_c::currentActionParameter() {
 
   switch(action) {
   case ACT_REDUCE:

@@ -22,7 +22,7 @@
 
 #include "disassemblernode.h"
 
-nodeHash::nodeHash(void) {
+nodeHash::nodeHash() {
 
   tab_size = 11;
   tab_entries = 0;
@@ -32,7 +32,7 @@ nodeHash::nodeHash(void) {
   memset(tab, 0, tab_size*sizeof(disassemblerNode_c*));
 }
 
-nodeHash::~nodeHash(void) {
+nodeHash::~nodeHash() {
   clear();
 
   delete [] tab;
@@ -124,7 +124,7 @@ bool nodeHash::contains(const disassemblerNode_c * n) const {
 
 
 
-countingNodeHash::countingNodeHash(void) {
+countingNodeHash::countingNodeHash() {
 
   tab_size = 100;
   tab_entries = 0;
@@ -217,7 +217,7 @@ bool countingNodeHash::insert(disassemblerNode_c * n) {
   return false;
 }
 
-void countingNodeHash::initScan(void) {
+void countingNodeHash::initScan() {
 
   bt_assert(!scanActive);
 
@@ -225,7 +225,7 @@ void countingNodeHash::initScan(void) {
   scanActive = true;
 }
 
-const disassemblerNode_c * countingNodeHash::nextScan(void) {
+const disassemblerNode_c * countingNodeHash::nextScan() {
 
   bt_assert(scanActive);
 

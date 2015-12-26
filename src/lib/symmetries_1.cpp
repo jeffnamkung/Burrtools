@@ -56,7 +56,7 @@ static const unsigned long long uniqueSymmetries[NUM_SYMMETRY_GROUPS] = {
 #include "tabs_1/uniquesym.inc"
 };
 
-symmetries_1_c::symmetries_1_c(void) {
+symmetries_1_c::symmetries_1_c() {
 }
 
 unsigned int symmetries_1_c::getNumTransformations(void) const { return NUM_TRANSFORMATIONS; }

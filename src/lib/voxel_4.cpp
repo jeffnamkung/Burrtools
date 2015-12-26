@@ -352,7 +352,7 @@ void voxel_4_c::resizeInclude(int & px, int & py, int & pz) {
   translate(tx, ty, tz, 0);
 }
 
-void voxel_4_c::minimizePiece(void) {
+void voxel_4_c::minimizePiece() {
 
   // we must make sure that the lower corner is
   // shifted back to the same modulo 6 position that it had been on

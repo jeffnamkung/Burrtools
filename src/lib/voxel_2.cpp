@@ -293,7 +293,7 @@ bool voxel_2_c::getNeighbor(unsigned int idx, unsigned int typ, int x, int y, in
 }
 
 
-void voxel_2_c::minimizePiece(void) {
+void voxel_2_c::minimizePiece() {
   int move_again = (bx1 + by1 + bz1) & 1;
 
   voxel_c::minimizePiece();
@@ -304,7 +304,7 @@ void voxel_2_c::minimizePiece(void) {
   }
 }
 
-void voxel_2_c::initHotspot(void) {
+void voxel_2_c::initHotspot() {
 
   unsigned long best = getX()*getX() + getY()*getY() + getZ()*getZ();
 

@@ -23,7 +23,7 @@
 
 #include "grideditor.h"
 
-class puzzle_c;
+class Puzzle;
 
 /**
  * implements grid editor functions to edit the rhombic grid
@@ -46,7 +46,7 @@ private:
 
 public:
 
-  gridEditor_3_c(int x, int y, int w, int h, puzzle_c * p) : gridEditor_c(x, y, w, h, p) {}
+  gridEditor_3_c(int x, int y, int w, int h, Puzzle * p) : gridEditor_c(x, y, w, h, p) {}
 };
 
 #endif

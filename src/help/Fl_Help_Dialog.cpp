@@ -49,7 +49,7 @@ filestruct* filelist = new filestruct[100];
 imagestruct* imagelist = new imagestruct[100];
 
 void cb_view_(Fl_Help_View* /*o*/, void* v) { ((Fl_Help_Dialog*)v)->cb_view__i(); }
-void Fl_Help_Dialog::cb_view__i(void) {
+void Fl_Help_Dialog::cb_view__i() {
   if (view_->filename()) {
     if (view_->changed()) {
       index_ ++;
@@ -89,7 +89,7 @@ void Fl_Help_Dialog::cb_view__i(void) {
 }
 
 void cb_Save(Fl_Button* /*o*/, void* v) { ((Fl_Help_Dialog*)(v))->cb_save__i(); }
-void Fl_Help_Dialog::cb_save__i(void) {
+void Fl_Help_Dialog::cb_save__i() {
 
 #ifndef BT_EXTERNAL
   const char * path = flu_dir_chooser("Select directory to save files to", "./");
@@ -206,7 +206,7 @@ void Fl_Help_Dialog::cb_save__i(void) {
 }
 
 void cb_back_(Fl_Button* /*o*/, void* v) { ((Fl_Help_Dialog*)v)->cb_back__i(); }
-void Fl_Help_Dialog::cb_back__i(void) {
+void Fl_Help_Dialog::cb_back__i() {
   if (index_ > 0)
     index_ --;
 
@@ -224,7 +224,7 @@ void Fl_Help_Dialog::cb_back__i(void) {
 }
 
 void cb_forward_(Fl_Button* /*o*/, void* v) { ((Fl_Help_Dialog*)v)->cb_forward__i(); }
-void Fl_Help_Dialog::cb_forward__i(void) {
+void Fl_Help_Dialog::cb_forward__i() {
   if (index_ < max_)
     index_ ++;
 
@@ -248,7 +248,7 @@ void Fl_Help_Dialog::cb_textsize__i(int inc) {
 }
 
 void cb_find_(Fl_Input* /*o*/, void* v) { ((Fl_Help_Dialog*)v)->cb_find__i(); }
-void Fl_Help_Dialog::cb_find__i(void) { find_pos_ = view_->find(find_->value(), find_pos_); }
+void Fl_Help_Dialog::cb_find__i() { find_pos_ = view_->find(find_->value(), find_pos_); }
 
 Fl_Help_Dialog::Fl_Help_Dialog() : Fl_Double_Window(530, 385, "Help Dialog") {
   {

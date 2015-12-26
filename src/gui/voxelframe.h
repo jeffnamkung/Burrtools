@@ -29,8 +29,8 @@
 #include <vector>
 
 class voxel_c;
-class puzzle_c;
-class problem_c;
+class Puzzle;
+class Problem;
 class assembly_c;
 class piecePositions_c;
 
@@ -44,7 +44,7 @@ class Polyhedron;
 class VoxelViewCallbacks {
   public:
 
-    virtual ~VoxelViewCallbacks(void) {}
+    virtual ~VoxelViewCallbacks() {}
 
     /* this function gets called before the the setup of the camera
      * and rotation of the object. If you return true
@@ -52,11 +52,11 @@ class VoxelViewCallbacks {
      * but you can continue using the light setup as its done before
      * this function is called
      */
-    virtual bool PreDraw(void) { return false; }
+    virtual bool PreDraw() { return false; }
 
     /* this is called AFTER the data has been drawn
      */
-    virtual void PostDraw(void) { }
+    virtual void PostDraw() { }
 };
 
 /** this class draws a 3d view of a voxel space.
@@ -112,16 +112,16 @@ class voxelFrame_c : public Fl_Gl_Window {
     }
 
     void showNothing(void);
-    void showSingleShape(const puzzle_c * puz, unsigned int shapeNum);
-    void showColors(const puzzle_c * puz, colorMode mode);
-    void showAssembly(const problem_c * puz, unsigned int solNum);
+    void showSingleShape(const Puzzle * puz, unsigned int shapeNum);
+    void showColors(const Puzzle * puz, colorMode mode);
+    void showAssembly(const Problem * puz, unsigned int solNum);
     void updatePositions(piecePositions_c *shifting);
     void updatePositionsOverlap(piecePositions_c *shifting);
     void dimStaticPieces(piecePositions_c *shifting);
-    void showAssemblerState(const problem_c * puz, const assembly_c * assm);
+    void showAssemblerState(const Problem * puz, const assembly_c * assm);
     void updateVisibility(PieceVisibility * pcvis);
-    void showProblem(const puzzle_c * puz, unsigned int problem, unsigned int selShape);
-    void showPlacement(const problem_c * puz, unsigned int piece, unsigned char trans, int x, int y, int z);
+    void showProblem(const Puzzle * puz, unsigned int problem, unsigned int selShape);
+    void showPlacement(const Problem * puz, unsigned int piece, unsigned char trans, int x, int y, int z);
     void showMesh(Polyhedron * poly);
 
     // this value determines the scaling factor used to draw the cube.

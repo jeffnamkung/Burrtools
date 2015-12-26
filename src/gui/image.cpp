@@ -69,7 +69,7 @@ void image_c::prepareOpenGlImagePart(voxelFrame_c * dr) {
   trBeginTile(tr);
 }
 
-bool image_c::getOpenGlImagePart(void) {
+bool image_c::getOpenGlImagePart() {
 
   /* grep the next tile */
 
@@ -110,7 +110,7 @@ bool image_c::getOpenGlImagePart(void) {
 }
 
 
-image_c::~image_c(void) {
+image_c::~image_c() {
   delete [] bitmap;
 
   /* if we delete the image while we are doing an openGl grep, the context

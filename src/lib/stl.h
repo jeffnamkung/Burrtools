@@ -55,7 +55,7 @@ class stlExporter_c {
 
     /** create new exporter, defaults to binary mode active */
     stlExporter_c(void) : binaryMode(true) {}
-    virtual ~stlExporter_c(void) {}
+    virtual ~stlExporter_c() {}
 
     /**
      * This function exports one shape.
@@ -93,7 +93,7 @@ class stlExporter_c {
     /** select whether to use binary mode or not */
     void setBinaryMode(bool on) { binaryMode = on; }
     /** find out if binary mode is active */
-    bool getBinaryMode(void) { return binaryMode; }
+    bool getBinaryMode() { return binaryMode; }
 
     virtual Polyhedron * getMesh(const voxel_c & v, const faceList_c & holes) const = 0;
 

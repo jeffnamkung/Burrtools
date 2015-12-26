@@ -150,7 +150,7 @@
 #include "images/ViewMode3DL.xpm"
 #include "images/ViewModeInsides.xpm"
 
-pixmapList_c::~pixmapList_c(void) {
+pixmapList_c::~pixmapList_c() {
   for (unsigned int i = 0; i < list.size(); i++)
     delete list[i];
 }

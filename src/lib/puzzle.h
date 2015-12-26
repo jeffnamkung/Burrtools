@@ -34,8 +34,8 @@
 #include <stdint.h>
 
 class voxel_c;
-class gridType_c;
-class problem_c;
+class GridType;
+class Problem;
 class xmlWriter_c;
 class xmlParser_c;
 
@@ -44,7 +44,7 @@ class xmlParser_c;
  * A puzzle is a collection of shapes and a set of problems associated
  * with these shapes and finally the color used for color constraint colors
  */
-class puzzle_c {
+class Puzzle {
 
 private:
 
@@ -53,7 +53,7 @@ private:
    * normally it doesn't change, except if you convert
    * a puzzle of one grid type into an other with a converter
    */
-  gridType_c *gt;
+  GridType *gt;
 
   /**
    * The vector with the shapes
@@ -63,7 +63,7 @@ private:
   /**
    * the vector with the problems
    */
-  std::vector<problem_c*> problems;
+  std::vector<Problem *> problems;
 
   /** The constraint colours.
    * there can be many colours to constrain the placement of pieces
@@ -92,19 +92,19 @@ public:
    * copy constructor this will NOT copy the labels and solutions of
    * the problems.
    */
-  puzzle_c(const puzzle_c * orig);
+  Puzzle(const Puzzle * orig);
 
   /**
    * Constructor for empty puzzle. no shape, no problem and no colours
    * ownership of the given gridtype is taken over, the memory
    * is freed on destruction of this class
    */
-  puzzle_c(gridType_c * g) : gt(g) , commentPopup(false) { }
+  Puzzle(GridType * g) : gt(g) , commentPopup(false) { }
 
   /**
    * load the puzzle from the XML file
    */
-  puzzle_c(xmlParser_c & pars);
+  Puzzle(xmlParser_c & pars);
 
   /**
    * save the puzzle into a XML node that is returned
@@ -115,12 +115,12 @@ public:
    * Destructor.
    * Deletes all the shapes in the puzzle
    */
-  ~puzzle_c(void);
+  ~Puzzle(void);
 
   /** \name some functions to get the current set grid type for this puzzle */
   //@{
-  const gridType_c * getGridType(void) const { return gt; }
-  gridType_c * getGridType(void) { return gt; }
+  const GridType * getGridType(void) const { return gt; }
+  GridType * getGridType() { return gt; }
   //@}
 
 
@@ -183,7 +183,7 @@ public:
   /** add a new problem as copy from another problem (from another puzzle).
    * A copy of the provided problem is created
    */
-  unsigned int addProblem(const problem_c * prob);
+  unsigned int addProblem(const Problem * prob);
   /** return the number of problems within this puzzle */
   unsigned int problemNumber(void) const { return problems.size(); }
   /** remove problem with the given index freeing all its ressources */
@@ -191,9 +191,9 @@ public:
   /** exchange problem at indes p1 with problem at index p2 */
   void exchangeProblem(unsigned int p1, unsigned int p2);
   /** get the problem at index p */
-  const problem_c * getProblem(unsigned int p) const { bt_assert(p < problems.size()); return problems[p]; }
+  const Problem * getProblem(unsigned int p) const { bt_assert(p < problems.size()); return problems[p]; }
   /** get the problem at index p */
-  problem_c * getProblem(unsigned int p) { bt_assert(p < problems.size()); return problems[p]; }
+  Problem * getProblem(unsigned int p) { bt_assert(p < problems.size()); return problems[p]; }
   //@}
 
 
@@ -212,8 +212,8 @@ public:
 private:
 
   // no copying and assigning
-  puzzle_c(const puzzle_c&);
-  void operator=(const puzzle_c&);
+  Puzzle(const Puzzle &);
+  void operator=(const Puzzle &);
 
 };
 

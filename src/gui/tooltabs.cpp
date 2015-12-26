@@ -315,7 +315,7 @@ SizeButtons::SizeButtons(int x, int y, int w, int h, bool addScale) : layouter_c
 static void cb_ChangeSize_stub(Fl_Widget* o, long /*v*/) { ((ChangeSize*)(o->parent()))->cb_roll(); }
 static void cb_InputSize_stub(Fl_Widget* o, long /*v*/) { ((ChangeSize*)(o->parent()))->cb_input(); }
 
-void ChangeSize::cb_roll(void) {
+void ChangeSize::cb_roll() {
 
   int ox, oy, oz, nx, ny, nz;
 
@@ -340,7 +340,7 @@ void ChangeSize::cb_roll(void) {
   do_callback();
 }
 
-void ChangeSize::cb_input(void) {
+void ChangeSize::cb_input() {
   int ox, oy, oz, nx, ny, nz;
 
   ox = (int)SizeX->value();
@@ -479,7 +479,7 @@ void ChangeSize::setXYZ(long x, long y, long z) {
 }
 
 
-static void resizeSpace(bool toAll, const ChangeSize *changeSize, puzzle_c * puzzle, unsigned int shape, unsigned int factor = 1) {
+static void resizeSpace(bool toAll, const ChangeSize *changeSize, Puzzle * puzzle, unsigned int shape, unsigned int factor = 1) {
 
   if (toAll) {
 
@@ -524,11 +524,11 @@ static void resizeSpace(bool toAll, const ChangeSize *changeSize, puzzle_c * puz
 
 
 
-void ToolTab_0::setVoxelSpace(puzzle_c * puz, unsigned int sh) {
+void ToolTab_0::setVoxelSpace(Puzzle * puz, unsigned int sh) {
   puzzle = puz;
   shape = sh;
 
-  bt_assert(!puzzle || (puzzle->getGridType()->getType() == gridType_c::GT_BRICKS));
+  bt_assert(!puzzle || (puzzle->getGridType()->getType() == GridType::GT_BRICKS));
 
   if (puzzle && shape < puzzle->shapeNumber())
     changeSize->setXYZ(puzzle->getShape(shape)->getX(),
@@ -583,7 +583,7 @@ ToolTab_0::ToolTab_0(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
   end();
 }
 
-void ToolTab_0::cb_size(void) {
+void ToolTab_0::cb_size() {
   if (puzzle && shape < puzzle->shapeNumber()) {
 
     resizeSpace(toAll->value(), changeSize, puzzle, shape);
@@ -699,11 +699,11 @@ void ToolTab_0::cb_transform(long task) {
 
 
 
-void ToolTab_1::setVoxelSpace(puzzle_c * puz, unsigned int sh) {
+void ToolTab_1::setVoxelSpace(Puzzle * puz, unsigned int sh) {
   puzzle = puz;
   shape = sh;
 
-  bt_assert(!puzzle || (puzzle->getGridType()->getType() == gridType_c::GT_TRIANGULAR_PRISM));
+  bt_assert(!puzzle || (puzzle->getGridType()->getType() == GridType::GT_TRIANGULAR_PRISM));
 
   if (puzzle && shape < puzzle->shapeNumber())
     changeSize->setXYZ(puzzle->getShape(shape)->getX(),
@@ -758,7 +758,7 @@ ToolTab_1::ToolTab_1(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
   end();
 }
 
-void ToolTab_1::cb_size(void) {
+void ToolTab_1::cb_size() {
   if (puzzle && shape < puzzle->shapeNumber()) {
 
     resizeSpace(toAll->value(), changeSize, puzzle, shape);
@@ -865,11 +865,11 @@ void ToolTab_1::cb_transform(long task) {
 }
 
 
-void ToolTab_2::setVoxelSpace(puzzle_c * puz, unsigned int sh) {
+void ToolTab_2::setVoxelSpace(Puzzle * puz, unsigned int sh) {
   puzzle = puz;
   shape = sh;
 
-  bt_assert(!puzzle || (puzzle->getGridType()->getType() == gridType_c::GT_SPHERES));
+  bt_assert(!puzzle || (puzzle->getGridType()->getType() == GridType::GT_SPHERES));
 
   if (puzzle && shape < puzzle->shapeNumber())
     changeSize->setXYZ(puzzle->getShape(shape)->getX(),
@@ -924,7 +924,7 @@ ToolTab_2::ToolTab_2(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
   end();
 }
 
-void ToolTab_2::cb_size(void) {
+void ToolTab_2::cb_size() {
   if (puzzle && shape < puzzle->shapeNumber()) {
 
     resizeSpace(toAll->value(), changeSize, puzzle, shape);
@@ -1034,11 +1034,11 @@ void ToolTab_2::cb_transform(long task) {
 
 
 
-void ToolTab_3::setVoxelSpace(puzzle_c * puz, unsigned int sh) {
+void ToolTab_3::setVoxelSpace(Puzzle * puz, unsigned int sh) {
   puzzle = puz;
   shape = sh;
 
-  bt_assert(!puzzle || (puzzle->getGridType()->getType() == gridType_c::GT_RHOMBIC));
+  bt_assert(!puzzle || (puzzle->getGridType()->getType() == GridType::GT_RHOMBIC));
 
   if (puzzle && shape < puzzle->shapeNumber())
     changeSize->setXYZ(
@@ -1094,7 +1094,7 @@ ToolTab_3::ToolTab_3(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
   end();
 }
 
-void ToolTab_3::cb_size(void) {
+void ToolTab_3::cb_size() {
   if (puzzle && shape < puzzle->shapeNumber()) {
 
     resizeSpace(toAll->value(), changeSize, puzzle, shape, 5);
@@ -1176,11 +1176,11 @@ void ToolTab_3::cb_transform(long task) {
 
 
 
-void ToolTab_4::setVoxelSpace(puzzle_c * puz, unsigned int sh) {
+void ToolTab_4::setVoxelSpace(Puzzle * puz, unsigned int sh) {
   puzzle = puz;
   shape = sh;
 
-  bt_assert(!puzzle || (puzzle->getGridType()->getType() == gridType_c::GT_TETRA_OCTA));
+  bt_assert(!puzzle || (puzzle->getGridType()->getType() == GridType::GT_TETRA_OCTA));
 
   if (puzzle && shape < puzzle->shapeNumber())
     changeSize->setXYZ(
@@ -1236,7 +1236,7 @@ ToolTab_4::ToolTab_4(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
   end();
 }
 
-void ToolTab_4::cb_size(void) {
+void ToolTab_4::cb_size() {
   if (puzzle && shape < puzzle->shapeNumber()) {
 
     resizeSpace(toAll->value(), changeSize, puzzle, shape, 3);

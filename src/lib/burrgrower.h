@@ -29,7 +29,7 @@
 
 class voxel_c;
 
-class puzzleSol_c : public assembler_cb {
+class puzzleSol_c : public AssemblerCallbackInterface {
 
 private:
 
@@ -52,13 +52,13 @@ public:
 
   bool assembly(assembly_c * a);
 
-  bool nosol(void) { return solutions == 0; }
+  bool nosol() { return solutions == 0; }
 
   const puzzle_c * getPuzzle(void) const { return puzzle; }
 
-  unsigned long numSolutions(void) { return solutions; }
-  unsigned long numMoves(void) { return maxMoves; }
-  unsigned long numLevel(void) { return maxLevel; }
+  unsigned long numSolutions() { return solutions; }
+  unsigned long numMoves() { return maxMoves; }
+  unsigned long numLevel() { return maxLevel; }
 };
 
 class burrGrower_c {

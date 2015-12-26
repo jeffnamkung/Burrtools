@@ -36,7 +36,7 @@
 class groupsEditorTab_c : public Fl_Table, public layoutable_c {
 
   /* the puzzle and the problem to edit */
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   unsigned int problem;
 
   /* the input line where the user inputs the value
@@ -63,7 +63,7 @@ class groupsEditorTab_c : public Fl_Table, public layoutable_c {
 
 public:
 
-  groupsEditorTab_c(int x, int y, int w, int h, puzzle_c * puzzle, unsigned int problem);
+  groupsEditorTab_c(int x, int y, int w, int h, Puzzle * puzzle, unsigned int problem);
 
   /* add a group to the puzzle and a column to the table
    */
@@ -72,7 +72,7 @@ public:
   void cb_input(void);
   void cb_tab(void);
 
-  bool getChanged(void) { return changed; }
+  bool getChanged() { return changed; }
 
   /* take over the currently edited value (if there is one) and
    * close the edit line
@@ -89,7 +89,7 @@ public:
 /* draw a cell of the table */
 void groupsEditorTab_c::draw_cell(TableContext context, int r, int c, int x, int y, int w, int h) {
 
-  problem_c * pr = puzzle->getProblem(problem);
+  Problem * pr = puzzle->getProblem(problem);
 
   switch(context) {
 
@@ -240,9 +240,9 @@ void groupsEditorTab_c::draw_cell(TableContext context, int r, int c, int x, int
 
 /* called when the input line has been completed */
 static void cb_input_stub(Fl_Widget*, void* v) { ((groupsEditorTab_c*)v)->cb_input(); }
-void groupsEditorTab_c::cb_input(void) {
+void groupsEditorTab_c::cb_input() {
 
-  problem_c * pr = puzzle->getProblem(problem);
+  Problem * pr = puzzle->getProblem(problem);
 
   /* we have either changed the count for the shape, or the group count */
   if (editGroup == 0)
@@ -275,7 +275,7 @@ void groupsEditorTab_c::cb_tab(void)
       if (col == 0) return;
 
       int count = 0;
-      problem_c * pr = puzzle->getProblem(problem);
+      Problem * pr = puzzle->getProblem(problem);
 
       /* if there is an active edit line, finish it */
       if (input->visible()) input->do_callback();
@@ -321,7 +321,7 @@ void groupsEditorTab_c::cb_tab(void)
   }
 }
 
-groupsEditorTab_c::groupsEditorTab_c(int x, int y, int w, int h, puzzle_c * p, unsigned int prob) :
+groupsEditorTab_c::groupsEditorTab_c(int x, int y, int w, int h, Puzzle * p, unsigned int prob) :
   Fl_Table(10, 10, 200, 200), layoutable_c(x, y, w, h), changed(false) {
 
   this->puzzle = p;
@@ -332,7 +332,7 @@ groupsEditorTab_c::groupsEditorTab_c(int x, int y, int w, int h, puzzle_c * p, u
   /* find out the number of groups */
   maxGroup = 0;
 
-  problem_c * pr = puzzle->getProblem(problem);
+  Problem * pr = puzzle->getProblem(problem);
 
   for (unsigned int i = 0; i < pr->partNumber(); i++)
     for (unsigned int j = 0; j < pr->getShapeGroupNumber(i); j++)
@@ -362,7 +362,7 @@ groupsEditorTab_c::groupsEditorTab_c(int x, int y, int w, int h, puzzle_c * p, u
   end();
 }
 
-void groupsEditorTab_c::addGroup(void) {
+void groupsEditorTab_c::addGroup() {
 
   maxGroup++;
 
@@ -372,7 +372,7 @@ void groupsEditorTab_c::addGroup(void) {
   col_width(maxGroup+2, 35);
 }
 
-void groupsEditorTab_c::finishEdit(void) {
+void groupsEditorTab_c::finishEdit() {
   if (input->visible()) {
     cb_input();
     redraw();
@@ -380,17 +380,17 @@ void groupsEditorTab_c::finishEdit(void) {
 }
 
 static void cb_AddGroup_stub(Fl_Widget* /*o*/, void* v) { ((groupsEditor_c*)v)->cb_AddGroup(); }
-void groupsEditor_c::cb_AddGroup(void) {
+void groupsEditor_c::cb_AddGroup() {
   tab->addGroup();
 }
 
 static void cb_CloseWindow_stub(Fl_Widget* /*o*/, void* v) { ((groupsEditor_c*)v)->cb_CloseWindow(); }
-void groupsEditor_c::cb_CloseWindow(void) {
+void groupsEditor_c::cb_CloseWindow() {
   hide();
 }
 
 static void cb_UpdateInterface_stub(Fl_Widget* /*o*/, void *v) { ((groupsEditor_c*)v)->cb_UpdateInterface(); }
-void groupsEditor_c::cb_UpdateInterface(void) {
+void groupsEditor_c::cb_UpdateInterface() {
 
   if (tab->callback_context() != groupsEditorTab_c::CONTEXT_NONE)
     tab->cb_tab();
@@ -398,7 +398,7 @@ void groupsEditor_c::cb_UpdateInterface(void) {
   /* check, if the maxHoles field makes any sense */
   bool useMaxHoles = false;
 
-  problem_c * pr = puzzle->getProblem(problem);
+  Problem * pr = puzzle->getProblem(problem);
 
   for (unsigned int i = 0; i < puzzle->shapeNumber(); i++)
     if (pr->getShapeMinimum(i) != pr->getShapeMaximum(i)) {
@@ -413,7 +413,7 @@ void groupsEditor_c::cb_UpdateInterface(void) {
 }
 
 static void cb_MaxHoles_stub(Fl_Widget* /*o*/, void* v) { ((groupsEditor_c*)v)->cb_MaxHoles(); }
-void groupsEditor_c::cb_MaxHoles(void) {
+void groupsEditor_c::cb_MaxHoles() {
 
   if (maxHoles->value()[0])
     puzzle->getProblem(problem)->setMaxHoles(atoi(maxHoles->value()));
@@ -431,7 +431,7 @@ void groupsEditor_c::cb_MaxHoles(void) {
 }
 
 /* when hiding the window, first close active editing tasks */
-void groupsEditor_c::hide(void) {
+void groupsEditor_c::hide() {
   tab->finishEdit();
 
   if (maxHoles->value()[0])
@@ -444,7 +444,7 @@ void groupsEditor_c::hide(void) {
 
 #define SZ_GAP 5                               // gap between elements
 
-groupsEditor_c::groupsEditor_c(puzzle_c * p, unsigned int pr) : LFl_Double_Window(true), puzzle(p), problem(pr), _changed(false) {
+groupsEditor_c::groupsEditor_c(Puzzle * p, unsigned int pr) : LFl_Double_Window(true), puzzle(p), problem(pr), _changed(false) {
 
   tab = new groupsEditorTab_c(0, 0, 1, 1, p, pr);
   tab->pitch(SZ_GAP);
@@ -492,7 +492,7 @@ groupsEditor_c::groupsEditor_c(puzzle_c * p, unsigned int pr) : LFl_Double_Windo
 }
 
 
-bool groupsEditor_c::changed(void) {
+bool groupsEditor_c::changed() {
   return tab->getChanged() || _changed;
 }
 

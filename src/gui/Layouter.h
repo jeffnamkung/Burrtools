@@ -88,7 +88,7 @@ public:
 
   layoutable_c(int gx = 0, int gy = 0, int gw = 1, int gh = 1) : _gridX(gx), _gridY(gy), _gridW(gw), _gridH(gh), _stretchX(STRETCH), _stretchY(STRETCH), _pitch(0), _weightX(0), _weightY(0), _minWidth(0), _minHeight(0) {}
 
-  virtual ~layoutable_c(void) {}
+  virtual ~layoutable_c() {}
 
   int getMinWidth(void) const { return _minWidth; }
   int getMinHeight(void) const { return _minHeight; }
@@ -139,15 +139,15 @@ public:
   }
 
   void pitch(unsigned char pitch) { _pitch = pitch; }
-  void stretchLeft(void) { _stretchX = STRETCH_MINUS; }
-  void stretchRight(void) { _stretchX = STRETCH_PLUS; }
-  void stretchTop(void) { _stretchY = STRETCH_MINUS; }
-  void stretchBottom(void) { _stretchY = STRETCH_PLUS; }
-  void stretchSquare(void) { _stretchX = _stretchY = STRETCH_SQUARE; }
-  void stretchHCenter(void) { _stretchX = STRETCH_MIDDLE; }
-  void stretchVCenter(void) { _stretchY = STRETCH_MIDDLE; }
-  void stretchCenter(void) { _stretchX = _stretchY = STRETCH_MIDDLE; }
-  void stretch(void) { _stretchX = _stretchY = STRETCH; }
+  void stretchLeft() { _stretchX = STRETCH_MINUS; }
+  void stretchRight() { _stretchX = STRETCH_PLUS; }
+  void stretchTop() { _stretchY = STRETCH_MINUS; }
+  void stretchBottom() { _stretchY = STRETCH_PLUS; }
+  void stretchSquare() { _stretchX = _stretchY = STRETCH_SQUARE; }
+  void stretchHCenter() { _stretchX = STRETCH_MIDDLE; }
+  void stretchVCenter() { _stretchY = STRETCH_MIDDLE; }
+  void stretchCenter() { _stretchX = _stretchY = STRETCH_MIDDLE; }
+  void stretch() { _stretchX = _stretchY = STRETCH; }
   void weight(unsigned char x, unsigned char y) { _weightX = x; _weightY = y; }
 
   /* sets the minimum size a widget should have */

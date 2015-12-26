@@ -91,8 +91,8 @@ class symmetries_c {
 
   public:
 
-    symmetries_c(void) {}
-    virtual ~symmetries_c(void) {}
+    symmetries_c() {}
+    virtual ~symmetries_c() {}
 
     /**
      * Get the number of possible transformations for a voxel space.

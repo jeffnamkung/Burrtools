@@ -39,8 +39,8 @@ puzzleSol_c::puzzleSol_c(puzzle_c * p, unsigned int prob) {
   puzzle = p;
   this->prob = prob;
 
-  assembler_0_c *assm = new assembler_0_c(p->getGridType()->getAssemblerFrontend());
-  if (assm->createMatrix(p, prob, false, false) == assembler_0_c::ERR_NONE) {
+  DonKnuthAssembler *assm = new DonKnuthAssembler(p->getGridType()->getAssemblerFrontend());
+  if (assm->createMatrix(p, prob, false, false) == DonKnuthAssembler::ERR_NONE) {
 
     solutions = 0;
 
@@ -96,11 +96,11 @@ bool puzzleSol_c::assembly(assembly_c* a) {
   return false;
 }
 
-puzzleSol_c::~puzzleSol_c(void) {
+puzzleSol_c::~puzzleSol_c() {
   delete puzzle;
 }
 
-double puzzleSol_c::fitness(void) {
+double puzzleSol_c::fitness() {
 
   double erg;
 

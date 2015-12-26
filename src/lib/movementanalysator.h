@@ -23,7 +23,7 @@
 
 #include <vector>
 
-class problem_c;
+class Problem;
 class disassemblerNode_c;
 class movementCache_c;
 class assembly_c;
@@ -80,7 +80,7 @@ class movementAnalysator_c {
      * This can not be changed, once you done that but you can analyse
      * many positions
      */
-    movementAnalysator_c(const problem_c *puz);
+    movementAnalysator_c(const Problem *puz);
     ~movementAnalysator_c(void);
 
     /* you use either the 2 functions below, or completeFind

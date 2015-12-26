@@ -23,7 +23,7 @@
 
 #include "symmetries.h"
 
-class gridType_c;
+class GridType;
 
 /** this is the symmetries class for cubes and cube based grids (like rhombic) */
 class symmetries_0_c : public symmetries_c {

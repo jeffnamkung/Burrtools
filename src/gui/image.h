@@ -98,8 +98,8 @@ class image_c {
     void minimizeWidth(unsigned int border, unsigned int multiple = 1);
 
     /* return the size of the image */
-    unsigned int w(void) { return width; }
-    unsigned int h(void) { return height; }
+    unsigned int w() { return width; }
+    unsigned int h() { return height; }
 };
 
 #endif

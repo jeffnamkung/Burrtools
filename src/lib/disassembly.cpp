@@ -452,7 +452,7 @@ separation_c::separation_c(const separation_c * cpy) {
 }
 
 
-bool separation_c::containsMultiMoves(void) {
+bool separation_c::containsMultiMoves() {
   return (states.size() > 2) ||
     (left && left->containsMultiMoves()) ||
     (removed && removed->containsMultiMoves());

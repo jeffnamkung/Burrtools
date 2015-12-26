@@ -26,7 +26,7 @@ ButtonGroup_c::ButtonGroup_c(int x, int y, int w, int h) : layouter_c(x, y, w, h
   end();
 }
 
-LFl_Button * ButtonGroup_c::addButton(void) {
+LFl_Button * ButtonGroup_c::addButton() {
 
   int c = children();
 

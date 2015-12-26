@@ -43,7 +43,7 @@
 
 class LView3dGroup;
 class LBlockListGroup;
-class puzzle_c;
+class Puzzle;
 class PieceSelector;
 class ButtonGroup_c;
 
@@ -56,7 +56,7 @@ class stlExport_c : public LFl_Double_Window {
   private:
 
     /* the puzzle that is going to be exported */
-    puzzle_c * puzzle;
+    Puzzle * puzzle;
 
     stlExporter_c * stl;
 
@@ -78,7 +78,7 @@ class stlExport_c : public LFl_Double_Window {
 
   public:
 
-    stlExport_c(puzzle_c * p);
+    stlExport_c(Puzzle * p);
     virtual ~stlExport_c(void);
 
     void cb_Export(void);

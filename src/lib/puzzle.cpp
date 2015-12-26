@@ -88,15 +88,15 @@
  *
  */
 
-puzzle_c::puzzle_c(const puzzle_c * orig) {
+Puzzle::Puzzle(const Puzzle * orig) {
 
-  gt = new gridType_c(*orig->gt);
+  gt = new GridType(*orig->gt);
 
   for (unsigned int i = 0; i < orig->shapes.size(); i++)
     shapes.push_back(gt->getVoxel(orig->shapes[i]));
 
   for (unsigned int i = 0; i < orig->problems.size(); i++)
-    problems.push_back(new problem_c(orig->problems[i], *this));
+    problems.push_back(new Problem(orig->problems[i], *this));
 
   for (unsigned int i = 0; i < orig->colors.size(); i++)
     colors.push_back(orig->colors[i]);
@@ -105,7 +105,7 @@ puzzle_c::puzzle_c(const puzzle_c * orig) {
   commentPopup = orig->commentPopup;
 }
 
-puzzle_c::~puzzle_c(void) {
+Puzzle::~Puzzle() {
 
   for (unsigned int i = 0; i < shapes.size(); i++)
     delete shapes[i];
@@ -116,13 +116,13 @@ puzzle_c::~puzzle_c(void) {
   delete gt;
 }
 
-unsigned int puzzle_c::addColor(unsigned char r, unsigned char g, unsigned char b) {
+unsigned int Puzzle::addColor(unsigned char r, unsigned char g, unsigned char b) {
   bt_assert(colors.size() < 63);  // only 63 colors are allowed, color 0 is special
   colors.push_back(r | (uint32_t)g << 8 | (uint32_t)b << 16);
   return colors.size()-1;
 }
 
-void puzzle_c::removeColor(unsigned int col) {
+void Puzzle::removeColor(unsigned int col) {
 
   bt_assert(col <= colors.size());
 
@@ -162,14 +162,14 @@ void puzzle_c::removeColor(unsigned int col) {
   colors.erase(colors.begin() + (col - 1));
 }
 
-void puzzle_c::changeColor(unsigned int idx, unsigned char r, unsigned char g, unsigned char b) {
+void Puzzle::changeColor(unsigned int idx, unsigned char r, unsigned char g, unsigned char b) {
 
   bt_assert(idx < colors.size());
 
   colors[idx] = r | (uint32_t)g << 8 | (uint32_t)b << 16;
 }
 
-void puzzle_c::getColor(unsigned int idx, unsigned char * r, unsigned char * g, unsigned char * b) const {
+void Puzzle::getColor(unsigned int idx, unsigned char * r, unsigned char * g, unsigned char * b) const {
 
   bt_assert(idx < colors.size());
 
@@ -178,7 +178,7 @@ void puzzle_c::getColor(unsigned int idx, unsigned char * r, unsigned char * g, 
   *b = (colors[idx] >> 16) & 0xFF;
 }
 
-void puzzle_c::save(xmlWriter_c & xml) const
+void Puzzle::save(xmlWriter_c & xml) const
 {
   xml.newTag("puzzle");
   xml.newAttrib("version", "2");
@@ -220,7 +220,7 @@ void puzzle_c::save(xmlWriter_c & xml) const
   xml.endTag("puzzle");
 }
 
-puzzle_c::puzzle_c(xmlParser_c & pars)
+Puzzle::Puzzle(xmlParser_c & pars)
 {
   pars.nextTag();
 
@@ -249,7 +249,7 @@ puzzle_c::puzzle_c(xmlParser_c & pars)
       if (gt != 0)
         pars.exception("only one gridtype can be defined, and it must be before the first shape");
 
-      gt = new gridType_c(pars);
+      gt = new GridType(pars);
     }
     else if (pars.getName() == "colors")
     {
@@ -277,7 +277,7 @@ puzzle_c::puzzle_c(xmlParser_c & pars)
     else if (pars.getName() == "shapes")
     {
       // if no gridtype has been defined, we assume cubes
-      if (!gt) gt = new gridType_c(gridType_c::GT_BRICKS);
+      if (!gt) gt = new GridType(GridType::GT_BRICKS);
 
       do
       {
@@ -310,7 +310,7 @@ puzzle_c::puzzle_c(xmlParser_c & pars)
 
         if (pars.getName() == "problem")
         {
-          problems.push_back(new problem_c(*this, pars));
+          problems.push_back(new Problem(*this, pars));
           pars.require(xmlParser_c::END_TAG, "problem");
         }
         else
@@ -345,14 +345,14 @@ puzzle_c::puzzle_c(xmlParser_c & pars)
   pars.require(xmlParser_c::END_TAG, "puzzle");
 }
 
-unsigned int puzzle_c::addShape(voxel_c * p) {
+unsigned int Puzzle::addShape(voxel_c * p) {
   bt_assert(gt->getType() == p->getGridType()->getType());
   shapes.push_back(p);
   return shapes.size()-1;
 }
 
 /* add empty shape of given size */
-unsigned int puzzle_c::addShape(unsigned int sx, unsigned int sy, unsigned int sz) {
+unsigned int Puzzle::addShape(unsigned int sx, unsigned int sy, unsigned int sz) {
   shapes.push_back(gt->getVoxel(sx, sy, sz, voxel_c::VX_EMPTY));
   return shapes.size()-1;
 }
@@ -360,7 +360,7 @@ unsigned int puzzle_c::addShape(unsigned int sx, unsigned int sy, unsigned int s
 /* remove the num-th shape
  * be careful this changes all ids and so all problems must be updated
  */
-void puzzle_c::removeShape(unsigned int idx) {
+void Puzzle::removeShape(unsigned int idx) {
   bt_assert(idx < shapes.size());
 
   /* First remove the shape from the problems */
@@ -373,7 +373,7 @@ void puzzle_c::removeShape(unsigned int idx) {
 
 }
 
-void puzzle_c::exchangeShape(unsigned int s1, unsigned int s2) {
+void Puzzle::exchangeShape(unsigned int s1, unsigned int s2) {
   bt_assert(s1 < shapes.size());
   bt_assert(s2 < shapes.size());
 
@@ -388,31 +388,31 @@ void puzzle_c::exchangeShape(unsigned int s1, unsigned int s2) {
 /**
  * similar functions for problems
  */
-unsigned int puzzle_c::addProblem(void) {
-  problems.push_back(new problem_c(*this));
+unsigned int Puzzle::addProblem() {
+  problems.push_back(new Problem(*this));
   return problems.size()-1;
 }
 
-unsigned int puzzle_c::addProblem(const problem_c * prob) {
+unsigned int Puzzle::addProblem(const Problem * prob) {
 
-  problems.push_back(new problem_c(prob, *this));
+  problems.push_back(new Problem(prob, *this));
 
   return problems.size()-1;
 }
 
 /* remove one problem */
-void puzzle_c::removeProblem(unsigned int idx) {
+void Puzzle::removeProblem(unsigned int idx) {
   bt_assert(idx < problems.size());
   delete problems[idx];
   problems.erase(problems.begin()+idx);
 }
 
-void puzzle_c::exchangeProblem(unsigned int p1, unsigned int p2) {
+void Puzzle::exchangeProblem(unsigned int p1, unsigned int p2) {
 
   bt_assert(p1 < problems.size());
   bt_assert(p2 < problems.size());
 
-  problem_c * p = problems[p1];
+  Problem * p = problems[p1];
   problems[p1] = problems[p2];
   problems[p2] = p;
 }

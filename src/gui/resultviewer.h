@@ -25,7 +25,7 @@
 
 #include <FL/Fl_Box.H>
 
-class problem_c;
+class Problem;
 
 /* a widget showing the number and name of the result shape for
  * a given problem
@@ -34,13 +34,13 @@ class ResultViewer_c : public Fl_Box, public layoutable_c {
 
 private:
 
-  problem_c * puzzle;
+  Problem * puzzle;
   Fl_Color bg;
 
 public:
 
   ResultViewer_c(int x, int y, int w, int h);
-  void setPuzzle(problem_c * p);
+  void setPuzzle(Problem * p);
   void draw(void);
 
   virtual void getMinSize(int *width, int *height) const {

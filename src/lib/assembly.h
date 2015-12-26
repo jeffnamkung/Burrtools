@@ -23,14 +23,14 @@
 
 #include "bt_assert.h"
 #include "symmetries.h"
-#include "gridtype.h"
+#include "grid-type.h"
 
 #include <vector>
 
 // this vailue is used for transformation to specify unplaced pieces
 #define UNPLACED_TRANS 0xff
 
-class problem_c;
+class Problem;
 class voxel_c;
 class xmlWriter_c;
 class xmlParser_c;
@@ -123,7 +123,7 @@ class mirrorInfo_c {
 
   public:
 
-    mirrorInfo_c(void) {};
+    mirrorInfo_c() {};
 
     /**
      * adds a pair of pieces that are mirrors or one another.
@@ -203,11 +203,11 @@ private:
    * returns true, if all shapes are at least the minimum required times
    * inside the assembly
    */
-  bool validSolution(const problem_c * puz) const;
+  bool validSolution(const Problem * puz) const;
 
 public:
 
-  assembly_c(const gridType_c * gt) : sym(gt->getSymmetries()) {}
+  assembly_c(const GridType * gt) : sym(gt->getSymmetries()) {}
 
   /**
    * copy constructor
@@ -217,7 +217,7 @@ public:
   /**
    * load the assembly from xml file
    */
-  assembly_c(xmlParser_c & pars, unsigned int pieces, const gridType_c * gt);
+  assembly_c(xmlParser_c & pars, unsigned int pieces, const GridType * gt);
 
   /** used to save to XML */
   void save(xmlWriter_c & xml) const;
@@ -236,7 +236,7 @@ public:
    * function needs to be called when a piece is not used in the
    * assembly.
    */
-  void addNonPlacement(void) {
+  void addNonPlacement() {
     placements.push_back(placement_c(UNPLACED_TRANS, 0, 0, 0));
   }
 
@@ -293,13 +293,13 @@ public:
    * maybe some pieces have already been replaced while other are still in their
    * initial position, so you have to throw away the assembly when that happens
    */
-  bool transform(unsigned char trans, const problem_c * puz, const mirrorInfo_c * mir);
+  bool transform(unsigned char trans, const Problem * puz, const mirrorInfo_c * mir);
 
   /**
    * return true, if this is a non-normal assembly.
    * This is used to drop rotated assemblies
    */
-  bool smallerRotationExists(const problem_c * puz, unsigned int pivot, const mirrorInfo_c * mir, bool complete) const;
+  bool smallerRotationExists(const Problem * puz, unsigned int pivot, const mirrorInfo_c * mir, bool complete) const;
 
   /**
    * exchange 2 shapes.
@@ -319,12 +319,12 @@ public:
    * sort the pieces within the assembly so that multipieces are ordered by
    * ascending placement order.
    */
-  void sort(const problem_c * puz);
+  void sort(const Problem * puz);
 
   /** calculate a voxelspace that is identical to the assembly with
    * all pieces put into the space
    */
-  voxel_c * createSpace(const problem_c * puz) const;
+  voxel_c * createSpace(const Problem * puz) const;
 
   void removePieces(unsigned int from, unsigned int cnt);
 

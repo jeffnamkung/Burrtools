@@ -33,8 +33,8 @@ class piecePositions_c {
 
 public:
 
-  piecePositions_c(void) {}
-  virtual ~piecePositions_c(void) {}
+  piecePositions_c() {}
+  virtual ~piecePositions_c() {}
 
   /** the x-positions of the piece is returned */
   virtual float getX(unsigned int piece) = 0;

@@ -40,7 +40,7 @@ static unsigned int moHashValue(unsigned int s1, unsigned int s2, int dx, int dy
 /* double the hash table size and copy the old elements into
  * the new table
  */
-void movementCache_c::moRehash(void) {
+void movementCache_c::moRehash() {
   unsigned int oldSize = moTableSize;
 
   /* the new size, roughly twice the old size but odd */
@@ -71,7 +71,7 @@ void movementCache_c::moRehash(void) {
   moHash = newHash;
 }
 
-movementCache_c::movementCache_c(const problem_c * puzzle) : gt(puzzle->getGridType()) {
+movementCache_c::movementCache_c(const Problem * puzzle) : gt(puzzle->getGridType()) {
 
   /* initial table */
   moTableSize = 101;

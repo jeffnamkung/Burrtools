@@ -25,8 +25,8 @@
 
 #include <FL/Fl_Widget.H>
 
-class puzzle_c;
-class problem_c;
+class Puzzle;
+class Problem;
 class assembly_c;
 /**
  * blocklist is a widget that displays a list of items in blocks. These blocks
@@ -101,14 +101,14 @@ public:
    * to show everything, so when the block list is 100 pixels high and the widget 50 we get 100-50 = 50
    * if everything fits into the widget size 0 is returned
    */
-  unsigned int calcHeight(void) { return lastHight; }
+  unsigned int calcHeight() { return lastHight; }
 
   enum {
     RS_CHANGEDHIGHT,
     RS_LIST_LAST
   };
 
-  int getReason(void) { return callbackReason; }
+  int getReason() { return callbackReason; }
 };
 
 /**
@@ -214,14 +214,14 @@ public:
  */
 class ColorSelector : public SelectableTextList {
 
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   bool includeNeutral;
 
 public:
 
-  ColorSelector(int x, int y, int w, int h, puzzle_c * p, bool incNeutr) : SelectableTextList(x, y, w, h), puzzle(p), includeNeutral(incNeutr) { bt_assert(p); if (incNeutr) setSelection(0); }
+  ColorSelector(int x, int y, int w, int h, Puzzle * p, bool incNeutr) : SelectableTextList(x, y, w, h), puzzle(p), includeNeutral(incNeutr) { bt_assert(p); if (incNeutr) setSelection(0); }
 
-  void setPuzzle(puzzle_c *pz);
+  void setPuzzle(Puzzle *pz);
 
   virtual unsigned int blockNumber(void);
 
@@ -244,13 +244,13 @@ class PieceSelector : public SelectableTextList {
 
 private:
 
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
 
 public:
 
-  PieceSelector(int x, int y, int w, int h, puzzle_c * p) : SelectableTextList(x, y, w, h), puzzle(p) { bt_assert(p); }
+  PieceSelector(int x, int y, int w, int h, Puzzle * p) : SelectableTextList(x, y, w, h), puzzle(p) { bt_assert(p); }
 
-  void setPuzzle(puzzle_c *pz);
+  void setPuzzle(Puzzle *pz);
   virtual unsigned int blockNumber(void);
   virtual void getText(unsigned int block, char * text);
   virtual void getColor(unsigned int block, unsigned char *r,  unsigned char *g, unsigned char *b);
@@ -263,16 +263,16 @@ class ProblemSelector : public SelectableTextList {
 
 private:
 
-  const puzzle_c * puzzle;
+  const Puzzle * puzzle;
 
 public:
 
-  ProblemSelector(int x, int y, int w, int h, const puzzle_c * p) :
+  ProblemSelector(int x, int y, int w, int h, const Puzzle * p) :
     SelectableTextList(x, y, w, h),
     puzzle(p)
   { bt_assert(p); }
 
-  void setPuzzle(const puzzle_c *pz);
+  void setPuzzle(const Puzzle *pz);
   virtual unsigned int blockNumber(void);
   virtual void getText(unsigned int block, char * text);
   virtual void getColor(unsigned int block, unsigned char *r,  unsigned char *g, unsigned char *b);
@@ -286,7 +286,7 @@ class PiecesList : public TextList {
 
 private:
 
-  const problem_c * puzzle;
+  const Problem * puzzle;
 
   unsigned int clicked;
 
@@ -299,7 +299,7 @@ public:
 
   PiecesList(int x, int y, int w, int h) : TextList(x, y, w, h), puzzle(0) { }
 
-  void setPuzzle(const problem_c *pz);
+  void setPuzzle(const Problem *pz);
   virtual unsigned int blockNumber(void);
   virtual void getText(unsigned int block, char * text);
   virtual void getColor(unsigned int block, unsigned char *r,  unsigned char *g, unsigned char *b);
@@ -309,7 +309,7 @@ public:
     do_callback(RS_CLICKED);
   }
 
-  unsigned int getClicked(void) { return clicked; }
+  unsigned int getClicked() { return clicked; }
 
 };
 
@@ -321,7 +321,7 @@ class PieceVisibility : public BlockList {
 
 private:
 
-  const problem_c * puzzle;
+  const Problem * puzzle;
 
   unsigned int count;
   unsigned char * visState;
@@ -336,7 +336,7 @@ public:
 
   PieceVisibility(int x, int y, int w, int h);
 
-  ~PieceVisibility(void) {
+  ~PieceVisibility() {
     if (visState) {
       delete [] visState;
       visState = 0;
@@ -347,7 +347,7 @@ public:
     }
   }
 
-  void setPuzzle(const problem_c *pz);
+  void setPuzzle(const Problem *pz);
   void setAssembly(assembly_c * assm);
   virtual unsigned int blockNumber(void);
   virtual void blockDraw(unsigned int block, int x, int y);
@@ -385,7 +385,7 @@ class ColorConstraintsEdit : public Fl_Widget {
   unsigned int lastHight;
 
   /* the puzzle and the problem to be edited */
-  puzzle_c * puzzle;
+  Puzzle * puzzle;
   unsigned int problem;
 
   bool sortByResult;
@@ -400,10 +400,10 @@ protected:
 
 public:
 
-  ColorConstraintsEdit(int x, int y, int w, int h, puzzle_c * p) :
+  ColorConstraintsEdit(int x, int y, int w, int h, Puzzle * p) :
     Fl_Widget(x, y, w, h), shift(0), lastHight(0), puzzle(p), problem(0), sortByResult(false), currentSelect(0) {}
 
-  void setPuzzle(puzzle_c *pz, unsigned int prob);
+  void setPuzzle(Puzzle *pz, unsigned int prob);
 
   void setShift(unsigned int z) {
     shift = z;
@@ -412,7 +412,7 @@ public:
 
   int handle(int event);
 
-  unsigned int calcHeight(void) { return lastHight; }
+  unsigned int calcHeight() { return lastHight; }
 
   enum {
     RS_CHANGEDHIGHT,
@@ -420,8 +420,8 @@ public:
     RS_LIST_LAST
   };
 
-  unsigned int getReason(void) { return callbackReason; }
-  unsigned int getSelection(void) { return currentSelect; }
+  unsigned int getReason() { return callbackReason; }
+  unsigned int getSelection() { return currentSelect; }
   void setSelection(unsigned int num);
 
   void SetSortByResult(bool value) {
@@ -434,7 +434,7 @@ public:
     Fl_Widget::do_callback(this, reason);
   }
 
-  bool GetSortByResult(void) { return sortByResult; }
+  bool GetSortByResult() { return sortByResult; }
 };
 
 #endif

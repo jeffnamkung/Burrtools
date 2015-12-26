@@ -47,16 +47,16 @@ bool quiet;
 
 disassembler_c * d;
 
-class asm_cb : public assembler_cb {
+class asm_cb : public AssemblerCallbackInterface {
 
 public:
 
   int Assemblies;
   int Solutions;
   int pn;
-  problem_c * puzzle;
+  Problem * puzzle;
 
-  asm_cb(problem_c * p) : Assemblies(0), Solutions(0), pn(p->pieceNumber()), puzzle(p) {}
+  asm_cb(Problem * p) : Assemblies(0), Solutions(0), pn(p->pieceNumber()), puzzle(p) {}
 
   bool assembly(assembly_c * a) {
 
@@ -94,7 +94,7 @@ public:
   }
 };
 
-void usage(void) {
+void usage() {
 
   cout << "burrTxt [options] file [options]\n\n";
   cout << "  file: puzzle file with the puzzle definition to solve\n\n";
@@ -197,7 +197,7 @@ int main(int argv, char* args[]) {
 
   std::istream * str = openGzFile(args[filenumber]);
   xmlParser_c pars(*str);
-  puzzle_c p(pars);
+  Puzzle p(pars);
   delete str;
 
   if (ask) {
@@ -269,28 +269,28 @@ int main(int argv, char* args[]) {
 
     for (unsigned int pr = firstProblem ; pr < lastProblem ; pr++) {
 
-      problem_c * problem = p.getProblem(pr);
+      Problem * problem = p.getProblem(pr);
 
-      assembler_c *assm = p.getGridType()->findAssembler(problem);
+      AssemblerInterface *assm = p.getGridType()->findAssembler(problem);
 
       switch (assm->createMatrix(problem, false, false, false)) {
-      case assembler_c::ERR_TOO_MANY_UNITS:
+      case AssemblerInterface::ERR_TOO_MANY_UNITS:
         printf("%i units too many for the result shape\n", assm->getErrorsParam());
         return 0;
-      case assembler_c::ERR_TOO_FEW_UNITS:
+      case AssemblerInterface::ERR_TOO_FEW_UNITS:
         printf("%i units too few for the result shape\n", assm->getErrorsParam());
         return 0;
-      case assembler_c::ERR_CAN_NOT_PLACE:
+      case AssemblerInterface::ERR_CAN_NOT_PLACE:
         printf("Piece %i can be place nowhere in the result shape\n", assm->getErrorsParam());
         return 0;
-      case assembler_c::ERR_NONE:
+      case AssemblerInterface::ERR_NONE:
         /* no error case */
         break;
-      case assembler_c::ERR_PUZZLE_UNHANDABLE:
+      case AssemblerInterface::ERR_PUZZLE_UNHANDABLE:
         printf("The puzzles contains features not yet supported by burrTxt\n");
         return 0;
-      case assembler_c::ERR_CAN_NOT_RESTORE_VERSION:
-      case assembler_c::ERR_CAN_NOT_RESTORE_SYNTAX:
+      case AssemblerInterface::ERR_CAN_NOT_RESTORE_VERSION:
+      case AssemblerInterface::ERR_CAN_NOT_RESTORE_SYNTAX:
         /* all other errors should not occur */
         printf("Oops internal error\n");
         return 0;
@@ -329,7 +329,7 @@ int main(int argv, char* args[]) {
 
     for (unsigned int pr = firstProblem ; pr < lastProblem; pr ++) {
 
-      problem_c * problem = p.getProblem(pr);
+      Problem * problem = p.getProblem(pr);
 
       d = new disassembler_0_c(problem);
 

@@ -62,7 +62,7 @@ const static int checks[NUM_DIRECTIONS][NUM_VOXELTYPES][NUM_CHECKS][3] = {
   }
 };
 
-movementCache_1_c::movementCache_1_c(const problem_c * puz) : movementCache_c(puz) {
+movementCache_1_c::movementCache_1_c(const Problem * puz) : movementCache_c(puz) {
 }
 
 /* calculate the required movement possibilities */
@@ -138,7 +138,7 @@ unsigned int* movementCache_1_c::moCalcValues(const voxel_c * sh1, const voxel_c
   return move;
 }
 
-unsigned int movementCache_1_c::numDirections(void) { return NUM_DIRECTIONS; }
+unsigned int movementCache_1_c::numDirections() { return NUM_DIRECTIONS; }
 void movementCache_1_c::getDirection(unsigned int dir, int * x, int * y, int * z)
 {
   bt_assert(dir < NUM_DIRECTIONS);

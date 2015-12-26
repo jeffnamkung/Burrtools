@@ -25,10 +25,10 @@
 
 #include "bt_assert.h"
 
-class assembler_c;
+class AssemblerInterface;
 class symmetries_c;
 class voxel_c;
-class problem_c;
+class Problem;
 class stlExporter_c;
 class movementCache_c;
 class xmlWriter_c;
@@ -43,7 +43,7 @@ class xmlParser_c;
  *
  * This is a factory (see http://en.wikipedia.org/wiki/Factory_method_pattern)
  */
-class gridType_c {
+class GridType {
 
   public:
 
@@ -84,10 +84,10 @@ class gridType_c {
     /**
      * load from xml node
      */
-    gridType_c(xmlParser_c & pars);
+    GridType(xmlParser_c & pars);
 
     /** copy constructor */
-    gridType_c(const gridType_c&);
+    GridType(const GridType &);
 
     /** used to save to XML */
     void save(xmlWriter_c & xml) const;
@@ -95,12 +95,12 @@ class gridType_c {
     /* some specializes constructors */
 
     /** create a cube grid */
-    gridType_c(void);
+    GridType(void);
 
     /** create a grid of the given type with its standard parameters */
-    gridType_c(gridType gt);
+    GridType(gridType gt);
 
-    ~gridType_c(void);
+    ~GridType(void);
 
     /** get the grid type */
     gridType getType(void) const { return type; }
@@ -108,7 +108,7 @@ class gridType_c {
     unsigned int getCapabilities(void) const;
 
     /// return a movement cache instance for this grid type
-    movementCache_c * getMovementCache(const problem_c * puz) const;
+    movementCache_c * getMovementCache(const Problem * puz) const;
 
     /// create a new voxel space of this grid type with the given dimensions
     voxel_c * getVoxel(unsigned int x, unsigned int y, unsigned int z, voxel_type init) const;
@@ -139,12 +139,12 @@ class gridType_c {
      * because we are not dependend on the gridtype this function is static
      * but it needs to know the puzzle
      */
-    static assembler_c * findAssembler(const problem_c * p);
+    static AssemblerInterface * findAssembler(const Problem * p);
 
   private:
 
     // no copying and assigning
-    void operator=(const gridType_c&);
+    void operator=(const GridType &);
 };
 
 #endif

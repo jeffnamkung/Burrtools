@@ -38,9 +38,9 @@ class disassembler_c {
 
 public:
 
-  disassembler_c(void) {}
+  disassembler_c() {}
 
-  virtual ~disassembler_c(void) {}
+  virtual ~disassembler_c() {}
 
   /**
    * Try to disassemble an assembly.
