@@ -24,7 +24,7 @@
 #include "guigridtype.h"
 #include "Layouter.h"
 
-#include "grid-type.h"
+#include "../lib/grid-type.h"
 
 #include <FL/Fl_Browser_.H>
 #include <FL/Fl_Image.H>

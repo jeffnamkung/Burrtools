@@ -29,7 +29,7 @@
 #include <FL/Fl_Group.H>
 
 class guiGridType_c;
-class piecePositions_c;
+class PiecePositionsInterface;
 
 class Fl_Slider;
 

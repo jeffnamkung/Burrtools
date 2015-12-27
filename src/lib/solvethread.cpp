@@ -23,7 +23,7 @@
 #include "disassembly.h"
 #include "problem.h"
 #include "assembly.h"
-#include "disassembler_0.h"
+#include "simple-disassembler.h"
 #include "solution.h"
 
 void solveThread_c::run(void){

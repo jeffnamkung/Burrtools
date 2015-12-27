@@ -58,11 +58,11 @@
 #include "../lib/voxel.h"
 #include "../lib/puzzle.h"
 #include "../lib/problem.h"
-#include "assembler-interface.h"
+#include "../lib/assembler-interface.h"
 #include "../lib/solvethread.h"
 #include "../lib/disassembly.h"
-#include "../lib/disassembler_0.h"
-#include "grid-type.h"
+#include "../lib/simple-disassembler.h"
+#include "../lib/grid-type.h"
 #include "../lib/disasmtomoves.h"
 #include "../lib/assembly.h"
 #include "../lib/converter.h"
@@ -2106,9 +2106,9 @@ void mainWindow_c::activateSolution(unsigned int prob, unsigned int num) {
 
       MovesInfo->value(levelText);
 
-      disassemble = new disasmToMoves_c(pr->getSolution(num)->getDisassembly(),
+      disassemble = new DisassemblyToMoves(pr->getSolution(num)->getDisassembly(),
                                       2*pr->getResultShape()->getBiggestDimension(),
-                                      pr->pieceNumber());
+                                           pr->pieceNumber());
       disassemble->setStep(SolutionAnim->value(), config.useBlendedRemoving(), true);
 
       if (prob < puzzle->problemNumber()) View3D->getView()->showAssembly(puzzle->getProblem(prob), num);

@@ -29,12 +29,12 @@ class disassemblerNode_c;
 /**
  * this is an abstract class used to define piece positions
  */
-class piecePositions_c {
+class PiecePositionsInterface {
 
 public:
 
-  piecePositions_c() {}
-  virtual ~piecePositions_c() {}
+  PiecePositionsInterface() {}
+  virtual ~PiecePositionsInterface() {}
 
   /** the x-positions of the piece is returned */
   virtual float getX(unsigned int piece) = 0;
@@ -52,8 +52,8 @@ public:
 private:
 
   // no copying and assigning
-  piecePositions_c(const piecePositions_c&);
-  void operator=(const piecePositions_c&);
+  PiecePositionsInterface(const PiecePositionsInterface &);
+  void operator=(const PiecePositionsInterface &);
 
 };
 
@@ -61,7 +61,7 @@ private:
  * this class takes a disassembly tree and generates piecepositions
  * for all pieces at each step of disassembly
  */
-class disasmToMoves_c : public piecePositions_c {
+class DisassemblyToMoves : public PiecePositionsInterface {
 
   /** the disassembly tree */
   const separation_c * tree;
@@ -94,9 +94,9 @@ public:
    * assembled puzzle. The larger the further away the pieces will be
    * moved
    */
-  disasmToMoves_c(const separation_c * tr, unsigned int sz, unsigned int maxPiece);
+  DisassemblyToMoves(const separation_c * tr, unsigned int sz, unsigned int maxPiece);
 
-  virtual ~disasmToMoves_c();
+  virtual ~DisassemblyToMoves();
 
   /**
    * sets the moves for the step. if the value is not integer you
@@ -117,18 +117,18 @@ public:
 private:
 
   // no copying and assigning
-  disasmToMoves_c(const disasmToMoves_c&);
-  void operator=(const disasmToMoves_c&);
+  DisassemblyToMoves(const DisassemblyToMoves &);
+  void operator=(const DisassemblyToMoves &);
 };
 
 /** a piece position class with fixed positions */
-class fixedPositions_c : public piecePositions_c {
+class FixedPositions : public PiecePositionsInterface {
 
   public:
 
-    fixedPositions_c(const disassemblerNode_c * nd, const std::vector<unsigned int> & pieces, unsigned int pc);
-    fixedPositions_c(const fixedPositions_c * nd);
-    ~fixedPositions_c(void);
+    FixedPositions(const disassemblerNode_c * nd, const std::vector<unsigned int> & pieces, unsigned int pc);
+    FixedPositions(const FixedPositions * nd);
+    ~FixedPositions(void);
 
     virtual float getX(unsigned int piece);
     virtual float getY(unsigned int piece);
@@ -145,8 +145,8 @@ class fixedPositions_c : public piecePositions_c {
   private:
 
     // no copying and assigning
-    fixedPositions_c(const fixedPositions_c&);
-    void operator=(const fixedPositions_c&);
+    FixedPositions(const FixedPositions &);
+    void operator=(const FixedPositions &);
 };
 
 #endif

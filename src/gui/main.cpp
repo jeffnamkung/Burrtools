@@ -28,7 +28,7 @@
 #include <time.h>
 
 #include "../lib/bt_assert.h"
-#include "grid-type.h"
+#include "../lib/grid-type.h"
 #include "../lib/puzzle.h"
 
 #include "../tools/xml.h"

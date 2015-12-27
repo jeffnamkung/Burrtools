@@ -21,7 +21,7 @@
 #ifndef __DISASSEMBLER_0_H__
 #define __DISASSEMBLER_0_H__
 
-#include "disassembler_a.h"
+#include "base-disassembler.h"
 
 class separation_c;
 

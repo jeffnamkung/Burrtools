@@ -22,7 +22,7 @@
 #define __SOLVETHREAD_H__
 
 #include "assembler-interface.h"
-#include "disassembler.h"
+#include "disassembler-interface.h"
 #include "bt_assert.h"
 #include "thread.h"
 

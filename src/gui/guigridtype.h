@@ -21,7 +21,7 @@
 #ifndef __GUI_GRID_TYPE__
 #define __GUI_GRID_TYPE__
 
-#include "grid-type.h"
+#include "../lib/grid-type.h"
 
 class gridEditor_c;
 class gridTypeGui_c;

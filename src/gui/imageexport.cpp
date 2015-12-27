@@ -65,7 +65,7 @@ class ImageInfo {
     unsigned int solution;
     bool dim;
 
-    disasmToMoves_c * positions;
+    DisassemblyToMoves * positions;
 
     // the image data
     image_c * i;  // image generated with the drawer that is with a fixed hight and the required width
@@ -88,11 +88,11 @@ class ImageInfo {
      */
     ImageInfo(Puzzle * p, voxelFrame_c::colorMode color, unsigned int prob,
               unsigned int sol, voxelFrame_c * v,
-              disasmToMoves_c * pos = 0, bool d = false) : setupFunction(SHOW_ASSEMBLY), puzzle(p),
-                                                   showColors(color), problem(prob),
-                                                   solution(sol), dim(d), positions(pos),
-                                                   i(new image_c(600, 200)),
-                                                   i2(0), vv(v) { }
+              DisassemblyToMoves * pos = 0, bool d = false) : setupFunction(SHOW_ASSEMBLY), puzzle(p),
+                                                              showColors(color), problem(prob),
+                                                              solution(sol), dim(d), positions(pos),
+                                                              i(new image_c(600, 200)),
+                                                              i2(0), vv(v) { }
 
     ~ImageInfo() {
       if (i) delete i;
@@ -428,7 +428,7 @@ void imageExport_c::cb_Export() {
     if (!t) return;
 
     for (unsigned int step = 0; step < t->sumMoves(); step++) {
-      disasmToMoves_c * dtm = new disasmToMoves_c(t, 20, pr->pieceNumber());
+      DisassemblyToMoves * dtm = new DisassemblyToMoves(t, 20, pr->pieceNumber());
       dtm->setStep(step, false, true);
       images.push_back(new ImageInfo(puzzle, getColorMode(),
            prob, s, view3D->getView(), dtm, DimStatic->value()));
@@ -445,13 +445,13 @@ void imageExport_c::cb_Export() {
     if (!t) return;
 
     for (unsigned int step = t->sumMoves() - 1; step > 0; step--) {
-      disasmToMoves_c * dtm = new disasmToMoves_c(t, 20, pr->pieceNumber());
+      DisassemblyToMoves * dtm = new DisassemblyToMoves(t, 20, pr->pieceNumber());
       dtm->setStep(step, false, true);
       images.push_back(new ImageInfo(puzzle, getColorMode(),
            prob, s, view3D->getView(), dtm, DimStatic->value()));
     }
 
-    disasmToMoves_c * dtm = new disasmToMoves_c(t, 20, pr->pieceNumber());
+    DisassemblyToMoves * dtm = new DisassemblyToMoves(t, 20, pr->pieceNumber());
     dtm->setStep(0, false, true);
     images.push_back(new ImageInfo(puzzle, getColorMode(),
           prob, s, view3D->getView(), dtm, false));

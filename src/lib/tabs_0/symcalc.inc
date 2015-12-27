@@ -1,4 +1,4 @@
-voxel_c * v;
+Voxel * v;
 bool res;
 v = pp->getGridType()->getVoxel(pp);
 v->transform(26);

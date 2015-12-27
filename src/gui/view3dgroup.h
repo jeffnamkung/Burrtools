@@ -26,7 +26,7 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Slider.H>
 
-class piecePositions_c;
+class PiecePositionsInterface;
 class voxelFrame_c;
 
 // the groups with the 3d view and the zoom slider

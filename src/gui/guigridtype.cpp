@@ -28,7 +28,7 @@
 #include "gridtypegui.h"
 #include "tooltabs.h"
 
-#include "grid-type.h"
+#include "../lib/grid-type.h"
 
 guiGridType_c::guiGridType_c(GridType * g) : gt(g) { }
 

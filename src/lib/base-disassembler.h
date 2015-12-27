@@ -21,7 +21,7 @@
 #ifndef __DISASSEMBLER_A_H__
 #define __DISASSEMBLER_A_H__
 
-#include "disassembler.h"
+#include "disassembler-interface.h"
 #include "movementanalysator.h"
 
 #include <vector>

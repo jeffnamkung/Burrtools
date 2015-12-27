@@ -32,7 +32,7 @@ class Voxel;
 class Puzzle;
 class Problem;
 class Assembly;
-class piecePositions_c;
+class PiecePositionsInterface;
 
 class rotater_c;
 
@@ -115,9 +115,9 @@ class voxelFrame_c : public Fl_Gl_Window {
     void showSingleShape(const Puzzle * puz, unsigned int shapeNum);
     void showColors(const Puzzle * puz, colorMode mode);
     void showAssembly(const Problem * puz, unsigned int solNum);
-    void updatePositions(piecePositions_c *shifting);
-    void updatePositionsOverlap(piecePositions_c *shifting);
-    void dimStaticPieces(piecePositions_c *shifting);
+    void updatePositions(PiecePositionsInterface *shifting);
+    void updatePositionsOverlap(PiecePositionsInterface *shifting);
+    void dimStaticPieces(PiecePositionsInterface *shifting);
     void showAssemblerState(const Problem * puz, const Assembly * assm);
     void updateVisibility(PieceVisibility * pcvis);
     void showProblem(const Puzzle * puz, unsigned int problem, unsigned int selShape);

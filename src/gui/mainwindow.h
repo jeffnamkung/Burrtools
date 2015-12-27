@@ -30,7 +30,7 @@ class ChangeSize;
 class ToolTab;
 class Puzzle;
 class solveThread_c;
-class disasmToMoves_c;
+class DisassemblyToMoves;
 class GridType;
 class guiGridType_c;
 class layouter_c;
@@ -65,7 +65,7 @@ class mainWindow_c : public LFl_Double_Window {
   Puzzle * puzzle;
   guiGridType_c * ggt;  // this is the guigridtype for the puzzle, is must always be in sync
   char * fname;
-  disasmToMoves_c * disassemble;
+  DisassemblyToMoves * disassemble;
   solveThread_c *assmThread;
   bool SolutionEmpty;
   bool changed;

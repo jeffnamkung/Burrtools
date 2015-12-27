@@ -1277,7 +1277,7 @@ void voxelFrame_c::showPlacement(const Problem * puz, unsigned int piece, unsign
 }
 
 
-void voxelFrame_c::updatePositions(piecePositions_c *shifting) {
+void voxelFrame_c::updatePositions(PiecePositionsInterface *shifting) {
 
   for (unsigned int p = 0; p < shapes.size()-1; p++) {
     setSpacePosition(p, shifting->getX(p), shifting->getY(p), shifting->getZ(p), 1);
@@ -1287,7 +1287,7 @@ void voxelFrame_c::updatePositions(piecePositions_c *shifting) {
   redraw();
 }
 
-void voxelFrame_c::updatePositionsOverlap(piecePositions_c *shifting) {
+void voxelFrame_c::updatePositionsOverlap(PiecePositionsInterface *shifting) {
 
   /* in this case all the positions must be on the raster, so check that first */
   for (unsigned int p = 0; p < shapes.size()-1; p++) {
@@ -1398,7 +1398,7 @@ void voxelFrame_c::updatePositionsOverlap(piecePositions_c *shifting) {
   redraw();
 }
 
-void voxelFrame_c::dimStaticPieces(piecePositions_c *shifting) {
+void voxelFrame_c::dimStaticPieces(PiecePositionsInterface *shifting) {
 
   for (unsigned int p = 0; p < shapes.size()-1; p++) {
     if (shapes[p].dim != !shifting->moving(p)) {

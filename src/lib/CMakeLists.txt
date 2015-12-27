@@ -35,11 +35,11 @@ converter.cpp
 converter.h
 disasmtomoves.cpp
 disasmtomoves.h
-disassembler.h
-disassembler_0.cpp
-disassembler_0.h
-disassembler_a.cpp
-disassembler_a.h
+    disassembler-interface.h
+    simple-disassembler.cpp
+    simple-disassembler.h
+    base-disassembler.cpp
+    base-disassembler.h
 disassemblerhashes.cpp
 disassemblerhashes.h
 disassemblernode.cpp

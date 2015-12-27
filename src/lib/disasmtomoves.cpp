@@ -23,7 +23,7 @@
 #include "disassembly.h"
 #include "disassemblernode.h"
 
-disasmToMoves_c::disasmToMoves_c(const separation_c * tr, unsigned int sz, unsigned int max) : size(sz), maxPieceName(max) {
+DisassemblyToMoves::DisassemblyToMoves(const separation_c * tr, unsigned int sz, unsigned int max) : size(sz), maxPieceName(max) {
 
   tree = new separation_c(tr);
 
@@ -31,13 +31,13 @@ disasmToMoves_c::disasmToMoves_c(const separation_c * tr, unsigned int sz, unsig
   mv = new bool[maxPieceName];
 }
 
-disasmToMoves_c::~disasmToMoves_c() {
+DisassemblyToMoves::~DisassemblyToMoves() {
   delete [] moves;
   delete [] mv;
   delete tree;
 }
 
-void disasmToMoves_c::setStep(float step, bool fadeOut, bool center_active) {
+void DisassemblyToMoves::setStep(float step, bool fadeOut, bool center_active) {
 
   int s = int(step);
   float frac = step - s;
@@ -78,23 +78,23 @@ void disasmToMoves_c::setStep(float step, bool fadeOut, bool center_active) {
   delete [] moves2;
 }
 
-float disasmToMoves_c::getX(unsigned int piece) {
+float DisassemblyToMoves::getX(unsigned int piece) {
   bt_assert(piece < maxPieceName);
   return moves[4*piece+0];
 }
-float disasmToMoves_c::getY(unsigned int piece) {
+float DisassemblyToMoves::getY(unsigned int piece) {
   bt_assert(piece < maxPieceName);
   return moves[4*piece+1];
 }
-float disasmToMoves_c::getZ(unsigned int piece) {
+float DisassemblyToMoves::getZ(unsigned int piece) {
   bt_assert(piece < maxPieceName);
   return moves[4*piece+2];
 }
-float disasmToMoves_c::getA(unsigned int piece) {
+float DisassemblyToMoves::getA(unsigned int piece) {
   bt_assert(piece < maxPieceName);
   return moves[4*piece+3];
 }
-bool disasmToMoves_c::moving(unsigned int piece) {
+bool DisassemblyToMoves::moving(unsigned int piece) {
   bt_assert(piece < maxPieceName);
   return mv[piece];
 }
@@ -124,7 +124,7 @@ static int mmax(int a, int b) {
  *                values are multiplied by this value and then the 2 end points are added
  *    cx, cy, cz are the centre to display the current tree
  */
-int disasmToMoves_c::doRecursive(const separation_c * tree, int step, float * array, bool center_active, int cx, int cy, int cz) {
+int DisassemblyToMoves::doRecursive(const separation_c * tree, int step, float * array, bool center_active, int cx, int cy, int cz) {
 
   bt_assert(tree);
 
@@ -282,7 +282,7 @@ int disasmToMoves_c::doRecursive(const separation_c * tree, int step, float * ar
 
 
 
-fixedPositions_c::fixedPositions_c(const disassemblerNode_c * nd, const std::vector<unsigned int> & pc, unsigned int pcs) {
+FixedPositions::FixedPositions(const disassemblerNode_c * nd, const std::vector<unsigned int> & pc, unsigned int pcs) {
 
   pieces = pcs;
   x = new int[pieces];
@@ -309,7 +309,7 @@ fixedPositions_c::fixedPositions_c(const disassemblerNode_c * nd, const std::vec
   }
 }
 
-fixedPositions_c::fixedPositions_c(const fixedPositions_c * nd) {
+FixedPositions::FixedPositions(const FixedPositions * nd) {
 
   pieces = nd->pieces;
   x = new int[pieces];
@@ -325,16 +325,16 @@ fixedPositions_c::fixedPositions_c(const fixedPositions_c * nd) {
   }
 }
 
-fixedPositions_c::~fixedPositions_c() {
+FixedPositions::~FixedPositions() {
   delete [] x;
   delete [] y;
   delete [] z;
   delete [] visible;
 }
 
-float fixedPositions_c::getX(unsigned int piece) { bt_assert(piece < pieces); return x[piece]; }
-float fixedPositions_c::getY(unsigned int piece) { bt_assert(piece < pieces); return y[piece]; }
-float fixedPositions_c::getZ(unsigned int piece) { bt_assert(piece < pieces); return z[piece]; }
-float fixedPositions_c::getA(unsigned int piece) { return visible[piece] ? 1 : 0; }
-bool fixedPositions_c::moving(unsigned int /*piece*/) { return false; }
+float FixedPositions::getX(unsigned int piece) { bt_assert(piece < pieces); return x[piece]; }
+float FixedPositions::getY(unsigned int piece) { bt_assert(piece < pieces); return y[piece]; }
+float FixedPositions::getZ(unsigned int piece) { bt_assert(piece < pieces); return z[piece]; }
+float FixedPositions::getA(unsigned int piece) { return visible[piece] ? 1 : 0; }
+bool FixedPositions::moving(unsigned int /*piece*/) { return false; }
 

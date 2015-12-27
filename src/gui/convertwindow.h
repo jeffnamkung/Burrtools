@@ -23,7 +23,7 @@
 
 #include "Layouter.h"
 
-#include "grid-type.h"
+#include "../lib/grid-type.h"
 
 #include <vector>
 
