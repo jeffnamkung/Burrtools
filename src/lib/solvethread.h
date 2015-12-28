@@ -34,7 +34,7 @@ class Problem;
  * be used to continue an already started solution, so that you can save you results
  * and continue later on
  */
-class solveThread_c : public AssemblerCallbackInterface, public thread_c {
+class solveThread_c : public AssemblerCallbackInterface, public Thread {
 
   public:
 

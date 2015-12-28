@@ -24,10 +24,8 @@
 #include <boost/thread.hpp>
 
 /* this class encapsulates a single thread */
-class thread_c {
-
+class Thread {
   private:
-
     boost::thread thread;  // our thread
 
     bool running;
@@ -35,12 +33,12 @@ class thread_c {
   public:
 
     /* create the thread data structure, but don't start the thread */
-    thread_c(void) : running(false) {}
+    Thread(void) : running(false) {}
 
     /* try to stop the thread, if that doesn't work, kill it and then
      * delete data structur
      */
-    virtual ~thread_c(void);
+    virtual ~Thread(void);
 
     /* run the thread return true on success */
     bool start();
@@ -66,8 +64,8 @@ class thread_c {
     void start_thread(void);
 
     // no copying and assigning
-    thread_c(const thread_c&);
-    void operator=(const thread_c&);
+    Thread(const Thread &);
+    void operator=(const Thread &);
 
 };
 

@@ -41,25 +41,24 @@
 using namespace std;
 
 void usage() {
-
-  cout << "burrTxt [options] file [options]\n\n";
-  cout << "  file: puzzle file with the puzzle definition to solve\n\n";
-  cout << "  -R    restart and throw away all found solutions, otherwise continue\n";
-  cout << "  -d    try to disassemble and only keep solutions that do disassemble\n";
-  cout << "  -c    just count solutions\n";
-  cout << "  -m    keep mirror solutions\n";
-  cout << "  -r    keep rotated solutions\n";
-  cout << "  -p    drop disassemblies and replace by information about disassembly\n";
-  cout << "  -b    selecte problem, else 0\n";
+  cout << R"(
+burrTxt [options] file [options]
+  file: puzzle file with the puzzle definition to solve
+  -R    restart and throw away all found solutions, otherwise continue
+  -d    try to disassemble and only keep solutions that do disassemble
+  -c    just count solutions
+  -m    keep mirror solutions
+  -r    keep rotated solutions
+  -p    drop disassemblies and replace by information about disassembly
+  -b    selecte problem, else 0)";
 }
 
 
-bool checkInput(void)
-{
+bool checkInput() {
   /* Initialize the file descriptor set. */
   fd_set set;
-  FD_ZERO (&set);
-  FD_SET (STDIN_FILENO, &set);
+  FD_ZERO(&set);
+  FD_SET(STDIN_FILENO, &set);
 
   /* Initialize the timeout data structure. */
   struct timeval timeout;
@@ -72,7 +71,6 @@ bool checkInput(void)
 
 
 int main(int argv, char* args[]) {
-
   if (argv < 1) {
     usage();
     return 2;

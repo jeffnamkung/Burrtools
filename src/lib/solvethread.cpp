@@ -364,7 +364,7 @@ bool solveThread_c::start(bool stop_after_prep) {
     a = (a+1) / 2;
   }
 
-  return thread_c::start();
+  return Thread::start();
 }
 
 unsigned int solveThread_c::currentActionParameter() {

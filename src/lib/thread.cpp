@@ -21,21 +21,21 @@
 
 #include "thread.h"
 
-thread_c::~thread_c() {
+Thread::~Thread() {
   kill();
 }
 
-void thread_c::start_thread(void)
+void Thread::start_thread(void)
 {
   running = true;
   run();
   running = false;
 }
 
-bool thread_c::start() {
+bool Thread::start() {
 
   running = true;
-  thread = boost::thread(&thread_c::start_thread, this);
+  thread = boost::thread(&Thread::start_thread, this);
 
   bool result = thread.get_id() != boost::thread::id();
 
@@ -47,7 +47,7 @@ bool thread_c::start() {
   return result;
 }
 
-void thread_c::kill() {
+void Thread::kill() {
 
   stop();
   thread.join();
