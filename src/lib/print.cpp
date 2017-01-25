@@ -90,11 +90,11 @@ void print(const Puzzle * p) {
   }
 }
 
-static void print_rec(const separation_c * s, Voxel ** pieces, int sx, int sy, int sz, unsigned int * pieceNum) {
+static void print_rec(const Separation * s, Voxel ** pieces, int sx, int sy, int sz, unsigned int * pieceNum) {
 
   for (unsigned int i = 0; i <= s->getMoves(); i++) {
 
-    const state_c * st = s->getState(i);
+    const State * st = s->getState(i);
 
     for (int z = -sz/2; z < sz+sz/2; z++) {
       printf(" +");
@@ -165,7 +165,7 @@ static void print_rec(const separation_c * s, Voxel ** pieces, int sx, int sy, i
   }
 }
 
-void print(const separation_c * s, const Assembly * a, const Problem * p) {
+void print(const Separation * s, const Assembly * a, const Problem * p) {
 
   bt_assert(p->resultValid());
 

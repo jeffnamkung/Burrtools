@@ -20,13 +20,13 @@
  */
 #include "buttongroup.h"
 
-static void cb_ButtonGroup_stub(Fl_Widget* o, void* v) { ((ButtonGroup_c*)v)->cb_Push((Fl_Button*)o); }
+static void cb_ButtonGroup_stub(Fl_Widget* o, void* v) { ((ButtonGroup*)v)->cb_Push((Fl_Button*)o); }
 
-ButtonGroup_c::ButtonGroup_c(int x, int y, int w, int h) : layouter_c(x, y, w, h), currentButton(0) {
+ButtonGroup::ButtonGroup(int x, int y, int w, int h) : Layouter(x, y, w, h), currentButton(0) {
   end();
 }
 
-LFl_Button * ButtonGroup_c::addButton() {
+LFl_Button * ButtonGroup::addButton() {
 
   int c = children();
 
@@ -47,7 +47,7 @@ LFl_Button * ButtonGroup_c::addButton() {
   return b;
 }
 
-void ButtonGroup_c::cb_Push(Fl_Button * btn) {
+void ButtonGroup::cb_Push(Fl_Button * btn) {
 
   Fl_Button ** a = (Fl_Button**) array();
 
@@ -62,7 +62,7 @@ void ButtonGroup_c::cb_Push(Fl_Button * btn) {
   do_callback();
 }
 
-void ButtonGroup_c::select(int num) {
+void ButtonGroup::select(int num) {
   if (num < children())
     cb_Push((Fl_Button*)array()[num]);
 }

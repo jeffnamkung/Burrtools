@@ -25,28 +25,28 @@
 
 #include "Layouter.h"
 
-class VoxelEditGroup_c;
+class VoxelEditGroup;
 class ChangeSize;
 class ToolTab;
 class Puzzle;
-class solveThread_c;
+class SolveThread;
 class DisassemblyToMoves;
 class GridType;
-class guiGridType_c;
-class layouter_c;
+class GuiGridType;
+class Layouter;
 
 class PieceSelector;
 class ProblemSelector;
 class ColorSelector;
-class ResultViewer_c;
+class ResultViewer;
 class PiecesList;
 class PieceVisibility;
 class ColorConstraintsEdit;
 class ToolTabContainer;
-class ButtonGroup_c;
+class ButtonGroup;
 class FlatButton;
 class LStatusLine;
-class LBlockListGroup_c;
+class LBlockListGroup;
 class LView3dGroup;
 
 class Fl_Tabs;
@@ -60,13 +60,12 @@ class Fl_Menu_Bar;
 class Fl_Choice;
 class Fl_Progress;
 
-class mainWindow_c : public LFl_Double_Window {
-
+class MainWindow : public LFl_Double_Window {
   Puzzle * puzzle;
-  guiGridType_c * ggt;  // this is the guigridtype for the puzzle, is must always be in sync
+  GuiGridType * ggt;  // this is the guigridtype for the puzzle, is must always be in sync
   char * fname;
   DisassemblyToMoves * disassemble;
-  solveThread_c *assmThread;
+  SolveThread *assmThread;
   bool SolutionEmpty;
   bool changed;
   int editSymmetries;
@@ -76,7 +75,7 @@ class mainWindow_c : public LFl_Double_Window {
   pixmapList_c pm;
 
   Fl_Tabs *TaskSelectionTab;
-  layouter_c *TabPieces;
+  Layouter *TabPieces;
   Fl_Group *MinSizeSelector;
 
   PieceSelector * PcSel;
@@ -84,18 +83,18 @@ class mainWindow_c : public LFl_Double_Window {
   ProblemSelector * solutionProblem;
   ColorSelector * colorAssignmentSelector;
   PieceSelector * shapeAssignmentSelector;
-  ResultViewer_c * problemResult;
+  ResultViewer * problemResult;
   PiecesList * PiecesCountList;
   PieceVisibility * PcVis;
   ColorConstraintsEdit * colconstrList;
 
-  layouter_c *TabProblems;
+  Layouter *TabProblems;
 
   ToolTabContainer * pieceTools;
-  ButtonGroup_c *editChoice;
-  ButtonGroup_c *editMode;
+  ButtonGroup *editChoice;
+  ButtonGroup *editMode;
 
-  layouter_c *TabSolve;
+  Layouter *TabSolve;
   Fl_Check_Button *SolveDisasm, *JustCount, *DropDisassemblies, *KeepMirrors, *KeepRotations, *CompleteRotations;
 
   FlatButton *BtnPrepare, *BtnStart, *BtnCont, *BtnStop, *BtnPlacement, *BtnStep, *BtnMovement;
@@ -126,7 +125,7 @@ class mainWindow_c : public LFl_Double_Window {
 
   ColorSelector * colorSelector;
 
-  VoxelEditGroup_c *pieceEdit;
+  VoxelEditGroup *pieceEdit;
 
   Fl_Choice * sortMethod;
   Fl_Value_Input *solDrop, *solLimit;
@@ -176,8 +175,8 @@ class mainWindow_c : public LFl_Double_Window {
 
 public:
 
-  mainWindow_c(GridType * gt);
-  virtual ~mainWindow_c();
+  MainWindow(GridType * gt);
+  virtual ~MainWindow();
 
   int handle(int event);
 
@@ -232,14 +231,14 @@ public:
   void cb_RemoveAllShapesFromProblem(void);
   void cb_ProbShapeExchange(int with);
 
-  void cb_PcSel(LBlockListGroup_c* reason);
-  void cb_ColSel(LBlockListGroup_c* reason);
-  void cb_ProbSel(LBlockListGroup_c* reason);
+  void cb_PcSel(LBlockListGroup* reason);
+  void cb_ColSel(LBlockListGroup* reason);
+  void cb_ProbSel(LBlockListGroup* reason);
 
   void cb_PiecesClicked(void);
 
   void cb_TransformPiece(void);
-  void cb_pieceEdit(VoxelEditGroup_c* o);
+  void cb_pieceEdit(VoxelEditGroup* o);
   void cb_EditChoice(void);
   void cb_EditSym(int onoff, int value);
   void cb_EditMode(void);
@@ -279,7 +278,7 @@ public:
   void cb_Config(void);
   void cb_Coment(void);
   void cb_Toggle3D(void);
-  void cb_SolProbSel(LBlockListGroup_c* reason);
+  void cb_SolProbSel(LBlockListGroup* reason);
 
   void cb_ShapeGroup(void);
   void cb_ImageExport(void);

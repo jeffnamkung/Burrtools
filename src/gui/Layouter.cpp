@@ -28,7 +28,7 @@
  * targetW and targetH only used when task = 1, it should be bigger than min size
  *      or strange thing may happen
  */
-void layouter_c::calcLayout(int task, std::vector<int> *widths, std::vector<int> *heights,
+void Layouter::calcLayout(int task, std::vector<int> *widths, std::vector<int> *heights,
                             std::vector<int> *widgetsW, std::vector<int> *widgetsH, int targetW, int targetH) const {
 
   /* right this routine is stolen from the gridbaglayouter of the gcc java awt class set */
@@ -253,7 +253,7 @@ void layouter_c::calcLayout(int task, std::vector<int> *widths, std::vector<int>
   }
 }
 
-void layouter_c::resize(int xt, int yt, int w, int h) {
+void Layouter::resize(int xt, int yt, int w, int h) {
 
   /* first step calculate the widths of the rows and columns */
   std::vector<int> widths;
@@ -351,45 +351,45 @@ void layouter_c::resize(int xt, int yt, int w, int h) {
   }
 }
 
-void layouter_c::getMinSize(int *width, int *height) const {
+void Layouter::getMinSize(int *width, int *height) const {
 
   if (!minsizeValid) {
 
     std::vector<int> widths;
     std::vector<int> heights;
 
-    ((layouter_c*)this)->mw = ((layouter_c*)this)->mh = 0;
+    ((Layouter*)this)->mw = ((Layouter*)this)->mh = 0;
 
     if (children()) {
 
       calcLayout(0, &widths, &heights, 0, 0);
 
       /* accumulate the rows and columns */
-      for (unsigned int i = 0; i < widths.size(); i++) ((layouter_c*)this)->mw += widths[i];
-      for (unsigned int i = 0; i < heights.size(); i++) ((layouter_c*)this)->mh += heights[i];
+      for (unsigned int i = 0; i < widths.size(); i++) ((Layouter*)this)->mw += widths[i];
+      for (unsigned int i = 0; i < heights.size(); i++) ((Layouter*)this)->mh += heights[i];
     }
 
-    ((layouter_c*)this)->minsizeValid = true;
+    ((Layouter*)this)->minsizeValid = true;
   }
 
   *width = mw;
   *height = mh;
 }
 
-void layouter_c::remove(Fl_Widget &w) {
+void Layouter::remove(Fl_Widget &w) {
   minsizeValid = false;
   Fl_Group::remove(w);
 }
-void layouter_c::remove(Fl_Widget *w) {
+void Layouter::remove(Fl_Widget *w) {
   minsizeValid = false;
   Fl_Group::remove(w);
 }
-void layouter_c::add(Fl_Widget &w) {
+void Layouter::add(Fl_Widget &w) {
   minsizeValid = false;
   Fl_Group::add(w);
 }
 
-void layouter_c::add(Fl_Widget *w) {
+void Layouter::add(Fl_Widget *w) {
   minsizeValid = false;
   Fl_Group::add(w);
 }

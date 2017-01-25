@@ -28,7 +28,7 @@
 
 #include <FL/Fl_Group.H>
 
-class guiGridType_c;
+class GuiGridType;
 class PiecePositionsInterface;
 
 class Fl_Slider;
@@ -36,7 +36,7 @@ class Fl_Slider;
 class LineSpacer;
 
 // the group for the square editor including the coloured marker and the slider for the z axis
-class VoxelEditGroup_c : public Fl_Group, public layoutable_c {
+class VoxelEditGroup : public Fl_Group, public layoutable_c {
 
   gridEditor_c * sqedit;
   Fl_Slider * zselect;
@@ -44,9 +44,9 @@ class VoxelEditGroup_c : public Fl_Group, public layoutable_c {
 
 public:
 
-  VoxelEditGroup_c(int x, int y, int w, int h, Puzzle * puzzle, const guiGridType_c * ggt);
+  VoxelEditGroup(int x, int y, int w, int h, Puzzle * puzzle, const GuiGridType * ggt);
 
-  void newGridType(const guiGridType_c * ggt, Puzzle * puzzle);
+  void newGridType(const GuiGridType * ggt, Puzzle * puzzle);
 
   void draw();
 

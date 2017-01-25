@@ -114,8 +114,8 @@ bool fileExists(const char *n) {
     return false;
 }
 
-static void cb_AddColor_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AddColor(); }
-void mainWindow_c::cb_AddColor() {
+static void cb_AddColor_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_AddColor(); }
+void MainWindow::cb_AddColor() {
 
   unsigned char r, g, b;
 
@@ -140,8 +140,8 @@ void mainWindow_c::cb_AddColor() {
   }
 }
 
-static void cb_RemoveColor_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_RemoveColor(); }
-void mainWindow_c::cb_RemoveColor() {
+static void cb_RemoveColor_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_RemoveColor(); }
+void MainWindow::cb_RemoveColor() {
 
   if (colorSelector->getSelection() == 0)
     fl_message("Can not delete the Neutral colour, this colour has to be there");
@@ -163,8 +163,8 @@ void mainWindow_c::cb_RemoveColor() {
   }
 }
 
-static void cb_ChangeColor_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ChangeColor(); }
-void mainWindow_c::cb_ChangeColor() {
+static void cb_ChangeColor_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ChangeColor(); }
+void MainWindow::cb_ChangeColor() {
 
   if (colorSelector->getSelection() == 0)
     fl_message("Can not edit the Neutral colour");
@@ -180,8 +180,8 @@ void mainWindow_c::cb_ChangeColor() {
   }
 }
 
-static void cb_NewShape_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_NewShape(); }
-void mainWindow_c::cb_NewShape() {
+static void cb_NewShape_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_NewShape(); }
+void MainWindow::cb_NewShape() {
 
   if (PcSel->getSelection() < puzzle->shapeNumber()) {
     const Voxel * v = puzzle->getShape(PcSel->getSelection());
@@ -194,8 +194,8 @@ void mainWindow_c::cb_NewShape() {
   changed = true;
 }
 
-static void cb_DeleteShape_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteShape(); }
-void mainWindow_c::cb_DeleteShape() {
+static void cb_DeleteShape_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteShape(); }
+void MainWindow::cb_DeleteShape() {
 
   unsigned int current = PcSel->getSelection();
 
@@ -223,8 +223,8 @@ void mainWindow_c::cb_DeleteShape() {
 
 }
 
-static void cb_CopyShape_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_CopyShape(); }
-void mainWindow_c::cb_CopyShape() {
+static void cb_CopyShape_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_CopyShape(); }
+void MainWindow::cb_CopyShape() {
 
   unsigned int current = PcSel->getSelection();
 
@@ -242,8 +242,8 @@ void mainWindow_c::cb_CopyShape() {
 
 }
 
-static void cb_NameShape_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_NameShape(); }
-void mainWindow_c::cb_NameShape() {
+static void cb_NameShape_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_NameShape(); }
+void MainWindow::cb_NameShape() {
 
   if (PcSel->getSelection() < puzzle->shapeNumber()) {
 
@@ -257,9 +257,9 @@ void mainWindow_c::cb_NameShape() {
   }
 }
 
-static void cb_WeightInc_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_WeightChange(1); }
-static void cb_WeightDec_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_WeightChange(-1); }
-void mainWindow_c::cb_WeightChange(int by) {
+static void cb_WeightInc_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_WeightChange(1); }
+static void cb_WeightDec_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_WeightChange(-1); }
+void MainWindow::cb_WeightChange(int by) {
 
   if (PcSel->getSelection() < puzzle->shapeNumber()) {
 
@@ -271,8 +271,8 @@ void mainWindow_c::cb_WeightChange(int by) {
 }
 
 
-static void cb_TaskSelectionTab_stub(Fl_Widget* o, void* v) { ((mainWindow_c*)v)->cb_TaskSelectionTab((Fl_Tabs*)o); }
-void mainWindow_c::cb_TaskSelectionTab(Fl_Tabs* o) {
+static void cb_TaskSelectionTab_stub(Fl_Widget* o, void* v) { ((MainWindow*)v)->cb_TaskSelectionTab((Fl_Tabs*)o); }
+void MainWindow::cb_TaskSelectionTab(Fl_Tabs* o) {
 
   if (o->value() == TabPieces) {
     activateShape(PcSel->getSelection());
@@ -321,8 +321,8 @@ void mainWindow_c::cb_TaskSelectionTab(Fl_Tabs* o) {
   updateInterface();
 }
 
-static void cb_TransformPiece_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_TransformPiece(); }
-void mainWindow_c::cb_TransformPiece() {
+static void cb_TransformPiece_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_TransformPiece(); }
+void MainWindow::cb_TransformPiece() {
 
   if (pieceTools->operationToAll()) {
     for (unsigned int i = 0; i < puzzle->shapeNumber(); i++)
@@ -338,9 +338,9 @@ void mainWindow_c::cb_TransformPiece() {
 }
 
 static void cb_EditSym_stub(Fl_Widget* o, void* v) {
-  ((mainWindow_c*)v)->cb_EditSym(((LToggleButton_c*)o)->value(), ((LToggleButton_c*)o)->ButtonVal());
+  ((MainWindow*)v)->cb_EditSym(((LToggleButton_c*)o)->value(), ((LToggleButton_c*)o)->ButtonVal());
 }
-void mainWindow_c::cb_EditSym(int onoff, int value) {
+void MainWindow::cb_EditSym(int onoff, int value) {
   if (onoff) {
     editSymmetries |= value;
   } else {
@@ -350,8 +350,8 @@ void mainWindow_c::cb_EditSym(int onoff, int value) {
   pieceEdit->editSymmetries(editSymmetries);
 }
 
-static void cb_EditChoice_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_EditChoice(); }
-void mainWindow_c::cb_EditChoice() {
+static void cb_EditChoice_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_EditChoice(); }
+void MainWindow::cb_EditChoice() {
   switch(editChoice->getSelected()) {
     case 0:
       pieceEdit->editChoice(gridEditor_c::TSK_SET);
@@ -368,8 +368,8 @@ void mainWindow_c::cb_EditChoice() {
   }
 }
 
-static void cb_EditMode_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_EditMode(); }
-void mainWindow_c::cb_EditMode() {
+static void cb_EditMode_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_EditMode(); }
+void MainWindow::cb_EditMode() {
   switch(editMode->getSelected()) {
     case 0:
       pieceEdit->editType(gridEditor_c::EDT_RUBBER);
@@ -382,8 +382,8 @@ void mainWindow_c::cb_EditMode() {
   }
 }
 
-static void cb_PcSel_stub(Fl_Widget* o, void* v) { ((mainWindow_c*)v)->cb_PcSel((LBlockListGroup_c*)o); }
-void mainWindow_c::cb_PcSel(LBlockListGroup_c* grp) {
+static void cb_PcSel_stub(Fl_Widget* o, void* v) { ((MainWindow*)v)->cb_PcSel((LBlockListGroup*)o); }
+void MainWindow::cb_PcSel(LBlockListGroup* grp) {
   int reason = grp->getReason();
 
   switch(reason) {
@@ -395,8 +395,8 @@ void mainWindow_c::cb_PcSel(LBlockListGroup_c* grp) {
   }
 }
 
-static void cb_SolProbSel_stub(Fl_Widget* o, void* v) { ((mainWindow_c*)v)->cb_SolProbSel((LBlockListGroup_c*)o); }
-void mainWindow_c::cb_SolProbSel(LBlockListGroup_c* grp) {
+static void cb_SolProbSel_stub(Fl_Widget* o, void* v) { ((MainWindow*)v)->cb_SolProbSel((LBlockListGroup*)o); }
+void MainWindow::cb_SolProbSel(LBlockListGroup* grp) {
   int reason = grp->getReason();
 
   switch(reason) {
@@ -417,8 +417,8 @@ void mainWindow_c::cb_SolProbSel(LBlockListGroup_c* grp) {
   }
 }
 
-static void cb_ColSel_stub(Fl_Widget* o, void* v) { ((mainWindow_c*)v)->cb_ColSel((LBlockListGroup_c*)o); }
-void mainWindow_c::cb_ColSel(LBlockListGroup_c* grp) {
+static void cb_ColSel_stub(Fl_Widget* o, void* v) { ((MainWindow*)v)->cb_ColSel((LBlockListGroup*)o); }
+void MainWindow::cb_ColSel(LBlockListGroup* grp) {
   int reason = grp->getReason();
 
   switch(reason) {
@@ -430,8 +430,8 @@ void mainWindow_c::cb_ColSel(LBlockListGroup_c* grp) {
   }
 }
 
-static void cb_ProbSel_stub(Fl_Widget* o, void* v) { ((mainWindow_c*)v)->cb_ProbSel((LBlockListGroup_c*)o); }
-void mainWindow_c::cb_ProbSel(LBlockListGroup_c* grp) {
+static void cb_ProbSel_stub(Fl_Widget* o, void* v) { ((MainWindow*)v)->cb_ProbSel((LBlockListGroup*)o); }
+void MainWindow::cb_ProbSel(LBlockListGroup* grp) {
   int reason = grp->getReason();
 
   switch(reason) {
@@ -443,8 +443,8 @@ void mainWindow_c::cb_ProbSel(LBlockListGroup_c* grp) {
   }
 }
 
-static void cb_pieceEdit_stub(Fl_Widget* o, void* v) { ((mainWindow_c*)v)->cb_pieceEdit((VoxelEditGroup_c*)o); }
-void mainWindow_c::cb_pieceEdit(VoxelEditGroup_c* o) {
+static void cb_pieceEdit_stub(Fl_Widget* o, void* v) { ((MainWindow*)v)->cb_pieceEdit((VoxelEditGroup*)o); }
+void MainWindow::cb_pieceEdit(VoxelEditGroup* o) {
 
   switch (o->getReason()) {
   case gridEditor_c::RS_MOUSEMOVE:
@@ -464,8 +464,8 @@ void mainWindow_c::cb_pieceEdit(VoxelEditGroup_c* o) {
   View3D->redraw();
 }
 
-static void cb_NewProblem_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_NewProblem(); }
-void mainWindow_c::cb_NewProblem() {
+static void cb_NewProblem_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_NewProblem(); }
+void MainWindow::cb_NewProblem() {
 
   unsigned int prob = puzzle->addProblem();
 
@@ -480,8 +480,8 @@ void mainWindow_c::cb_NewProblem() {
   StatProblemInfo(problemSelector->getSelection());
 }
 
-static void cb_DeleteProblem_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteProblem(); }
-void mainWindow_c::cb_DeleteProblem() {
+static void cb_DeleteProblem_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteProblem(); }
+void MainWindow::cb_DeleteProblem() {
 
   if (problemSelector->getSelection() < puzzle->problemNumber()) {
 
@@ -502,8 +502,8 @@ void mainWindow_c::cb_DeleteProblem() {
   }
 }
 
-static void cb_CopyProblem_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_CopyProblem(); }
-void mainWindow_c::cb_CopyProblem() {
+static void cb_CopyProblem_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_CopyProblem(); }
+void MainWindow::cb_CopyProblem() {
 
   if (problemSelector->getSelection() < puzzle->problemNumber()) {
 
@@ -517,8 +517,8 @@ void mainWindow_c::cb_CopyProblem() {
   }
 }
 
-static void cb_RenameProblem_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_RenameProblem(); }
-void mainWindow_c::cb_RenameProblem() {
+static void cb_RenameProblem_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_RenameProblem(); }
+void MainWindow::cb_RenameProblem() {
 
   if (problemSelector->getSelection() < puzzle->problemNumber()) {
 
@@ -535,9 +535,9 @@ void mainWindow_c::cb_RenameProblem() {
   }
 }
 
-static void cb_ProblemLeft_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ProblemExchange(-1); }
-static void cb_ProblemRight_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ProblemExchange(+1); }
-void mainWindow_c::cb_ProblemExchange(int with) {
+static void cb_ProblemLeft_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ProblemExchange(-1); }
+static void cb_ProblemRight_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ProblemExchange(+1); }
+void MainWindow::cb_ProblemExchange(int with) {
 
   unsigned int current = problemSelector->getSelection();
   unsigned int other = current + with;
@@ -549,9 +549,9 @@ void mainWindow_c::cb_ProblemExchange(int with) {
   }
 }
 
-static void cb_ShapeLeft_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ShapeExchange(-1); }
-static void cb_ShapeRight_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ShapeExchange(+1); }
-void mainWindow_c::cb_ShapeExchange(int with) {
+static void cb_ShapeLeft_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ShapeExchange(-1); }
+static void cb_ShapeRight_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ShapeExchange(+1); }
+void MainWindow::cb_ShapeExchange(int with) {
 
   unsigned int current = PcSel->getSelection();
   unsigned int other = current + with;
@@ -563,9 +563,9 @@ void mainWindow_c::cb_ShapeExchange(int with) {
   }
 }
 
-static void cb_ProbShapeLeft_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ProbShapeExchange(-1); }
-static void cb_ProbShapeRight_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ProbShapeExchange(+1); }
-void mainWindow_c::cb_ProbShapeExchange(int with) {
+static void cb_ProbShapeLeft_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ProbShapeExchange(-1); }
+static void cb_ProbShapeRight_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ProbShapeExchange(+1); }
+void MainWindow::cb_ProbShapeExchange(int with) {
 
   unsigned int p = problemSelector->getSelection();
   unsigned int s = shapeAssignmentSelector->getSelection();
@@ -589,18 +589,18 @@ void mainWindow_c::cb_ProbShapeExchange(int with) {
   }
 }
 
-static void cb_ColorAssSel_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ColorAssSel(); }
-void mainWindow_c::cb_ColorAssSel() {
+static void cb_ColorAssSel_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ColorAssSel(); }
+void MainWindow::cb_ColorAssSel() {
   updateInterface();
 }
 
-static void cb_ColorConstrSel_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ColorConstrSel(); }
-void mainWindow_c::cb_ColorConstrSel() {
+static void cb_ColorConstrSel_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ColorConstrSel(); }
+void MainWindow::cb_ColorConstrSel() {
   updateInterface();
 }
 
-static void cb_ShapeToResult_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ShapeToResult(); }
-void mainWindow_c::cb_ShapeToResult() {
+static void cb_ShapeToResult_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ShapeToResult(); }
+void MainWindow::cb_ShapeToResult() {
 
   if (problemSelector->getSelection() >= puzzle->problemNumber()) {
     fl_message("First create a problem");
@@ -625,14 +625,14 @@ void mainWindow_c::cb_ShapeToResult() {
   changed = true;
 }
 
-static void cb_ShapeSel_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_SelectProblemShape(); }
-void mainWindow_c::cb_SelectProblemShape() {
+static void cb_ShapeSel_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_SelectProblemShape(); }
+void MainWindow::cb_SelectProblemShape() {
   updateInterface();
   activateProblem(problemSelector->getSelection());
 }
 
-static void cb_PiecesClicked_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_PiecesClicked(); }
-void mainWindow_c::cb_PiecesClicked() {
+static void cb_PiecesClicked_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_PiecesClicked(); }
+void MainWindow::cb_PiecesClicked() {
 
   Problem * pr = puzzle->getProblem(problemSelector->getSelection());
 
@@ -642,8 +642,8 @@ void mainWindow_c::cb_PiecesClicked() {
   activateProblem(problemSelector->getSelection());
 }
 
-static void cb_AddShapeToProblem_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AddShapeToProblem(); }
-void mainWindow_c::cb_AddShapeToProblem() {
+static void cb_AddShapeToProblem_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_AddShapeToProblem(); }
+void MainWindow::cb_AddShapeToProblem() {
 
   if (problemSelector->getSelection() >= puzzle->problemNumber()) {
     fl_message("First create a problem");
@@ -669,8 +669,8 @@ void mainWindow_c::cb_AddShapeToProblem() {
   StatProblemInfo(problemSelector->getSelection());
 }
 
-static void cb_AddAllShapesToProblem_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AddAllShapesToProblem(); }
-void mainWindow_c::cb_AddAllShapesToProblem() {
+static void cb_AddAllShapesToProblem_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_AddAllShapesToProblem(); }
+void MainWindow::cb_AddAllShapesToProblem() {
 
   if (problemSelector->getSelection() >= puzzle->problemNumber()) {
     fl_message("First create a problem");
@@ -700,8 +700,8 @@ void mainWindow_c::cb_AddAllShapesToProblem() {
   StatProblemInfo(problemSelector->getSelection());
 }
 
-static void cb_RemoveShapeFromProblem_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_RemoveShapeFromProblem(); }
-void mainWindow_c::cb_RemoveShapeFromProblem() {
+static void cb_RemoveShapeFromProblem_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_RemoveShapeFromProblem(); }
+void MainWindow::cb_RemoveShapeFromProblem() {
 
   if (problemSelector->getSelection() >= puzzle->problemNumber()) {
     fl_message("First create a problem");
@@ -729,8 +729,8 @@ void mainWindow_c::cb_RemoveShapeFromProblem() {
 }
 
 
-static void cb_SetShapeMinimumToZero_stub (Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_SetShapeMinimumToZero(); }
-void mainWindow_c::cb_SetShapeMinimumToZero() {
+static void cb_SetShapeMinimumToZero_stub (Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_SetShapeMinimumToZero(); }
+void MainWindow::cb_SetShapeMinimumToZero() {
 
   if (problemSelector->getSelection() >= puzzle->problemNumber()) {
     fl_message("First create a problem");
@@ -758,8 +758,8 @@ void mainWindow_c::cb_SetShapeMinimumToZero() {
 }
 
 
-static void cb_RemoveAllShapesFromProblem_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_RemoveAllShapesFromProblem(); }
-void mainWindow_c::cb_RemoveAllShapesFromProblem() {
+static void cb_RemoveAllShapesFromProblem_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_RemoveAllShapesFromProblem(); }
+void MainWindow::cb_RemoveAllShapesFromProblem() {
 
   if (problemSelector->getSelection() >= puzzle->problemNumber()) {
     fl_message("First create a problem");
@@ -782,8 +782,8 @@ void mainWindow_c::cb_RemoveAllShapesFromProblem() {
   StatProblemInfo(problemSelector->getSelection());
 }
 
-static void cb_ShapeGroup_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ShapeGroup(); }
-void mainWindow_c::cb_ShapeGroup() {
+static void cb_ShapeGroup_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ShapeGroup(); }
+void MainWindow::cb_ShapeGroup() {
 
   unsigned int prob = problemSelector->getSelection();
 
@@ -817,8 +817,8 @@ void mainWindow_c::cb_ShapeGroup() {
   delete groupEditWin;
 }
 
-static void cb_BtnPlacementBrowser_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_BtnPlacementBrowser(); }
-void mainWindow_c::cb_BtnPlacementBrowser() {
+static void cb_BtnPlacementBrowser_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_BtnPlacementBrowser(); }
+void MainWindow::cb_BtnPlacementBrowser() {
 
   unsigned int prob = solutionProblem->getSelection();
 
@@ -840,8 +840,8 @@ void mainWindow_c::cb_BtnPlacementBrowser() {
   delete plbr;
 }
 
-static void cb_BtnMovementBrowser_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_BtnMovementBrowser(); }
-void mainWindow_c::cb_BtnMovementBrowser() {
+static void cb_BtnMovementBrowser_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_BtnMovementBrowser(); }
+void MainWindow::cb_BtnMovementBrowser() {
 
   unsigned int prob = solutionProblem->getSelection();
 
@@ -863,8 +863,8 @@ void mainWindow_c::cb_BtnMovementBrowser() {
   delete mvbr;
 }
 
-static void cb_BtnAssemblerStep_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_BtnAssemblerStep(); }
-void mainWindow_c::cb_BtnAssemblerStep() {
+static void cb_BtnAssemblerStep_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_BtnAssemblerStep(); }
+void MainWindow::cb_BtnAssemblerStep() {
 
   bt_assert(assmThread == 0);
 
@@ -882,8 +882,8 @@ void mainWindow_c::cb_BtnAssemblerStep() {
   View3D->getView()->showAssemblerState(puzzle->getProblem(solutionProblem->getSelection()), assm->getAssembly());
 }
 
-static void cb_AllowColor_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AllowColor(); }
-void mainWindow_c::cb_AllowColor() {
+static void cb_AllowColor_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_AllowColor(); }
+void MainWindow::cb_AllowColor() {
 
   if (problemSelector->getSelection() >= puzzle->problemNumber()) {
     fl_message("First create a problem");
@@ -904,8 +904,8 @@ void mainWindow_c::cb_AllowColor() {
   updateInterface();
 }
 
-static void cb_DisallowColor_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DisallowColor(); }
-void mainWindow_c::cb_DisallowColor() {
+static void cb_DisallowColor_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DisallowColor(); }
+void MainWindow::cb_DisallowColor() {
 
   if (problemSelector->getSelection() >= puzzle->problemNumber()) {
     fl_message("First create a problem");
@@ -927,9 +927,9 @@ void mainWindow_c::cb_DisallowColor() {
   updateInterface();
 }
 
-static void cb_CCSortByResult_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_CCSort(1); }
-static void cb_CCSortByPiece_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_CCSort(0); }
-void mainWindow_c::cb_CCSort(bool byResult) {
+static void cb_CCSortByResult_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_CCSort(1); }
+static void cb_CCSortByPiece_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_CCSort(0); }
+void MainWindow::cb_CCSort(bool byResult) {
   colconstrList->SetSortByResult(byResult);
 
   if (byResult) {
@@ -941,13 +941,13 @@ void mainWindow_c::cb_CCSort(bool byResult) {
   }
 }
 
-static void cb_BtnPrepare_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_BtnPrepare(); }
-void mainWindow_c::cb_BtnPrepare() {
+static void cb_BtnPrepare_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_BtnPrepare(); }
+void MainWindow::cb_BtnPrepare() {
   cb_BtnStart(true);
 }
 
-static void cb_BtnStart_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_BtnStart(false); }
-void mainWindow_c::cb_BtnStart(bool prep_only) {
+static void cb_BtnStart_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_BtnStart(false); }
+void MainWindow::cb_BtnStart(bool prep_only) {
 
   puzzle->getProblem(solutionProblem->getSelection())->removeAllSolutions();
   SolutionEmpty = true;
@@ -961,8 +961,8 @@ void mainWindow_c::cb_BtnStart(bool prep_only) {
   changed = true;
 }
 
-static void cb_BtnCont_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_BtnCont(false); }
-void mainWindow_c::cb_BtnCont(bool prep_only) {
+static void cb_BtnCont_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_BtnCont(false); }
+void MainWindow::cb_BtnCont(bool prep_only) {
 
   unsigned int prob = solutionProblem->getSelection();
 
@@ -989,15 +989,15 @@ void mainWindow_c::cb_BtnCont(bool prep_only) {
 
   bt_assert(assmThread == 0);
 
-  int par = solveThread_c::PAR_REDUCE;
-  if (KeepMirrors->value() != 0) par |= solveThread_c::PAR_KEEP_MIRROR;
-  if (KeepRotations->value() != 0) par |= solveThread_c::PAR_KEEP_ROTATIONS;
-  if (DropDisassemblies->value() != 0) par |= solveThread_c::PAR_DROP_DISASSEMBLIES;
-  if (SolveDisasm->value() != 0) par |= solveThread_c::PAR_DISASSM;
-  if (JustCount->value() != 0) par |= solveThread_c::PAR_JUST_COUNT;
-  if (CompleteRotations->value() != 0) par |= solveThread_c::PAR_COMPLETE_ROTATIONS;
+  int par = SolveThread::PAR_REDUCE;
+  if (KeepMirrors->value() != 0) par |= SolveThread::PAR_KEEP_MIRROR;
+  if (KeepRotations->value() != 0) par |= SolveThread::PAR_KEEP_ROTATIONS;
+  if (DropDisassemblies->value() != 0) par |= SolveThread::PAR_DROP_DISASSEMBLIES;
+  if (SolveDisasm->value() != 0) par |= SolveThread::PAR_DISASSM;
+  if (JustCount->value() != 0) par |= SolveThread::PAR_JUST_COUNT;
+  if (CompleteRotations->value() != 0) par |= SolveThread::PAR_COMPLETE_ROTATIONS;
 
-  assmThread = new solveThread_c(puzzle->getProblem(prob), par);
+  assmThread = new SolveThread(puzzle->getProblem(prob), par);
 
   assmThread->setSortMethod(sortMethod->value());
   assmThread->setSolutionLimits((int)solLimit->value(), (int)solDrop->value());
@@ -1014,23 +1014,23 @@ void mainWindow_c::cb_BtnCont(bool prep_only) {
   }
 }
 
-static void cb_BtnStop_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_BtnStop(); }
-void mainWindow_c::cb_BtnStop() {
+static void cb_BtnStop_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_BtnStop(); }
+void MainWindow::cb_BtnStop() {
 
   bt_assert(assmThread);
 
   assmThread->stop();
 }
 
-static void cb_SolutionSel_stub(Fl_Widget* o, void* v) { ((mainWindow_c*)v)->cb_SolutionSel((Fl_Value_Slider*)o); }
-void mainWindow_c::cb_SolutionSel(Fl_Value_Slider* o) {
+static void cb_SolutionSel_stub(Fl_Widget* o, void* v) { ((MainWindow*)v)->cb_SolutionSel((Fl_Value_Slider*)o); }
+void MainWindow::cb_SolutionSel(Fl_Value_Slider* o) {
   o->take_focus();
   activateSolution(solutionProblem->getSelection(), int(o->value()-1));
   updateInterface();
 }
 
-static void cb_SolutionAnim_stub(Fl_Widget* o, void* v) { ((mainWindow_c*)v)->cb_SolutionAnim((Fl_Value_Slider*)o); }
-void mainWindow_c::cb_SolutionAnim(Fl_Value_Slider* o) {
+static void cb_SolutionAnim_stub(Fl_Widget* o, void* v) { ((MainWindow*)v)->cb_SolutionAnim((Fl_Value_Slider*)o); }
+void MainWindow::cb_SolutionAnim(Fl_Value_Slider* o) {
   o->take_focus();
   if (disassemble) {
     disassemble->setStep(o->value(), config.useBlendedRemoving(), true);
@@ -1038,11 +1038,11 @@ void mainWindow_c::cb_SolutionAnim(Fl_Value_Slider* o) {
   }
 }
 
-static void cb_SrtFind_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_SortSolutions(0); }
-static void cb_SrtLevel_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_SortSolutions(1); }
-static void cb_SrtMoves_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_SortSolutions(2); }
-static void cb_SrtPieces_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_SortSolutions(3); }
-void mainWindow_c::cb_SortSolutions(unsigned int by) {
+static void cb_SrtFind_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_SortSolutions(0); }
+static void cb_SrtLevel_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_SortSolutions(1); }
+static void cb_SrtMoves_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_SortSolutions(2); }
+static void cb_SrtPieces_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_SortSolutions(3); }
+void MainWindow::cb_SortSolutions(unsigned int by) {
   unsigned int prob = solutionProblem->getSelection();
 
   if (prob >= puzzle->problemNumber())
@@ -1060,12 +1060,12 @@ void mainWindow_c::cb_SortSolutions(unsigned int by) {
   updateInterface();
 }
 
-static void cb_DelAll_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteSolutions(0); }
-static void cb_DelBefore_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteSolutions(1); }
-static void cb_DelAt_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteSolutions(2); }
-static void cb_DelAfter_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteSolutions(3); }
-static void cb_DelDisasmless_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteSolutions(4); }
-void mainWindow_c::cb_DeleteSolutions(unsigned int which) {
+static void cb_DelAll_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteSolutions(0); }
+static void cb_DelBefore_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteSolutions(1); }
+static void cb_DelAt_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteSolutions(2); }
+static void cb_DelAfter_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteSolutions(3); }
+static void cb_DelDisasmless_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteSolutions(4); }
+void MainWindow::cb_DeleteSolutions(unsigned int which) {
 
   unsigned int prob = solutionProblem->getSelection();
 
@@ -1127,8 +1127,8 @@ void mainWindow_c::cb_DeleteSolutions(unsigned int which) {
   updateInterface();
 }
 
-static void cb_DelDisasm_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteDisasm(); }
-void mainWindow_c::cb_DeleteDisasm() {
+static void cb_DelDisasm_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteDisasm(); }
+void MainWindow::cb_DeleteDisasm() {
   unsigned int prob = solutionProblem->getSelection();
 
   if (prob >= puzzle->problemNumber())
@@ -1149,8 +1149,8 @@ void mainWindow_c::cb_DeleteDisasm() {
   updateInterface();
 }
 
-static void cb_DelAllDisasm_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_DeleteAllDisasm(); }
-void mainWindow_c::cb_DeleteAllDisasm() {
+static void cb_DelAllDisasm_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_DeleteAllDisasm(); }
+void MainWindow::cb_DeleteAllDisasm() {
   unsigned int prob = solutionProblem->getSelection();
 
   if (prob >= puzzle->problemNumber())
@@ -1167,8 +1167,8 @@ void mainWindow_c::cb_DeleteAllDisasm() {
   updateInterface();
 }
 
-static void cb_AddDisasm_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AddDisasm(); }
-void mainWindow_c::cb_AddDisasm() {
+static void cb_AddDisasm_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_AddDisasm(); }
+void MainWindow::cb_AddDisasm() {
   unsigned int prob = solutionProblem->getSelection();
 
   if (prob >= puzzle->problemNumber())
@@ -1188,7 +1188,7 @@ void mainWindow_c::cb_AddDisasm() {
 
   DisassemblerInterface * dis = new SimpleDisassembler(pr);
 
-  separation_c * d = dis->disassemble(pr->getSolution(sol)->getAssembly());
+  Separation * d = dis->disassemble(pr->getSolution(sol)->getAssembly());
 
   changed = true;
 
@@ -1201,9 +1201,9 @@ void mainWindow_c::cb_AddDisasm() {
   delete dis;
 }
 
-static void cb_AddAllDisasm_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AddAllDisasm(true); }
-static void cb_AddMissingDisasm_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AddAllDisasm(false); }
-void mainWindow_c::cb_AddAllDisasm(bool all) {
+static void cb_AddAllDisasm_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_AddAllDisasm(true); }
+static void cb_AddMissingDisasm_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_AddAllDisasm(false); }
+void MainWindow::cb_AddAllDisasm(bool all) {
   unsigned int prob = solutionProblem->getSelection();
 
   if (prob >= puzzle->problemNumber())
@@ -1237,7 +1237,7 @@ void mainWindow_c::cb_AddAllDisasm(bool all) {
 
     if (all || !pr->getSolution(sol)->getDisassembly()) {
 
-      separation_c * d = dis->disassemble(pr->getSolution(sol)->getAssembly());
+      Separation * d = dis->disassemble(pr->getSolution(sol)->getAssembly());
 
       if (d)
         pr->getSolution(sol)->setDisassembly(d);
@@ -1252,18 +1252,18 @@ void mainWindow_c::cb_AddAllDisasm(bool all) {
 }
 
 
-static void cb_PcVis_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_PcVis(); }
-void mainWindow_c::cb_PcVis() {
+static void cb_PcVis_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_PcVis(); }
+void MainWindow::cb_PcVis() {
   View3D->getView()->updateVisibility(PcVis);
 }
 
-static void cb_Status_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Status(); }
-void mainWindow_c::cb_Status() {
+static void cb_Status_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Status(); }
+void MainWindow::cb_Status() {
   View3D->getView()->showColors(puzzle, StatusLine->getColorMode());
 }
 
-static void cb_3dClick_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_3dClick(); }
-void mainWindow_c::cb_3dClick() {
+static void cb_3dClick_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_3dClick(); }
+void MainWindow::cb_3dClick() {
 
 
   if (TaskSelectionTab->value() == TabPieces) {
@@ -1349,8 +1349,8 @@ void mainWindow_c::cb_3dClick() {
   }
 }
 
-static void cb_New_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_New(); }
-void mainWindow_c::cb_New() {
+static void cb_New_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_New(); }
+void MainWindow::cb_New() {
 
   if (threadStopped()) {
 
@@ -1380,8 +1380,8 @@ void mainWindow_c::cb_New() {
   }
 }
 
-static void cb_Load_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Load(); }
-void mainWindow_c::cb_Load() {
+static void cb_Load_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Load(); }
+void MainWindow::cb_Load() {
 
   if (threadStopped()) {
 
@@ -1395,8 +1395,8 @@ void mainWindow_c::cb_Load() {
   }
 }
 
-static void cb_Load_Ps3d_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Load_Ps3d(); }
-void mainWindow_c::cb_Load_Ps3d() {
+static void cb_Load_Ps3d_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Load_Ps3d(); }
+void MainWindow::cb_Load_Ps3d() {
 
   if (threadStopped()) {
 
@@ -1436,8 +1436,8 @@ void mainWindow_c::cb_Load_Ps3d() {
   }
 }
 
-static void cb_Save_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Save(); }
-void mainWindow_c::cb_Save() {
+static void cb_Save_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Save(); }
+void MainWindow::cb_Save() {
 
   if (threadStopped()) {
 
@@ -1460,8 +1460,8 @@ void mainWindow_c::cb_Save() {
   }
 }
 
-static void cb_Convert_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Convert(); }
-void mainWindow_c::cb_Convert() {
+static void cb_Convert_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Convert(); }
+void MainWindow::cb_Convert() {
 
   convertWindow_c win(puzzle->getGridType()->getType());
 
@@ -1499,8 +1499,8 @@ class voxelTableVector_c : public voxelTable_c
     const Voxel * findSpace(unsigned int index) const { return (*shapes)[index]; }
 };
 
-static void cb_AssembliesToShapes_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_AssembliesToShapes(); }
-void mainWindow_c::cb_AssembliesToShapes() {
+static void cb_AssembliesToShapes_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_AssembliesToShapes(); }
+void MainWindow::cb_AssembliesToShapes() {
 
   assmImportWindow_c win(puzzle);
 
@@ -1607,8 +1607,8 @@ void mainWindow_c::cb_AssembliesToShapes() {
   }
 }
 
-static void cb_SaveAs_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_SaveAs(); }
-void mainWindow_c::cb_SaveAs() {
+static void cb_SaveAs_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_SaveAs(); }
+void MainWindow::cb_SaveAs() {
 
   if (threadStopped()) {
     const char * f = flu_file_chooser("Save Puzzle As", "*.xmpuzzle", "");
@@ -1656,20 +1656,20 @@ void mainWindow_c::cb_SaveAs() {
   }
 }
 
-static void cb_Quit_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->hide(); }
-void mainWindow_c::hide() {
+static void cb_Quit_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->hide(); }
+void MainWindow::hide() {
   if ((!changed) || fl_choice("Puzzle changed do you want to quit and loose the changes?", "Cancel", "Quit", 0))
     Fl_Double_Window::hide();
 }
 
-static void cb_Config_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Config(); }
-void mainWindow_c::cb_Config() {
+static void cb_Config_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Config(); }
+void MainWindow::cb_Config() {
   config.dialog();
   activateConfigOptions();
 }
 
-static void cb_Comment_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Coment(); }
-void mainWindow_c::cb_Coment() {
+static void cb_Comment_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Coment(); }
+void MainWindow::cb_Coment() {
 
   multiLineWindow_c win("Edit Comment", "Change the comment for the current puzzle", puzzle->getComment().c_str());
 
@@ -1684,8 +1684,8 @@ void mainWindow_c::cb_Coment() {
   }
 }
 
-static void cb_ImageExportVector_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ImageExportVector(); }
-void mainWindow_c::cb_ImageExportVector() {
+static void cb_ImageExportVector_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ImageExportVector(); }
+void MainWindow::cb_ImageExportVector() {
 
   vectorExportWindow_c w;
 
@@ -1697,8 +1697,8 @@ void mainWindow_c::cb_ImageExportVector() {
     View3D->getView()->exportToVector(w.getFileName(), w.getVectorType());
 }
 
-static void cb_ImageExport_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_ImageExport(); }
-void mainWindow_c::cb_ImageExport() {
+static void cb_ImageExport_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_ImageExport(); }
+void MainWindow::cb_ImageExport() {
   imageExport_c w(puzzle);
   w.show();
 
@@ -1711,9 +1711,9 @@ void mainWindow_c::cb_ImageExport() {
   }
 }
 
-static void cb_STLExport_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_STLExport(); }
-void mainWindow_c::cb_STLExport() {
-  stlExport_c w(puzzle);
+static void cb_STLExport_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_STLExport(); }
+void MainWindow::cb_STLExport() {
+  StlExport w(puzzle);
   w.show();
 
   while (w.visible()) {
@@ -1721,8 +1721,8 @@ void mainWindow_c::cb_STLExport() {
   }
 }
 
-static void cb_StatusWindow_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_StatusWindow(); }
-void mainWindow_c::cb_StatusWindow() {
+static void cb_StatusWindow_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_StatusWindow(); }
+void MainWindow::cb_StatusWindow() {
 
   bool again;
 
@@ -1757,8 +1757,8 @@ void mainWindow_c::cb_StatusWindow() {
   updateInterface();
 }
 
-static void cb_Toggle3D_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Toggle3D(); }
-void mainWindow_c::cb_Toggle3D() {
+static void cb_Toggle3D_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Toggle3D(); }
+void MainWindow::cb_Toggle3D() {
 
   if (TaskSelectionTab->value() == TabPieces) {
     shapeEditorWithBig3DView = !shapeEditorWithBig3DView;
@@ -1769,8 +1769,8 @@ void mainWindow_c::cb_Toggle3D() {
   }
 }
 
-static void cb_Help_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_Help(); }
-void mainWindow_c::cb_Help() {
+static void cb_Help_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_Help(); }
+void MainWindow::cb_Help() {
 
   Fl_Help_Dialog * help = new Fl_Help_Dialog;
 
@@ -1779,8 +1779,8 @@ void mainWindow_c::cb_Help() {
   help->show();
 }
 
-static void cb_About_stub(Fl_Widget* /*o*/, void* v) { ((mainWindow_c*)v)->cb_About(); }
-void mainWindow_c::cb_About() {
+static void cb_About_stub(Fl_Widget* /*o*/, void* v) { ((MainWindow*)v)->cb_About(); }
+void MainWindow::cb_About() {
 
   fl_message("This is the GUI for BurrTools version " VERSION "\n"
              "BurrTools (c) 2003-2011 by Andreas Röver\n"
@@ -1799,7 +1799,7 @@ void mainWindow_c::cb_About() {
             );
 }
 
-void mainWindow_c::StatPieceInfo(unsigned int pc) {
+void MainWindow::StatPieceInfo(unsigned int pc) {
 
   if (pc < puzzle->shapeNumber()) {
     char txt[100];
@@ -1812,7 +1812,7 @@ void mainWindow_c::StatPieceInfo(unsigned int pc) {
   }
 }
 
-void mainWindow_c::StatProblemInfo(unsigned int prob) {
+void MainWindow::StatProblemInfo(unsigned int prob) {
 
   if ((prob < puzzle->problemNumber()) && (puzzle->getProblem(prob)->resultValid())) {
 
@@ -1852,7 +1852,7 @@ void mainWindow_c::StatProblemInfo(unsigned int prob) {
     StatusLine->setText("");
 }
 
-void mainWindow_c::changeColor(unsigned int nr) {
+void MainWindow::changeColor(unsigned int nr) {
 
   for (unsigned int i = 0; i < puzzle->shapeNumber(); i++)
     for (unsigned int j = 0; j < puzzle->getShape(i)->getXYZ(); j++)
@@ -1862,17 +1862,17 @@ void mainWindow_c::changeColor(unsigned int nr) {
       }
 }
 
-void mainWindow_c::changeShape(unsigned int nr) {
+void MainWindow::changeShape(unsigned int nr) {
   for (unsigned int i = 0; i < puzzle->problemNumber(); i++)
     if (puzzle->getProblem(i)->usesShape(nr))
       puzzle->getProblem(i)->removeAllSolutions();
 }
 
-void mainWindow_c::changeProblem(unsigned int nr) {
+void MainWindow::changeProblem(unsigned int nr) {
   puzzle->getProblem(nr)->removeAllSolutions();
 }
 
-bool mainWindow_c::threadStopped() {
+bool MainWindow::threadStopped() {
 
   if (assmThread) {
 
@@ -1883,7 +1883,7 @@ bool mainWindow_c::threadStopped() {
   return true;
 }
 
-bool mainWindow_c::tryToLoad(const char * f) {
+bool MainWindow::tryToLoad(const char * f) {
 
   // it may well be that the file doesn't exist, if it came from the command line
   if (!f) return false;
@@ -1944,7 +1944,7 @@ bool mainWindow_c::tryToLoad(const char * f) {
   return true;
 }
 
-void mainWindow_c::ReplacePuzzle(Puzzle * NewPuzzle) {
+void MainWindow::ReplacePuzzle(Puzzle * NewPuzzle) {
 
   // inform everybody
   colorSelector->setPuzzle(NewPuzzle);
@@ -1973,7 +1973,7 @@ void mainWindow_c::ReplacePuzzle(Puzzle * NewPuzzle) {
     puzzle = NewPuzzle;
   }
 
-  guiGridType_c * nggt = new guiGridType_c(puzzle->getGridType());
+  GuiGridType * nggt = new GuiGridType(puzzle->getGridType());
 
   // now replace all gridtype dependent gui elements with
   // instances from the guigridtype
@@ -1997,7 +1997,7 @@ void mainWindow_c::ReplacePuzzle(Puzzle * NewPuzzle) {
   ggt = nggt;
 }
 
-Fl_Menu_Item mainWindow_c::menu_MainMenu[] = {
+Fl_Menu_Item MainWindow::menu_MainMenu[] = {
   { "&File",           0, 0, 0, FL_SUBMENU },
     {"New",            0, cb_New_stub,         0, 0, 0, 0, 14, 56},
     {"Load",    FL_F + 3, cb_Load_stub,        0, 0, 0, 0, 14, 56},
@@ -2022,7 +2022,7 @@ Fl_Menu_Item mainWindow_c::menu_MainMenu[] = {
   {0}
 };
 
-void mainWindow_c::show(int argn, char ** argv) {
+void MainWindow::show(int argn, char ** argv) {
   LFl_Double_Window::show();
 
   int arg = 1;
@@ -2036,7 +2036,7 @@ void mainWindow_c::show(int argn, char ** argv) {
       arg++;
 }
 
-void mainWindow_c::activateClear() {
+void MainWindow::activateClear() {
   View3D->getView()->showNothing();
   pieceEdit->clearPuzzle();
   pieceTools->setVoxelSpace(0, 0);
@@ -2044,7 +2044,7 @@ void mainWindow_c::activateClear() {
   SolutionEmpty = true;
 }
 
-void mainWindow_c::activateShape(unsigned int number) {
+void MainWindow::activateShape(unsigned int number) {
 
   if ((number < puzzle->shapeNumber())) {
 
@@ -2064,7 +2064,7 @@ void mainWindow_c::activateShape(unsigned int number) {
   SolutionEmpty = true;
 }
 
-void mainWindow_c::activateProblem(unsigned int prob) {
+void MainWindow::activateProblem(unsigned int prob) {
 
   if (prob < puzzle->problemNumber())
     View3D->getView()->showProblem(puzzle, prob, shapeAssignmentSelector->getSelection());
@@ -2074,7 +2074,7 @@ void mainWindow_c::activateProblem(unsigned int prob) {
   SolutionEmpty = true;
 }
 
-void mainWindow_c::activateSolution(unsigned int prob, unsigned int num) {
+void MainWindow::activateSolution(unsigned int prob, unsigned int num) {
 
   if (disassemble) {
     delete disassemble;
@@ -2187,7 +2187,7 @@ const char * timeToString(float time) {
   return tmp;
 }
 
-int mainWindow_c::findMenuEntry(const char * txt) {
+int MainWindow::findMenuEntry(const char * txt) {
 
   int found = -1;
 
@@ -2201,7 +2201,7 @@ int mainWindow_c::findMenuEntry(const char * txt) {
   return found;
 }
 
-void mainWindow_c::updateInterface() {
+void MainWindow::updateInterface() {
 
   // update the menu items activate state
 
@@ -2687,14 +2687,14 @@ void mainWindow_c::updateInterface() {
       Problem * pr = puzzle->getProblem(prob);
 
       switch(assmThread->currentAction()) {
-      case solveThread_c::ACT_PREPARATION:
+      case SolveThread::ACT_PREPARATION:
         {
           char tmp[20];
           snprintf(tmp, 20, "prepare piece %i", assmThread->currentActionParameter()+1);
           OutputActivity->value(tmp);
         }
         break;
-      case solveThread_c::ACT_REDUCE:
+      case SolveThread::ACT_REDUCE:
         if (pr->getAssembler()) {
           char tmp[20];
           snprintf(tmp, 20, "optimize piece %i", pr->getAssembler()->getReducePiece()+1);
@@ -2705,22 +2705,22 @@ void mainWindow_c::updateInterface() {
           OutputActivity->value(tmp);
         }
         break;
-      case solveThread_c::ACT_ASSEMBLING:
+      case SolveThread::ACT_ASSEMBLING:
         OutputActivity->value("assemble");
         break;
-      case solveThread_c::ACT_DISASSEMBLING:
+      case SolveThread::ACT_DISASSEMBLING:
         OutputActivity->value("disassemble");
         break;
-      case solveThread_c::ACT_PAUSING:
+      case SolveThread::ACT_PAUSING:
         OutputActivity->value("pause");
         break;
-      case solveThread_c::ACT_FINISHED:
+      case SolveThread::ACT_FINISHED:
         OutputActivity->value("finished");
         break;
-      case solveThread_c::ACT_WAIT_TO_STOP:
+      case SolveThread::ACT_WAIT_TO_STOP:
         OutputActivity->value("please wait");
         break;
-      case solveThread_c::ACT_ERROR:
+      case SolveThread::ACT_ERROR:
         OutputActivity->value("error");
         break;
       }
@@ -2821,12 +2821,12 @@ void mainWindow_c::updateInterface() {
   TaskSelectionTab->redraw();
 }
 
-void mainWindow_c::update() {
+void MainWindow::update() {
 
   if (assmThread) {
 
     // check, if the thread has thrown an exception, if so re-throw it
-    if (assmThread->currentAction() == solveThread_c::ACT_ASSERT) {
+    if (assmThread->currentAction() == SolveThread::ACT_ASSERT) {
 
       assertWindow_c * aw = new assertWindow_c("Because of an internal error the current puzzle\n"
                                                "can not be solved\n",
@@ -2845,13 +2845,13 @@ void mainWindow_c::update() {
     }
 
     // check, if the thread has stopped, if so then delete the object
-    if ((assmThread->currentAction() == solveThread_c::ACT_PAUSING) ||
-        (assmThread->currentAction() == solveThread_c::ACT_FINISHED)) {
+    if ((assmThread->currentAction() == SolveThread::ACT_PAUSING) ||
+        (assmThread->currentAction() == SolveThread::ACT_FINISHED)) {
 
       delete assmThread;
       assmThread = 0;
 
-    } else if (assmThread->currentAction() == solveThread_c::ACT_ERROR) {
+    } else if (assmThread->currentAction() == SolveThread::ACT_ERROR) {
 
       unsigned int selectShape = 0xFFFFFFFF;
 
@@ -2905,7 +2905,7 @@ void mainWindow_c::update() {
   }
 }
 
-void mainWindow_c::Toggle3DView(void)
+void MainWindow::Toggle3DView(void)
 {
   // select the pieces tab, as exchanging widgets while they are invisible
   // didn't work. Save the current tab before that
@@ -2952,19 +2952,19 @@ void mainWindow_c::Toggle3DView(void)
   TaskSelectionTab->when(FL_WHEN_CHANGED);
 }
 
-void mainWindow_c::Big3DView() {
+void MainWindow::Big3DView() {
   if (!is3DViewBig) Toggle3DView();
   View3D->show();
   redraw();
 }
 
-void mainWindow_c::Small3DView() {
+void MainWindow::Small3DView() {
   if (is3DViewBig) Toggle3DView();
   pieceEdit->show();
   redraw();
 }
 
-int mainWindow_c::handle(int event) {
+int MainWindow::handle(int event) {
 
   if (Fl_Double_Window::handle(event))
     return 1;
@@ -3021,9 +3021,9 @@ int mainWindow_c::handle(int event) {
 
 #define SZ_GAP 5                               // gap between elements
 
-void mainWindow_c::CreateShapeTab() {
+void MainWindow::CreateShapeTab() {
 
-  TabPieces = new layouter_c();
+  TabPieces = new Layouter();
   TabPieces->label("Entities");
   TabPieces->tooltip("Edit shapes");
   TabPieces->clear_visible_focus();
@@ -3032,12 +3032,12 @@ void mainWindow_c::CreateShapeTab() {
   tile->pitch(SZ_GAP);
 
   {
-    layouter_c * group = new layouter_c(0, 0);
+    Layouter * group = new Layouter(0, 0);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, "Shapes", false);
 
-    layouter_c * o = new layouter_c(0, 1);
+    Layouter * o = new Layouter(0, 1);
 
     BtnNewShape =   new LFlatButton_c(0, 0, 1, 1, "New", " Add another piece ", cb_NewShape_stub, this);
     ((LFlatButton_c*)BtnNewShape)->weight(1, 0);
@@ -3064,7 +3064,7 @@ void mainWindow_c::CreateShapeTab() {
     (new LFl_Box(0, 2))->setMinimumSize(0, SZ_GAP);
 
     PcSel = new PieceSelector(0, 0, 200, 200, puzzle);
-    LBlockListGroup_c * selGroup = new LBlockListGroup_c(0, 3, 1, 1, PcSel);
+    LBlockListGroup * selGroup = new LBlockListGroup(0, 3, 1, 1, PcSel);
     selGroup->callback(cb_PcSel_stub, this);
     selGroup->tooltip(" Select the shape that you want to edit ");
     selGroup->weight(1, 1);
@@ -3073,7 +3073,7 @@ void mainWindow_c::CreateShapeTab() {
   }
 
   {
-    layouter_c * group = new layouter_c(0, 1);
+    Layouter * group = new Layouter(0, 1);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, "Edit", true);
@@ -3083,9 +3083,9 @@ void mainWindow_c::CreateShapeTab() {
 
     (new LFl_Box(0, 2, 1, 1))->setMinimumSize(0, 5);
 
-    layouter_c * o2 = new layouter_c(0, 3, 1, 1);
+    Layouter * o2 = new Layouter(0, 3, 1, 1);
 
-    editChoice = new ButtonGroup_c(0, 0, 1, 1);
+    editChoice = new ButtonGroup(0, 0, 1, 1);
 
     Fl_Button * b;
     b = editChoice->addButton();
@@ -3108,7 +3108,7 @@ void mainWindow_c::CreateShapeTab() {
 
     (new LFl_Box(1, 0, 1, 1))->setMinimumSize(5, 0);
 
-    editMode = new ButtonGroup_c(2, 0, 1, 1);
+    editMode = new ButtonGroup(2, 0, 1, 1);
 
     b = editMode->addButton();
     b->image(pm.get(TB_Color_Mouse_Rubber_Band_xpm));
@@ -3156,7 +3156,7 @@ void mainWindow_c::CreateShapeTab() {
 
     (new LFl_Box(0, 4, 1, 1))->setMinimumSize(0, 5);
 
-    pieceEdit = new VoxelEditGroup_c(0, 5, 1, 1, puzzle, ggt);
+    pieceEdit = new VoxelEditGroup(0, 5, 1, 1, puzzle, ggt);
     pieceEdit->callback(cb_pieceEdit_stub, this);
     pieceEdit->end();
     pieceEdit->editType(gridEditor_c::EDT_RUBBER);
@@ -3166,12 +3166,12 @@ void mainWindow_c::CreateShapeTab() {
   }
 
   {
-    layouter_c * group = new layouter_c(0, 2);
+    Layouter * group = new Layouter(0, 2);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, "Colours", true);
 
-    layouter_c * o = new layouter_c(0, 1);
+    Layouter * o = new Layouter(0, 1);
 
     BtnNewColor = new LFlatButton_c(0, 0, 1, 1, "Add", " Add another colour ", cb_AddColor_stub, this);
     ((LFlatButton_c*)BtnNewColor)->weight(1, 0);
@@ -3187,7 +3187,7 @@ void mainWindow_c::CreateShapeTab() {
     (new LFl_Box(0, 2))->setMinimumSize(0, SZ_GAP);
 
     colorSelector = new ColorSelector(0, 0, 200, 200, puzzle, true);
-    LBlockListGroup_c * colGroup = new LBlockListGroup_c(0, 3, 1, 1, colorSelector);
+    LBlockListGroup * colGroup = new LBlockListGroup(0, 3, 1, 1, colorSelector);
     colGroup->callback(cb_ColSel_stub, this);
     colGroup->tooltip(" Select colour to use for all editing operations ");
     colGroup->weight(1, 1);
@@ -3203,9 +3203,9 @@ void mainWindow_c::CreateShapeTab() {
   Fl_Group::current()->resizable(TabPieces);
 }
 
-void mainWindow_c::CreateProblemTab() {
+void MainWindow::CreateProblemTab() {
 
-  TabProblems = new layouter_c();
+  TabProblems = new Layouter();
   TabProblems->label("Puzzle");
   TabProblems->tooltip("Edit problems");
   TabProblems->hide();
@@ -3215,12 +3215,12 @@ void mainWindow_c::CreateProblemTab() {
   tile->pitch(SZ_GAP);
 
   {
-    layouter_c * group = new layouter_c(0, 0);
+    Layouter * group = new Layouter(0, 0);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, "Problems", false);
 
-    layouter_c * o = new layouter_c(0, 1);
+    Layouter * o = new Layouter(0, 1);
 
     BtnNewProb = new LFlatButton_c(0, 0, 1, 1, "New", " Add another problem ", cb_NewProblem_stub, this);
     ((LFlatButton_c*)BtnNewProb)->weight(1, 0);
@@ -3244,7 +3244,7 @@ void mainWindow_c::CreateProblemTab() {
     (new LFl_Box(0, 2))->setMinimumSize(0, SZ_GAP);
 
     problemSelector = new ProblemSelector(0, 0, 100, 100, puzzle);
-    LBlockListGroup_c * probGroup = new LBlockListGroup_c(0, 3, 1, 1, problemSelector);
+    LBlockListGroup * probGroup = new LBlockListGroup(0, 3, 1, 1, problemSelector);
     probGroup->callback(cb_ProbSel_stub, this);
     probGroup->tooltip(" Select problem to edit ");
     probGroup->weight(1, 1);
@@ -3253,14 +3253,14 @@ void mainWindow_c::CreateProblemTab() {
   }
 
   {
-    layouter_c * group = new layouter_c(0, 1);
+    Layouter * group = new Layouter(0, 1);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, "Piece Assignment", true);
 
-    layouter_c * o = new layouter_c(0, 1);
+    Layouter * o = new Layouter(0, 1);
 
-    problemResult = new ResultViewer_c(0, 0, 1, 1);
+    problemResult = new ResultViewer(0, 0, 1, 1);
     problemResult->tooltip(" The result shape for the current problem ");
     problemResult->weight(1, 0);
 
@@ -3273,7 +3273,7 @@ void mainWindow_c::CreateProblemTab() {
     (new LFl_Box(0, 2))->setMinimumSize(0, SZ_GAP);
 
     shapeAssignmentSelector = new PieceSelector(0, 0, 100, 100, puzzle);
-    LBlockListGroup_c * shapeGroup = new LBlockListGroup_c(0, 3, 1, 1, shapeAssignmentSelector);
+    LBlockListGroup * shapeGroup = new LBlockListGroup(0, 3, 1, 1, shapeAssignmentSelector);
     shapeGroup->callback(cb_ShapeSel_stub, this);
     shapeGroup->tooltip(" Select a shape to set as result or to add or remove from problem ");
     shapeGroup->weight(1, 1);
@@ -3282,12 +3282,12 @@ void mainWindow_c::CreateProblemTab() {
   }
 
   {
-    layouter_c * group = new layouter_c(0, 2);
+    Layouter * group = new Layouter(0, 2);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, 0, true);
 
-    layouter_c * o = new layouter_c(0, 1);
+    Layouter * o = new Layouter(0, 1);
 
     int xp = 0;
 
@@ -3318,7 +3318,7 @@ void mainWindow_c::CreateProblemTab() {
     (new LFl_Box(0, 2))->setMinimumSize(0, SZ_GAP);
 
     PiecesCountList = new PiecesList(0, 0, 100, 100);
-    LBlockListGroup_c * shapeGroup = new LBlockListGroup_c(0, 3, 1, 1, PiecesCountList);
+    LBlockListGroup * shapeGroup = new LBlockListGroup(0, 3, 1, 1, PiecesCountList);
     shapeGroup->callback(cb_PiecesClicked_stub, this);
     shapeGroup->tooltip(" Show which shapes are used in the current problem and how often they are used, can be used to select shapes ");
     shapeGroup->weight(1, 1);
@@ -3327,13 +3327,13 @@ void mainWindow_c::CreateProblemTab() {
   }
 
   {
-    layouter_c * group = new layouter_c(0, 3);
+    Layouter * group = new Layouter(0, 3);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, "Colour Assignment", true);
 
     colorAssignmentSelector = new ColorSelector(0, 0, 100, 100, puzzle, false);
-    LBlockListGroup_c * colGroup = new LBlockListGroup_c(0, 1, 1, 1, colorAssignmentSelector);
+    LBlockListGroup * colGroup = new LBlockListGroup(0, 1, 1, 1, colorAssignmentSelector);
     colGroup->callback(cb_ColorAssSel_stub, this);
     colGroup->tooltip(" Select colour to add or remove from constraints ");
     colGroup->weight(1, 1);
@@ -3342,12 +3342,12 @@ void mainWindow_c::CreateProblemTab() {
   }
 
   {
-    layouter_c * group = new layouter_c(0, 4);
+    Layouter * group = new Layouter(0, 4);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, 0, true);
 
-    layouter_c * o = new layouter_c(0, 1);
+    Layouter * o = new Layouter(0, 1);
 
     BtnColSrtPc = new LFlatButton_c(0, 0, 1, 1, "Sort by Piece", " Sort colour constraints by piece ", cb_CCSortByPiece_stub, this);
     ((LFlatButton_c*)BtnColSrtPc)->weight(1, 0);
@@ -3377,9 +3377,9 @@ void mainWindow_c::CreateProblemTab() {
   TabProblems->end();
 }
 
-void mainWindow_c::CreateSolveTab() {
+void MainWindow::CreateSolveTab() {
 
-  TabSolve = new layouter_c();
+  TabSolve = new Layouter();
   TabSolve->label("Solver");
   TabSolve->tooltip("Solve problems");
   TabSolve->hide();
@@ -3389,18 +3389,18 @@ void mainWindow_c::CreateSolveTab() {
   tile->pitch(SZ_GAP);
 
   {
-    layouter_c * group = new layouter_c(0, 0);
+    Layouter * group = new Layouter(0, 0);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, "Parameters", false);
 
     solutionProblem = new ProblemSelector(0, 0, 100, 100, puzzle);
-    LBlockListGroup_c * shapeGroup = new LBlockListGroup_c(0, 1, 1, 1, solutionProblem);
+    LBlockListGroup * shapeGroup = new LBlockListGroup(0, 1, 1, 1, solutionProblem);
     shapeGroup->callback(cb_SolProbSel_stub, this);
     shapeGroup->tooltip(" Select problem to solve ");
     shapeGroup->weight(1, 1);
 
-    layouter_c * o = new layouter_c(0, 2);
+    Layouter * o = new Layouter(0, 2);
 
     SolveDisasm = new LFl_Check_Button("Disassemble", 0, 0, 1, 1);
     SolveDisasm->tooltip(" Do also try to disassemble the assembled puzzles. Only puzzles that can be disassembled will be added to solutions ");
@@ -3428,7 +3428,7 @@ void mainWindow_c::CreateSolveTab() {
 
     o->end();
 
-    o = new layouter_c(0, 3);
+    o = new Layouter(0, 3);
 
     new LFl_Box("Sort by: ", 0, 0, 1, 1);
 
@@ -3446,7 +3446,7 @@ void mainWindow_c::CreateSolveTab() {
 
     (new LFl_Box(0, 4))->setMinimumSize(0, SZ_GAP);
 
-    o = new layouter_c(0, 5);
+    o = new Layouter(0, 5);
 
     new LFl_Box("Drop ", 0, 0, 1, 1);
     new LFl_Box("Limit ", 3, 0, 1, 1);
@@ -3469,7 +3469,7 @@ void mainWindow_c::CreateSolveTab() {
 
     (new LFl_Box(0, 6))->setMinimumSize(0, SZ_GAP);
 
-    o = new layouter_c(0, 7);
+    o = new Layouter(0, 7);
 
     if (expertMode) {
       BtnPrepare = new LFlatButton_c(0, 0, 1, 1, "Prepare", " Do the preparation phase and then stop, this removes old results ", cb_BtnPrepare_stub, this);
@@ -3490,7 +3490,7 @@ void mainWindow_c::CreateSolveTab() {
 
     (new LFl_Box(0, 8))->setMinimumSize(0, SZ_GAP);
 
-    o = new layouter_c(0, 9);
+    o = new Layouter(0, 9);
 
     BtnPlacement = new LFlatButton_c(0, 0, 1, 1, "Placements", " Browse the calculated placement of pieces ", cb_BtnPlacementBrowser_stub, this);
     ((LFlatButton_c*)BtnPlacement)->weight(1, 0);
@@ -3519,7 +3519,7 @@ void mainWindow_c::CreateSolveTab() {
     SolvingProgress->selection_color((Fl_Color)4);
     SolvingProgress->align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE);
 
-    o = new layouter_c(0, 12);
+    o = new Layouter(0, 12);
 
     (new LFl_Box("Activity: ", 0, 0, 1, 1))->stretchRight();
     OutputActivity = new LFl_Output(1, 0, 3, 1);
@@ -3557,12 +3557,12 @@ void mainWindow_c::CreateSolveTab() {
   }
 
   {
-    layouter_c * group = new layouter_c(0, 1);
+    Layouter * group = new Layouter(0, 1);
     group->box(FL_FLAT_BOX);
 
     new LSeparator_c(0, 0, 1, 1, "Solutions", true);
 
-    layouter_c * o = new layouter_c(0, 1);
+    Layouter * o = new Layouter(0, 1);
 
     new LFl_Box("Solution", 0, 0, 1, 1);
 
@@ -3603,7 +3603,7 @@ void mainWindow_c::CreateSolveTab() {
 
     (new LFl_Box(0, 2))->setMinimumSize(0, SZ_GAP);
 
-    o = new layouter_c(0, 3);
+    o = new Layouter(0, 3);
 
     new LFl_Box("Assembly:", 0, 0, 1, 1);
     new LFl_Box("Solution:", 2, 0, 1, 1);
@@ -3621,7 +3621,7 @@ void mainWindow_c::CreateSolveTab() {
 
     (new LFl_Box(0, 4))->setMinimumSize(0, SZ_GAP);
 
-    o = new layouter_c(0, 5);
+    o = new Layouter(0, 5);
 
     new LFl_Box("Sort by: ", 0, 0);
 
@@ -3641,7 +3641,7 @@ void mainWindow_c::CreateSolveTab() {
 
     (new LFl_Box(0, 6))->setMinimumSize(0, SZ_GAP);
 
-    o = new layouter_c(0, 7);
+    o = new Layouter(0, 7);
 
     new LFl_Box("Delete: ", 0, 0);
 
@@ -3664,7 +3664,7 @@ void mainWindow_c::CreateSolveTab() {
 
     (new LFl_Box(0, 8))->setMinimumSize(0, SZ_GAP);
 
-    o = new layouter_c(0, 9);
+    o = new Layouter(0, 9);
 
     BtnDisasmDel    = new LFlatButton_c(0, 0, 1, 1, "D DA", " Remove the disassembly for the current solution ", cb_DelDisasm_stub, this);
     ((LFlatButton_c*)BtnDisasmDel)->weight(1, 0);
@@ -3686,7 +3686,7 @@ void mainWindow_c::CreateSolveTab() {
     (new LFl_Box(0, 10))->setMinimumSize(0, SZ_GAP);
 
     PcVis = new PieceVisibility(0, 0, 100, 100);
-    LBlockListGroup_c * shapeGroup = new LBlockListGroup_c(0, 11, 1, 1, PcVis);
+    LBlockListGroup * shapeGroup = new LBlockListGroup(0, 11, 1, 1, PcVis);
     shapeGroup->callback(cb_PcVis_stub, this);
     shapeGroup->tooltip(" Change appearance of the pieces between normal, grid and invisible ");
     shapeGroup->weight(1, 1);
@@ -3699,7 +3699,7 @@ void mainWindow_c::CreateSolveTab() {
   TabSolve->end();
 }
 
-void mainWindow_c::activateConfigOptions() {
+void MainWindow::activateConfigOptions() {
 
   if (config.useTooltips())
     Fl_Tooltip::enable();
@@ -3710,7 +3710,7 @@ void mainWindow_c::activateConfigOptions() {
   View3D->getView()->setRotaterMethod(config.rotationMethod());
 }
 
-mainWindow_c::mainWindow_c(GridType * gt) : LFl_Double_Window(true) {
+MainWindow::MainWindow(GridType * gt) : LFl_Double_Window(true) {
 
   assmThread = 0;
   fname = 0;
@@ -3719,7 +3719,7 @@ mainWindow_c::mainWindow_c(GridType * gt) : LFl_Double_Window(true) {
   expertMode = true;
 
   puzzle = new Puzzle(gt);
-  ggt = new guiGridType_c(puzzle->getGridType());
+  ggt = new GuiGridType(puzzle->getGridType());
   changed = false;
 
   label("BurrTools - unknown");
@@ -3734,7 +3734,7 @@ mainWindow_c::mainWindow_c(GridType * gt) : LFl_Double_Window(true) {
   LFl_Tile * mainTile = new LFl_Tile(0, 1, 1, 1);
   mainTile->weight(0, 1);
 
-  layouter_c * lay = new layouter_c(1, 0, 1, 1);
+  Layouter * lay = new Layouter(1, 0, 1, 1);
   View3D = new LView3dGroup(0, 0, 1, 1);
   lay->weight(1, 0);
   lay->end();
@@ -3779,7 +3779,7 @@ mainWindow_c::mainWindow_c(GridType * gt) : LFl_Double_Window(true) {
   activateConfigOptions();
 }
 
-mainWindow_c::~mainWindow_c() {
+MainWindow::~MainWindow() {
 
   config.windowPos(x(), y(), w(), h());
 

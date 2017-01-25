@@ -23,7 +23,7 @@
 
 #include <vector>
 
-class separation_c;
+class Separation;
 class disassemblerNode_c;
 
 /**
@@ -64,7 +64,7 @@ private:
 class DisassemblyToMoves : public PiecePositionsInterface {
 
   /** the disassembly tree */
-  const separation_c * tree;
+  const Separation * tree;
 
   /**
    * size is used to removed pieces from the puzzle, this value controls
@@ -85,7 +85,7 @@ class DisassemblyToMoves : public PiecePositionsInterface {
   unsigned int maxPieceName;
 
   /** this function walks the tree and sets the piece positions */
-  int doRecursive(const separation_c * tree, int step, float * array, bool center_active, int cx, int cy, int cz);
+  int doRecursive(const Separation * tree, int step, float * array, bool center_active, int cx, int cy, int cz);
 
 public:
 
@@ -94,7 +94,7 @@ public:
    * assembled puzzle. The larger the further away the pieces will be
    * moved
    */
-  DisassemblyToMoves(const separation_c * tr, unsigned int sz, unsigned int maxPiece);
+  DisassemblyToMoves(const Separation * tr, unsigned int sz, unsigned int maxPiece);
 
   virtual ~DisassemblyToMoves();
 

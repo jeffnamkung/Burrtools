@@ -126,7 +126,7 @@ statusWindow_c::statusWindow_c(Puzzle * p) : LFl_Double_Window(true), puz(p), ag
   unsigned int lines = p->shapeNumber();
   unsigned int head = 3;
 
-  layouter_c * fr = new layouter_c(0, 0, 1, 1);
+  Layouter * fr = new Layouter(0, 0, 1, 1);
   fr->pitch(7);
 
   (new LFl_Scroll(0, 0, 1, 1))->type(Fl_Scroll::VERTICAL_ALWAYS);
@@ -365,7 +365,7 @@ statusWindow_c::statusWindow_c(Puzzle * p) : LFl_Double_Window(true), puz(p), ag
   fr->setMinimumSize(10, 200);
   fr->weight(1, 1);
 
-  fr = new layouter_c(0, 1, 1, 1);
+  fr = new Layouter(0, 1, 1, 1);
   fr->pitch(7);
 
   LFl_Button * btn = new LFl_Button("Close", 0, 1);

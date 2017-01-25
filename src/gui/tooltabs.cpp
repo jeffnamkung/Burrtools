@@ -30,7 +30,7 @@
 #include "FL/fl_ask.H"
 
 // the transform group
-class TransformButtons : public layouter_c {
+class TransformButtons : public Layouter {
 
   pixmapList_c pm;
 
@@ -45,7 +45,7 @@ public:
   void cb_Press(long button) { do_callback(this, button); }
 };
 
-class ToolsButtons : public layouter_c {
+class ToolsButtons : public Layouter {
 
   pixmapList_c pm;
 
@@ -56,7 +56,7 @@ public:
   void cb_Press(long button) { do_callback(this, button); }
 };
 
-class SizeButtons : public layouter_c {
+class SizeButtons : public Layouter {
 
   pixmapList_c pm;
 
@@ -68,7 +68,7 @@ public:
 };
 
 // the change size group
-class ChangeSize : public layouter_c {
+class ChangeSize : public Layouter {
 
   LFl_Roller* SizeX;
   LFl_Roller* SizeY;
@@ -105,7 +105,7 @@ public:
 
 static void cb_TransformButtons_stub(Fl_Widget* o, long v) { ((TransformButtons*)(o->parent()->parent()))->cb_Press(v); }
 
-TransformButtons::TransformButtons(int x, int y, int w, int h, int type) : layouter_c(x, y, w, h) {
+TransformButtons::TransformButtons(int x, int y, int w, int h, int type) : Layouter(x, y, w, h) {
 
   label("Transform");
 
@@ -118,7 +118,7 @@ TransformButtons::TransformButtons(int x, int y, int w, int h, int type) : layou
   (new LFl_Box("Nudge",  3, 1, 2, 1))->labelsize(LABEL_FONT_SIZE);
   (new LFl_Box("Rotate", 6, 1, 2, 1))->labelsize(LABEL_FONT_SIZE);
 
-  layouter_c * o = new layouter_c(1, 3, 1, 1);
+  Layouter * o = new Layouter(1, 3, 1, 1);
 
   new LFlatButton_c(0, 0, 1, 1, pm.get(Transform_Color_Flip_X_xpm)        , pm.get(Transform_Disabled_Flip_X_xpm)        ,
       " Flip along Y-Z Plane ",              cb_TransformButtons_stub, 12);
@@ -129,7 +129,7 @@ TransformButtons::TransformButtons(int x, int y, int w, int h, int type) : layou
 
   o->end();
 
-  o = new layouter_c(3, 3, 1, 1);
+  o = new Layouter(3, 3, 1, 1);
 
   if (type == 0) {
     new LFlatButton_c(0, 0, 1, 1, pm.get(Transform_Color_Nudge_X_Left_xpm)  , pm.get(Transform_Disabled_Nudge_X_Left_xpm)  ,
@@ -199,7 +199,7 @@ TransformButtons::TransformButtons(int x, int y, int w, int h, int type) : layou
 
   o->end();
 
-  o = new layouter_c(6, 3, 1, 1);
+  o = new Layouter(6, 3, 1, 1);
 
   if (type == 1) {
 
@@ -241,7 +241,7 @@ TransformButtons::TransformButtons(int x, int y, int w, int h, int type) : layou
 
 static void cb_ToolsButtons_stub(Fl_Widget* o, long v) { ((ToolsButtons*)(o->parent()))->cb_Press(v); }
 
-ToolsButtons::ToolsButtons(int x, int y, int w, int h) : layouter_c(x, y, w, h) {
+ToolsButtons::ToolsButtons(int x, int y, int w, int h) : Layouter(x, y, w, h) {
 
   label("Tools");
 
@@ -280,7 +280,7 @@ ToolsButtons::ToolsButtons(int x, int y, int w, int h) : layouter_c(x, y, w, h) 
 
 static void cb_SizeButtons_stub(Fl_Widget* o, long v) { ((SizeButtons*)(o->parent()))->cb_Press(v); }
 
-SizeButtons::SizeButtons(int x, int y, int w, int h, bool addScale) : layouter_c(x, y, w, h) {
+SizeButtons::SizeButtons(int x, int y, int w, int h, bool addScale) : Layouter(x, y, w, h) {
 
   (new LFl_Box(0, 0, 1, 1))->weight(1, 1);
   (new LFl_Box(0, 8, 1, 1))->weight(1, 1);
@@ -398,7 +398,7 @@ void ChangeSize::calcNewSizes(int ox, int oy, int oz, int *nx, int *ny, int *nz)
   if (*nz > 1000) *nz = 1000;
 }
 
-ChangeSize::ChangeSize(int x, int y, int w, int h) : layouter_c(x, y, w, h) {
+ChangeSize::ChangeSize(int x, int y, int w, int h) : Layouter(x, y, w, h) {
 
   tooltip(" Change size of space ");
 
@@ -545,11 +545,11 @@ static void cb_ToolTab0Transform2_stub(Fl_Widget* o, long v) { ((ToolTab_0*)(o->
 ToolTab_0::ToolTab_0(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
 
   {
-    layouter_c * o = new layouter_c(0, 1, 1, 1);
+    Layouter * o = new Layouter(0, 1, 1, 1);
     o->label("Size");
     o->pitch(5);
 
-    layouter_c *o2 = new layouter_c(0, 0, 1, 1);
+    Layouter *o2 = new Layouter(0, 0, 1, 1);
 
     changeSize = new ChangeSize(0, 1, 1, 1);
     changeSize->callback(cb_ToolTab0Size_stub);
@@ -720,11 +720,11 @@ static void cb_ToolTab1Transform2_stub(Fl_Widget* o, long v) { ((ToolTab_1*)(o->
 ToolTab_1::ToolTab_1(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
 
   {
-    layouter_c * o = new layouter_c(0, 1, 1, 1);
+    Layouter * o = new Layouter(0, 1, 1, 1);
     o->label("Size");
     o->pitch(5);
 
-    layouter_c *o2 = new layouter_c(0, 0, 1, 1);
+    Layouter *o2 = new Layouter(0, 0, 1, 1);
 
     changeSize = new ChangeSize(0, 1, 1, 1);
     changeSize->callback(cb_ToolTab1Size_stub);
@@ -886,11 +886,11 @@ static void cb_ToolTab2Transform2_stub(Fl_Widget* o, long v) { ((ToolTab_2*)(o->
 ToolTab_2::ToolTab_2(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
 
   {
-    layouter_c * o = new layouter_c(0, 1, 1, 1);
+    Layouter * o = new Layouter(0, 1, 1, 1);
     o->label("Size");
     o->pitch(5);
 
-    layouter_c *o2 = new layouter_c(0, 0, 1, 1);
+    Layouter *o2 = new Layouter(0, 0, 1, 1);
 
     changeSize = new ChangeSize(0, 1, 1, 1);
     changeSize->callback(cb_ToolTab2Size_stub);
@@ -1056,11 +1056,11 @@ static void cb_ToolTab3Transform2_stub(Fl_Widget* o, long v) { ((ToolTab_3*)(o->
 ToolTab_3::ToolTab_3(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
 
   {
-    layouter_c * o = new layouter_c(0, 1, 1, 1);
+    Layouter * o = new Layouter(0, 1, 1, 1);
     o->label("Size");
     o->pitch(5);
 
-    layouter_c *o2 = new layouter_c(0, 0, 1, 1);
+    Layouter *o2 = new Layouter(0, 0, 1, 1);
 
     changeSize = new ChangeSize(0, 1, 1, 1);
     changeSize->callback(cb_ToolTab3Size_stub);
@@ -1198,11 +1198,11 @@ static void cb_ToolTab4Transform2_stub(Fl_Widget* o, long v) { ((ToolTab_4*)(o->
 ToolTab_4::ToolTab_4(int x, int y, int w, int h) : ToolTab(x, y, w, h) {
 
   {
-    layouter_c * o = new layouter_c(0, 1, 1, 1);
+    Layouter * o = new Layouter(0, 1, 1, 1);
     o->label("Size");
     o->pitch(3);
 
-    layouter_c *o2 = new layouter_c(0, 0, 1, 1);
+    Layouter *o2 = new Layouter(0, 0, 1, 1);
 
     changeSize = new ChangeSize(0, 1, 1, 1);
     changeSize->callback(cb_ToolTab4Size_stub);
@@ -1322,13 +1322,13 @@ static void cb_ToolTabContainer_stub(Fl_Widget* /*o*/, void*v) {
   vv->do_callback(vv, vv->user_data());
 }
 
-ToolTabContainer::ToolTabContainer(int x, int y, int w, int h, const guiGridType_c * ggt) : layouter_c(x, y, w, h) {
+ToolTabContainer::ToolTabContainer(int x, int y, int w, int h, const GuiGridType * ggt) : Layouter(x, y, w, h) {
   tt = ggt->getToolTab(0, 0, 1, 1);
   tt->callback(cb_ToolTabContainer_stub, this);
   end();
 }
 
-void ToolTabContainer::newGridType(const guiGridType_c * ggt) {
+void ToolTabContainer::newGridType(const GuiGridType * ggt) {
 
   remove(tt);
   delete tt;

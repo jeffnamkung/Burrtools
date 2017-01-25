@@ -24,18 +24,18 @@
 #include "../lib/problem.h"
 #include "../lib/voxel.h"
 
-ResultViewer_c::ResultViewer_c(int x, int y, int w, int h) : Fl_Box(0, 0, 10, 10), layoutable_c(x, y, w, h), puzzle(0) {
+ResultViewer::ResultViewer(int x, int y, int w, int h) : Fl_Box(0, 0, 10, 10), layoutable_c(x, y, w, h), puzzle(0) {
   bg = color();
   box(FL_BORDER_BOX);
   clear_visible_focus();
 }
 
-void ResultViewer_c::setPuzzle(Problem * p) {
+void ResultViewer::setPuzzle(Problem * p) {
   puzzle = p;
   redraw();
 }
 
-void ResultViewer_c::draw() {
+void ResultViewer::draw() {
   if (!puzzle || !puzzle->resultValid()) {
     label("No Result");
     color(bg);

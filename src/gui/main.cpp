@@ -38,7 +38,7 @@ class my_Fl : public Fl {
 
 public:
 
-  static int run(mainWindow_c * ui) {
+  static int run(MainWindow * ui) {
 
     time_t start = time(0);
 
@@ -65,7 +65,7 @@ int main(int argc, char ** argv) {
 
   Fl::get_system_colors();
 
-  mainWindow_c *ui = new mainWindow_c(new GridType());
+  MainWindow *ui = new MainWindow(new GridType());
 
   int res = 0;
 

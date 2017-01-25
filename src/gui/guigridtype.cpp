@@ -30,9 +30,9 @@
 
 #include "../lib/grid-type.h"
 
-guiGridType_c::guiGridType_c(GridType * g) : gt(g) { }
+GuiGridType::GuiGridType(GridType * g) : gt(g) { }
 
-gridEditor_c * guiGridType_c::getGridEditor(int x, int y, int w, int h, Puzzle * puzzle) const {
+gridEditor_c * GuiGridType::getGridEditor(int x, int y, int w, int h, Puzzle * puzzle) const {
   switch(gt->getType()) {
     case GridType::GT_BRICKS: return new gridEditor_0_c(x, y, w, h, puzzle);
     case GridType::GT_TRIANGULAR_PRISM: return new gridEditor_1_c(x, y, w, h, puzzle);
@@ -47,7 +47,7 @@ gridEditor_c * guiGridType_c::getGridEditor(int x, int y, int w, int h, Puzzle *
  * is is used in the new puzzle grid selection dialogue
  * and also in the later possible grid parameters dialogue
  */
-gridTypeGui_c * guiGridType_c::getConfigurationDialog(int x, int y, int w, int h) {
+gridTypeGui_c * GuiGridType::getConfigurationDialog(int x, int y, int w, int h) {
   switch(gt->getType()) {
     case GridType::GT_BRICKS: return new gridTypeGui_0_c(x, y, w, h, gt);
     case GridType::GT_TRIANGULAR_PRISM: return new gridTypeGui_1_c(x, y, w, h, gt);
@@ -59,7 +59,7 @@ gridTypeGui_c * guiGridType_c::getConfigurationDialog(int x, int y, int w, int h
 }
 
 /* return icon and text for the current grid type */
-char * guiGridType_c::getIcon(void) const {
+char * GuiGridType::getIcon(void) const {
   switch(gt->getType()) {
     case GridType::GT_BRICKS: return 0;
     case GridType::GT_TRIANGULAR_PRISM: return 0;
@@ -70,7 +70,7 @@ char * guiGridType_c::getIcon(void) const {
   }
 }
 
-const char * guiGridType_c::getName(void) const {
+const char * GuiGridType::getName(void) const {
   switch(gt->getType()) {
     case GridType::GT_BRICKS: return "Brick";
     case GridType::GT_TRIANGULAR_PRISM: return "Triangular Prism";
@@ -81,7 +81,7 @@ const char * guiGridType_c::getName(void) const {
   }
 }
 
-ToolTab * guiGridType_c::getToolTab(int x, int y, int w, int h) const {
+ToolTab * GuiGridType::getToolTab(int x, int y, int w, int h) const {
   switch(gt->getType()) {
     case GridType::GT_BRICKS: return new ToolTab_0(x, y, w, h);
     case GridType::GT_TRIANGULAR_PRISM: return new ToolTab_1(x, y, w, h);
@@ -92,7 +92,7 @@ ToolTab * guiGridType_c::getToolTab(int x, int y, int w, int h) const {
   }
 }
 
-unsigned int guiGridType_c::defaultSize(void) const {
+unsigned int GuiGridType::defaultSize(void) const {
   switch(gt->getType()) {
     case GridType::GT_RHOMBIC: return 5;
     case GridType::GT_SPHERES: return 3;

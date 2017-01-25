@@ -31,11 +31,11 @@ class Voxel;
 class Puzzle;
 class Problem;
 class Assembly;
-class separation_c;
+class Separation;
 
 void print(const Voxel * v, char base = 'a');
 void print(const Puzzle * p);
 void print(const Assembly * a, const Problem * p);
-void print(const separation_c * s, const Assembly * a, const Problem * p);
+void print(const Separation * s, const Assembly * a, const Problem * p);
 
 #endif

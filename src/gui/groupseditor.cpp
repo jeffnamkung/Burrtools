@@ -451,7 +451,7 @@ groupsEditor_c::groupsEditor_c(Puzzle * p, unsigned int pr) : LFl_Double_Window(
   tab->weight(1, 1);
   tab->callback(cb_UpdateInterface_stub, this);
 
-  layouter_c * o = new layouter_c(0, 1, 1, 1);
+  Layouter * o = new Layouter(0, 1, 1, 1);
   o->pitch(SZ_GAP);
 
   new LFl_Box("Maximum Number of Holes:", 0, 0, 1, 1);
@@ -469,7 +469,7 @@ groupsEditor_c::groupsEditor_c(Puzzle * p, unsigned int pr) : LFl_Double_Window(
 
   o->end();
 
-  o = new layouter_c(0, 2, 2, 1);
+  o = new Layouter(0, 2, 2, 1);
 
   LFl_Button * btn;
 

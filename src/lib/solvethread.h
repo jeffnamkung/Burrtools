@@ -34,7 +34,7 @@ class Problem;
  * be used to continue an already started solution, so that you can save you results
  * and continue later on
  */
-class solveThread_c : public AssemblerCallbackInterface, public Thread {
+class SolveThread : public AssemblerCallbackInterface, public Thread {
 
   public:
 
@@ -102,7 +102,7 @@ class solveThread_c : public AssemblerCallbackInterface, public Thread {
     static const int PAR_COMPLETE_ROTATIONS = 0x40;  // do a thorough rotation check
 
     // create all the necessary data structures to start the thread later on
-    solveThread_c(Problem * puz, int par);
+    SolveThread(Problem * puz, int par);
     const Problem * getProblem(void) const { return puzzle; }
 
   private:
@@ -169,7 +169,7 @@ public:
 
 
   // stop and exit
-  virtual ~solveThread_c(void);
+  virtual ~SolveThread(void);
 
 private:
 
@@ -197,8 +197,8 @@ public:
 private:
 
   // no copying and assigning
-  solveThread_c(const solveThread_c&);
-  void operator=(const solveThread_c&);
+  SolveThread(const SolveThread&);
+  void operator=(const SolveThread&);
 };
 
 #endif

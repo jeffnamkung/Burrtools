@@ -35,9 +35,9 @@
 #include <stdint.h>
 
 class Voxel;
-class separation_c;
+class Separation;
 class separationInfo_c;
-class disassembly_c;
+class Disassembly;
 class Assembly;
 class GridType;
 class Puzzle;
@@ -429,7 +429,7 @@ public:
   /** add an assembly with disassembly proper as a solution.
    * You can give the index, where to add it. This defaults to the end of the list
    */
-  void addSolution(Assembly * assm, separation_c * disasm, unsigned int pos = 0xFFFFFFFF);
+  void addSolution(Assembly * assm, Separation * disasm, unsigned int pos = 0xFFFFFFFF);
   /** once finished analysing call finishedSolving for finish off all actions.
    * After that call no more modifications are possible, no more addSOlution, incNumAssemblies and so on.
    * */

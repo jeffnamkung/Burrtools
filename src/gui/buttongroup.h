@@ -25,13 +25,13 @@
 
 // a group that can contain only buttons and one button is
 // pressed while others are not
-class ButtonGroup_c : public layouter_c {
+class ButtonGroup : public Layouter {
 
   unsigned int currentButton;
 
 public:
 
-  ButtonGroup_c(int x, int y, int w, int h);
+  ButtonGroup(int x, int y, int w, int h);
 
   LFl_Button * addButton(void);
 

@@ -28,7 +28,7 @@
 class vectorExportWindow_c : public LFl_Double_Window {
 
     LFl_Input * inp;
-    layouter_c * radGroup;
+    Layouter * radGroup;
 
   public:
 

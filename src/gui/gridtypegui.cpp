@@ -58,16 +58,16 @@ class gridTypeInfos_c {
   public:
 
     GridType * gt;
-    guiGridType_c * ggt;
+    GuiGridType * ggt;
     LFl_Radio_Button * btn;
     gridTypeGui_c * gui;
 
-    gridTypeInfos_c(GridType * g) : gt(g), ggt(new guiGridType_c(g)) {}
+    gridTypeInfos_c(GridType * g) : gt(g), ggt(new GuiGridType(g)) {}
 };
 
 static void cb_WindowButton_stub(Fl_Widget * /*o*/, void *v) { ((Fl_Double_Window*)(v))->hide(); }
 
-gridTypeParameterWindow_c::gridTypeParameterWindow_c(guiGridType_c * ggt) : LFl_Double_Window(false) {
+gridTypeParameterWindow_c::gridTypeParameterWindow_c(GuiGridType * ggt) : LFl_Double_Window(false) {
   label("Set parameters for grid type");
 
   ggt->getConfigurationDialog(0, 0, 1, 1);
@@ -147,7 +147,7 @@ gridTypeSelectorWindow_c::gridTypeSelectorWindow_c(void) : LFl_Double_Window(fal
 
   /* now the buttons */
   {
-    layouter_c * l = new layouter_c(0, 2, 3, 1);
+    Layouter * l = new Layouter(0, 2, 3, 1);
 
     LFl_Button * b = new LFl_Button("OK", 0, 0);
     b->pitch(7);

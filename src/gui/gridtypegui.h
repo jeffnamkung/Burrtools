@@ -25,7 +25,7 @@
 #include "Layouter.h"
 
 class GridType;
-class guiGridType_c;
+class GuiGridType;
 
 /* this is a fltk group that contains all elements to change the
  * parameters that a certain gridtype can have
@@ -33,7 +33,7 @@ class guiGridType_c;
  * in fact this is only the base class, for each gridtype there will be
  * an inherited class that contains the elements
  */
-class gridTypeGui_c : public layouter_c {
+class gridTypeGui_c : public Layouter {
 };
 
 /* the required elements for the brick grid type */
@@ -66,7 +66,7 @@ class gridTypeParameterWindow_c : public LFl_Double_Window {
   public:
 
     /* creates the parameter window for the given gui grid type */
-    gridTypeParameterWindow_c(guiGridType_c * ggt);
+    gridTypeParameterWindow_c(GuiGridType * ggt);
 };
 
 /* this class is used in the window below to hold all data necessary

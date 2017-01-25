@@ -75,7 +75,7 @@ class BaseDisassembler : public DisassemblerInterface {
     unsigned short subProbGroup(const disassemblerNode_c * st, const std::vector<unsigned int> & pn, bool cond);
     bool subProbGrouping(const std::vector<unsigned int> & pn);
 
-    separation_c * checkSubproblem(int pieceCount, const std::vector<unsigned int> & pieces, const disassemblerNode_c * st, bool left, bool * ok);
+    Separation * checkSubproblem(int pieceCount, const std::vector<unsigned int> & pieces, const disassemblerNode_c * st, bool left, bool * ok);
 
   protected:
 
@@ -93,10 +93,10 @@ class BaseDisassembler : public DisassemblerInterface {
      * once a separating node has been found by the disassemble_rec function,
      * it should call this function to analyze the sub-problems
      */
-    separation_c * checkSubproblems(const disassemblerNode_c * st, const std::vector<unsigned int> &pieces);
+    Separation * checkSubproblems(const disassemblerNode_c * st, const std::vector<unsigned int> &pieces);
 
     /** this function must be implemented by the real disassemblers */
-    virtual separation_c * disassemble_rec(const std::vector<unsigned int> & pieces, disassemblerNode_c * start) = 0;
+    virtual Separation * disassemble_rec(const std::vector<unsigned int> & pieces, disassemblerNode_c * start) = 0;
 
   public:
 
@@ -117,7 +117,7 @@ class BaseDisassembler : public DisassemblerInterface {
      * you need to take care of deleting the disassembly sequence after
      * doing with it whatever you want.
      */
-    separation_c * disassemble(const Assembly * assembly);
+    Separation * disassemble(const Assembly * assembly);
 
   private:
 

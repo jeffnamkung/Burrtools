@@ -103,7 +103,7 @@ void getNumbers(std::string str, iter start, iter end, bool neg_allowed) {
  * State
  ************************************************************************/
 
-void state_c::save(XmlWriter & xml, unsigned int piecenumber) const
+void State::save(XmlWriter & xml, unsigned int piecenumber) const
 {
   xml.newTag("state");
 
@@ -146,7 +146,7 @@ void state_c::save(XmlWriter & xml, unsigned int piecenumber) const
   xml.endTag("state");
 }
 
-state_c::state_c(XmlParser & pars, unsigned int pn)
+State::State(XmlParser & pars, unsigned int pn)
 {
   pars.require(XmlParser::START_TAG, "state");
 
@@ -207,7 +207,7 @@ state_c::state_c(XmlParser & pars, unsigned int pn)
   pars.require(XmlParser::END_TAG, "state");
 }
 
-state_c::state_c(const state_c * cpy, unsigned int pn)
+State::State(const State * cpy, unsigned int pn)
 #ifndef NDEBUG
 : piecenumber(pn)
 #endif
@@ -221,7 +221,7 @@ state_c::state_c(const state_c * cpy, unsigned int pn)
   memcpy(dz, cpy->dz, pn*sizeof(int));
 }
 
-state_c::state_c(unsigned int pn)
+State::State(unsigned int pn)
 #ifndef NDEBUG
 : piecenumber(pn)
 #endif
@@ -232,20 +232,20 @@ state_c::state_c(unsigned int pn)
   bt_assert(dx && dy && dz);
 }
 
-state_c::~state_c() {
+State::~State() {
   delete [] dx;
   delete [] dy;
   delete [] dz;
 }
 
-void state_c::set(unsigned int piece, int x, int y, int z) {
+void State::set(unsigned int piece, int x, int y, int z) {
   bt_assert(piece < piecenumber);
   dx[piece] = x;
   dy[piece] = y;
   dz[piece] = z;
 }
 
-bool state_c::pieceRemoved(unsigned int i) const {
+bool State::pieceRemoved(unsigned int i) const {
   bt_assert(i < piecenumber);
   return (abs(dx[i]) > 10000) || (abs(dy[i]) > 10000) || (abs(dz[i]) > 10000);
 }
@@ -254,7 +254,7 @@ bool state_c::pieceRemoved(unsigned int i) const {
  * Disassembly
  ************************************************************************/
 
-int disassembly_c::compare(const disassembly_c * s2) const
+int Disassembly::compare(const Disassembly * s2) const
 {
   unsigned int numSeq = std::max(getNumSequences(), s2->getNumSequences());
 
@@ -271,7 +271,7 @@ int disassembly_c::compare(const disassembly_c * s2) const
  * Separation
  ************************************************************************/
 
-void separation_c::save(XmlWriter & xml, int type) const
+void Separation::save(XmlWriter & xml, int type) const
 {
   xml.newTag("separation");
 
@@ -307,7 +307,7 @@ void separation_c::save(XmlWriter & xml, int type) const
   xml.endTag("separation");
 }
 
-separation_c::separation_c(XmlParser & pars, unsigned int pieceCnt)
+Separation::Separation(XmlParser & pars, unsigned int pieceCnt)
 {
   pars.require(XmlParser::START_TAG, "separation");
 
@@ -352,7 +352,7 @@ separation_c::separation_c(XmlParser & pars, unsigned int pieceCnt)
         pars.exception("there are states behind the sub separations");
 
       // get the states
-      states.push_back(new state_c(pars, piecenumber));
+      states.push_back(new State(pars, piecenumber));
     }
     else if (pars.getName() == "separation")
     {
@@ -378,13 +378,13 @@ separation_c::separation_c(XmlParser & pars, unsigned int pieceCnt)
       {
         if (left)
           pars.exception("more than one left branch in disassembly");
-        left = new separation_c(pars, leftPc);
+        left = new Separation(pars, leftPc);
       }
       else if (str == "removed")
       {
         if (removed)
           pars.exception("more than one removed branch in disassembly");
-        removed = new separation_c(pars, removedPc);
+        removed = new Separation(pars, removedPc);
       }
       else
         pars.exception("subnodes must have either left or removed type");
@@ -402,20 +402,20 @@ separation_c::separation_c(XmlParser & pars, unsigned int pieceCnt)
   numSequences = left?left->numSequences:0 + removed?removed->numSequences:0 + 1;
 }
 
-separation_c::separation_c(separation_c * r, separation_c * l, const std::vector<unsigned int> & pcs) : removed(r), left(l) {
+Separation::Separation(Separation * r, Separation * l, const std::vector<unsigned int> & pcs) : removed(r), left(l) {
   pieces = pcs;
 
   numSequences = l?l->numSequences:0 + r?r->numSequences:0 + 1;
 }
 
-separation_c::~separation_c() {
+Separation::~Separation() {
   delete removed;
   delete left;
   for (unsigned int i = 0; i < states.size(); i++)
     delete states[i];
 }
 
-unsigned int separation_c::sumMoves(void) const {
+unsigned int Separation::sumMoves(void) const {
   bt_assert(states.size());
   unsigned int erg = states.size() - 1;
   if (removed)
@@ -426,25 +426,25 @@ unsigned int separation_c::sumMoves(void) const {
   return erg;
 }
 
-void separation_c::addstate(state_c *st) {
+void Separation::addstate(State *st) {
   bt_assert(st->getPiecenumber() == pieces.size());
   states.push_front(st);
 }
 
-separation_c::separation_c(const separation_c * cpy) {
+Separation::Separation(const Separation * cpy) {
 
   pieces = cpy->pieces;
 
   for (unsigned int i = 0; i < cpy->states.size(); i++)
-    states.push_back(new state_c(cpy->states[i], pieces.size()));
+    states.push_back(new State(cpy->states[i], pieces.size()));
 
   if (cpy->left)
-    left = new separation_c(cpy->left);
+    left = new Separation(cpy->left);
   else
     left = 0;
 
   if (cpy->removed)
-    removed = new separation_c(cpy->removed);
+    removed = new Separation(cpy->removed);
   else
     removed = 0;
 
@@ -452,13 +452,13 @@ separation_c::separation_c(const separation_c * cpy) {
 }
 
 
-bool separation_c::containsMultiMoves() {
+bool Separation::containsMultiMoves() {
   return (states.size() > 2) ||
     (left && left->containsMultiMoves()) ||
     (removed && removed->containsMultiMoves());
 }
 
-int separation_c::movesText2(char * txt, int len) const {
+int Separation::movesText2(char * txt, int len) const {
 
   bt_assert(states.size() > 0);
 
@@ -485,7 +485,7 @@ int separation_c::movesText2(char * txt, int len) const {
   return len2;
 }
 
-void separation_c::exchangeShape(unsigned int s1, unsigned int s2) {
+void Separation::exchangeShape(unsigned int s1, unsigned int s2) {
 
   for (unsigned int i = 0; i < pieces.size(); i++)
     if (pieces[i] == s1) pieces[i] = s2;
@@ -498,7 +498,7 @@ void separation_c::exchangeShape(unsigned int s1, unsigned int s2) {
     left->exchangeShape(s1, s2);
 }
 
-unsigned int separation_c::getSequenceLength(unsigned int x) const
+unsigned int Separation::getSequenceLength(unsigned int x) const
 {
   if (x == 0)
     return states.size();
@@ -522,12 +522,12 @@ unsigned int separation_c::getSequenceLength(unsigned int x) const
   return 0;
 }
 
-unsigned int separation_c::getNumSequences(void) const
+unsigned int Separation::getNumSequences(void) const
 {
   return numSequences;
 }
 
-void separation_c::removePieces(unsigned int from, unsigned int cnt)
+void Separation::removePieces(unsigned int from, unsigned int cnt)
 {
   /* for the moment we assume, that none of the removed pieces is actually used
    * in this disassembly, because otherwise the whole solution should have been
@@ -547,7 +547,7 @@ void separation_c::removePieces(unsigned int from, unsigned int cnt)
 
 }
 
-void separation_c::addNonPlacedPieces(unsigned int from, unsigned int cnt)
+void Separation::addNonPlacedPieces(unsigned int from, unsigned int cnt)
 {
   /* increase piece numbers accordingly */
   for (unsigned int i = 0; i < pieces.size(); i++)
@@ -620,7 +620,7 @@ separationInfo_c::separationInfo_c(XmlParser & pars)
 }
 
 /* this is a simple recursive function to get the separation tree into pre-order */
-void separationInfo_c::recursiveConstruction(const separation_c * sep) {
+void separationInfo_c::recursiveConstruction(const Separation * sep) {
   values.push_back(sep->getMoves()+1);
 
   if (sep->getLeft())
@@ -634,7 +634,7 @@ void separationInfo_c::recursiveConstruction(const separation_c * sep) {
     values.push_back(0);
 }
 
-separationInfo_c::separationInfo_c(const separation_c * sep) {
+separationInfo_c::separationInfo_c(const Separation * sep) {
 
   recursiveConstruction(sep);
 }

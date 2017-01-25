@@ -23,7 +23,7 @@
 
 #include "base-disassembler.h"
 
-class separation_c;
+class Separation;
 
 class disassemblerNode_c;
 
@@ -49,7 +49,7 @@ private:
    * pieces contains the names of all the pieces that are still inside the
    * subpuzzle puzzle, start defines the starting position of these pieces
    */
-  separation_c * disassemble_rec(const std::vector<unsigned int> & pieces, disassemblerNode_c * start);
+  Separation * disassemble_rec(const std::vector<unsigned int> & pieces, disassemblerNode_c * start);
 
 public:
 

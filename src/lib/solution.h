@@ -22,12 +22,12 @@
 #define __SOLUTION_H__
 
 class Assembly;
-class separation_c;
+class Separation;
 class separationInfo_c;
 class XmlParser;
 class XmlWriter;
 class GridType;
-class disassembly_c;
+class Disassembly;
 
 /**
  * This class stores the information for one solution for a
@@ -42,7 +42,7 @@ class solution_c
   /* the disassembly tree, only not NULL, if we
    * have disassembled the puzzle
    */
-  separation_c * tree;
+  Separation * tree;
 
   /* if no separation is given, maybe we have a separationInfo
    * that contains only some of the information of a full separation
@@ -62,7 +62,7 @@ class solution_c
 public:
 
   /** create a solution with a proper separation */
-  solution_c(Assembly * assm, unsigned int assmNum, separation_c * t, unsigned int solNum) :
+  solution_c(Assembly * assm, unsigned int assmNum, Separation * t, unsigned int solNum) :
     assembly(assm), tree(t), treeInfo(0), assemblyNum(assmNum), solutionNum(solNum) {}
 
   /** create a solution with only separation information */
@@ -86,12 +86,12 @@ public:
   const Assembly * getAssembly(void) const { return assembly; }
 
   /** get the full disassembly or 0 if there is none */
-  separation_c * getDisassembly() { return tree; }
-  const separation_c * getDisassembly(void) const { return tree; }
+  Separation * getDisassembly() { return tree; }
+  const Separation * getDisassembly(void) const { return tree; }
 
   /** get either the disassembly or the disassembly information or nothing */
-  disassembly_c * getDisassemblyInfo(void);
-  const disassembly_c * getDisassemblyInfo(void) const;
+  Disassembly * getDisassemblyInfo(void);
+  const Disassembly * getDisassemblyInfo(void) const;
 
   /** get the assembly number */
   unsigned int getAssemblyNumber(void) const { return assemblyNum; }
@@ -103,7 +103,7 @@ public:
   /** add a new disassembly to this solution, deleting an old one, in
    * case such an old exists
    */
-  void setDisassembly(separation_c * sep);
+  void setDisassembly(Separation * sep);
 
   /** change the solution so that shape s1 and s2 are swapped */
   void exchangeShape(unsigned int s1, unsigned int s2);

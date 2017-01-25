@@ -82,7 +82,7 @@ static void cb_BtnCancel_stub(Fl_Widget* /*o*/, void* v) { ((AddMovementDialog*)
 
 AddMovementDialog::AddMovementDialog(movementCache_c * c, const std::vector<unsigned int> & pieces, const Problem * puz) : LFl_Double_Window(false) {
 
-  layouter_c * o = new layouter_c(0, 0, 1, 1);
+  Layouter * o = new Layouter(0, 0, 1, 1);
 
   new LFl_Box("Direction", 0, 0, 1, 1);
 
@@ -128,7 +128,7 @@ AddMovementDialog::AddMovementDialog(movementCache_c * c, const std::vector<unsi
 
   o->end();
 
-  o = new layouter_c(1, 0, 1, 1);
+  o = new Layouter(1, 0, 1, 1);
 
   new LFl_Box("Pieces", 0, 0, 1, 1);
 
@@ -151,7 +151,7 @@ AddMovementDialog::AddMovementDialog(movementCache_c * c, const std::vector<unsi
 
   o->end();
 
-  o = new layouter_c(0, 1, 2, 1);
+  o = new Layouter(0, 1, 2, 1);
 
   (new LFlatButton_c(0, 0, 1, 1, "Done", "", cb_BtnDone_stub, this))->weight(1, 0);
   (new LFl_Box("", 1, 0, 1, 1))->setMinimumSize(5, 0);
@@ -471,7 +471,7 @@ movementBrowser_c::movementBrowser_c(Problem * puzzle, unsigned int solNum) : LF
   view3d->setMinimumSize(300, 300);
   view3d->callback(cb_3dClick_movementBrowser_stub, this);
 
-  layouter_c * lay = new layouter_c(0, 0, 1, 1);
+  Layouter * lay = new Layouter(0, 0, 1, 1);
 
   tree = new LTreeBrowser(0, 0, 1, 1);
   tree->weight(1, 1);
@@ -480,7 +480,7 @@ movementBrowser_c::movementBrowser_c(Problem * puzzle, unsigned int solNum) : LF
   tree->selection_mode(FLU_SINGLE_SELECT);
   tree->selection_follows_hilight(true);
 
-  layouter_c * o = new layouter_c(0, 1, 1, 2);
+  Layouter * o = new Layouter(0, 1, 1, 2);
 
   analyzeNode =       new LFlatButton_c(0, 0, 1, 1, "Analyze", " Analyze this node for possible movement ", cb_NodeAnalyze_stub, this);
   analyzeNextLevels = new LFlatButton_c(1, 0, 1, 1, "Analyze more", " Analyze multiple levels for movement ", cb_NodeAnalyzeMany_stub, this);

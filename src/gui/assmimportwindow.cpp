@@ -49,13 +49,13 @@ assmImportWindow_c::assmImportWindow_c(const Puzzle * puzzle) : LFl_Double_Windo
 
   int ypos = 0;
 
-  layouter_c * o = new layouter_c(0, 0);
+  Layouter * o = new Layouter(0, 0);
   o->pitch(5);
 
   new LSeparator_c(0, ypos++, 1, 1, "Source", false);
 
   problemSelectorSrc = new ProblemSelector(0, 0, 100, 100, puzzle);
-  LBlockListGroup_c * probGroup = new LBlockListGroup_c(0, ypos++, 1, 1, problemSelectorSrc);
+  LBlockListGroup * probGroup = new LBlockListGroup(0, ypos++, 1, 1, problemSelectorSrc);
   probGroup->setMinimumSize(0, 70);
 
   new LSeparator_c(0, ypos++, 1, 1, "Destination", false);
@@ -66,13 +66,13 @@ assmImportWindow_c::assmImportWindow_c(const Puzzle * puzzle) : LFl_Double_Windo
   rdDontAdd->set();
 
   problemSelectorDst = new ProblemSelector(0, 0, 100, 100, puzzle);
-  probGroup = new LBlockListGroup_c(0, ypos++, 1, 1, problemSelectorDst);
+  probGroup = new LBlockListGroup(0, ypos++, 1, 1, problemSelectorDst);
   probGroup->setMinimumSize(0, 70);
 
   new LSeparator_c(0, ypos++, 1, 1, "Range", false);
 
   {
-    layouter_c * o = new layouter_c(0, ypos++);
+    Layouter * o = new Layouter(0, ypos++);
 
     (new LFl_Box("Range min", 0, 0))->stretchRight();
     (new LFl_Box("Range max", 0, 1))->stretchRight();
@@ -110,7 +110,7 @@ assmImportWindow_c::assmImportWindow_c(const Puzzle * puzzle) : LFl_Double_Windo
   ckDrpIdentical->set();
 
   {
-    layouter_c * o = new layouter_c(0, ypos++);
+    Layouter * o = new Layouter(0, ypos++);
 
     (new LFl_Box("Shape min", 0, 0))->stretchRight();
     (new LFl_Box("Shape max", 0, 1))->stretchRight();
@@ -129,7 +129,7 @@ assmImportWindow_c::assmImportWindow_c(const Puzzle * puzzle) : LFl_Double_Windo
 
   o->end();
 
-  o = new layouter_c(0, 1);
+  o = new Layouter(0, 1);
   o->pitch(5);
 
   (new LFl_Button("Continue", 0, 0, 1, 1))->callback(cb_WindowButton_stub2, this);

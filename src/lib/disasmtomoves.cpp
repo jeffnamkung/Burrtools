@@ -23,9 +23,9 @@
 #include "disassembly.h"
 #include "disassemblernode.h"
 
-DisassemblyToMoves::DisassemblyToMoves(const separation_c * tr, unsigned int sz, unsigned int max) : size(sz), maxPieceName(max) {
+DisassemblyToMoves::DisassemblyToMoves(const Separation * tr, unsigned int sz, unsigned int max) : size(sz), maxPieceName(max) {
 
-  tree = new separation_c(tr);
+  tree = new Separation(tr);
 
   moves = new float[maxPieceName*4];
   mv = new bool[maxPieceName];
@@ -124,7 +124,7 @@ static int mmax(int a, int b) {
  *                values are multiplied by this value and then the 2 end points are added
  *    cx, cy, cz are the centre to display the current tree
  */
-int DisassemblyToMoves::doRecursive(const separation_c * tree, int step, float * array, bool center_active, int cx, int cy, int cz) {
+int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * array, bool center_active, int cx, int cy, int cz) {
 
   bt_assert(tree);
 
@@ -152,7 +152,7 @@ int DisassemblyToMoves::doRecursive(const separation_c * tree, int step, float *
      * take the last state, in this state the removed pieces have a
      * distance grater 1000
      */
-    const state_c * s = tree->getState(tree->getMoves());
+    const State * s = tree->getState(tree->getMoves());
 
     /* find one of the removed pieces and one of the left pieces */
     unsigned int pc, pc2;
@@ -197,7 +197,7 @@ int DisassemblyToMoves::doRecursive(const separation_c * tree, int step, float *
 
     } else {
 
-      const state_c * s2 = tree->getState(tree->getMoves()-1);
+      const State * s2 = tree->getState(tree->getMoves()-1);
 
       /* if there is no removed tree, the pieces need to vanish */
       if (array)
@@ -260,7 +260,7 @@ int DisassemblyToMoves::doRecursive(const separation_c * tree, int step, float *
    * we also have to place the pieces at their initial position, when we are
    * before the current node
    */
-  const state_c * s = tree->getState(mmax(step, 0));
+  const State * s = tree->getState(mmax(step, 0));
 
   if (array)
     for (unsigned int i = 0; i < tree->getPieceNumber(); i++) {

@@ -211,7 +211,8 @@ bool imageExport_c::PreDraw() {
   switch(state) {
     case 0:
 
-      snprintf(statText, 50, "create Preview image %u / %u", im, images.size());
+      snprintf(statText, 50, "create Preview image %u / %lu", im, images.size
+          ());
       status->label(statText);
 
       images[im]->preparePreviewImage();
@@ -222,7 +223,7 @@ bool imageExport_c::PreDraw() {
 
       if (!images[im]->imageStarted()) {
 
-        snprintf(statText, 50, "create image %u / %u", im, images.size());
+        snprintf(statText, 50, "create image %u / %lu", im, images.size());
         status->label(statText);
 
         unsigned int w = (unsigned int)(imgHeight * images[im]->ratio() + 0.9);
@@ -424,7 +425,7 @@ void imageExport_c::cb_Export() {
 
     // generate an image for each step (for the moment only for the last solution)
     unsigned int s = pr->solutionNumber() - 1;
-    separation_c * t = pr->getSolution(s)->getDisassembly();
+    Separation * t = pr->getSolution(s)->getDisassembly();
     if (!t) return;
 
     for (unsigned int step = 0; step < t->sumMoves(); step++) {
@@ -441,7 +442,7 @@ void imageExport_c::cb_Export() {
 
     // generate an image for each step (for the moment only for the last solution)
     unsigned int s = pr->solutionNumber() - 1;
-    separation_c * t = pr->getSolution(s)->getDisassembly();
+    Separation * t = pr->getSolution(s)->getDisassembly();
     if (!t) return;
 
     for (unsigned int step = t->sumMoves() - 1; step > 0; step--) {
@@ -606,7 +607,7 @@ imageExport_c::imageExport_c(Puzzle * p) : LFl_Double_Window(false), puzzle(p), 
     AA5 = new LFl_Radio_Button("5x5 Supersampling", 0, 4);
 
     {
-      layouter_c * l = new layouter_c(0, 5, 1, 2);
+      Layouter * l = new Layouter(0, 5, 1, 2);
 
       ColPiece = new LFl_Radio_Button("Use piece colours", 0, 5);
       ColConst = new LFl_Radio_Button("Use colour constraint colours", 0, 6);
@@ -724,7 +725,7 @@ imageExport_c::imageExport_c(Puzzle * p) : LFl_Double_Window(false), puzzle(p), 
   }
 
   {
-    layouter_c * l = new layouter_c(0, 5, 2, 1);
+    Layouter * l = new Layouter(0, 5, 2, 1);
 
     ShapeSelect = new PieceSelector(0, 0, 20, 20, puzzle);
     ProblemSelect = new ProblemSelector(0, 0, 20, 20, puzzle);
@@ -732,11 +733,11 @@ imageExport_c::imageExport_c(Puzzle * p) : LFl_Double_Window(false), puzzle(p), 
     ShapeSelect->setSelection(0);
     ProblemSelect->setSelection(0);
 
-    LBlockListGroup_c * gr = new LBlockListGroup_c(0, 0, 1, 1, ShapeSelect);
+    LBlockListGroup * gr = new LBlockListGroup(0, 0, 1, 1, ShapeSelect);
     gr->callback(cb_ImageExport3DUpdate_stub, this);
     gr->setMinimumSize(200, 100);
 
-    gr = new LBlockListGroup_c(1, 0, 1, 1, ProblemSelect);
+    gr = new LBlockListGroup(1, 0, 1, 1, ProblemSelect);
     gr->callback(cb_ImageExport3DUpdate_stub, this);
     gr->setMinimumSize(200, 100);
 
@@ -744,7 +745,7 @@ imageExport_c::imageExport_c(Puzzle * p) : LFl_Double_Window(false), puzzle(p), 
   }
 
   {
-    layouter_c * l = new layouter_c(0, 6, 3, 1);
+    Layouter * l = new Layouter(0, 6, 3, 1);
 
     status = new LFl_Box();
     status->weight(1, 0);

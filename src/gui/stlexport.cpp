@@ -52,15 +52,15 @@ class inputField_c
 };
 
 
-static void cb_stlExportAbort_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)(v))->cb_Abort(); }
+static void cb_stlExportAbort_stub(Fl_Widget* /*o*/, void* v) { ((StlExport*)(v))->cb_Abort(); }
 
-void stlExport_c::cb_Abort() {
+void StlExport::cb_Abort() {
   hide();
 }
 
-static void cb_stlExportExport_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)(v))->cb_Export(); }
+static void cb_stlExportExport_stub(Fl_Widget* /*o*/, void* v) { ((StlExport*)(v))->cb_Export(); }
 
-void stlExport_c::cb_Export() {
+void StlExport::cb_Export() {
 
   exportSTL(ShapeSelect->getSelection());
 
@@ -88,9 +88,9 @@ static void updateParameters(stlExporter_c * stl, const std::vector<inputField_c
   }
 }
 
-static void cb_stlExport3DUpdate_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)(v))->cb_Update3DView(1); }
-static void cb_stlExport3DUpdate2_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)(v))->cb_Update3DView(2); }
-void stlExport_c::cb_Update3DView(int type)
+static void cb_stlExport3DUpdate_stub(Fl_Widget* /*o*/, void* v) { ((StlExport*)(v))->cb_Update3DView(1); }
+static void cb_stlExport3DUpdate2_stub(Fl_Widget* /*o*/, void* v) { ((StlExport*)(v))->cb_Update3DView(2); }
+void StlExport::cb_Update3DView(int type)
 {
   updateParameters(stl, params);
 
@@ -130,8 +130,8 @@ void stlExport_c::cb_Update3DView(int type)
 
 }
 
-static void cb_stlFileChooser_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)(v))->cb_FileChooser(); }
-void stlExport_c::cb_FileChooser(void)
+static void cb_stlFileChooser_stub(Fl_Widget* /*o*/, void* v) { ((StlExport*)(v))->cb_FileChooser(); }
+void StlExport::cb_FileChooser(void)
 {
   char curFile[500];
   snprintf(curFile, 500, "%s/%s", Pname->value(), Fname->value());
@@ -166,8 +166,8 @@ void stlExport_c::cb_FileChooser(void)
 
 }
 
-static void cb_stlExportViewUpdate_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)(v))->cb_Update3DViewParams(); }
-void stlExport_c::cb_Update3DViewParams(void)
+static void cb_stlExportViewUpdate_stub(Fl_Widget* /*o*/, void* v) { ((StlExport*)(v))->cb_Update3DViewParams(); }
+void StlExport::cb_Update3DViewParams(void)
 {
   switch (mode->getSelected())
   {
@@ -177,8 +177,8 @@ void stlExport_c::cb_Update3DViewParams(void)
   }
 }
 
-static void cb_3dClick_stub(Fl_Widget* /*o*/, void* v) { ((stlExport_c*)v)->cb_3dClick(); }
-void stlExport_c::cb_3dClick(void)
+static void cb_3dClick_stub(Fl_Widget* /*o*/, void* v) { ((StlExport*)v)->cb_3dClick(); }
+void StlExport::cb_3dClick(void)
 {
   if (Fl::event_ctrl() || Fl::event_shift())
   {
@@ -206,7 +206,7 @@ void stlExport_c::cb_3dClick(void)
   }
 }
 
-stlExport_c::stlExport_c(Puzzle * p) : LFl_Double_Window(true), puzzle(p) {
+StlExport::StlExport(Puzzle * p) : LFl_Double_Window(true), puzzle(p) {
 
   label("Export STL");
 
@@ -335,7 +335,7 @@ stlExport_c::stlExport_c(Puzzle * p) : LFl_Double_Window(true), puzzle(p) {
 
     ShapeSelect->setSelection(0);
 
-    LBlockListGroup_c * gr = new LBlockListGroup_c(0, 2, 1, 1, ShapeSelect);
+    LBlockListGroup * gr = new LBlockListGroup(0, 2, 1, 1, ShapeSelect);
     gr->callback(cb_stlExport3DUpdate2_stub, this);
     gr->setMinimumSize(200, 100);
     gr->stretch();
@@ -345,7 +345,7 @@ stlExport_c::stlExport_c(Puzzle * p) : LFl_Double_Window(true), puzzle(p) {
   {
     fr = new LFl_Frame(0, 3, 1, 1);
 
-    layouter_c * l = new layouter_c(0, 0, 1, 1);
+    Layouter * l = new Layouter(0, 0, 1, 1);
     l->pitch(5);
 
     BtnStart = new LFl_Button("Export STL", 0, 0);
@@ -360,14 +360,14 @@ stlExport_c::stlExport_c(Puzzle * p) : LFl_Double_Window(true), puzzle(p) {
   }
 
   {
-    layouter_c * l = new layouter_c(0, 4, 2, 1);
+    Layouter * l = new Layouter(0, 4, 2, 1);
 
     status = new LFl_Box(0, 0, 1, 1);
     status->box(FL_UP_BOX);
     status->weight(1, 0);
     status->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
-    mode = new ButtonGroup_c(1, 0, 1, 1);
+    mode = new ButtonGroup(1, 0, 1, 1);
 
     Fl_Button * b;
 
@@ -393,7 +393,7 @@ stlExport_c::stlExport_c(Puzzle * p) : LFl_Double_Window(true), puzzle(p) {
   set_modal();
 }
 
-void stlExport_c::exportSTL(int shape)
+void StlExport::exportSTL(int shape)
 {
   char name[1000];
 
@@ -432,7 +432,7 @@ void stlExport_c::exportSTL(int shape)
   }
 }
 
-stlExport_c::~stlExport_c(void)
+StlExport::~StlExport(void)
 {
   if (stl) delete stl;
   for (size_t i = 0; i < params.size(); i++)

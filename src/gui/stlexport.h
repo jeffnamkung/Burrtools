@@ -45,13 +45,13 @@ class LView3dGroup;
 class LBlockListGroup;
 class Puzzle;
 class PieceSelector;
-class ButtonGroup_c;
+class ButtonGroup;
 
 class stlExporter_c;
 
 class inputField_c;
 
-class stlExport_c : public LFl_Double_Window {
+class StlExport : public LFl_Double_Window {
 
   private:
 
@@ -70,7 +70,7 @@ class stlExport_c : public LFl_Double_Window {
     PieceSelector * ShapeSelect;
     LFl_Radio_Button *ExpShape;
     LFl_Check_Button *Binary;
-    ButtonGroup_c * mode;
+    ButtonGroup * mode;
 
     pixmapList_c pm;
 
@@ -78,8 +78,8 @@ class stlExport_c : public LFl_Double_Window {
 
   public:
 
-    stlExport_c(Puzzle * p);
-    virtual ~stlExport_c(void);
+    StlExport(Puzzle * p);
+    virtual ~StlExport(void);
 
     void cb_Export(void);
     void cb_Abort(void);

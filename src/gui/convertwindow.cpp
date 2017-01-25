@@ -47,7 +47,7 @@ convertWindow_c::convertWindow_c(
   bool found = false;
   unsigned int yPos = 0;
 
-  layouter_c * o = new layouter_c(0, 1, 1, 1);
+  Layouter * o = new Layouter(0, 1, 1, 1);
   o->pitch(5);
 
   for (int i = 0; i < GridType::GT_NUM_GRIDS; i++)
@@ -58,7 +58,7 @@ convertWindow_c::convertWindow_c(
 
       GridType::gridType g = (GridType::gridType)i;
       GridType gt(g);
-      guiGridType_c ggt(&gt);
+      GuiGridType ggt(&gt);
 
 
       gti.push_back(new LFl_Radio_Button(ggt.getName(), 0, yPos, 1, 1));
@@ -84,7 +84,7 @@ convertWindow_c::convertWindow_c(
   {
     new LFl_Box("Please Select Target grid", 0, 0, 1, 1);
 
-    o = new layouter_c(0, 2, 1, 1);
+    o = new Layouter(0, 2, 1, 1);
     o->pitch(5);
 
     (new LFl_Button("Continue", 0, 0, 1, 1))->callback(cb_WindowButton_stub2, this);

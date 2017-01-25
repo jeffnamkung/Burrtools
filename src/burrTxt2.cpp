@@ -76,7 +76,7 @@ int main(int argv, char* args[]) {
     return 2;
   }
 
-  int par = solveThread_c::PAR_REDUCE;
+  int par = SolveThread::PAR_REDUCE;
   bool restart = false;
   int filenumber = 0;
   int firstProblem = 0;
@@ -87,15 +87,15 @@ int main(int argv, char* args[]) {
     if (strcmp(args[i], "-R") == 0)
       restart = true;
     else if (strcmp(args[i], "-d") == 0)
-      par |= solveThread_c::PAR_DISASSM;
+      par |= SolveThread::PAR_DISASSM;
     else if (strcmp(args[i], "-c") == 0)
-      par |= solveThread_c::PAR_JUST_COUNT;
+      par |= SolveThread::PAR_JUST_COUNT;
     else if (strcmp(args[i], "-m") == 0)
-      par |= solveThread_c::PAR_KEEP_MIRROR;
+      par |= SolveThread::PAR_KEEP_MIRROR;
     else if (strcmp(args[i], "-r") == 0)
-      par |= solveThread_c::PAR_KEEP_ROTATIONS;
+      par |= SolveThread::PAR_KEEP_ROTATIONS;
     else if (strcmp(args[i], "-p") == 0)
-      par |= solveThread_c::PAR_DROP_DISASSEMBLIES;
+      par |= SolveThread::PAR_DROP_DISASSEMBLIES;
     else if (strcmp(args[i], "-b") == 0) {
       firstProblem = atoi(args[i+1]);
       lastProblem = firstProblem + 1;
@@ -136,23 +136,23 @@ int main(int argv, char* args[]) {
       p.getProblem(pr)->removeAllSolutions();
 
 
-    solveThread_c assmThread(p.getProblem(pr), par);
+    SolveThread assmThread(p.getProblem(pr), par);
 
     if (!assmThread.start(false)) {
       cout << "Could not start Solver\n";
       continue;
     }
 
-    while (assmThread.currentAction() != solveThread_c::ACT_FINISHED &&
-        assmThread.currentAction() != solveThread_c::ACT_ERROR) {
+    while (assmThread.currentAction() != SolveThread::ACT_FINISHED &&
+        assmThread.currentAction() != SolveThread::ACT_ERROR) {
 
       if (checkInput()) {
         cout << "abborting \n";
         assmThread.stop();
 
-        while (assmThread.currentAction() != solveThread_c::ACT_FINISHED &&
-            assmThread.currentAction() != solveThread_c::ACT_ERROR &&
-            assmThread.currentAction() != solveThread_c::ACT_PAUSING)
+        while (assmThread.currentAction() != SolveThread::ACT_FINISHED &&
+            assmThread.currentAction() != SolveThread::ACT_ERROR &&
+            assmThread.currentAction() != SolveThread::ACT_PAUSING)
 #ifdef WIN32
           Sleep(1);
 #else
@@ -162,7 +162,7 @@ int main(int argv, char* args[]) {
         break;
       }
 
-      if (assmThread.currentAction() == solveThread_c::ACT_ERROR) {
+      if (assmThread.currentAction() == SolveThread::ACT_ERROR) {
         cout << "Exception in Solver\n";
         cout << " file      : " << assmThread.getAssertException().file;
         cout << " function  : " << assmThread.getAssertException().function;
@@ -177,22 +177,22 @@ int main(int argv, char* args[]) {
         : 0;
 
       switch (assmThread.currentAction()) {
-        case solveThread_c::ACT_PREPARATION:
+        case SolveThread::ACT_PREPARATION:
           cout << "\rpreparing piece " << assmThread.currentActionParameter()+1;
           break;
-        case solveThread_c::ACT_REDUCE:
+        case SolveThread::ACT_REDUCE:
           cout << "\rreducing piece " << assmThread.currentActionParameter()+1;
           break;
-        case solveThread_c::ACT_ASSEMBLING:
+        case SolveThread::ACT_ASSEMBLING:
           cout << "\rassembling " << finished*100 << "% done";
           break;
-        case solveThread_c::ACT_DISASSEMBLING:
+        case SolveThread::ACT_DISASSEMBLING:
           cout << "\rdisassembling " << finished*100 << "% done";
           break;
-        case solveThread_c::ACT_WAIT_TO_STOP:
+        case SolveThread::ACT_WAIT_TO_STOP:
           cout << "\rwaitin";
           break;
-        case solveThread_c::ACT_ERROR:
+        case SolveThread::ACT_ERROR:
           cout << "\rerror: ";
           switch (assmThread.getErrorState()) {
             case AssemblerInterface::ERR_TOO_MANY_UNITS:
@@ -220,7 +220,7 @@ int main(int argv, char* args[]) {
               break;
           }
           break;
-        case solveThread_c::ACT_FINISHED:
+        case SolveThread::ACT_FINISHED:
           cout << "\rdone";
           break;
       }

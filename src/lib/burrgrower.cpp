@@ -70,7 +70,7 @@ bool puzzleSol_c::assembly(assembly_c* a) {
 
 
   disassembler_c * d = new disassembler_0_c(puzzle, prob);
-  separation_c * da = d->disassemble(a);
+  Separation * da = d->disassemble(a);
 
   if (da) {
 

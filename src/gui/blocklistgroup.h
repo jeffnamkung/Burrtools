@@ -27,7 +27,7 @@
 
 class BlockList;
 
-class LBlockListGroup_c : public Fl_Group, public layoutable_c {
+class LBlockListGroup : public Fl_Group, public layoutable_c {
 
   Fl_Slider * Slider;
   BlockList * List;
@@ -35,7 +35,7 @@ class LBlockListGroup_c : public Fl_Group, public layoutable_c {
 
   public:
 
-  LBlockListGroup_c(int x, int y, int w, int h, BlockList * l);
+  LBlockListGroup(int x, int y, int w, int h, BlockList * l);
 
   void cb_slider(void);
   void cb_list(void);

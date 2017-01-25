@@ -817,7 +817,7 @@ void Problem::addSolution(Assembly * assm) {
   solutions.push_back(new solution_c(assm, numAssemblies));
 }
 
-void Problem::addSolution(Assembly * assm, separation_c * disasm, unsigned int pos) {
+void Problem::addSolution(Assembly * assm, Separation * disasm, unsigned int pos) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 

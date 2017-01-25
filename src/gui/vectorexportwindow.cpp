@@ -45,7 +45,7 @@ vectorExportWindow_c::vectorExportWindow_c(void) : LFl_Double_Window(false) {
 
   label("Parameters for Vector Export");
 
-  layouter_c * o = new layouter_c(0, 0, 1, 1);
+  Layouter * o = new Layouter(0, 0, 1, 1);
 
   (new LFl_Box("Filename:", 0, 0, 3, 1))->stretchLeft();;
 
@@ -62,7 +62,7 @@ vectorExportWindow_c::vectorExportWindow_c(void) : LFl_Double_Window(false) {
 
   (new LFl_Box("File type:", 0, 2, 1, 1))->stretchLeft();
 
-  o = new layouter_c(0, 3, 1, 1);
+  o = new Layouter(0, 3, 1, 1);
 
   /* only put LFl_RadioButtons in this layouter and keep the
    * oder the same as in voxelFrame enum
@@ -79,7 +79,7 @@ vectorExportWindow_c::vectorExportWindow_c(void) : LFl_Double_Window(false) {
 
   (new LFl_Box(0, 4, 1, 1))->setMinimumSize(0, 5);
 
-  o = new layouter_c(0, 5, 1, 1);
+  o = new Layouter(0, 5, 1, 1);
 
   btn = new LFl_Button("Export", 0, 0, 1, 1);
   btn->callback(cb_Button1_stub, this);

@@ -30,7 +30,7 @@ class Problem;
 /* a widget showing the number and name of the result shape for
  * a given problem
  */
-class ResultViewer_c : public Fl_Box, public layoutable_c {
+class ResultViewer : public Fl_Box, public layoutable_c {
 
 private:
 
@@ -39,7 +39,7 @@ private:
 
 public:
 
-  ResultViewer_c(int x, int y, int w, int h);
+  ResultViewer(int x, int y, int w, int h);
   void setPuzzle(Problem * p);
   void draw(void);
 

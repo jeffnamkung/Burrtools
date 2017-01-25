@@ -132,7 +132,7 @@ void LFl_Tile::resize(int X,int Y,int W,int H) {
 
   if (unspoiled) {
 
-    layouter_c::resize(X, Y, W, H);
+    Layouter::resize(X, Y, W, H);
     init_sizes();
 
   } else {
@@ -172,7 +172,7 @@ void LFl_Tile::resize(int X,int Y,int W,int H) {
       // back to layouter mode, this ensured minimum sizes
       if (((R-xx) < minX) || ((B-yy) < minY)) {
         unspoiled = true;
-        layouter_c::resize(X, Y, W, H);
+        Layouter::resize(X, Y, W, H);
         init_sizes();
         return;
       }

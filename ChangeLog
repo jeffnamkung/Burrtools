@@ -485,7 +485,7 @@ Sun Mar 29 11:55:27 CEST 2009  Andreas R?ver <roever@users.sourceforge.net>
 Sat Mar 28 18:14:39 CET 2009  Andreas R?ver <roever@users.sourceforge.net>
   * cleanup in disassembler classes
   
-  create a common base for separation_c and separationInfo_c with virtual functions for functions that were available
+  create a common base for Separation and separationInfo_c with virtual functions for functions that were available
   in both classes
   
   cleanup the problem interface accordingly, getDisassemblerInfo now returns the common base class
@@ -803,7 +803,7 @@ Sun Feb  8 17:19:57 CET 2009  Andreas R?ver <roever@users.sourceforge.net>
   - replace copying a problem from the puzzle by adding a problem with a pointer
 
 Sat Jan 31 16:42:36 CET 2009  Andreas R?ver <roever@users.sourceforge.net>
-  * rename assemblerThread_c to solveThread_c as it does complete solving and not just assembling
+  * rename assemblerThread_c to SolveThread as it does complete solving and not just assembling
 
 Sat Feb  7 16:11:31 CET 2009  Andreas R?ver <roever@users.sourceforge.net>
   * NEWS update

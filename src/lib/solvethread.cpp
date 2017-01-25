@@ -26,7 +26,7 @@
 #include "simple-disassembler.h"
 #include "solution.h"
 
-void solveThread_c::run(void){
+void SolveThread::run(void){
 
   try {
 
@@ -40,7 +40,7 @@ void solveThread_c::run(void){
 
       /* otherwise we have to create a new one
        */
-      action = solveThread_c::ACT_PREPARATION;
+      action = SolveThread::ACT_PREPARATION;
       assm = puzzle->getGridType()->findAssembler(puzzle);
 
       errState = assm->createMatrix(puzzle, parameters & PAR_KEEP_MIRROR, parameters & PAR_KEEP_ROTATIONS, parameters & PAR_COMPLETE_ROTATIONS);
@@ -48,7 +48,7 @@ void solveThread_c::run(void){
 
         errParam = assm->getErrorsParam();
 
-        action = solveThread_c::ACT_ERROR;
+        action = SolveThread::ACT_ERROR;
 
         delete assm;
         return;
@@ -57,7 +57,7 @@ void solveThread_c::run(void){
       if (parameters & PAR_REDUCE) {
 
         if (!stopPressed)
-          action = solveThread_c::ACT_REDUCE;
+          action = SolveThread::ACT_REDUCE;
 
         assm->reduce();
       }
@@ -69,30 +69,30 @@ void solveThread_c::run(void){
        */
       errState = puzzle->setAssembler(assm);
       if (errState != AssemblerInterface::ERR_NONE) {
-        action = solveThread_c::ACT_ERROR;
+        action = SolveThread::ACT_ERROR;
         return;
       }
     }
 
     if (return_after_prep) {
-      action = solveThread_c::ACT_PAUSING;
+      action = SolveThread::ACT_PAUSING;
       return;
     }
 
     if (!stopPressed) {
 
-      action = solveThread_c::ACT_ASSEMBLING;
+      action = SolveThread::ACT_ASSEMBLING;
       assm->assemble(this);
       puzzle->addTime(time(0)-startTime);
 
       if (assm->getFinished() >= 1) {
-        action = solveThread_c::ACT_FINISHED;
+        action = SolveThread::ACT_FINISHED;
         puzzle->finishedSolving();
       } else
-        action = solveThread_c::ACT_PAUSING;
+        action = SolveThread::ACT_PAUSING;
 
     } else {
-      action = solveThread_c::ACT_PAUSING;
+      action = SolveThread::ACT_PAUSING;
       puzzle->addTime(time(0)-startTime);
     }
 
@@ -101,13 +101,13 @@ void solveThread_c::run(void){
   catch (assert_exception a) {
 
     ae = a;
-    action = solveThread_c::ACT_ASSERT;
+    action = SolveThread::ACT_ASSERT;
     if (puzzle->getAssembler())
       puzzle->removeAllSolutions();
   }
 }
 
-solveThread_c::solveThread_c(Problem * puz, int par) :
+SolveThread::SolveThread(Problem * puz, int par) :
 action(ACT_PREPARATION),
 puzzle(puz),
 parameters(par),
@@ -122,7 +122,7 @@ assm(0)
     disassm = new SimpleDisassembler(puz);
 }
 
-solveThread_c::~solveThread_c() {
+SolveThread::~SolveThread() {
 
   kill();
 
@@ -132,7 +132,7 @@ solveThread_c::~solveThread_c() {
   }
 }
 
-bool solveThread_c::assembly(Assembly * a) {
+bool SolveThread::assembly(Assembly * a) {
 
   enum {
     SOL_COUNT_ASM,
@@ -176,7 +176,7 @@ bool solveThread_c::assembly(Assembly * a) {
 
       // try to disassemble
       action = ACT_DISASSEMBLING;
-      separation_c * s = disassm->disassemble(a);
+      Separation * s = disassm->disassemble(a);
       action = ACT_ASSEMBLING;
 
       // check, if we found a disassembly sequence
@@ -212,7 +212,7 @@ bool solveThread_c::assembly(Assembly * a) {
 
             for (unsigned int i = 0; i < puzzle->solutionNumber(); i++) {
 
-              const disassembly_c * s2 = puzzle->getSolution(i)->getDisassembly();
+              const Disassembly * s2 = puzzle->getSolution(i)->getDisassembly();
 
               if (s2 && s2->sumMoves() > lev) {
                 if (parameters & PAR_DROP_DISASSEMBLIES) {
@@ -245,7 +245,7 @@ bool solveThread_c::assembly(Assembly * a) {
           {
             for (unsigned int i = 0; i < puzzle->solutionNumber(); i++) {
 
-              const disassembly_c * s2 = puzzle->getSolution(i)->getDisassemblyInfo();
+              const Disassembly * s2 = puzzle->getSolution(i)->getDisassemblyInfo();
 
               if (s2 && (s2->compare(s) > 0)) {
                 if (parameters & PAR_DROP_DISASSEMBLIES) {
@@ -315,7 +315,7 @@ bool solveThread_c::assembly(Assembly * a) {
   return true;
 }
 
-void solveThread_c::stop() {
+void SolveThread::stop() {
 
   if ((action != ACT_ASSEMBLING) &&
       (action != ACT_REDUCE) &&
@@ -332,7 +332,7 @@ void solveThread_c::stop() {
   stopPressed = true;
 }
 
-bool solveThread_c::start(bool stop_after_prep) {
+bool SolveThread::start(bool stop_after_prep) {
 
   stopPressed = false;
   return_after_prep = stop_after_prep;
@@ -367,7 +367,7 @@ bool solveThread_c::start(bool stop_after_prep) {
   return Thread::start();
 }
 
-unsigned int solveThread_c::currentActionParameter() {
+unsigned int SolveThread::currentActionParameter() {
 
   switch(action) {
   case ACT_REDUCE:

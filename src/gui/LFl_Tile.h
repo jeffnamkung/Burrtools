@@ -30,13 +30,13 @@
 
 #include "Layouter.h"
 
-class LFl_Tile : public layouter_c {
+class LFl_Tile : public Layouter {
 
   bool unspoiled;
 
 public:
   int handle(int);
-  LFl_Tile(int X,int Y,int W,int H) : layouter_c(X,Y,W,H), unspoiled(true) {}
+  LFl_Tile(int X,int Y,int W,int H) : Layouter(X,Y,W,H), unspoiled(true) {}
   void resize(int, int, int, int);
   void position(int, int, int, int);
 };

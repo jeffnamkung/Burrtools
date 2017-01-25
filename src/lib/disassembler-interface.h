@@ -21,7 +21,7 @@
 #ifndef __DISASSEMBLER_H__
 #define __DISASSEMBLER_H__
 
-class separation_c;
+class Separation;
 class Assembly;
 
 /**
@@ -51,7 +51,7 @@ public:
    * you need to take care of freeing the disassembly sequence after
    * doing with it whatever you want
    */
-  virtual separation_c * disassemble(const Assembly * /*assembly*/) { return 0; }
+  virtual Separation * disassemble(const Assembly * /*assembly*/) { return 0; }
 
 private:
 

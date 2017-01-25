@@ -25,15 +25,15 @@
 #include "Images.h"
 #include "voxelframe.h"
 
-class ButtonGroup_c;
+class ButtonGroup;
 
 // a status line containing text and a button to toggle
 // between coloured and normal view
-class LStatusLine : public layouter_c {
+class LStatusLine : public Layouter {
 
 private:
 
-  ButtonGroup_c *mode;
+  ButtonGroup *mode;
   LFl_Box * text;
   pixmapList_c pm;
 

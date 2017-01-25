@@ -26,7 +26,7 @@
 
 class ChangeSize;
 class Puzzle;
-class guiGridType_c;
+class GuiGridType;
 
 // the class that contains the tool tab
 class ToolTab : public LFl_Tabs {
@@ -132,18 +132,18 @@ public:
   void cb_transform(long task);
 };
 
-class ToolTabContainer : public layouter_c {
+class ToolTabContainer : public Layouter {
 
   ToolTab * tt;
 
   public:
 
-  ToolTabContainer(int x, int y, int w, int h, const guiGridType_c * ggt);
+  ToolTabContainer(int x, int y, int w, int h, const GuiGridType * ggt);
 
   void setVoxelSpace(Puzzle * puz, unsigned int sh) { if (tt) tt->setVoxelSpace(puz, sh); }
   bool operationToAll() { if (tt) return tt->operationToAll(); else return false; }
 
-  void newGridType(const guiGridType_c * ggt);
+  void newGridType(const GuiGridType * ggt);
 };
 
 #endif

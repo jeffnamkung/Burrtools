@@ -65,7 +65,7 @@ public:
 
     if (disassemble) {
 
-      separation_c * da = d->disassemble(a);
+      Separation * da = d->disassemble(a);
 
       if (da) {
         Solutions++;
@@ -337,7 +337,7 @@ int main(int argv, char* args[]) {
 
         if (problem->getSolution(sol)->getAssembly()) {
 
-          separation_c * da = d->disassemble(problem->getSolution(sol)->getAssembly());
+          Separation * da = d->disassemble(problem->getSolution(sol)->getAssembly());
 
           if (da) {
             if (printSolutions)

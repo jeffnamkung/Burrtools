@@ -37,13 +37,11 @@ class XmlParser;
 /** the disassembly is a common base class for the
  * separation and separationInfo classes.
  */
-class disassembly_c
+class Disassembly
 {
-
   public:
-
-    disassembly_c() {}
-    virtual ~disassembly_c() {}
+    Disassembly() {}
+    virtual ~Disassembly() {}
 
     /**
      * the number of moves to completely disassemble the puzzle, including
@@ -66,7 +64,7 @@ class disassembly_c
      * if this assembler is smaller <0 is returned
      * if they are both equal =0 is returned
      */
-    int compare(const disassembly_c * s2) const;
+    int compare(const Disassembly * s2) const;
 
   protected:
 
@@ -82,8 +80,8 @@ class disassembly_c
   private:
 
     // no copying and assigning
-    disassembly_c(const disassembly_c&);
-    void operator=(const disassembly_c&);
+    Disassembly(const Disassembly&);
+    void operator=(const Disassembly&);
 };
 
 
@@ -91,7 +89,7 @@ class disassembly_c
  * defines one step in the separation process.
  * one state of relative piece positions on your way
  */
-class state_c {
+class State {
 
   /** contains the x positions of all the pieces that are handled */
   int *dx;
@@ -111,15 +109,15 @@ public:
    * create a new spate for pn pieces. you can not add more
    * pieces later on, so plan ahead
    */
-  state_c(unsigned int pn);
+  State(unsigned int pn);
 
   /** copy constructor */
-  state_c(const state_c * cpy, unsigned int pn);
+  State(const State * cpy, unsigned int pn);
 
   /** load from an xml node */
-  state_c(XmlParser & pars, unsigned int pn);
+  State(XmlParser & pars, unsigned int pn);
 
-  ~state_c();
+  ~State();
 
   /** save into an xml node */
   void save(XmlWriter & xml, unsigned int piecenumber) const;
@@ -152,10 +150,9 @@ public:
 #endif
 
 private:
-
   // no copying and assigning
-  state_c(const state_c&);
-  void operator=(const state_c&);
+  State(const State&) = delete;
+  void operator=(const State&) = delete;
 };
 
 
@@ -167,7 +164,7 @@ private:
  * puzzle and the lower parts divide the puzzle more and more until only
  * single pieces are left
  */
-class separation_c : public disassembly_c
+class Separation : public Disassembly
 {
 
   /**
@@ -189,13 +186,13 @@ class separation_c : public disassembly_c
    * for the root node the first state represents the assembles puzzle
    * with all values 0
    */
-  std::deque <state_c *> states;
+  std::deque <State *> states;
 
   /* the 2 parts the puzzle gets divided with the
    * last move. If one of this parts consists of only
    * one piece there will be a null pointer
    */
-  separation_c * removed, *left;
+  Separation * removed, *left;
 
   /** used in movesText to find out if a branch has a movesequence longer than 1 */
   bool containsMultiMoves(void);
@@ -214,18 +211,18 @@ public:
    * create a separation with sub separations r and l
    * and the pieces in the array pcs
    */
-  separation_c(separation_c * r, separation_c * l, const std::vector<unsigned int> & pcs);
+  Separation(Separation * r, Separation * l, const std::vector<unsigned int> & pcs);
 
   /** load a separation from an xml node */
-  separation_c(XmlParser & pars, unsigned int pieces);
+  Separation(XmlParser & pars, unsigned int pieces);
 
   /** copy constructor */
-  separation_c(const separation_c * cpy);
+  Separation(const Separation * cpy);
 
   /* save into an xml node, please always call with just xml, the type is for internal use */
   void save(XmlWriter & xml, int type = 0) const;
 
-  ~separation_c();
+  ~Separation();
 
   /**
    * return the number of moves that are required to separate the puzzle.
@@ -234,16 +231,16 @@ public:
   unsigned int getMoves(void) const { return states.size() - 1; }
 
   /** get one state from the separation process */
-  const state_c * getState(unsigned int num) const {
+  const State * getState(unsigned int num) const {
     bt_assert(num < states.size());
     return states[num];
   }
 
   /** get the separation for the pieces that were removed */
-  const separation_c * getLeft(void) const { return left; }
+  const Separation * getLeft(void) const { return left; }
 
   /** get the separation for the pieces that were left over */
-  const separation_c * getRemoved(void) const { return removed; }
+  const Separation * getRemoved(void) const { return removed; }
 
   /**
    * add a new state to the FRONT of the current state list.
@@ -253,7 +250,7 @@ public:
    * keep in mind that the new state must have the same number
    * of pieces as all the other states
    */
-  void addstate(state_c *st);
+  void addstate(State *st);
 
   /** return the number of pieces that are in this separation */
   unsigned int getPieceNumber(void) const { return pieces.size(); }
@@ -279,8 +276,8 @@ public:
 private:
 
   // no copying and assigning
-  separation_c(const separation_c&);
-  void operator=(const separation_c&);
+  Separation(const Separation&);
+  void operator=(const Separation&);
 };
 
 /**
@@ -288,7 +285,7 @@ private:
  * is used as a memory efficient replacement for the basic information
  * in separation_c without the detailed disassembly instructions
  */
-class separationInfo_c : public disassembly_c {
+class separationInfo_c : public Disassembly {
 
   private:
 
@@ -313,7 +310,7 @@ class separationInfo_c : public disassembly_c {
     bool containsMultiMoves(unsigned int root) const;
 
     /** used in constructor for create separationInfo from normal separation */
-    void recursiveConstruction(const separation_c * sep);
+    void recursiveConstruction(const Separation * sep);
 
     int movesText2(char * txt, int len, unsigned int idx) const;
 
@@ -323,7 +320,7 @@ class separationInfo_c : public disassembly_c {
     separationInfo_c(XmlParser & pars);
 
     /** create a separation infor from a normal separation */
-    separationInfo_c(const separation_c * sep);
+    separationInfo_c(const Separation * sep);
 
     /** save into an xml node */
     void save(XmlWriter & xml) const;

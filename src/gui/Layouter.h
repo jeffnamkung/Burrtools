@@ -157,7 +157,7 @@ public:
   }
 };
 
-class layouter_c : public Fl_Group, public layoutable_c {
+class Layouter : public Fl_Group, public layoutable_c {
 
   private:
 
@@ -173,7 +173,7 @@ class layouter_c : public Fl_Group, public layoutable_c {
 
   virtual void resize(int x, int y, int w, int h);
 
-  layouter_c(int x = 0, int y = 0, int w = 1, int h = 1) : Fl_Group(0, 0, 100, 100),
+  Layouter(int x = 0, int y = 0, int w = 1, int h = 1) : Fl_Group(0, 0, 100, 100),
               layoutable_c(x, y, w, h), minsizeValid(false) {}
 
   void remove(Fl_Widget &w);
@@ -198,14 +198,14 @@ class LFl_Box : public Fl_Box, public layoutable_c {
   }
 };
 
-class LFl_Frame : public layouter_c {
+class LFl_Frame : public Layouter {
 
-  layouter_c *l;
+  Layouter *l;
 
   public:
 
-  LFl_Frame(int x = 0, int y = 0, int w = 1, int h = 1) : layouter_c(x, y, w, h) {
-    l = new layouter_c();
+  LFl_Frame(int x = 0, int y = 0, int w = 1, int h = 1) : Layouter(x, y, w, h) {
+    l = new Layouter();
     l->pitch(3);
     box(FL_ENGRAVED_BOX);
     pitch(1);
@@ -462,14 +462,14 @@ class LFl_Roller : public Fl_Roller, public layoutable_c {
 
 class LFl_Double_Window : public Fl_Double_Window {
 
-  layouter_c * lay;
+  Layouter * lay;
   bool res;
   bool placed;
 
   public:
 
   LFl_Double_Window(bool resizab) : Fl_Double_Window(10, 10), res(resizab), placed(false) {
-    lay = new layouter_c();
+    lay = new Layouter();
     lay->resize(0, 0, 10, 10);
     resizable(lay);
   }
@@ -512,13 +512,13 @@ class LFl_Scroll : public Fl_Scroll, public layoutable_c {
 
   private:
 
-    layouter_c * lay;
+    Layouter * lay;
 
   public:
 
     LFl_Scroll(int x, int y, int w, int h) : Fl_Scroll(0, 0, 100, 100), layoutable_c(x, y, w, h) {
 
-      lay = new layouter_c();
+      lay = new Layouter();
       lay->resize(0, 0, 200, 200);
       resizable(lay);
     }

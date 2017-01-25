@@ -22,7 +22,7 @@
 
 #include "buttongroup.h"
 
-LStatusLine::LStatusLine(int x, int y, int w, int h) : layouter_c(x, y, w, h) {
+LStatusLine::LStatusLine(int x, int y, int w, int h) : Layouter(x, y, w, h) {
 
   text = new LFl_Box(0, 0, 1, 1);
   text->box(FL_UP_BOX);
@@ -32,7 +32,7 @@ LStatusLine::LStatusLine(int x, int y, int w, int h) : layouter_c(x, y, w, h) {
 
   Fl_Button * b;
 
-  mode = new ButtonGroup_c(1, 0, 1, 1);
+  mode = new ButtonGroup(1, 0, 1, 1);
 
   b = mode->addButton();
   b->image(pm.get(ViewModeNormal_xpm));

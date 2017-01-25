@@ -24,8 +24,8 @@
 
 // some tool widgets, that may be swapped out later into another file
 
-static void cb_BlockListGroupList_stub(Fl_Widget* o, void* /*v*/) { ((LBlockListGroup_c*)(o->parent()))->cb_list(); }
-void LBlockListGroup_c::cb_list() {
+static void cb_BlockListGroupList_stub(Fl_Widget* o, void* /*v*/) { ((LBlockListGroup*)(o->parent()))->cb_list(); }
+void LBlockListGroup::cb_list() {
 
   if (List->getReason() == PieceSelector::RS_CHANGEDHIGHT) {
 
@@ -41,10 +41,10 @@ void LBlockListGroup_c::cb_list() {
   }
 }
 
-static void cb_BlockListGroupSlider_stub(Fl_Widget* o, void* /*v*/) { ((LBlockListGroup_c*)(o->parent()))->cb_slider(); }
-void LBlockListGroup_c::cb_slider() { List->setShift((int)Slider->value()); }
+static void cb_BlockListGroupSlider_stub(Fl_Widget* o, void* /*v*/) { ((LBlockListGroup*)(o->parent()))->cb_slider(); }
+void LBlockListGroup::cb_slider() { List->setShift((int)Slider->value()); }
 
-LBlockListGroup_c::LBlockListGroup_c(int x, int y, int w, int h, BlockList * l) : Fl_Group(0, 0, 100, 100), layoutable_c(x, y, w, h), List(l) {
+LBlockListGroup::LBlockListGroup(int x, int y, int w, int h, BlockList * l) : Fl_Group(0, 0, 100, 100), layoutable_c(x, y, w, h), List(l) {
 
   box(FL_DOWN_FRAME);
 

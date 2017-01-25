@@ -64,7 +64,7 @@ solution_c::solution_c(XmlParser & pars, unsigned int pieces, const GridType * g
       for (unsigned int i = 0; i < assembly->placementCount(); i++)
         if (assembly->isPlaced(i))
           pl++;
-      tree = new separation_c(pars, pl);
+      tree = new Separation(pars, pl);
 
       pars.require(XmlParser::END_TAG, "separation");
     }
@@ -131,14 +131,14 @@ void solution_c::exchangeShape(unsigned int s1, unsigned int s2)
     tree->exchangeShape(s1, s2);
 }
 
-const disassembly_c * solution_c::getDisassemblyInfo(void) const
+const Disassembly * solution_c::getDisassemblyInfo(void) const
 {
   if (tree) return tree;
   if (treeInfo) return treeInfo;
   return 0;
 }
 
-disassembly_c * solution_c::getDisassemblyInfo(void)
+Disassembly * solution_c::getDisassemblyInfo(void)
 {
   if (tree) return tree;
   if (treeInfo) return treeInfo;
@@ -157,7 +157,7 @@ void solution_c::removeDisassembly(void)
   }
 }
 
-void solution_c::setDisassembly(separation_c * sep)
+void solution_c::setDisassembly(Separation * sep)
 {
   if (tree) delete tree;
   tree = sep;

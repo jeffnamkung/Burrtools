@@ -28,7 +28,7 @@ class gridTypeGui_c;
 class ToolTab;
 class Puzzle;
 
-class guiGridType_c {
+class GuiGridType {
 
   private:
 
@@ -36,7 +36,7 @@ class guiGridType_c {
 
   public:
 
-    guiGridType_c(GridType * gt);
+    GuiGridType(GridType * gt);
 
     gridEditor_c * getGridEditor(int x, int y, int w, int h, Puzzle * puzzle) const;
 
