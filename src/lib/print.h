@@ -33,9 +33,9 @@ class Problem;
 class Assembly;
 class Separation;
 
-void print(const Voxel * v, char base = 'a');
-void print(const Puzzle * p);
-void print(const Assembly * a, const Problem * p);
-void print(const Separation * s, const Assembly * a, const Problem * p);
+void print(const Voxel *v, char base = 'a');
+void print(const Puzzle *p);
+void print(const Assembly *a, const Problem *p);
+void print(const Separation *s, const Assembly *a, const Problem *p);
 
 #endif

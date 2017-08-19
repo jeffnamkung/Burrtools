@@ -43,7 +43,7 @@ class GridType;
  */
 class movementCache_c {
 
-  private:
+ private:
 
   /**
    * values are saved within a hash table, this is the entry for the table for the movement data
@@ -66,15 +66,15 @@ class movementCache_c {
     unsigned short t2; ///< orientation of the second shape
 
     /** the possible movement in positive directions */
-    unsigned int * move;
+    unsigned int *move;
 
     /** next in the linked list of the hash table */
-    struct moEntry * next;
+    struct moEntry *next;
 
   } moEntry;
 
   /** the hash table */
-  moEntry ** moHash;
+  moEntry **moHash;
 
   unsigned int moTableSize; ///< size of the hash table
   unsigned int moEntries;   ///< number of entries in the table
@@ -84,10 +84,10 @@ class movementCache_c {
    * The voxel spaces are calculated on demand. The entry at the zero-th position are
    * pointers into the puzzle, so we must not free them
    */
-  const Voxel *** shapes;
+  const Voxel ***shapes;
 
   /** the mapping of piece numbers to shape ids */
-  unsigned int * pieces;
+  unsigned int *pieces;
 
   /** number of shapes */
   unsigned int num_shapes;
@@ -98,20 +98,24 @@ class movementCache_c {
   void moRehash(void); ///< this function resizes the hash table to roughly twice the size
 
   /** when the entry is not inside the table, this function calculates the values for the movement info */
-  virtual unsigned int* moCalcValues(const Voxel * sh1, const Voxel * sh2, int dx, int dy, int dz) = 0;
+  virtual unsigned int *moCalcValues(const Voxel *sh1,
+                                     const Voxel *sh2,
+                                     int dx,
+                                     int dy,
+                                     int dz) = 0;
 
   /// the gridtype used. We need this to make copies and transformations of the shapes
-  const GridType * gt;
+  const GridType *gt;
 
   /// get the transformed shape from the shapes array, calculating missing ones
-  const Voxel * getTransformedShape(unsigned int s, unsigned char t);
+  const Voxel *getTransformedShape(unsigned int s, unsigned char t);
 
-public:
+ public:
 
   /** create the cache. The cache is then fixed to the puzzle and the problem, it can
    * and should be reused to analyse all assemblies found but can not be used for another puzzle
    */
-  movementCache_c(const Problem * puz);
+  movementCache_c(const Problem *puz);
 
   virtual ~movementCache_c(void);
 
@@ -122,7 +126,14 @@ public:
    * the 2 pieces are the pieces p1 and p2 from the puzzle and problem defined in the constructor
    * and the 2 pieces are transformed by t1 and t2
    */
-  void getMoValue(int dx, int dy, int dz, unsigned char t1, unsigned char t2, unsigned int p1, unsigned int p2, unsigned int * movements);
+  void getMoValue(int dx,
+                  int dy,
+                  int dz,
+                  unsigned char t1,
+                  unsigned char t2,
+                  unsigned int p1,
+                  unsigned int p2,
+                  unsigned int *movements);
 
   /**
    * return the number of different directions of movement that are possible within
@@ -131,13 +142,13 @@ public:
   virtual unsigned int numDirections(void) = 0;
 
   /** return the movement vector of the given direction */
-  virtual void getDirection(unsigned int dir, int * x, int * y, int * z) = 0;
+  virtual void getDirection(unsigned int dir, int *x, int *y, int *z) = 0;
 
-private:
+ private:
 
   // no copying and assigning
-  movementCache_c(const movementCache_c&);
-  void operator=(const movementCache_c&);
+  movementCache_c(const movementCache_c &);
+  void operator=(const movementCache_c &);
 };
 
 #endif

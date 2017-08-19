@@ -30,6 +30,6 @@
 class Puzzle;
 
 /* either return a puzzle, or nil, when failed */
-Puzzle * loadPuzzlerSolver3D(std::istream * str);
+Puzzle *loadPuzzlerSolver3D(std::istream *str);
 
 #endif

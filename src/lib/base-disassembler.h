@@ -46,84 +46,93 @@ class Assembly;
  */
 class BaseDisassembler : public DisassemblerInterface {
 
-  private:
+ private:
 
-    /**
-     * For grouping pieces
-     */
-    grouping_c * groups;
+  /**
+   * For grouping pieces
+   */
+  grouping_c *groups;
 
-    /**
-     * the problem we solve
-     */
-    const Problem * puzzle;
+  /**
+   * the problem we solve
+   */
+  const Problem *puzzle;
 
-    /**
-     * Converts piece number to the corresponding shape number.
-     *
-     * These are needed for the grouping functions
-     */
-    unsigned short * piece2shape;
+  /**
+   * Converts piece number to the corresponding shape number.
+   *
+   * These are needed for the grouping functions
+   */
+  unsigned short *piece2shape;
 
-    /**
-     * the movement analysator we use.
-     *
-     * The movement analysator will return the possible moves from a given position
-     */
-    movementAnalysator_c *analyse;
+  /**
+   * the movement analysator we use.
+   *
+   * The movement analysator will return the possible moves from a given position
+   */
+  movementAnalysator_c *analyse;
 
-    unsigned short subProbGroup(const disassemblerNode_c * st, const std::vector<unsigned int> & pn, bool cond);
-    bool subProbGrouping(const std::vector<unsigned int> & pn);
+  unsigned short subProbGroup(const disassemblerNode_c *st,
+                              const std::vector<unsigned int> &pn,
+                              bool cond);
+  bool subProbGrouping(const std::vector<unsigned int> &pn);
 
-    Separation * checkSubproblem(int pieceCount, const std::vector<unsigned int> & pieces, const disassemblerNode_c * st, bool left, bool * ok);
+  Separation *checkSubproblem(int pieceCount,
+                              const std::vector<unsigned int> &pieces,
+                              const disassemblerNode_c *st,
+                              bool left,
+                              bool *ok);
 
-  protected:
+ protected:
 
-    /** start analysing the position given in the disassemblerNode */
-    void init_find(disassemblerNode_c * nd, const std::vector<unsigned int> & pieces) {
-      analyse->init_find(nd, pieces);
-    }
+  /** start analysing the position given in the disassemblerNode */
+  void init_find(disassemblerNode_c *nd,
+                 const std::vector<unsigned int> &pieces) {
+    analyse->init_find(nd, pieces);
+  }
 
-    /** get one possible next position for the currently running analysis */
-    disassemblerNode_c * find() { return analyse->find(); }
+  /** get one possible next position for the currently running analysis */
+  disassemblerNode_c *find() { return analyse->find(); }
 
-    /**
-     * Analyze a sub-problem.
-     *
-     * once a separating node has been found by the disassemble_rec function,
-     * it should call this function to analyze the sub-problems
-     */
-    Separation * checkSubproblems(const disassemblerNode_c * st, const std::vector<unsigned int> &pieces);
+  /**
+   * Analyze a sub-problem.
+   *
+   * once a separating node has been found by the disassemble_rec function,
+   * it should call this function to analyze the sub-problems
+   */
+  Separation *checkSubproblems(const disassemblerNode_c *st,
+                               const std::vector<unsigned int> &pieces);
 
-    /** this function must be implemented by the real disassemblers */
-    virtual Separation * disassemble_rec(const std::vector<unsigned int> & pieces, disassemblerNode_c * start) = 0;
+  /** this function must be implemented by the real disassemblers */
+  virtual Separation *disassemble_rec(const std::vector<unsigned int> &pieces,
+                                      disassemblerNode_c *start) = 0;
 
-  public:
+ public:
 
-    /**
-     * construct the disassembler for this concrete problem.
-     * The problem can not be changed, once you done that but
-     * you can analyse many assemblies for disassembability
-     */
-    BaseDisassembler(const Problem *puz);
-    ~BaseDisassembler(void);
+  /**
+   * construct the disassembler for this concrete problem.
+   * The problem can not be changed, once you done that but
+   * you can analyse many assemblies for disassembability
+   */
+  BaseDisassembler(const Problem *puz);
+  ~BaseDisassembler(void);
 
-    /**
-     * Disassemble an assembly of the puzzle.
-     *
-     * Because we can only have or don't have a disassembly sequence
-     * we don't need the same complicated callback interface. The function
-     * returns either the disassembly sequence or a null pointer.
-     * you need to take care of deleting the disassembly sequence after
-     * doing with it whatever you want.
-     */
-    Separation * disassemble(const Assembly * assembly);
+  /**
+   * Disassemble an assembly of the puzzle.
+   *
+   * Because we can only have or don't have a disassembly sequence
+   * we don't need the same complicated callback interface. The function
+   * returns either the disassembly sequence or a null pointer.
+   * you need to take care of deleting the disassembly sequence after
+   * doing with it whatever you want.
+   */
+  Separation *disassemble(const Assembly *assembly);
 
-  private:
+ private:
 
-    // no copying and assigning
-    BaseDisassembler(const BaseDisassembler &);
-    void operator=(const BaseDisassembler &);
+  // no copying and assigning
+  BaseDisassembler(const BaseDisassembler &);
+  void operator=(const BaseDisassembler &);
 };
 
 #endif

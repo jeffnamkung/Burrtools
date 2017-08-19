@@ -20,9 +20,7 @@
  */
 #include "symmetries_1.h"
 
-#include "voxel_1.h"
-
-#include "bt_assert.h"
+#include "triangle_voxel.h"
 
 #include "tabs_1/tablesizes.inc"
 
@@ -30,7 +28,8 @@
  * if you first transform the piece around t1 and then around t2
  * you can as well transform around transMult[t1][t2]
  */
-static const unsigned int transMult[NUM_TRANSFORMATIONS_MIRROR][NUM_TRANSFORMATIONS_MIRROR] = {
+static const unsigned int
+    transMult[NUM_TRANSFORMATIONS_MIRROR][NUM_TRANSFORMATIONS_MIRROR] = {
 #include "tabs_1/transmult.inc"
 };
 
@@ -48,7 +47,8 @@ static const unsigned long long unifiedSymmetries[NUM_SYMMETRY_GROUPS] = {
 /* this matrix lets you calculate the orientation with the smallest number that results in an identical looking
  * shape. This requires us to know the symmetry group
  */
-static const unsigned char transformationMinimizer[NUM_SYMMETRY_GROUPS][NUM_TRANSFORMATIONS_MIRROR] = {
+static const unsigned char
+    transformationMinimizer[NUM_SYMMETRY_GROUPS][NUM_TRANSFORMATIONS_MIRROR] = {
 #include "tabs_1/transformmini.inc"
 };
 
@@ -67,21 +67,24 @@ bool symmetries_1_c::symmetryContainsMirror(symmetries_t sym) const {
   return (symmetries[sym] & ~((1 << getNumTransformations()) - 1)) != 0;
 }
 
-unsigned char symmetries_1_c::transAdd(unsigned char t1, unsigned char t2) const {
+unsigned char symmetries_1_c::transAdd(unsigned char t1,
+                                       unsigned char t2) const {
   bt_assert(t1 < NUM_TRANSFORMATIONS_MIRROR);
   bt_assert(t2 < NUM_TRANSFORMATIONS_MIRROR);
   return transMult[t1][t2];
 }
 
-bool symmetries_1_c::symmetrieContainsTransformation(symmetries_t s, unsigned int t) const {
+bool symmetries_1_c::symmetrieContainsTransformation(symmetries_t s,
+                                                     unsigned int t) const {
 
   bt_assert(s < NUM_SYMMETRY_GROUPS);
   bt_assert(t < NUM_TRANSFORMATIONS_MIRROR);
 
-  return ((symmetries[s] & ((unsigned long long)1 << t)) != 0);
+  return ((symmetries[s] & ((unsigned long long) 1 << t)) != 0);
 }
 
-unsigned char symmetries_1_c::minimizeTransformation(symmetries_t s, unsigned char trans) const {
+unsigned char symmetries_1_c::minimizeTransformation(symmetries_t s,
+                                                     unsigned char trans) const {
 
   bt_assert(s < NUM_SYMMETRY_GROUPS);
   bt_assert(trans < NUM_TRANSFORMATIONS_MIRROR);
@@ -89,15 +92,17 @@ unsigned char symmetries_1_c::minimizeTransformation(symmetries_t s, unsigned ch
   return transformationMinimizer[s][trans];
 }
 
-bool symmetries_1_c::isTransformationUnique(symmetries_t s, unsigned int t) const {
+bool symmetries_1_c::isTransformationUnique(symmetries_t s,
+                                            unsigned int t) const {
 
   bt_assert(s < NUM_SYMMETRY_GROUPS);
   bt_assert(t < NUM_TRANSFORMATIONS_MIRROR);
 
-  return ((uniqueSymmetries[s] & ((unsigned long long)1 << t)) != 0);
+  return ((uniqueSymmetries[s] & ((unsigned long long) 1 << t)) != 0);
 }
 
-unsigned int symmetries_1_c::countSymmetryIntersection(symmetries_t res, symmetries_t s2) const {
+unsigned int symmetries_1_c::countSymmetryIntersection(symmetries_t res,
+                                                       symmetries_t s2) const {
 
   bt_assert(res < NUM_SYMMETRY_GROUPS);
   bt_assert(s2 < NUM_SYMMETRY_GROUPS);
@@ -110,26 +115,28 @@ unsigned int symmetries_1_c::countSymmetryIntersection(symmetries_t res, symmetr
   s += (s >> 8);
   s += (s >> 16);
   s += (s >> 32);
-  return (unsigned int)(s & 0x3f);
+  return (unsigned int) (s & 0x3f);
 }
 
-bool symmetries_1_c::symmetriesLeft(symmetries_t resultSym, symmetries_t s2) const {
+bool symmetries_1_c::symmetriesLeft(symmetries_t resultSym,
+                                    symmetries_t s2) const {
 
   bt_assert(resultSym < NUM_SYMMETRY_GROUPS);
   bt_assert(s2 < NUM_SYMMETRY_GROUPS);
 
-  return symmetries[resultSym] & unifiedSymmetries[s2] & ~((unsigned long long)1);
+  return symmetries[resultSym] & unifiedSymmetries[s2]
+      & ~((unsigned long long) 1);
 }
 
-bool symmetries_1_c::symmetryKnown(const Voxel * pp) const {
+bool symmetries_1_c::symmetryKnown(const Voxel *pp) const {
   unsigned long long s = 1;
   int i;
 
   for (int j = 1; j < NUM_TRANSFORMATIONS_MIRROR; j++) {
-    voxel_1_c v(pp);
+    TriangleVoxel v(pp);
     bt_assert2(v.transform(j));
     if (pp->identicalInBB(&v))
-      s |= ((unsigned long long)1) << j;
+      s |= ((unsigned long long) 1) << j;
   }
 
   for (i = 0; i < NUM_SYMMETRY_GROUPS; i++)

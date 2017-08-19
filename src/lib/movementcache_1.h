@@ -26,22 +26,26 @@
 /** movement cache for the triangle grid */
 class movementCache_1_c : public movementCache_c {
 
-  public:
+ public:
 
-    movementCache_1_c(const Problem * puz);
+  movementCache_1_c(const Problem *puz);
 
-  private:
+ private:
 
-    unsigned int* moCalcValues(const Voxel * sh1, const Voxel * sh2, int dx, int dy, int dz);
+  unsigned int *moCalcValues(const Voxel *sh1,
+                             const Voxel *sh2,
+                             int dx,
+                             int dy,
+                             int dz);
 
-    unsigned int numDirections(void);
-    void getDirection(unsigned int dir, int * x, int * y, int * z);
+  unsigned int numDirections(void);
+  void getDirection(unsigned int dir, int *x, int *y, int *z);
 
-  private:
+ private:
 
-    // no copying and assigning
-    movementCache_1_c(const movementCache_1_c&);
-    void operator=(const movementCache_1_c&);
+  // no copying and assigning
+  movementCache_1_c(const movementCache_1_c &);
+  void operator=(const movementCache_1_c &);
 };
 
 #endif

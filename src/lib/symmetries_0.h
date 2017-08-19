@@ -28,27 +28,29 @@ class GridType;
 /** this is the symmetries class for cubes and cube based grids (like rhombic) */
 class symmetries_0_c : public symmetries_c {
 
-  public:
+ public:
 
-    symmetries_0_c(void);
+  symmetries_0_c(void);
 
-    unsigned int getNumTransformations(void) const;
-    unsigned int getNumTransformationsMirror(void) const;
-    bool symmetrieContainsTransformation(symmetries_t s, unsigned int t) const;
-    unsigned char transAdd(unsigned char t1, unsigned char t2) const;
-    unsigned char minimizeTransformation(symmetries_t s, unsigned char trans) const;
-    unsigned int countSymmetryIntersection(symmetries_t resultSym, symmetries_t s2) const;
-    bool symmetriesLeft(symmetries_t resultSym, symmetries_t s2) const;
-    symmetries_t calculateSymmetry(const Voxel * pp) const;
-    bool symmetryContainsMirror(symmetries_t sym) const;
-    bool symmetryKnown(const Voxel * pp) const;
-    bool isTransformationUnique(symmetries_t s, unsigned int trans) const;
+  unsigned int getNumTransformations(void) const;
+  unsigned int getNumTransformationsMirror(void) const;
+  bool symmetrieContainsTransformation(symmetries_t s, unsigned int t) const;
+  unsigned char transAdd(unsigned char t1, unsigned char t2) const;
+  unsigned char minimizeTransformation(symmetries_t s,
+                                       unsigned char trans) const;
+  unsigned int countSymmetryIntersection(symmetries_t resultSym,
+                                         symmetries_t s2) const;
+  bool symmetriesLeft(symmetries_t resultSym, symmetries_t s2) const;
+  symmetries_t calculateSymmetry(const Voxel *pp) const;
+  bool symmetryContainsMirror(symmetries_t sym) const;
+  bool symmetryKnown(const Voxel *pp) const;
+  bool isTransformationUnique(symmetries_t s, unsigned int trans) const;
 
-  private:
+ private:
 
-    // no copying and assigning
-    symmetries_0_c(const symmetries_0_c&);
-    void operator=(const symmetries_0_c&);
+  // no copying and assigning
+  symmetries_0_c(const symmetries_0_c &);
+  void operator=(const symmetries_0_c &);
 };
 
 #endif

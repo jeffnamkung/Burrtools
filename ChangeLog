@@ -485,7 +485,7 @@ Sun Mar 29 11:55:27 CEST 2009  Andreas R?ver <roever@users.sourceforge.net>
 Sat Mar 28 18:14:39 CET 2009  Andreas R?ver <roever@users.sourceforge.net>
   * cleanup in disassembler classes
   
-  create a common base for Separation and separationInfo_c with virtual functions for functions that were available
+  create a common base for Separation and SeparationInfo with virtual functions for functions that were available
   in both classes
   
   cleanup the problem interface accordingly, getDisassemblerInfo now returns the common base class
@@ -988,7 +988,7 @@ Sat Jan 31 15:20:13 CET 2009  Andreas R?ver <roever@users.sourceforge.net>
   * fix symmetry calculation for grid 0
   
   grid 0 symmetry calculations are also used by grid 3 (and maybe later even more) so we
-  can no longer assume that voxel_0_c contains the right transformation functions, so we need
+  can no longer assume that CubeVoxel contains the right transformation functions, so we need
   to calculate those values dynamically
 
 Sat Jan 31 15:19:12 CET 2009  Andreas R?ver <roever@users.sourceforge.net>
@@ -4358,7 +4358,7 @@ Mon Mar 20 20:36:21 CET 2006  Andreas R?ver <roever@users.sourceforge.net>
   * bitrot on tester, lets for now comment out most of it, we will care for the useful functions later on
 
 Mon Mar 20 20:25:24 CET 2006  Andreas R?ver <roever@users.sourceforge.net>
-  * voxel_c is not the base class for all voxel classes, voxel_0_c as usual the subclass for bricks
+  * voxel_c is not the base class for all voxel classes, CubeVoxel as usual the subclass for bricks
   
   for now only the rotate functions are virtual, but more are surely to come
 

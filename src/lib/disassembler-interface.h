@@ -36,7 +36,7 @@ class Assembly;
  */
 class DisassemblerInterface {
 
-public:
+ public:
 
   DisassemblerInterface() {}
 
@@ -51,9 +51,9 @@ public:
    * you need to take care of freeing the disassembly sequence after
    * doing with it whatever you want
    */
-  virtual Separation * disassemble(const Assembly * /*assembly*/) { return 0; }
+  virtual Separation *disassemble(const Assembly * /*assembly*/) { return 0; }
 
-private:
+ private:
 
   // no copying and assigning
   DisassemblerInterface(const DisassemblerInterface &);

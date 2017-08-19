@@ -31,7 +31,7 @@ class disassemblerNode_c;
  */
 class PiecePositionsInterface {
 
-public:
+ public:
 
   PiecePositionsInterface() {}
   virtual ~PiecePositionsInterface() {}
@@ -49,7 +49,7 @@ public:
   /** piece moving at this time */
   virtual bool moving(unsigned int piece) = 0;
 
-private:
+ private:
 
   // no copying and assigning
   PiecePositionsInterface(const PiecePositionsInterface &);
@@ -64,7 +64,7 @@ private:
 class DisassemblyToMoves : public PiecePositionsInterface {
 
   /** the disassembly tree */
-  const Separation * tree;
+  const Separation *tree;
 
   /**
    * size is used to removed pieces from the puzzle, this value controls
@@ -73,10 +73,10 @@ class DisassemblyToMoves : public PiecePositionsInterface {
   unsigned int size;
 
   /** this array contains the current position and alpha values of all pieces */
-  float * moves;
+  float *moves;
 
   /** this array contains the information, if a piece is currently moving, or not */
-  bool * mv;
+  bool *mv;
 
   /**
    * the number of the last used piece this is NOT identical with
@@ -85,16 +85,24 @@ class DisassemblyToMoves : public PiecePositionsInterface {
   unsigned int maxPieceName;
 
   /** this function walks the tree and sets the piece positions */
-  int doRecursive(const Separation * tree, int step, float * array, bool center_active, int cx, int cy, int cz);
+  int doRecursive(const Separation *tree,
+                  int step,
+                  float *array,
+                  bool center_active,
+                  int cx,
+                  int cy,
+                  int cz);
 
-public:
+ public:
 
   /**
    * create class. sz is used when the pieces are removed from the
    * assembled puzzle. The larger the further away the pieces will be
    * moved
    */
-  DisassemblyToMoves(const Separation * tr, unsigned int sz, unsigned int maxPiece);
+  DisassemblyToMoves(const Separation *tr,
+                     unsigned int sz,
+                     unsigned int maxPiece);
 
   virtual ~DisassemblyToMoves();
 
@@ -114,7 +122,7 @@ public:
   virtual float getA(unsigned int piece);
   virtual bool moving(unsigned int piece);
 
-private:
+ private:
 
   // no copying and assigning
   DisassemblyToMoves(const DisassemblyToMoves &);
@@ -124,29 +132,31 @@ private:
 /** a piece position class with fixed positions */
 class FixedPositions : public PiecePositionsInterface {
 
-  public:
+ public:
 
-    FixedPositions(const disassemblerNode_c * nd, const std::vector<unsigned int> & pieces, unsigned int pc);
-    FixedPositions(const FixedPositions * nd);
-    ~FixedPositions(void);
+  FixedPositions(const disassemblerNode_c *nd,
+                 const std::vector<unsigned int> &pieces,
+                 unsigned int pc);
+  FixedPositions(const FixedPositions *nd);
+  ~FixedPositions(void);
 
-    virtual float getX(unsigned int piece);
-    virtual float getY(unsigned int piece);
-    virtual float getZ(unsigned int piece);
-    virtual float getA(unsigned int piece);
-    virtual bool moving(unsigned int piece);
+  virtual float getX(unsigned int piece);
+  virtual float getY(unsigned int piece);
+  virtual float getZ(unsigned int piece);
+  virtual float getA(unsigned int piece);
+  virtual bool moving(unsigned int piece);
 
-  private:
+ private:
 
-    int *x, *y, *z;
-    bool *visible;
-    unsigned int pieces;
+  int *x, *y, *z;
+  bool *visible;
+  unsigned int pieces;
 
-  private:
+ private:
 
-    // no copying and assigning
-    FixedPositions(const FixedPositions &);
-    void operator=(const FixedPositions &);
+  // no copying and assigning
+  FixedPositions(const FixedPositions &);
+  void operator=(const FixedPositions &);
 };
 
 #endif

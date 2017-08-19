@@ -26,11 +26,9 @@
 
 #include "../tools/xml.h"
 
-#include <stdlib.h>
-
-solution_c::solution_c(XmlParser & pars, unsigned int pieces, const GridType * gt) :
-  tree(0), treeInfo(0), assemblyNum(0), solutionNum(0)
-{
+Solution::Solution(XmlParser &pars, unsigned int pieces, const GridType *gt)
+    :
+    tree(0), treeInfo(0), assemblyNum(0), solutionNum(0) {
   pars.require(XmlParser::START_TAG, "solution");
 
   std::string str;
@@ -49,15 +47,13 @@ solution_c::solution_c(XmlParser & pars, unsigned int pieces, const GridType * g
     if (state == XmlParser::END_TAG) break;
     pars.require(XmlParser::START_TAG, "");
 
-    if (pars.getName() == "assembly")
-    {
+    if (pars.getName() == "assembly") {
       assembly = new Assembly(pars, pieces, gt);
       pars.require(XmlParser::END_TAG, "assembly");
-    }
-    else if (pars.getName() == "separation")
-    {
+    } else if (pars.getName() == "separation") {
       if (!assembly)
-        pars.exception("an assembly must always be before a separation in a solution");
+        pars.exception(
+            "an assembly must always be before a separation in a solution");
 
       // find the number of really placed pieces
       unsigned int pl = 0;
@@ -67,13 +63,10 @@ solution_c::solution_c(XmlParser & pars, unsigned int pieces, const GridType * g
       tree = new Separation(pars, pl);
 
       pars.require(XmlParser::END_TAG, "separation");
-    }
-    else if (pars.getName() == "separationInfo")
-    {
-      treeInfo = new separationInfo_c(pars);
+    } else if (pars.getName() == "separationInfo") {
+      treeInfo = new SeparationInfo(pars);
       pars.require(XmlParser::END_TAG, "separationInfo");
-    }
-    else
+    } else
       pars.skipSubTree();
 
     pars.require(XmlParser::END_TAG, "");
@@ -85,15 +78,13 @@ solution_c::solution_c(XmlParser & pars, unsigned int pieces, const GridType * g
   if (!assembly)
     pars.exception("no assembly in solution");
 
-  if (tree && treeInfo)
-  {
+  if (tree && treeInfo) {
     delete treeInfo;
     treeInfo = 0;
   }
 }
 
-void solution_c::save(XmlWriter & xml) const
-{
+void Solution::save(XmlWriter &xml) const {
   xml.newTag("solution");
 
   if (assemblyNum) {
@@ -105,14 +96,16 @@ void solution_c::save(XmlWriter & xml) const
 
   assembly->save(xml);
 
-  if (tree) {            tree->save(xml);
-  } else if (treeInfo) { treeInfo->save(xml);
+  if (tree) {
+    tree->save(xml);
+  } else if (treeInfo) {
+    treeInfo->save(xml);
   }
 
   xml.endTag("solution");
 }
 
-solution_c::~solution_c() {
+Solution::~Solution() {
   if (tree)
     delete tree;
 
@@ -123,42 +116,36 @@ solution_c::~solution_c() {
     delete treeInfo;
 }
 
-void solution_c::exchangeShape(unsigned int s1, unsigned int s2)
-{
+void Solution::exchangeShape(unsigned int s1, unsigned int s2) {
   if (assembly)
     assembly->exchangeShape(s1, s2);
   if (tree)
     tree->exchangeShape(s1, s2);
 }
 
-const Disassembly * solution_c::getDisassemblyInfo(void) const
-{
+const Disassembly *Solution::getDisassemblyInfo(void) const {
   if (tree) return tree;
   if (treeInfo) return treeInfo;
   return 0;
 }
 
-Disassembly * solution_c::getDisassemblyInfo(void)
-{
+Disassembly *Solution::getDisassemblyInfo(void) {
   if (tree) return tree;
   if (treeInfo) return treeInfo;
   return 0;
 }
 
-void solution_c::removeDisassembly(void)
-{
-  if (tree)
-  {
+void Solution::removeDisassembly(void) {
+  if (tree) {
     if (!treeInfo)
-      treeInfo = new separationInfo_c(tree);
+      treeInfo = new SeparationInfo(tree);
 
     delete tree;
     tree = 0;
   }
 }
 
-void solution_c::setDisassembly(Separation * sep)
-{
+void Solution::setDisassembly(Separation *sep) {
   if (tree) delete tree;
   tree = sep;
 
@@ -166,17 +153,14 @@ void solution_c::setDisassembly(Separation * sep)
   treeInfo = 0;
 }
 
-
-void solution_c::removePieces(unsigned int start, unsigned int count)
-{
+void Solution::removePieces(unsigned int start, unsigned int count) {
   if (assembly)
     assembly->removePieces(start, count);
   if (tree)
     tree->removePieces(start, count);
 }
 
-void solution_c::addNonPlacedPieces(unsigned int start, unsigned int count)
-{
+void Solution::addNonPlacedPieces(unsigned int start, unsigned int count) {
   if (assembly)
     assembly->addNonPlacedPieces(start, count);
   if (tree)

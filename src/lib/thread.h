@@ -25,47 +25,47 @@
 
 /* this class encapsulates a single thread */
 class Thread {
-  private:
-    boost::thread thread;  // our thread
+ private:
+  boost::thread thread;  // our thread
 
-    bool running;
+  bool running;
 
-  public:
+ public:
 
-    /* create the thread data structure, but don't start the thread */
-    Thread(void) : running(false) {}
+  /* create the thread data structure, but don't start the thread */
+  Thread(void) : running(false) {}
 
-    /* try to stop the thread, if that doesn't work, kill it and then
-     * delete data structur
-     */
-    virtual ~Thread(void);
+  /* try to stop the thread, if that doesn't work, kill it and then
+   * delete data structur
+   */
+  virtual ~Thread(void);
 
-    /* run the thread return true on success */
-    bool start();
+  /* run the thread return true on success */
+  bool start();
 
-    /* inform the thread to stop running, this is dependent on the thread */
-    virtual void stop() {};
+  /* inform the thread to stop running, this is dependent on the thread */
+  virtual void stop() {};
 
-    /* kill the thread */
-    void kill();
+  /* kill the thread */
+  void kill();
 
-    /** return true, if the thread is running */
-    bool isRunning() { return running; }
+  /** return true, if the thread is running */
+  bool isRunning() { return running; }
 
-  protected:
+ protected:
 
-    /* this is the function that gets started for the thread, once this
-     * function finishes, the thread will end
-     */
-    virtual void run(void) = 0;
+  /* this is the function that gets started for the thread, once this
+   * function finishes, the thread will end
+   */
+  virtual void run(void) = 0;
 
-  private:
+ private:
 
-    void start_thread(void);
+  void start_thread(void);
 
-    // no copying and assigning
-    Thread(const Thread &);
-    void operator=(const Thread &);
+  // no copying and assigning
+  Thread(const Thread &);
+  void operator=(const Thread &);
 
 };
 

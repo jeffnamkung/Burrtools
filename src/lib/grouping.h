@@ -85,8 +85,7 @@ class grouping_c {
 
   bool failed;
 
-public:
-
+ public:
 
   grouping_c(void) : numGroups(0), failed(false) {}
 
@@ -114,11 +113,11 @@ public:
    */
   bool addPieceToSet(unsigned int pc);
 
-private:
+ private:
 
   // no copying and assigning
-  grouping_c(const grouping_c&);
-  void operator=(const grouping_c&);
+  grouping_c(const grouping_c &);
+  void operator=(const grouping_c &);
 };
 
 #endif

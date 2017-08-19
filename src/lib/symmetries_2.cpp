@@ -20,7 +20,7 @@
  */
 #include "symmetries_2.h"
 
-#include "voxel_2.h"
+#include "sphere_voxel.h"
 
 #include "bt_assert.h"
 #include "bitfield.h"
@@ -31,29 +31,34 @@
  * if you first transform the piece around t1 and then around t2
  * you can as well transform around transMult[t1][t2]
  */
-static const unsigned char transMult[NUM_TRANSFORMATIONS_MIRROR][NUM_TRANSFORMATIONS_MIRROR] = {
+static const unsigned char
+    transMult[NUM_TRANSFORMATIONS_MIRROR][NUM_TRANSFORMATIONS_MIRROR] = {
 #include "tabs_2/transmult.inc"
 };
 
 /* this array contains all possible symmetry groups, meaning bitmasks with exactly the bits set
  * that correspond to transformations that reorient the piece so that it looks identical
  */
-static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> symmetries[NUM_SYMMETRY_GROUPS] = {
+static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR>
+    symmetries[NUM_SYMMETRY_GROUPS] = {
 #include "tabs_2/symmetries.inc"
 };
 
-static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> unifiedSymmetries[NUM_SYMMETRY_GROUPS] = {
+static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR>
+    unifiedSymmetries[NUM_SYMMETRY_GROUPS] = {
 #include "tabs_2/unifiedsym.inc"
 };
 
 /* this matrix lets you calculate the orientation with the smallest number that results in an identical looking
  * shape. This requires us to know the symmetry group
  */
-static const unsigned char transformationMinimizer[NUM_SYMMETRY_GROUPS][NUM_TRANSFORMATIONS_MIRROR] = {
+static const unsigned char
+    transformationMinimizer[NUM_SYMMETRY_GROUPS][NUM_TRANSFORMATIONS_MIRROR] = {
 #include "tabs_2/transformmini.inc"
 };
 
-static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> uniqueSymmetries[NUM_SYMMETRY_GROUPS] = {
+static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR>
+    uniqueSymmetries[NUM_SYMMETRY_GROUPS] = {
 #include "tabs_2/uniquesym.inc"
 };
 
@@ -66,7 +71,7 @@ unsigned int symmetries_2_c::getNumTransformationsMirror(void) const { return NU
 bool symmetries_2_c::symmetryContainsMirror(symmetries_t sym) const {
   bt_assert(sym < NUM_SYMMETRY_GROUPS);
 
-  bitfield_c<NUM_TRANSFORMATIONS_MIRROR>s = symmetries[sym];
+  bitfield_c<NUM_TRANSFORMATIONS_MIRROR> s = symmetries[sym];
 
   for (int i = 0; i < NUM_TRANSFORMATIONS; i++)
     s.reset(i);
@@ -74,14 +79,16 @@ bool symmetries_2_c::symmetryContainsMirror(symmetries_t sym) const {
   return s.notNull();
 }
 
-unsigned char symmetries_2_c::transAdd(unsigned char t1, unsigned char t2) const {
+unsigned char symmetries_2_c::transAdd(unsigned char t1,
+                                       unsigned char t2) const {
   bt_assert(t1 < NUM_TRANSFORMATIONS_MIRROR);
   bt_assert(t2 < NUM_TRANSFORMATIONS_MIRROR);
   bt_assert(transMult[t1][t2] < NUM_TRANSFORMATIONS_MIRROR);
   return transMult[t1][t2];
 }
 
-bool symmetries_2_c::symmetrieContainsTransformation(symmetries_t s, unsigned int t) const {
+bool symmetries_2_c::symmetrieContainsTransformation(symmetries_t s,
+                                                     unsigned int t) const {
 
   bt_assert(s < NUM_SYMMETRY_GROUPS);
   bt_assert(t < NUM_TRANSFORMATIONS_MIRROR);
@@ -89,7 +96,8 @@ bool symmetries_2_c::symmetrieContainsTransformation(symmetries_t s, unsigned in
   return symmetries[s].get(t);
 }
 
-unsigned char symmetries_2_c::minimizeTransformation(symmetries_t s, unsigned char trans) const {
+unsigned char symmetries_2_c::minimizeTransformation(symmetries_t s,
+                                                     unsigned char trans) const {
 
   bt_assert(s < NUM_SYMMETRY_GROUPS);
   bt_assert(trans < NUM_TRANSFORMATIONS_MIRROR);
@@ -97,7 +105,8 @@ unsigned char symmetries_2_c::minimizeTransformation(symmetries_t s, unsigned ch
   return transformationMinimizer[s][trans];
 }
 
-bool symmetries_2_c::isTransformationUnique(symmetries_t s, unsigned int t) const {
+bool symmetries_2_c::isTransformationUnique(symmetries_t s,
+                                            unsigned int t) const {
 
   bt_assert(s < NUM_SYMMETRY_GROUPS);
   bt_assert(t < NUM_TRANSFORMATIONS_MIRROR);
@@ -105,29 +114,33 @@ bool symmetries_2_c::isTransformationUnique(symmetries_t s, unsigned int t) cons
   return uniqueSymmetries[s].get(t);
 }
 
-unsigned int symmetries_2_c::countSymmetryIntersection(symmetries_t res, symmetries_t s2) const {
+unsigned int symmetries_2_c::countSymmetryIntersection(symmetries_t res,
+                                                       symmetries_t s2) const {
 
   bt_assert(res < NUM_SYMMETRY_GROUPS);
   bt_assert(s2 < NUM_SYMMETRY_GROUPS);
 
-  bitfield_c<NUM_TRANSFORMATIONS_MIRROR> s = unifiedSymmetries[res] & symmetries[s2];
+  bitfield_c<NUM_TRANSFORMATIONS_MIRROR>
+      s = unifiedSymmetries[res] & symmetries[s2];
 
   return s.countbits();
 }
 
-bool symmetries_2_c::symmetriesLeft(symmetries_t resultSym, symmetries_t s2) const {
+bool symmetries_2_c::symmetriesLeft(symmetries_t resultSym,
+                                    symmetries_t s2) const {
 
   bt_assert(resultSym < NUM_SYMMETRY_GROUPS);
   bt_assert(s2 < NUM_SYMMETRY_GROUPS);
 
-  bitfield_c<NUM_TRANSFORMATIONS_MIRROR>s = symmetries[resultSym] & unifiedSymmetries[s2];
+  bitfield_c<NUM_TRANSFORMATIONS_MIRROR>
+      s = symmetries[resultSym] & unifiedSymmetries[s2];
 
   s.reset(0);
 
   return s.notNull();
 }
 
-bool symmetries_2_c::symmetryKnown(const Voxel * pp) const {
+bool symmetries_2_c::symmetryKnown(const Voxel *pp) const {
 
   int i;
   bitfield_c<NUM_TRANSFORMATIONS_MIRROR> s;
@@ -136,7 +149,7 @@ bool symmetries_2_c::symmetryKnown(const Voxel * pp) const {
   s.set(0);
 
   for (int j = 1; j < NUM_TRANSFORMATIONS_MIRROR; j++) {
-    voxel_2_c v(pp);
+    SphereVoxel v(pp);
     if (v.transform(j) && pp->identicalInBB(&v))
       s.set(j);
   }

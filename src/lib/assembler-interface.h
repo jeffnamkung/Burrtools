@@ -59,9 +59,7 @@ class AssemblerCallbackInterface {
  * use the callback for each found assembly.
  */
 class AssemblerInterface {
-
-public:
-
+ public:
   /// the possible error conditions that can be found while preparing the puzzle
   typedef enum {
     ERR_NONE,                    ///< no error
@@ -78,14 +76,17 @@ public:
    */
   AssemblerInterface() {}
 
-  virtual ~AssemblerInterface() { }
+  virtual ~AssemblerInterface() {}
 
   /**
    * the part of the initialisation that may take a while.
    * when keep mirror is true, the assembler must not throw away mirror solutions
    * but it still removes solutions that are rotations.
    */
-  virtual errState createMatrix(const Problem * /*puz*/, bool /*keepMirror*/, bool /*keepRotations*/, bool /*complete*/);
+  virtual errState createMatrix(const Problem * /*puz*/,
+                                bool /*keepMirror*/,
+                                bool /*keepRotations*/,
+                                bool /*complete*/);
 
   /**
    * when createMatrix returns an error you can call this function to
@@ -102,7 +103,7 @@ public:
    *
    * it is not necessary for an assembler to implement this function
    */
-  virtual void reduce() { }
+  virtual void reduce() {}
 
   /**
    * Then running in an extra thread it is possible to find out which piece is worked on by reduce.
@@ -150,7 +151,7 @@ public:
    * the function should only be called when assembly is not running it should be
    * called before calling assemble
    */
-  virtual errState setPosition(const char * string, const char * version);
+  virtual errState setPosition(const char *string, const char *version);
 
   /**
    * this function saves the current state of the assembler into an xml node to
@@ -158,7 +159,7 @@ public:
    * this state must be such that the class can restore this state and continue
    * from there by getting this and the puzzle given to the constructor
    */
-  virtual void save(XmlWriter & xml) const;
+  virtual void save(XmlWriter &xml) const;
 
   /* some more special information to find out possible piece placements */
 
@@ -176,8 +177,13 @@ public:
    * give 0 as node. Delta is the number of placements you want to go back of forward. So
    * node = getPiecePlacement(0, 10, ...) returns the 11-th placement of the given piece (1st plus 10 forward)
    */
-  virtual unsigned int getPiecePlacement(unsigned int /*node*/, int /*delta*/,
-      unsigned int /*piece*/, unsigned char * /*ran*/, int * /*x*/, int * /*y*/, int * /*z*/) const { return 0; }
+  virtual unsigned int getPiecePlacement(unsigned int /*node*/,
+                                         int /*delta*/,
+                                         unsigned int /*piece*/,
+                                         unsigned char * /*ran*/,
+                                         int * /*x*/,
+                                         int * /*y*/,
+                                         int * /*z*/) const { return 0; }
 
 
   /* finally some debugging functions that allow to look how, why, and where pieces are placed */
@@ -188,13 +194,13 @@ public:
   /* returns the assembly for the current state of the assembler or the solution assembly, if
    * the assembler is currently at a solution
    */
-  virtual Assembly * getAssembly(void) = 0;
+  virtual Assembly *getAssembly(void) = 0;
 
-private:
+ private:
 
-    // no copying and assigning
-    AssemblerInterface(const AssemblerInterface &);
-    void operator=(const AssemblerInterface &);
+  // no copying and assigning
+  AssemblerInterface(const AssemblerInterface &);
+  void operator=(const AssemblerInterface &);
 
 };
 

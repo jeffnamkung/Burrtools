@@ -41,13 +41,13 @@
 
 /* print out the current matrix */
 void printMatrix(
-    const std::vector<unsigned int> & upDown,
-    const std::vector<unsigned int> & left,
-    const std::vector<unsigned int> & right,
-    const std::vector<unsigned int> & colCount,
+    const std::vector<unsigned int> &upDown,
+    const std::vector<unsigned int> &left,
+    const std::vector<unsigned int> &right,
+    const std::vector<unsigned int> &colCount,
     unsigned int varivoxelStart,
     unsigned int varivoxelEnd
-  ) {
+) {
 
   // check consistency of matrix
   {
@@ -133,13 +133,13 @@ void printMatrix(
     unsigned int nodeS = rows[r];
     unsigned int node = nodeS;
 
-    std::vector<int>matrixline;
+    std::vector<int> matrixline;
 
     matrixline.resize(rows.size());
 
     do {
 
-      unsigned int col = colCount[node]-1;
+      unsigned int col = colCount[node] - 1;
 
       for (unsigned int i = 0; i < columns.size(); i++) {
         if (columns[i] == col) {
@@ -166,13 +166,11 @@ void printMatrix(
   }
 }
 
-
-
 void DonKnuthAssembler::GenerateFirstRow() {
 
   for (unsigned int i = 0; i < varivoxelStart; i++) {
-    right.push_back(i+1);
-    left.push_back(i-1);
+    right.push_back(i + 1);
+    left.push_back(i - 1);
     upDown.push_back(i);
     upDown.push_back(i);
     colCount.push_back(0);
@@ -188,8 +186,8 @@ void DonKnuthAssembler::GenerateFirstRow() {
    * like normal columns
    */
   for (unsigned int j = varivoxelStart; j <= varivoxelEnd; j++) {
-    left.push_back(j-1);
-    right.push_back(j+1);
+    left.push_back(j - 1);
+    right.push_back(j + 1);
     upDown.push_back(j);
     upDown.push_back(j);
     colCount.push_back(0);
@@ -198,28 +196,37 @@ void DonKnuthAssembler::GenerateFirstRow() {
   right[varivoxelEnd] = varivoxelStart;
 }
 
-int DonKnuthAssembler::AddPieceNode(unsigned int piece, unsigned int rot, unsigned int x, unsigned int y, unsigned int z) {
+int DonKnuthAssembler::AddPieceNode(unsigned int piece,
+                                    unsigned int rot,
+                                    unsigned int x,
+                                    unsigned int y,
+                                    unsigned int z) {
   unsigned long piecenode = left.size();
 
   left.push_back(piecenode);
   right.push_back(piecenode);
-  upDown.push_back(up(piece+1));
-  upDown.push_back(piece+1);
+  upDown.push_back(up(piece + 1));
+  upDown.push_back(piece + 1);
 
-  down(up(piece+1)) = piecenode;
-  up(piece+1) = piecenode;
+  down(up(piece + 1)) = piecenode;
+  up(piece + 1) = piecenode;
 
-  colCount.push_back(piece+1);
-  colCount[piece+1]++;
+  colCount.push_back(piece + 1);
+  colCount[piece + 1]++;
 
   piecePositions.push_back(piecePosition(x, y, z, rot, piecenode, piece));
 
   return piecenode;
 }
 
-void DonKnuthAssembler::getPieceInformation(unsigned int node, unsigned char *tran, int *x, int *y, int *z, unsigned int *piece) const {
+void DonKnuthAssembler::getPieceInformation(unsigned int node,
+                                            unsigned char *tran,
+                                            int *x,
+                                            int *y,
+                                            int *z,
+                                            unsigned int *piece) const {
 
-  for (int i = piecePositions.size()-1; i >= 0; i--)
+  for (int i = piecePositions.size() - 1; i >= 0; i--)
     if (piecePositions[i].row <= node) {
       *tran = piecePositions[i].transformation;
       *x = piecePositions[i].x;
@@ -253,7 +260,7 @@ unsigned int DonKnuthAssembler::clumpify() {
      * yet ruled out to be different from col
      * the vector contains the node index
      */
-    std::vector<unsigned int>columns;
+    std::vector<unsigned int> columns;
 
     unsigned int c = right[col];
 
@@ -267,7 +274,9 @@ unsigned int DonKnuthAssembler::clumpify() {
 
     while (row != col) {
 
-      while ((line < piecePositions.size()) && (piecePositions[line+1].row <= row)) line++;
+      while ((line < piecePositions.size())
+          && (piecePositions[line + 1].row <= row))
+        line++;
 
       unsigned int i = 0;
 
@@ -276,9 +285,9 @@ unsigned int DonKnuthAssembler::clumpify() {
        */
       while (i < columns.size()) {
         if ((columns[i] < piecePositions[line].row) ||
-            (columns[i] >= piecePositions[line+1].row)
-           ) {
-          columns.erase(columns.begin()+i);
+            (columns[i] >= piecePositions[line + 1].row)
+            ) {
+          columns.erase(columns.begin() + i);
         } else
           i++;
       }
@@ -296,7 +305,7 @@ unsigned int DonKnuthAssembler::clumpify() {
     unsigned int i = 0;
     while (i < columns.size()) {
       if (columns[i] >= piecePositions[0].row)
-        columns.erase(columns.begin()+i);
+        columns.erase(columns.begin() + i);
       else
         i++;
     }
@@ -330,16 +339,15 @@ void DonKnuthAssembler::AddVoxelNode(unsigned int col, unsigned int piecenode) {
 }
 
 DonKnuthAssembler::DonKnuthAssembler(void) :
-  AssemblerInterface(),
-  pos(0), rows(0), columns(0),
-  reducePiece(0),
-  avoidTransformedAssemblies(0), avoidTransformedMirror(0)
-{
+    AssemblerInterface(),
+    pos(0), rows(0), columns(0),
+    reducePiece(0),
+    avoidTransformedAssemblies(0), avoidTransformedMirror(0) {
 }
 
 DonKnuthAssembler::~DonKnuthAssembler() {
-  if (rows) delete [] rows;
-  if (columns) delete [] columns;
+  if (rows) delete[] rows;
+  if (columns) delete[] columns;
 
   if (avoidTransformedMirror) delete avoidTransformedMirror;
 }
@@ -347,7 +355,7 @@ DonKnuthAssembler::~DonKnuthAssembler() {
 /* add a piece to the cache, but only if it is not already there. If it is added return the
  * piece pointer otherwise return null
  */
-static Voxel * addToCache(Voxel * cache[], unsigned int * fill, Voxel * piece) {
+static Voxel *addToCache(Voxel *cache[], unsigned int *fill, Voxel *piece) {
 
   for (unsigned int i = 0; i < *fill; i++)
     if (cache[i]->identicalInBB(piece)) {
@@ -360,31 +368,36 @@ static Voxel * addToCache(Voxel * cache[], unsigned int * fill, Voxel * piece) {
   return piece;
 }
 
-
-bool DonKnuthAssembler::canPlace(const Voxel * piece, int x, int y, int z) const {
+bool DonKnuthAssembler::canPlace(const Voxel *piece,
+                                 int x,
+                                 int y,
+                                 int z) const {
 
   if (!piece->onGrid(x, y, z))
     return false;
 
-  const Voxel * result = puzzle->getResultShape();
+  const Voxel *result = puzzle->getResultShape();
 
   for (unsigned int pz = piece->boundZ1(); pz <= piece->boundZ2(); pz++)
     for (unsigned int py = piece->boundY1(); py <= piece->boundY2(); py++)
       for (unsigned int px = piece->boundX1(); px <= piece->boundX2(); px++)
         if (
-            // the piece can not be place if the result is empty and the piece is filled at a given voxel
+          // the piece can not be place if the result is empty and the piece is filled at a given voxel
             ((piece->getState(px, py, pz) == Voxel::VX_FILLED) &&
-             (result->getState(x+px, y+py, z+pz) == Voxel::VX_EMPTY)) ||
+                (result->getState(x + px, y + py, z + pz) == Voxel::VX_EMPTY))
+                ||
 
-            // the piece can also not be placed when the colour constraints don't fit
-            !puzzle->placementAllowed(piece->getColor(px, py, pz), result->getColor(x+px, y+py, z+pz))
+                    // the piece can also not be placed when the colour constraints don't fit
+                    !puzzle->placementAllowed(piece->getColor(px, py, pz),
+                                              result->getColor(x + px,
+                                                               y + py,
+                                                               z + pz))
 
-           )
+            )
           return false;
 
   return true;
 }
-
 
 /**
  * this function prepares the matrix of nodes for the recursive function
@@ -409,7 +422,7 @@ bool DonKnuthAssembler::canPlace(const Voxel * piece, int x, int y, int z) const
  */
 int DonKnuthAssembler::prepare() {
 
-  const Voxel * result = puzzle->getResultShape();
+  const Voxel *result = puzzle->getResultShape();
 
   /* this array contains the column in our matrix that corresponds with
    * the voxel position inside the result. We use this matrix because
@@ -418,13 +431,13 @@ int DonKnuthAssembler::prepare() {
    * with this lookup I was able to reduce the preparation time
    * from 5 to 0.5 seconds for TheLostDay puzzle
    */
-  unsigned int * columns = new unsigned int[result->getXYZ()];
+  unsigned int *columns = new unsigned int[result->getXYZ()];
   unsigned int piecenumber = puzzle->pieceNumber();
 
   /* voxelindex is the inverse of the function column. It returns
    * the index (not x, y, z) of a given column in the matrix
    */
-  int * voxelindex = new int[result->getXYZ() + piecenumber + 1];
+  int *voxelindex = new int[result->getXYZ() + piecenumber + 1];
 
   for (unsigned int i = 0; i < result->getXYZ() + piecenumber + 1; i++)
     voxelindex[i] = -1;
@@ -434,17 +447,14 @@ int DonKnuthAssembler::prepare() {
     int c = 0;
 
     for (unsigned int i = 0; i < result->getXYZ(); i++) {
-      switch(result->getState(i)) {
-      case Voxel::VX_VARIABLE:
-        voxelindex[getVarivoxelStart() + v] = i;
-        columns[i] = getVarivoxelStart() + v++;
-        break;
-      case Voxel::VX_FILLED:
-        voxelindex[1 + piecenumber + c] = i;
-        columns[i] = 1 + piecenumber + c++;
-        break;
-      default:
-        columns[i] = 0;
+      switch (result->getState(i)) {
+        case Voxel::VX_VARIABLE:voxelindex[getVarivoxelStart() + v] = i;
+          columns[i] = getVarivoxelStart() + v++;
+          break;
+        case Voxel::VX_FILLED:voxelindex[1 + piecenumber + c] = i;
+          columns[i] = 1 + piecenumber + c++;
+          break;
+        default:columns[i] = 0;
       }
     }
   }
@@ -461,8 +471,8 @@ int DonKnuthAssembler::prepare() {
    * that are present in the piece
    */
   symmetries_t resultSym = result->selfSymmetries();
-  const GridType * gt = puzzle->getGridType();
-  const symmetries_c * sym = puzzle->getGridType()->getSymmetries();
+  const GridType *gt = puzzle->getGridType();
+  const symmetries_c *sym = puzzle->getGridType()->getSymmetries();
   unsigned int symBreakerShape = 0xFFFFFFFF;
 
   /* so, if we have just the self-symmetry in the result, everything needs to be tried
@@ -479,12 +489,15 @@ int DonKnuthAssembler::prepare() {
      * as its a difference if we select a piece that has only one placement anyway
      * or select one with 400 placements of which 23/24th can be dropped
      */
-    unsigned int bestFound = sym->countSymmetryIntersection(resultSym, puzzle->getShapeShape(0)->selfSymmetries());
+    unsigned int bestFound = sym->countSymmetryIntersection(resultSym,
+                                                            puzzle->getShapeShape(
+                                                                0)->selfSymmetries());
     symBreakerShape = 0;
 
     for (unsigned int i = 1; i < puzzle->partNumber(); i++) {
 
-      unsigned int cnt = sym->countSymmetryIntersection(resultSym, puzzle->getShapeShape(i)->selfSymmetries());
+      unsigned int cnt = sym->countSymmetryIntersection(resultSym,
+                                                        puzzle->getShapeShape(i)->selfSymmetries());
 
       if (cnt < bestFound) {
         bestFound = cnt;
@@ -492,7 +505,8 @@ int DonKnuthAssembler::prepare() {
       }
     }
 
-    if (sym->symmetriesLeft(resultSym, puzzle->getShapeShape(symBreakerShape)->selfSymmetries()))
+    if (sym->symmetriesLeft(resultSym,
+                            puzzle->getShapeShape(symBreakerShape)->selfSymmetries()))
       checkForTransformedAssemblies(symBreakerShape, 0);
 
     if (sym->symmetryContainsMirror(resultSym)) {
@@ -513,12 +527,12 @@ int DonKnuthAssembler::prepare() {
         unsigned int trans;
       } mm;
 
-      mm * mirror = new mm[puzzle->pieceNumber()];
+      mm *mirror = new mm[puzzle->pieceNumber()];
 
       // first initialize
       for (unsigned int i = 0; i < puzzle->partNumber(); i++) {
         mirror[i].shape = i;
-        mirror[i].mirror = (unsigned int)-1;
+        mirror[i].mirror = (unsigned int) -1;
         mirror[i].trans = 255;
       }
 
@@ -538,13 +552,14 @@ int DonKnuthAssembler::prepare() {
           bool found = false;
 
           // now see if we can find another shape that is the mirror of the current shape
-          for (unsigned int j = i+1; j < puzzle->pieceNumber(); j++) {
+          for (unsigned int j = i + 1; j < puzzle->pieceNumber(); j++) {
 
             if (mirror[j].mirror < puzzle->pieceNumber())
               continue;
 
-            unsigned int trans = puzzle->getShapeShape(mirror[i].shape)->getMirrorTransform(
-                puzzle->getShapeShape(mirror[j].shape));
+            unsigned int trans =
+                puzzle->getShapeShape(mirror[i].shape)->getMirrorTransform(
+                    puzzle->getShapeShape(mirror[j].shape));
 
             if (trans > 0) {
               // found a mirror shape
@@ -552,8 +567,9 @@ int DonKnuthAssembler::prepare() {
               mirror[i].mirror = j;
               mirror[i].trans = trans;
               mirror[j].mirror = i;
-              mirror[j].trans = puzzle->getShapeShape(mirror[j].shape)->getMirrorTransform(
-                  puzzle->getShapeShape(mirror[i].shape));
+              mirror[j].trans =
+                  puzzle->getShapeShape(mirror[j].shape)->getMirrorTransform(
+                      puzzle->getShapeShape(mirror[i].shape));
 
               found = true;
               break;
@@ -573,7 +589,7 @@ int DonKnuthAssembler::prepare() {
         /* all the shapes are either self mirroring or have a mirror pair
          * so we create the mirror structure and we do the mirror check
          */
-        MirrorInfo * mir = new MirrorInfo();
+        MirrorInfo *mir = new MirrorInfo();
 
         for (unsigned int i = 0; i < puzzle->pieceNumber(); i++)
           if (mirror[i].trans != 255)
@@ -582,7 +598,7 @@ int DonKnuthAssembler::prepare() {
         checkForTransformedAssemblies(symBreakerShape, mir);
       }
 
-      delete [] mirror;
+      delete[] mirror;
     }
   }
 
@@ -597,7 +613,7 @@ int DonKnuthAssembler::prepare() {
   /* nodes 1..n are the columns nodes */
   GenerateFirstRow();
 
-  Voxel ** cache = new Voxel *[sym->getNumTransformationsMirror()];
+  Voxel **cache = new Voxel *[sym->getNumTransformationsMirror()];
 
   /* now we insert one shape after another */
   for (unsigned int pc = 0; pc < puzzle->partNumber(); pc++) {
@@ -615,7 +631,7 @@ int DonKnuthAssembler::prepare() {
      */
     for (unsigned int rot = 0; rot < sym->getNumTransformations(); rot++) {
 
-      Voxel * rotation = gt->getVoxel(puzzle->getShapeShape(pc));
+      Voxel *rotation = gt->getVoxel(puzzle->getShapeShape(pc));
       if (!rotation->transform(rot)) {
         delete rotation;
         continue;
@@ -624,20 +640,33 @@ int DonKnuthAssembler::prepare() {
       rotation = addToCache(cache, &cachefill, rotation);
 
       if (rotation) {
-        for (int x = (int)result->boundX1()-(int)rotation->boundX1(); x <= (int)result->boundX2()-(int)rotation->boundX2(); x++)
-          for (int y = (int)result->boundY1()-(int)rotation->boundY1(); y <= (int)result->boundY2()-(int)rotation->boundY2(); y++)
-            for (int z = (int)result->boundZ1()-(int)rotation->boundZ1(); z <= (int)result->boundZ2()-(int)rotation->boundZ2(); z++)
+        for (int x = (int) result->boundX1() - (int) rotation->boundX1();
+             x <= (int) result->boundX2() - (int) rotation->boundX2(); x++)
+          for (int y = (int) result->boundY1() - (int) rotation->boundY1();
+               y <= (int) result->boundY2() - (int) rotation->boundY2(); y++)
+            for (int z = (int) result->boundZ1() - (int) rotation->boundZ1();
+                 z <= (int) result->boundZ2() - (int) rotation->boundZ2(); z++)
               if (canPlace(rotation, x, y, z)) {
 
-                int piecenode = AddPieceNode(pc, rot, x+rotation->getHx(), y+rotation->getHy(), z+rotation->getHz());
+                int piecenode = AddPieceNode(pc,
+                                             rot,
+                                             x + rotation->getHx(),
+                                             y + rotation->getHy(),
+                                             z + rotation->getHz());
                 placements = 1;
 
                 /* now add the used cubes of the piece */
-                for (unsigned int pz = rotation->boundZ1(); pz <= rotation->boundZ2(); pz++)
-                  for (unsigned int py = rotation->boundY1(); py <= rotation->boundY2(); py++)
-                    for (unsigned int px = rotation->boundX1(); px <= rotation->boundX2(); px++)
+                for (unsigned int pz = rotation->boundZ1();
+                     pz <= rotation->boundZ2(); pz++)
+                  for (unsigned int py = rotation->boundY1();
+                       py <= rotation->boundY2(); py++)
+                    for (unsigned int px = rotation->boundX1();
+                         px <= rotation->boundX2(); px++)
                       if (rotation->getState(px, py, pz) == Voxel::VX_FILLED)
-                        AddVoxelNode(columns[result->getIndex(x+px, y+py, z+pz)], piecenode);
+                        AddVoxelNode(columns[result->getIndex(x + px,
+                                                              y + py,
+                                                              z + pz)],
+                                     piecenode);
               }
 
 
@@ -646,7 +675,7 @@ int DonKnuthAssembler::prepare() {
           for (unsigned int r = 1; r < sym->getNumTransformations(); r++)
             if (sym->symmetrieContainsTransformation(resultSym, r)) {
 
-              Voxel * vx = gt->getVoxel(puzzle->getShapeShape(pc));
+              Voxel *vx = gt->getVoxel(puzzle->getShapeShape(pc));
 
               if (!vx->transform(rot) || !vx->transform(r)) {
                 delete vx;
@@ -658,27 +687,28 @@ int DonKnuthAssembler::prepare() {
       }
     }
 
-    for (unsigned int i = 0; i < cachefill; i++)  delete cache[i];
+    for (unsigned int i = 0; i < cachefill; i++) delete cache[i];
 
     /* check, if the current piece has at least one placement */
     if (placements == 0) {
-      delete [] cache;
-      delete [] columns;
-      delete [] voxelindex;
+      delete[] cache;
+      delete[] columns;
+      delete[] voxelindex;
       return -puzzle->getShape(pc);
     }
   }
 
-  delete [] cache;
-  delete [] columns;
-  delete [] voxelindex;
+  delete[] cache;
+  delete[] columns;
+  delete[] voxelindex;
 
   return 1;
 }
 
-
-
-DonKnuthAssembler::errState DonKnuthAssembler::createMatrix(const Problem * puz, bool keepMirror, bool keepRotations, bool comp) {
+DonKnuthAssembler::errState DonKnuthAssembler::createMatrix(const Problem *puz,
+                                                            bool keepMirror,
+                                                            bool keepRotations,
+                                                            bool comp) {
 
   bt_assert(puz->resultValid());
 
@@ -693,7 +723,8 @@ DonKnuthAssembler::errState DonKnuthAssembler::createMatrix(const Problem * puz,
 
   /* count the filled and variable units */
   int res_vari = puz->getResultShape()->countState(Voxel::VX_VARIABLE);
-  int res_filled = puz->getResultShape()->countState(Voxel::VX_FILLED) + res_vari;
+  int res_filled =
+      puz->getResultShape()->countState(Voxel::VX_FILLED) + res_vari;
 
   varivoxelStart = 1 + piecenumber + res_filled - res_vari;
   varivoxelEnd = 1 + piecenumber + res_filled;
@@ -716,7 +747,7 @@ DonKnuthAssembler::errState DonKnuthAssembler::createMatrix(const Problem * puz,
 
   if (h > res_vari) {
     errorsState = ERR_TOO_FEW_UNITS;
-    errorsParam = h-res_vari;
+    errorsParam = h - res_vari;
     return errorsState;
   }
 
@@ -724,7 +755,7 @@ DonKnuthAssembler::errState DonKnuthAssembler::createMatrix(const Problem * puz,
 
   /* allocate all the required memory */
   rows = new unsigned int[piecenumber];
-  columns = new unsigned int [piecenumber];
+  columns = new unsigned int[piecenumber];
 
   /* fill the nodes arrays */
   int error = prepare();
@@ -752,8 +783,7 @@ DonKnuthAssembler::errState DonKnuthAssembler::createMatrix(const Problem * puz,
 }
 
 /* remove column from array, and also all the rows, where the column is one */
-void DonKnuthAssembler::cover(unsigned int col)
-{
+void DonKnuthAssembler::cover(unsigned int col) {
   {
     unsigned int l = left[col];
     unsigned int r = right[col];
@@ -921,7 +951,8 @@ void DonKnuthAssembler::cover_row(register unsigned int r) {
     cover(colCount[j]);
 }
 
-bool DonKnuthAssembler::try_cover_row(register unsigned int r, unsigned int * columns) {
+bool DonKnuthAssembler::try_cover_row(register unsigned int r,
+                                      unsigned int *columns) {
 
   memset(columns, 0, varivoxelEnd * sizeof(unsigned int));
 
@@ -1080,13 +1111,13 @@ void DonKnuthAssembler::reduce() {
       // place the piece and check, if this leads to some
       // infillable holes or unplaceable pieces or whatever
       // conditions that make a solution impossible
-      cover(p+1);
+      cover(p + 1);
 
       rowsToRemove.clear();
 
       // go over all the placements of the piece and check, if
       // each for possibility
-      for (unsigned int r = down(p+1); r != p+1; r = down(r)) {
+      for (unsigned int r = down(p + 1); r != p + 1; r = down(r)) {
 
         // try to do this placement, if the placing goes
         // wrong already, we don't need to do the deep check
@@ -1102,7 +1133,7 @@ void DonKnuthAssembler::reduce() {
         }
       }
 
-      uncover(p+1);
+      uncover(p + 1);
 
       for (unsigned int rem = 0; rem < rowsToRemove.size(); rem++)
         remove_row(rowsToRemove[rem]);
@@ -1116,7 +1147,7 @@ void DonKnuthAssembler::reduce() {
        */
       memset(columns, 0, varivoxelEnd * sizeof(unsigned int));
       unsigned int placements = 0;
-      for (unsigned int r = down(p+1); r != p+1; r = down(r)) {
+      for (unsigned int r = down(p + 1); r != p + 1; r = down(r)) {
         for (unsigned int j = right[r]; j != r; j = right[j])
           columns[colCount[j]]++;
         placements++;
@@ -1139,7 +1170,9 @@ void DonKnuthAssembler::reduce() {
           for (unsigned int r = down(c); r != c; r = down(r)) {
 
             /* find out to which piece this row belongs */
-            while ((i+1) < piecePositions.size() && piecePositions[i+1].row <= r) i++;
+            while ((i + 1) < piecePositions.size()
+                && piecePositions[i + 1].row <= r)
+              i++;
 
             if (piecePositions[i].piece != p)
               rowsToRemove.push_back(r);
@@ -1158,7 +1191,7 @@ void DonKnuthAssembler::reduce() {
     }
   } while (rem_sth);
 
-  delete [] columns;
+  delete[] columns;
 
   remCol += clumpify();
 
@@ -1167,7 +1200,7 @@ void DonKnuthAssembler::reduce() {
 
 Assembly *DonKnuthAssembler::getAssembly() {
 
-  Assembly * assembly = new Assembly(puzzle->getGridType());
+  Assembly *assembly = new Assembly(puzzle->getGridType());
 
   // if no pieces are placed, or we finished return an empty assembly
   if (pos > piecenumber) {
@@ -1179,11 +1212,11 @@ Assembly *DonKnuthAssembler::getAssembly() {
   bt_assert(getPos() <= getPiecenumber());
 
   /* first we need to find the order the piece are in */
-  unsigned int * pieces = new unsigned int[getPiecenumber()];
-  unsigned char * trans = new unsigned char[getPiecenumber()];
-  int * xs = new int[getPiecenumber()];
-  int * ys = new int[getPiecenumber()];
-  int * zs = new int[getPiecenumber()];
+  unsigned int *pieces = new unsigned int[getPiecenumber()];
+  unsigned char *trans = new unsigned char[getPiecenumber()];
+  int *xs = new int[getPiecenumber()];
+  int *ys = new int[getPiecenumber()];
+  int *zs = new int[getPiecenumber()];
 
   /* fill the array with 0xff, so that we can distinguish between
    * placed and unplaced pieces
@@ -1210,11 +1243,11 @@ Assembly *DonKnuthAssembler::getAssembly() {
     else
       assembly->addPlacement(trans[i], xs[i], ys[i], zs[i]);
 
-  delete [] pieces;
-  delete [] trans;
-  delete [] xs;
-  delete [] ys;
-  delete [] zs;
+  delete[] pieces;
+  delete[] trans;
+  delete[] xs;
+  delete[] ys;
+  delete[] zs;
 
   // sort is not necessary because there is only one of each piece
   // assembly->sort(puzzle, problem);
@@ -1222,7 +1255,8 @@ Assembly *DonKnuthAssembler::getAssembly() {
   return assembly;
 }
 
-void DonKnuthAssembler::checkForTransformedAssemblies(unsigned int pivot, MirrorInfo * mir) {
+void DonKnuthAssembler::checkForTransformedAssemblies(unsigned int pivot,
+                                                      MirrorInfo *mir) {
   avoidTransformedAssemblies = true;
   avoidTransformedPivot = pivot;
   avoidTransformedMirror = mir;
@@ -1234,9 +1268,12 @@ void DonKnuthAssembler::solution() {
 
   if (getCallback()) {
 
-    Assembly * assembly = getAssembly();
+    Assembly *assembly = getAssembly();
 
-    if (avoidTransformedAssemblies && assembly->smallerRotationExists(puzzle, avoidTransformedPivot, avoidTransformedMirror, complete))
+    if (avoidTransformedAssemblies && assembly->smallerRotationExists(puzzle,
+                                                                      avoidTransformedPivot,
+                                                                      avoidTransformedMirror,
+                                                                      complete))
       delete assembly;
     else {
       getCallback()->assembly(assembly);
@@ -1278,7 +1315,7 @@ void DonKnuthAssembler::iterativeMultiSearch() {
       if (debug_loops <= 0)
         break;
 
-      debug_loops --;
+      debug_loops--;
     }
 
     // if all pieces are placed we can not go on even if there are
@@ -1397,7 +1434,7 @@ void DonKnuthAssembler::iterativeMultiSearch() {
   running = false;
 }
 
-void DonKnuthAssembler::assemble(AssemblerCallbackInterface * callback) {
+void DonKnuthAssembler::assemble(AssemblerCallbackInterface *callback) {
 
   debug = false;
 
@@ -1440,31 +1477,32 @@ float DonKnuthAssembler::getFinished(void) const {
   return erg;
 }
 
-static unsigned int getInt(const char * s, unsigned int * i) {
+static unsigned int getInt(const char *s, unsigned int *i) {
 
-  char * s2;
+  char *s2;
 
-  *i = std::strtol (s, &s2, 10);
+  *i = std::strtol(s, &s2, 10);
 
   if (s2)
-    return s2-s;
+    return s2 - s;
   else
     return 500000;
 }
 
-static unsigned int getLong(const char * s, unsigned long * i) {
+static unsigned int getLong(const char *s, unsigned long *i) {
 
-  char * s2;
+  char *s2;
 
-  *i = std::strtol (s, &s2, 10);
+  *i = std::strtol(s, &s2, 10);
 
   if (s2)
-    return s2-s;
+    return s2 - s;
   else
     return 500000;
 }
 
-AssemblerInterface::errState DonKnuthAssembler::setPosition(const char * string, const char * version) {
+AssemblerInterface::errState DonKnuthAssembler::setPosition(const char *string,
+                                                            const char *version) {
 
   /* we assert that the matrix is in the initial position
    * otherwise we would have to clean the stack
@@ -1480,22 +1518,24 @@ AssemblerInterface::errState DonKnuthAssembler::setPosition(const char * string,
 
   /* get the values from the string.
    */
-  spos += getInt(string+spos, &pos);
+  spos += getInt(string + spos, &pos);
   if (spos >= len) return ERR_CAN_NOT_RESTORE_SYNTAX;
 
-  spos += getLong(string+spos, &iterations);
+  spos += getLong(string + spos, &iterations);
   if (spos >= len) return ERR_CAN_NOT_RESTORE_SYNTAX;
 
   if (pos <= piecenumber)
     for (unsigned int i = 0; i <= pos; i++) {
-      while ((spos < len) && (*(string+spos) != '(')) spos++;
+      while ((spos < len) && (*(string + spos) != '(')) spos++;
       spos++;
       if (spos >= len) return ERR_CAN_NOT_RESTORE_SYNTAX;
 
-      spos += getInt(string+spos, &rows[i]);      if (spos >= len) return ERR_CAN_NOT_RESTORE_SYNTAX;
-      spos += getInt(string+spos, &columns[i]);   if (spos >= len) return ERR_CAN_NOT_RESTORE_SYNTAX;
+      spos += getInt(string + spos, &rows[i]);
+      if (spos >= len) return ERR_CAN_NOT_RESTORE_SYNTAX;
+      spos += getInt(string + spos, &columns[i]);
+      if (spos >= len) return ERR_CAN_NOT_RESTORE_SYNTAX;
 
-      while ((spos < len) && (*(string+spos) != ')')) spos++;
+      while ((spos < len) && (*(string + spos) != ')')) spos++;
       spos++;
       // after the last ')' we might be at the end of the string, so here
       // it's ok to have a pos at the end
@@ -1531,18 +1571,16 @@ AssemblerInterface::errState DonKnuthAssembler::setPosition(const char * string,
   return ERR_NONE;
 }
 
-void DonKnuthAssembler::save(XmlWriter & xml) const
-{
+void DonKnuthAssembler::save(XmlWriter &xml) const {
   xml.newTag("assembler");
   xml.newAttrib("version", ASSEMBLER_VERSION);
 
-  std::ostream & str = xml.addContent();
+  std::ostream &str = xml.addContent();
 
   str << pos << " " << iterations << " ";
 
   if (pos <= piecenumber)
-    for (unsigned int j = 0; j <= pos; j++)
-    {
+    for (unsigned int j = 0; j <= pos; j++) {
       str << "(" << rows[j] << " " << columns[j] << ")";
 
       if (j < pos) str << " ";
@@ -1551,12 +1589,18 @@ void DonKnuthAssembler::save(XmlWriter & xml) const
   xml.endTag("assembler");
 }
 
-unsigned int DonKnuthAssembler::getPiecePlacement(unsigned int node, int delta, unsigned int piece, unsigned char *tran, int *x, int *y, int *z) const {
+unsigned int DonKnuthAssembler::getPiecePlacement(unsigned int node,
+                                                  int delta,
+                                                  unsigned int piece,
+                                                  unsigned char *tran,
+                                                  int *x,
+                                                  int *y,
+                                                  int *z) const {
 
   unsigned int pi;
 
   if (!node)
-    node = down(piece+1);
+    node = down(piece + 1);
 
   while (delta > 0) {
     node = down(node);
@@ -1577,9 +1621,8 @@ unsigned int DonKnuthAssembler::getPiecePlacement(unsigned int node, int delta, 
 
 unsigned int DonKnuthAssembler::getPiecePlacementCount(unsigned int piece) const {
 
-  return colCount[piece+1];
+  return colCount[piece + 1];
 }
-
 
 void DonKnuthAssembler::debug_step(unsigned long num) {
   debug = true;
@@ -1588,7 +1631,7 @@ void DonKnuthAssembler::debug_step(unsigned long num) {
   iterativeMultiSearch();
 }
 
-bool DonKnuthAssembler::canHandle(const Problem * p) {
+bool DonKnuthAssembler::canHandle(const Problem *p) {
 
   // we can not handle if there is one shape having not a counter of 1
   for (unsigned int s = 0; s < p->partNumber(); s++)

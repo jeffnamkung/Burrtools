@@ -26,7 +26,7 @@
 #include "simple-disassembler.h"
 #include "solution.h"
 
-void SolveThread::run(void){
+void SolveThread::run(void) {
 
   try {
 
@@ -43,7 +43,10 @@ void SolveThread::run(void){
       action = SolveThread::ACT_PREPARATION;
       assm = puzzle->getGridType()->findAssembler(puzzle);
 
-      errState = assm->createMatrix(puzzle, parameters & PAR_KEEP_MIRROR, parameters & PAR_KEEP_ROTATIONS, parameters & PAR_COMPLETE_ROTATIONS);
+      errState = assm->createMatrix(puzzle,
+                                    parameters & PAR_KEEP_MIRROR,
+                                    parameters & PAR_KEEP_ROTATIONS,
+                                    parameters & PAR_COMPLETE_ROTATIONS);
       if (errState != AssemblerInterface::ERR_NONE) {
 
         errParam = assm->getErrorsParam();
@@ -83,7 +86,7 @@ void SolveThread::run(void){
 
       action = SolveThread::ACT_ASSEMBLING;
       assm->assemble(this);
-      puzzle->addTime(time(0)-startTime);
+      puzzle->addTime(time(0) - startTime);
 
       if (assm->getFinished() >= 1) {
         action = SolveThread::ACT_FINISHED;
@@ -93,7 +96,7 @@ void SolveThread::run(void){
 
     } else {
       action = SolveThread::ACT_PAUSING;
-      puzzle->addTime(time(0)-startTime);
+      puzzle->addTime(time(0) - startTime);
     }
 
   }
@@ -107,16 +110,15 @@ void SolveThread::run(void){
   }
 }
 
-SolveThread::SolveThread(Problem * puz, int par) :
-action(ACT_PREPARATION),
-puzzle(puz),
-parameters(par),
-sortMethod(SRT_COMPLETE_MOVES),
-solutionLimit(10),
-solutionDrop(1),
-disassm(0),
-assm(0)
-{
+SolveThread::SolveThread(Problem *puz, int par) :
+    action(ACT_PREPARATION),
+    puzzle(puz),
+    parameters(par),
+    sortMethod(SRT_COMPLETE_MOVES),
+    solutionLimit(10),
+    solutionDrop(1),
+    disassm(0),
+    assm(0) {
 
   if (par & PAR_DISASSM)
     disassm = new SimpleDisassembler(puz);
@@ -132,7 +134,7 @@ SolveThread::~SolveThread() {
   }
 }
 
-bool SolveThread::assembly(Assembly * a) {
+bool SolveThread::assembly(Assembly *a) {
 
   enum {
     SOL_COUNT_ASM,
@@ -145,22 +147,20 @@ bool SolveThread::assembly(Assembly * a) {
   if (!(parameters & PAR_JUST_COUNT)) _solutionAction += 1;
   if (parameters & PAR_DISASSM) _solutionAction += 2;
 
-  switch(_solutionAction) {
-  case SOL_COUNT_ASM:
-    delete a;
-    break;
-  case SOL_SAVE_ASM:
+  switch (_solutionAction) {
+    case SOL_COUNT_ASM:delete a;
+      break;
+    case SOL_SAVE_ASM:
 
-    if (puzzle->getNumAssemblies() % (solutionDrop*dropMultiplicator) == 0)
-      puzzle->addSolution(a);
-    else
-      delete a;
+      if (puzzle->getNumAssemblies() % (solutionDrop * dropMultiplicator) == 0)
+        puzzle->addSolution(a);
+      else
+        delete a;
 
-    break;
+      break;
 
-  case SOL_DISASM:
-  case SOL_COUNT_DISASM:
-    {
+    case SOL_DISASM:
+    case SOL_COUNT_DISASM: {
 
       // when the assembly has only 1 piece, we don't need
       // to disassemble, the disassembler will return 0 anyway
@@ -176,7 +176,7 @@ bool SolveThread::assembly(Assembly * a) {
 
       // try to disassemble
       action = ACT_DISASSEMBLING;
-      Separation * s = disassm->disassemble(a);
+      Separation *s = disassm->disassemble(a);
       action = ACT_ASSEMBLING;
 
       // check, if we found a disassembly sequence
@@ -205,30 +205,29 @@ bool SolveThread::assembly(Assembly * a) {
 
       bool ins = false;
 
-      switch(sortMethod) {
-        case SRT_COMPLETE_MOVES:
-          {
-            unsigned int lev = s->sumMoves();
+      switch (sortMethod) {
+        case SRT_COMPLETE_MOVES: {
+          unsigned int lev = s->sumMoves();
 
-            for (unsigned int i = 0; i < puzzle->solutionNumber(); i++) {
+          for (unsigned int i = 0; i < puzzle->solutionNumber(); i++) {
 
-              const Disassembly * s2 = puzzle->getSolution(i)->getDisassembly();
+            const Disassembly *s2 = puzzle->getSolution(i)->getDisassembly();
 
-              if (s2 && s2->sumMoves() > lev) {
-                if (parameters & PAR_DROP_DISASSEMBLIES) {
-                  puzzle->addSolution(a, new separationInfo_c(s), i);
-                  delete s;
-                } else
-                  puzzle->addSolution(a, s, i);
-                ins = true;
-                break;
-              }
+            if (s2 && s2->sumMoves() > lev) {
+              if (parameters & PAR_DROP_DISASSEMBLIES) {
+                puzzle->addSolution(a, new SeparationInfo(s), i);
+                delete s;
+              } else
+                puzzle->addSolution(a, s, i);
+              ins = true;
+              break;
             }
           }
+        }
 
           if (!ins) {
             if (parameters & PAR_DROP_DISASSEMBLIES) {
-              puzzle->addSolution(a, new separationInfo_c(s));
+              puzzle->addSolution(a, new SeparationInfo(s));
               delete s;
             } else
               puzzle->addSolution(a, s);
@@ -241,31 +240,31 @@ bool SolveThread::assembly(Assembly * a) {
             puzzle->removeSolution(0);
 
           break;
-        case SRT_LEVEL:
-          {
-            for (unsigned int i = 0; i < puzzle->solutionNumber(); i++) {
+        case SRT_LEVEL: {
+          for (unsigned int i = 0; i < puzzle->solutionNumber(); i++) {
 
-              const Disassembly * s2 = puzzle->getSolution(i)->getDisassemblyInfo();
+            const Disassembly
+                *s2 = puzzle->getSolution(i)->getDisassemblyInfo();
 
-              if (s2 && (s2->compare(s) > 0)) {
-                if (parameters & PAR_DROP_DISASSEMBLIES) {
-                  puzzle->addSolution(a, new separationInfo_c(s), i);
-                  delete s;
-                } else
-                  puzzle->addSolution(a, s, i);
-                ins = true;
-                break;
-              }
-            }
-
-            if (!ins)  {
+            if (s2 && (s2->compare(s) > 0)) {
               if (parameters & PAR_DROP_DISASSEMBLIES) {
-                puzzle->addSolution(a, new separationInfo_c(s));
+                puzzle->addSolution(a, new SeparationInfo(s), i);
                 delete s;
               } else
-                puzzle->addSolution(a, s);
+                puzzle->addSolution(a, s, i);
+              ins = true;
+              break;
             }
           }
+
+          if (!ins) {
+            if (parameters & PAR_DROP_DISASSEMBLIES) {
+              puzzle->addSolution(a, new SeparationInfo(s));
+              delete s;
+            } else
+              puzzle->addSolution(a, s);
+          }
+        }
 
           // remove the front most solution, if we only want to save
           // a limited number of solutions, as the front most
@@ -276,9 +275,10 @@ bool SolveThread::assembly(Assembly * a) {
           break;
         case SRT_UNSORT:
           /* only save every solutionDrop-th solution */
-          if (puzzle->getNumSolutions() % (solutionDrop * dropMultiplicator) == 0) {
+          if (puzzle->getNumSolutions() % (solutionDrop * dropMultiplicator)
+              == 0) {
             if (parameters & PAR_DROP_DISASSEMBLIES) {
-              puzzle->addSolution(a, new separationInfo_c(s));
+              puzzle->addSolution(a, new SeparationInfo(s));
               delete s;
             } else
               puzzle->addSolution(a, s);
@@ -293,7 +293,7 @@ bool SolveThread::assembly(Assembly * a) {
       // yes, the puzzle is disassembably, count solutions
       puzzle->incNumSolutions();
     }
-    break;
+      break;
   }
 
   puzzle->incNumAssemblies();
@@ -301,15 +301,17 @@ bool SolveThread::assembly(Assembly * a) {
   // this is the case for assembly only or unsorted disassembly solutions
   // we need to thin out the list
   if (solutionLimit && (puzzle->solutionNumber() > solutionLimit)) {
-    unsigned int idx = (_solutionAction == SOL_SAVE_ASM) ? puzzle->getNumAssemblies()-1
-                                                         : puzzle->getNumSolutions()-1;
+    unsigned int
+        idx = (_solutionAction == SOL_SAVE_ASM) ? puzzle->getNumAssemblies() - 1
+                                                : puzzle->getNumSolutions() - 1;
 
-    idx = (idx % (solutionLimit * solutionDrop * dropMultiplicator)) / (solutionDrop * dropMultiplicator);
+    idx = (idx % (solutionLimit * solutionDrop * dropMultiplicator))
+        / (solutionDrop * dropMultiplicator);
 
-    if (idx == solutionLimit-1)
+    if (idx == solutionLimit - 1)
       dropMultiplicator *= 2;
 
-    puzzle->removeSolution(idx+1);
+    puzzle->removeSolution(idx + 1);
   }
 
   return true;
@@ -321,7 +323,7 @@ void SolveThread::stop() {
       (action != ACT_REDUCE) &&
       (action != ACT_DISASSEMBLING) &&
       (action != ACT_PREPARATION)
-     )
+      )
     return;
 
   action = ACT_WAIT_TO_STOP;
@@ -359,9 +361,9 @@ bool SolveThread::start(bool stop_after_prep) {
       a = puzzle->getNumSolutions();
   }
 
-  while (a+solutionDrop > 2 * solutionLimit * solutionDrop) {
+  while (a + solutionDrop > 2 * solutionLimit * solutionDrop) {
     dropMultiplicator *= 2;
-    a = (a+1) / 2;
+    a = (a + 1) / 2;
   }
 
   return Thread::start();
@@ -369,15 +371,14 @@ bool SolveThread::start(bool stop_after_prep) {
 
 unsigned int SolveThread::currentActionParameter() {
 
-  switch(action) {
-  case ACT_REDUCE:
-  case ACT_PREPARATION:
-    if (assm)
-      return assm->getReducePiece();
-    else
-      return 0;
+  switch (action) {
+    case ACT_REDUCE:
+    case ACT_PREPARATION:
+      if (assm)
+        return assm->getReducePiece();
+      else
+        return 0;
 
-  default:
-    return 0;
+    default:return 0;
   }
 }

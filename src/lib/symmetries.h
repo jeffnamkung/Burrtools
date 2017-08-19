@@ -89,96 +89,100 @@ class Voxel;
  */
 class symmetries_c {
 
-  public:
+ public:
 
-    symmetries_c() {}
-    virtual ~symmetries_c() {}
+  symmetries_c() {}
+  virtual ~symmetries_c() {}
 
-    /**
-     * Get the number of possible transformations for a voxel space.
-     * This number does not include mirror transformations
-     */
-    virtual unsigned int getNumTransformations(void) const = 0;
+  /**
+   * Get the number of possible transformations for a voxel space.
+   * This number does not include mirror transformations
+   */
+  virtual unsigned int getNumTransformations(void) const = 0;
 
-    /**
-     * Get the number of possible transformations for a voxel space.
-     * This time the mirror transformations are included. Normally this value
-     * is twice the number you get when calling getNumTransformations
-     */
-    virtual unsigned int getNumTransformationsMirror(void) const = 0;
+  /**
+   * Get the number of possible transformations for a voxel space.
+   * This time the mirror transformations are included. Normally this value
+   * is twice the number you get when calling getNumTransformations
+   */
+  virtual unsigned int getNumTransformationsMirror(void) const = 0;
 
-    /**
-     * This return true, if the symmetry contains the given transformation
-     *
-     * A a symmetry group contains a list of transformations. This functions
-     * tells you whether the given symmetry group s contains transformation t
-     */
-    virtual bool symmetrieContainsTransformation(symmetries_t s, unsigned int t) const = 0;
+  /**
+   * This return true, if the symmetry contains the given transformation
+   *
+   * A a symmetry group contains a list of transformations. This functions
+   * tells you whether the given symmetry group s contains transformation t
+   */
+  virtual bool symmetrieContainsTransformation(symmetries_t s,
+                                               unsigned int t) const = 0;
 
-    /**
-     * When you apply all the transformations to the shape with a given symmetry
-     * s for which this function returns true, you get all possible
-     * orientations that that shape can have
-     */
-    virtual bool isTransformationUnique(symmetries_t s, unsigned int t) const = 0;
+  /**
+   * When you apply all the transformations to the shape with a given symmetry
+   * s for which this function returns true, you get all possible
+   * orientations that that shape can have
+   */
+  virtual bool isTransformationUnique(symmetries_t s, unsigned int t) const = 0;
 
-    /**
-     * returns the transformation that results, when you first carry out transformation t1
-     * and then transformation t2
-     *
-     * the function might return TND, when the new required transformation doesn't exist
-     */
-    virtual unsigned char transAdd(unsigned char t1, unsigned char t2) const = 0;
+  /**
+   * returns the transformation that results, when you first carry out transformation t1
+   * and then transformation t2
+   *
+   * the function might return TND, when the new required transformation doesn't exist
+   */
+  virtual unsigned char transAdd(unsigned char t1, unsigned char t2) const = 0;
 
-    /**
-     * Find the first transformation, for a shape with the given symmetry group that
-     * results in a shape identical to the given transformation.
-     *
-     * This functionality is used when rotating an assembly. The new transformation is
-     * found out by using transAdd but then we might end up with a high transformation
-     * number even though the symmetries of the shape would say otherwise.
-     *
-     * An example. Suppose you have a cube in orientation 0. Now you transform that
-     * cube by transformation 1 resulting in orientation 1 for the cube. But a cube in
-     * orientation 1, well in _any_ orientation looks identical so we can just as well
-     * say we leave the cube in orientation 0
-     */
-    virtual unsigned char minimizeTransformation(symmetries_t s, unsigned char trans) const = 0;
+  /**
+   * Find the first transformation, for a shape with the given symmetry group that
+   * results in a shape identical to the given transformation.
+   *
+   * This functionality is used when rotating an assembly. The new transformation is
+   * found out by using transAdd but then we might end up with a high transformation
+   * number even though the symmetries of the shape would say otherwise.
+   *
+   * An example. Suppose you have a cube in orientation 0. Now you transform that
+   * cube by transformation 1 resulting in orientation 1 for the cube. But a cube in
+   * orientation 1, well in _any_ orientation looks identical so we can just as well
+   * say we leave the cube in orientation 0
+   */
+  virtual unsigned char minimizeTransformation(symmetries_t s,
+                                               unsigned char trans) const = 0;
 
-    /**
-     * This counts how much 'overlap' there is in symmetry between the given result and the shape.
-     * The value is small, when the 2 shapes have less symmetries in common
-     */
-    virtual unsigned int countSymmetryIntersection(symmetries_t resultSym, symmetries_t s2) const = 0;
+  /**
+   * This counts how much 'overlap' there is in symmetry between the given result and the shape.
+   * The value is small, when the 2 shapes have less symmetries in common
+   */
+  virtual unsigned int countSymmetryIntersection(symmetries_t resultSym,
+                                                 symmetries_t s2) const = 0;
 
-    /**
-     * Do the result and the shape share common symmetries?
-     * This is a bit like countSymmetryIntersection() > 1, only faster
-     */
-    virtual bool symmetriesLeft(symmetries_t resultSym, symmetries_t s2) const = 0;
+  /**
+   * Do the result and the shape share common symmetries?
+   * This is a bit like countSymmetryIntersection() > 1, only faster
+   */
+  virtual bool symmetriesLeft(symmetries_t resultSym,
+                              symmetries_t s2) const = 0;
 
-    /**
-     * returns true, if the symmetry group given contains a mirror transformation, meaning
-     * the shape that symmetry belongs to can be mirrored by using just rotations
-     */
-    virtual bool symmetryContainsMirror(symmetries_t sym) const = 0;
+  /**
+   * returns true, if the symmetry group given contains a mirror transformation, meaning
+   * the shape that symmetry belongs to can be mirrored by using just rotations
+   */
+  virtual bool symmetryContainsMirror(symmetries_t sym) const = 0;
 
-    /** calculate the symmetry group for the given voxel space */
-    virtual symmetries_t calculateSymmetry(const Voxel * pp) const = 0;
+  /** calculate the symmetry group for the given voxel space */
+  virtual symmetries_t calculateSymmetry(const Voxel *pp) const = 0;
 
-    /**
-     * find out if the shape has an unknown symmetry group. This was especially useful
-     * when this feature with the symmetry groups was introduced and not all of the
-     * symmetry groups were known. Nowadays there should be very little chance
-     * of finding new symmetry groups. I still leave this extra check in just in case
-     */
-    virtual bool symmetryKnown(const Voxel * pp) const = 0;
+  /**
+   * find out if the shape has an unknown symmetry group. This was especially useful
+   * when this feature with the symmetry groups was introduced and not all of the
+   * symmetry groups were known. Nowadays there should be very little chance
+   * of finding new symmetry groups. I still leave this extra check in just in case
+   */
+  virtual bool symmetryKnown(const Voxel *pp) const = 0;
 
-  private:
+ private:
 
-    // no copying and assigning
-    symmetries_c(const symmetries_c&);
-    void operator=(const symmetries_c&);
+  // no copying and assigning
+  symmetries_c(const symmetries_c &);
+  void operator=(const symmetries_c &);
 };
 
 #endif

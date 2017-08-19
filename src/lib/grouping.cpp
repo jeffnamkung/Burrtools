@@ -22,7 +22,9 @@
 
 #include <assert.h>
 
-void grouping_c::addPieces(unsigned int pc, unsigned int group, unsigned int count) {
+void grouping_c::addPieces(unsigned int pc,
+                           unsigned int group,
+                           unsigned int count) {
 
   if (group == 0)
     return;
@@ -42,7 +44,7 @@ void grouping_c::addPieces(unsigned int pc, unsigned int group, unsigned int cou
 
     pieces.push_back(s);
 
-    if (group+1 > numGroups) numGroups = group+1;
+    if (group + 1 > numGroups) numGroups = group + 1;
   }
 }
 
@@ -69,7 +71,7 @@ bool grouping_c::addPieceToSet(unsigned int pc) {
 
   assert(sets.size() > 0);
 
-  unsigned int set = sets.size()-1;
+  unsigned int set = sets.size() - 1;
 
   // add the piece to the current set
   sets[set].pieces.push_back(pc);
@@ -85,7 +87,7 @@ bool grouping_c::addPieceToSet(unsigned int pc) {
 
   } else {
     // not available -> remove set from group
-    for (unsigned int p = 0; p < sets[set].pieces.size()-1; p++)
+    for (unsigned int p = 0; p < sets[set].pieces.size() - 1; p++)
       pieces[findPiece(sets[set].pieces[p], sets[set].currentGroup)].count++;
   }
 
@@ -134,7 +136,8 @@ bool grouping_c::addPieceToSet(unsigned int pc) {
 
           // remove already placed pieces from the group
           for (unsigned int p2 = 0; p2 < p; p++)
-            pieces[findPiece(sets[set].pieces[p2], sets[set].currentGroup)].count++;
+            pieces[findPiece(sets[set].pieces[p2],
+                             sets[set].currentGroup)].count++;
 
           set--;
           break;

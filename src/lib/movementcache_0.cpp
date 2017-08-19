@@ -24,14 +24,19 @@
 
 #define NUM_DIRECTIONS 3
 
-movementCache_0_c::movementCache_0_c(const Problem * puz) : movementCache_c(puz) {
+movementCache_0_c::movementCache_0_c(const Problem *puz)
+    : movementCache_c(puz) {
 }
 
 static int min(int a, int b) { if (a < b) return a; else return b; }
 static int max(int a, int b) { if (a > b) return a; else return b; }
 
 /* calculate the required movement possibilities */
-unsigned int* movementCache_0_c::moCalcValues(const Voxel * sh1, const Voxel * sh2, int dx, int dy, int dz) {
+unsigned int *movementCache_0_c::moCalcValues(const Voxel *sh1,
+                                              const Voxel *sh2,
+                                              int dx,
+                                              int dy,
+                                              int dz) {
 
   /* because the dx, dy and dz values are calculated using the hotspot we need to reverse
    * that process
@@ -40,7 +45,7 @@ unsigned int* movementCache_0_c::moCalcValues(const Voxel * sh1, const Voxel * s
   dy += (sh1->getHy() - sh2->getHy());
   dz += (sh1->getHz() - sh2->getHz());
 
-  unsigned int * move = new unsigned int[NUM_DIRECTIONS];
+  unsigned int *move = new unsigned int[NUM_DIRECTIONS];
 
   /* calculate some bounding boxes for the intersecting and union boxes of the 2 pieces */
   int x1i, x2i, y1i, y2i, z1i, z2i;
@@ -85,18 +90,12 @@ unsigned int* movementCache_0_c::moCalcValues(const Voxel * sh1, const Voxel * s
 
       unsigned int gap = 32000;
 
-      for (int x = x1u; x <= x2u; x++)
-      {
-        if (sh1->isFilled2(x, y, z))
-        {
+      for (int x = x1u; x <= x2u; x++) {
+        if (sh1->isFilled2(x, y, z)) {
           gap = 0;
-        }
-        else if (sh2->isFilled2(x-dx, y-dy, z-dz))
-        {
+        } else if (sh2->isFilled2(x - dx, y - dy, z - dz)) {
           if (gap < mx) mx = gap;
-        }
-        else
-        {
+        } else {
           gap++;
         }
       }
@@ -108,18 +107,12 @@ unsigned int* movementCache_0_c::moCalcValues(const Voxel * sh1, const Voxel * s
 
       unsigned int gap = 32000;
 
-      for (int y = y1u; y <= y2u; y++)
-      {
-        if (sh1->isFilled2(x, y, z))
-        {
+      for (int y = y1u; y <= y2u; y++) {
+        if (sh1->isFilled2(x, y, z)) {
           gap = 0;
-        }
-        else if (sh2->isFilled2(x-dx, y-dy, z-dz))
-        {
+        } else if (sh2->isFilled2(x - dx, y - dy, z - dz)) {
           if (gap < my) my = gap;
-        }
-        else
-        {
+        } else {
           gap++;
         }
       }
@@ -131,18 +124,12 @@ unsigned int* movementCache_0_c::moCalcValues(const Voxel * sh1, const Voxel * s
 
       unsigned int gap = 32000;
 
-      for (int z = z1u; z <= z2u; z++)
-      {
-        if (sh1->isFilled2(x, y, z))
-        {
+      for (int z = z1u; z <= z2u; z++) {
+        if (sh1->isFilled2(x, y, z)) {
           gap = 0;
-        }
-        else if (sh2->isFilled2(x-dx, y-dy, z-dz))
-        {
+        } else if (sh2->isFilled2(x - dx, y - dy, z - dz)) {
           if (gap < mz) mz = gap;
-        }
-        else
-        {
+        } else {
           gap++;
         }
       }
@@ -155,14 +142,19 @@ unsigned int* movementCache_0_c::moCalcValues(const Voxel * sh1, const Voxel * s
   return move;
 }
 
-
 unsigned int movementCache_0_c::numDirections() { return NUM_DIRECTIONS; }
-void movementCache_0_c::getDirection(unsigned int dir, int * x, int * y, int * z) {
+void movementCache_0_c::getDirection(unsigned int dir, int *x, int *y, int *z) {
 
   switch (dir) {
-    case 0: *x = 1; *y = *z = 0; break;
-    case 1: *y = 1; *x = *z = 0; break;
-    case 2: *z = 1; *x = *y = 0; break;
+    case 0: *x = 1;
+      *y = *z = 0;
+      break;
+    case 1: *y = 1;
+      *x = *z = 0;
+      break;
+    case 2: *z = 1;
+      *x = *y = 0;
+      break;
     default: bt_assert(0);
   }
 }

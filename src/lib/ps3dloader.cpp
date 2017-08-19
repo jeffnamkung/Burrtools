@@ -23,17 +23,16 @@
 #include "voxel.h"
 #include "puzzle.h"
 #include "problem.h"
-#include "grid-type.h"
 
 #include <fstream>
 #include <sstream>
 
 /* either return a puzzle, or nil, when failed */
-Puzzle * loadPuzzlerSolver3D(std::istream * str) {
+Puzzle *loadPuzzlerSolver3D(std::istream *str) {
 
-  Puzzle * p = new Puzzle(new GridType());
+  Puzzle *p = new Puzzle(new GridType());
 
-  Problem * pr = p->getProblem(p->addProblem());
+  Problem *pr = p->getProblem(p->addProblem());
 
   pr->setName("Problem");
 
@@ -44,78 +43,84 @@ Puzzle * loadPuzzlerSolver3D(std::istream * str) {
   int sx, sy, sz;
   int piece = 0;
 
-  while (getline(*str,line,'\n'))  {
+  while (getline(*str, line, '\n')) {
 
     switch (state) {
 
-    case 0:
+      case 0:
 
-      if (line.substr(0, 6) == "PIECE ") {
-        state = 1;
-        line = line.substr(6, 11);
-      } else if (line.substr(0, 7) == "RESULT ") {
-        state = 2;
-        line = line.substr(7, 11);
-      }
-
-      if (state != 0) {
-
-        std::istringstream s(line);
-
-        char c;
-
-        s >> sx >> c >> sy >> c >> sz;
-
-        if ((sx > 500) || (sy > 500) || (sz > 500)) {
-          delete p;
-          return 0;
+        if (line.substr(0, 6) == "PIECE ") {
+          state = 1;
+          line = line.substr(6, 11);
+        } else if (line.substr(0, 7) == "RESULT ") {
+          state = 2;
+          line = line.substr(7, 11);
         }
 
-        piece = p->addShape(sx, sy, sz);
+        if (state != 0) {
 
-        if (state == 2)
-          pr->setResultId(piece);
-        else
-          pr->setShapeMinimum(piece, 1);
+          std::istringstream s(line);
 
-        linenum = 0;
-      }
+          char c;
 
-      break;
+          s >> sx >> c >> sy >> c >> sz;
 
-    case 1:
-    case 2:
-
-      for (int z = 0; z < sz; z++)
-        for (int x = 0; x < sx; x++) {
-          char c = line[z*(sx+1)+x];
-          if (c == ',') {
+          if ((sx > 500) || (sy > 500) || (sz > 500)) {
             delete p;
             return 0;
           }
-          if (c != ' ')
-            p->getShape(piece)->setState(x, linenum, z, Voxel::VX_FILLED);
+
+          piece = p->addShape(sx, sy, sz);
+
+          if (state == 2)
+            pr->setResultId(piece);
+          else
+            pr->setShapeMinimum(piece, 1);
+
+          linenum = 0;
         }
 
-      linenum ++;
-      if (linenum >= sy) {
-        state = 0;
-      }
+        break;
 
-      break;
+      case 1:
+      case 2:
+
+        for (int z = 0; z < sz; z++)
+          for (int x = 0; x < sx; x++) {
+            char c = line[z * (sx + 1) + x];
+            if (c == ',') {
+              delete p;
+              return 0;
+            }
+            if (c != ' ')
+              p->getShape(piece)->setState(x, linenum, z, Voxel::VX_FILLED);
+          }
+
+        linenum++;
+        if (linenum >= sy) {
+          state = 0;
+        }
+
+        break;
     }
   }
 
   // find mark and remove dublicate shapes from problem
   unsigned s = pr->partNumber();
 
-  for (unsigned int s1 = 0; s1 < s-1; s1++)
-    for (unsigned int s2 = s1+1; s2 < s; s2++)
-      if (pr->getShapeShape(s1)->identicalWithRots(pr->getShapeShape(s2), false, false)) {
+  for (unsigned int s1 = 0; s1 < s - 1; s1++)
+    for (unsigned int s2 = s1 + 1; s2 < s; s2++)
+      if (pr->getShapeShape(s1)->identicalWithRots(pr->getShapeShape(s2),
+                                                   false,
+                                                   false)) {
         unsigned int sh1 = pr->getShape(s1);
         unsigned int sh2 = pr->getShape(s2);
-        pr->setShapeMaximum(sh1, pr->getShapeMaximum(sh1) + pr->getShapeMaximum(sh2));
-        pr->setShapeMinimum(sh1, pr->getShapeMinimum(sh1) + pr->getShapeMinimum(sh2));
+        pr->setShapeMaximum(sh1,
+                            pr->getShapeMaximum(sh1)
+                                + pr->getShapeMaximum(sh2));
+        pr->setShapeMinimum(sh1,
+                            pr->getShapeMinimum(sh1)
+                                + pr->getShapeMinimum(sh2));
         pr->getShapeShape(s2)->setName("Duplicate");
         pr->setShapeMaximum(sh2, 0);
         s2--;

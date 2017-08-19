@@ -29,7 +29,7 @@ class Voxel;
  *
  * This function only works for cube voxel spaces right now
  */
-bool isNotchable(const Voxel * v);
+bool isNotchable(const Voxel *v);
 
 /**
  * Check, if a shape is millable.
@@ -37,6 +37,6 @@ bool isNotchable(const Voxel * v);
  *
  * This function only works for cube voxel spaces right now
  */
-bool isMillable(const Voxel * v);
+bool isMillable(const Voxel *v);
 
 #endif

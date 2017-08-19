@@ -20,7 +20,6 @@
  */
 #include "problem.h"
 
-#include "bt_assert.h"
 #include "voxel.h"
 #include "assembly.h"
 #include "disassembly.h"
@@ -29,56 +28,56 @@
 
 #include "../tools/xml.h"
 
-#include <algorithm>
-
-#include <stdio.h>
-
 /** internal class of problem storing the grouping information of a shape */
 class group_c {
 
-  public:
+ public:
 
-    group_c(unsigned short gr, unsigned short cnt) : group(gr), count(cnt) {}
+  group_c(unsigned short gr, unsigned short cnt) : group(gr), count(cnt) {}
 
-    unsigned short group;
-    unsigned short count;
+  unsigned short group;
+  unsigned short count;
 };
 
 /** internal class of problem storing the information attatched to a piece in a problem */
 class part_c {
 
-  public:
+ public:
 
-    part_c(unsigned short id, unsigned short mn, unsigned short mx, unsigned short grp) : shapeId(id), min(mn), max(mx) {
-      if (grp)
-        groups.push_back(group_c(grp, max));
-    }
+  part_c(unsigned short id,
+         unsigned short mn,
+         unsigned short mx,
+         unsigned short grp) : shapeId(id), min(mn), max(mx) {
+    if (grp)
+      groups.push_back(group_c(grp, max));
+  }
 
-    part_c(unsigned short id, unsigned short mn, unsigned short mx) : shapeId(id), min(mn), max(mx) { }
+  part_c(unsigned short id, unsigned short mn, unsigned short mx)
+      : shapeId(id), min(mn), max(mx) {}
 
-    part_c(part_c * orig) : shapeId(orig->shapeId), min(orig->min), max(orig->max), groups(orig->groups) { }
+  part_c(part_c *orig)
+      : shapeId(orig->shapeId),
+        min(orig->min),
+        max(orig->max),
+        groups(orig->groups) {}
 
-    void addGroup(unsigned short grp, unsigned short cnt) {
-      groups.push_back(group_c(grp, cnt));
-    }
+  void addGroup(unsigned short grp, unsigned short cnt) {
+    groups.push_back(group_c(grp, cnt));
+  }
 
-    unsigned short shapeId;
-    unsigned short min;
-    unsigned short max;
+  unsigned short shapeId;
+  unsigned short min;
+  unsigned short max;
 
-    std::vector<group_c> groups;
+  std::vector<group_c> groups;
 };
 
-Problem::Problem(Puzzle & puz) :
-  puzzle(puz), result(0xFFFFFFFF),
-  assm(0),solveState(SS_UNSOLVED), numAssemblies(0),
-  numSolutions(0), usedTime(0), maxHoles(0xFFFFFFFF)
-{}
+Problem::Problem(Puzzle &puz) :
+    puzzle(puz), result(0xFFFFFFFF),
+    assm(0), solveState(SS_UNSOLVED), numAssemblies(0),
+    numSolutions(0), usedTime(0), maxHoles(0xFFFFFFFF) {}
 
 Problem::~Problem() {
-  for (unsigned int i = 0; i < solutions.size(); i++)
-    delete solutions[i];
-
   for (unsigned int i = 0; i < parts.size(); i++)
     delete parts[i];
 
@@ -86,13 +85,13 @@ Problem::~Problem() {
     delete assm;
 }
 
-Problem::Problem(const Problem * orig, Puzzle & puz) :
-  puzzle(puz), result(orig->result),
-  solveState(SS_UNSOLVED), numAssemblies(0), numSolutions(0), usedTime(0)
-{
+Problem::Problem(const Problem *orig, Puzzle &puz) :
+    puzzle(puz), result(orig->result),
+    solveState(SS_UNSOLVED), numAssemblies(0), numSolutions(0), usedTime(0) {
   assm = 0;
 
-  for (std::set<uint32_t>::iterator i = orig->colorConstraints.begin(); i != orig->colorConstraints.end(); i++)
+  for (std::set<uint32_t>::iterator i = orig->colorConstraints.begin();
+       i != orig->colorConstraints.end(); i++)
     colorConstraints.insert(*i);
 
   for (unsigned int i = 0; i < orig->parts.size(); i++)
@@ -107,8 +106,7 @@ Problem::Problem(const Problem * orig, Puzzle & puz) :
   // likely give a new name any way
 }
 
-void Problem::save(XmlWriter & xml) const
-{
+void Problem::save(XmlWriter &xml) const {
   xml.newTag("problem");
 
   if (name.length() > 0)
@@ -116,8 +114,7 @@ void Problem::save(XmlWriter & xml) const
 
   xml.newAttrib("state", solveState);
 
-  if (solveState != SS_UNSOLVED)
-  {
+  if (solveState != SS_UNSOLVED) {
     xml.newAttrib("assemblies", numAssemblies);
     xml.newAttrib("solutions", numSolutions);
     xml.newAttrib("time", usedTime);
@@ -133,34 +130,25 @@ void Problem::save(XmlWriter & xml) const
 
     xml.newAttrib("id", parts[i]->shapeId);
 
-    if (parts[i]->min == parts[i]->max)
-    {
+    if (parts[i]->min == parts[i]->max) {
       xml.newAttrib("count", parts[i]->min);
-    }
-    else
-    {
+    } else {
       xml.newAttrib("min", parts[i]->min);
       xml.newAttrib("max", parts[i]->max);
     }
 
-    if (parts[i]->groups.size() == 0)
-    {
+    if (parts[i]->groups.size() == 0) {
       // do nothing, we don't need to save anything in this case
-    }
-    else if ((parts[i]->groups.size() == 1) &&
-             (parts[i]->groups[0].count == parts[i]->max))
-    {
+    } else if ((parts[i]->groups.size() == 1) &&
+        (parts[i]->groups[0].count == parts[i]->max)) {
       // this is the case when all pieces are in the same group
       // we only need to save the group, if it is not 0,
       // the loader takes 0 as default anyway
       if (parts[i]->groups[0].group != 0)
         xml.newAttrib("group", parts[i]->groups[0].group);
-    }
-    else
-    {
+    } else {
       for (unsigned int j = 0; j < parts[i]->groups.size(); j++)
-        if (parts[i]->groups[j].group != 0)
-        {
+        if (parts[i]->groups[j].group != 0) {
           xml.newTag("group");
           xml.newAttrib("group", parts[i]->groups[j].group);
           xml.newAttrib("count", parts[i]->groups[j].count);
@@ -177,8 +165,8 @@ void Problem::save(XmlWriter & xml) const
   xml.endTag("result");
 
   xml.newTag("bitmap");
-  for (std::set<uint32_t>::iterator i = colorConstraints.begin(); i != colorConstraints.end(); i++)
-  {
+  for (std::set<uint32_t>::iterator i = colorConstraints.begin();
+       i != colorConstraints.end(); i++) {
     xml.newTag("pair");
     xml.newAttrib("piece", *i >> 16);
     xml.newAttrib("result", *i & 0xFFFF);
@@ -186,14 +174,10 @@ void Problem::save(XmlWriter & xml) const
   }
   xml.endTag("bitmap");
 
-  if (solveState == SS_SOLVING)
-  {
-    if (assm)
-    {
+  if (solveState == SS_SOLVING) {
+    if (assm) {
       assm->save(xml);
-    }
-    else if (assemblerState != "" && assemblerVersion != "")
-    {
+    } else if (assemblerState != "" && assemblerVersion != "") {
       xml.newTag("assembler");
       xml.newAttrib("version", assemblerVersion);
       xml.addContent(assemblerState);
@@ -201,18 +185,18 @@ void Problem::save(XmlWriter & xml) const
     }
   }
 
-  if (solutions.size()) {
+  if (solutions_.size()) {
     xml.newTag("solutions");
-    for (unsigned int i = 0; i < solutions.size(); i++)
-      solutions[i]->save(xml);
+    for (unsigned int i = 0; i < solutions_.size(); i++)
+      solutions_[i]->save(xml);
     xml.endTag("solutions");
   }
 
   xml.endTag("problem");
 }
 
-Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFFF), assm(0)
-{
+Problem::Problem(Puzzle &puz, XmlParser &pars)
+    : puzzle(puz), result(0xFFFFFFFF), assm(0) {
   pars.require(XmlParser::START_TAG, "problem");
 
   name = pars.getAttributeValue("name");
@@ -226,10 +210,9 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
 
   str = pars.getAttributeValue("state");
   if (str.length())
-    solveState = (solveState_e)atoi(str.c_str());
+    solveState = (solveState_e) atoi(str.c_str());
 
-  if (solveState != SS_UNSOLVED)
-  {
+  if (solveState != SS_UNSOLVED) {
     str = pars.getAttributeValue("assemblies");
     if (str.length())
       numAssemblies = atoi(str.c_str());
@@ -245,24 +228,22 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
 
   unsigned int pieces = 0;
 
-  do
-  {
+  do {
     int state = pars.nextTag();
 
     if (state == XmlParser::END_TAG) break;
     pars.require(XmlParser::START_TAG, "");
 
-    if (pars.getName() == "shapes")  // parts are saved in this tag for historical reasons
+    if (pars.getName()
+        == "shapes")  // parts are saved in this tag for historical reasons
     {
-      do
-      {
+      do {
         int state = pars.nextTag();
 
         if (state == XmlParser::END_TAG) break;
         pars.require(XmlParser::START_TAG, "");
 
-        if (pars.getName() == "shape")
-        {
+        if (pars.getName() == "shape") {
           unsigned short id, min, max, grp;
 
           str = pars.getAttributeValue("id");
@@ -276,7 +257,7 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
           if (str.length())
             min = max = atoi(str.c_str());
           else if (pars.getAttributeValue("min").length() &&
-                   pars.getAttributeValue("max").length()) {
+              pars.getAttributeValue("max").length()) {
             min = atoi(pars.getAttributeValue("min").c_str());
             max = atoi(pars.getAttributeValue("max").c_str());
             if (min > max)
@@ -292,13 +273,10 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
           if (id >= puzzle.shapeNumber())
             pars.exception("the shape ids must be for valid shapes");
 
-          if (grp)
-          {
+          if (grp) {
             parts.push_back(new part_c(id, min, max, grp));
             pars.skipSubTree();
-          }
-          else
-          {
+          } else {
             /* OK we have 2 ways to specify groups for pieces, either
              * a group attribute in the tag. Then all pieces are
              * in the given group, or you specify a list of group
@@ -307,23 +285,23 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
              */
             parts.push_back(new part_c(id, min, max));
 
-            do
-            {
+            do {
               int state = pars.nextTag();
 
               if (state == XmlParser::END_TAG) break;
               pars.require(XmlParser::START_TAG, "");
 
-              if (pars.getName() == "group")
-              {
+              if (pars.getName() == "group") {
                 str = pars.getAttributeValue("group");
                 if (!str.length())
-                  pars.exception("a group node must have a valid group attribute");
+                  pars.exception(
+                      "a group node must have a valid group attribute");
                 grp = atoi(str.c_str());
 
                 str = pars.getAttributeValue("count");
                 if (!str.length())
-                  pars.exception("a group node must have a valid count attribute");
+                  pars.exception(
+                      "a group node must have a valid count attribute");
                 unsigned int cnt = atoi(str.c_str());
 
                 (*parts.rbegin())->addGroup(grp, cnt);
@@ -333,8 +311,7 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
 
             } while (true);
           }
-        }
-        else
+        } else
           pars.skipSubTree();
 
         pars.require(XmlParser::END_TAG, "shape");
@@ -342,26 +319,24 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
       } while (true);
 
       pars.require(XmlParser::END_TAG, "shapes");
-    }
-    else if (pars.getName() == "result")
-    {
+    } else if (pars.getName() == "result") {
       str = pars.getAttributeValue("id");
       if (!str.length())
-        pars.exception("the result node must have an 'id' attribute with content");
+        pars.exception(
+            "the result node must have an 'id' attribute with content");
       result = atoi(str.c_str());
       pars.skipSubTree();
-    }
-    else if (pars.getName() == "solutions")
-    {
-      do
-      {
+    } else if (pars.getName() == "solutions") {
+      do {
         int state = pars.nextTag();
 
         if (state == XmlParser::END_TAG) break;
         pars.require(XmlParser::START_TAG, "");
 
         if (pars.getName() == "solution")
-          solutions.push_back(new solution_c(pars, pieces, puzzle.getGridType()));
+          solutions_.push_back(std::make_unique<Solution>(pars,
+                                                          pieces,
+                                                          puzzle.getGridType()));
         else
           pars.skipSubTree();
 
@@ -370,18 +345,14 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
       } while (true);
 
       pars.require(XmlParser::END_TAG, "solutions");
-    }
-    else if (pars.getName() == "bitmap")
-    {
-      do
-      {
+    } else if (pars.getName() == "bitmap") {
+      do {
         int state = pars.nextTag();
 
         if (state == XmlParser::END_TAG) break;
         pars.require(XmlParser::START_TAG, "");
 
-        if (pars.getName() == "pair")
-        {
+        if (pars.getName() == "pair") {
           str = pars.getAttributeValue("piece");
           if (str.length() == 0)
             pars.exception("a pair node must have a piece attribute");
@@ -400,25 +371,19 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
       } while (true);
 
       pars.require(XmlParser::END_TAG, "bitmap");
-    }
-    else if (pars.getName() == "assembler")
-    {
+    } else if (pars.getName() == "assembler") {
       str = pars.getAttributeValue("version");
-      if (str.length())
-      {
+      if (str.length()) {
         assemblerVersion = str;
         pars.next();
         assemblerState = pars.getText();
         pars.next();
         pars.require(XmlParser::END_TAG, "assembler");
-      }
-      else
+      } else
         pars.skipSubTree();
 
       pars.require(XmlParser::END_TAG, "assembler");
-    }
-    else
-    {
+    } else {
       pars.skipSubTree();
     }
 
@@ -437,8 +402,7 @@ Problem::Problem(Puzzle & puz, XmlParser & pars) : puzzle(puz), result(0xFFFFFFF
 
 void Problem::removeShape(unsigned short idx) {
 
-  if (result == idx)
-  {
+  if (result == idx) {
     editProblem();
     result = 0xFFFFFFFF;
   }
@@ -473,7 +437,7 @@ void Problem::allowPlacement(unsigned int pc, unsigned int res) {
   if ((pc == 0) || (res == 0))
     return;
 
-  colorConstraints.insert((pc-1) << 16 | (res-1));
+  colorConstraints.insert((pc - 1) << 16 | (res - 1));
 }
 
 void Problem::disallowPlacement(unsigned int pc, unsigned int res) {
@@ -483,7 +447,8 @@ void Problem::disallowPlacement(unsigned int pc, unsigned int res) {
   if ((pc == 0) || (res == 0))
     return;
 
-  std::set<uint32_t>::iterator i = colorConstraints.find((pc-1) << 16 | (res-1));
+  std::set<uint32_t>::iterator
+      i = colorConstraints.find((pc - 1) << 16 | (res - 1));
   if (i != colorConstraints.end())
     colorConstraints.erase(i);
 }
@@ -495,9 +460,10 @@ bool Problem::placementAllowed(unsigned int pc, unsigned int res) const {
   if (puzzle.colorNumber() == 0)
     return true;
 
-  return (pc == 0) || (res == 0) || (colorConstraints.find((pc-1) << 16 | (res-1)) != colorConstraints.end());
+  return (pc == 0) || (res == 0)
+      || (colorConstraints.find((pc - 1) << 16 | (res - 1))
+          != colorConstraints.end());
 }
-
 
 void Problem::exchangeShape(unsigned int s1, unsigned int s2) {
   bt_assert(s1 < parts.size());
@@ -527,47 +493,45 @@ void Problem::exchangeShape(unsigned int s1, unsigned int s2) {
   p1Count = parts[s1]->max;
   p2Count = parts[s2]->max;
 
-  bt_assert(p1Start+p1Count == p2Start);
+  bt_assert(p1Start + p1Count == p2Start);
 
-  part_c * s = parts[s1];
+  part_c *s = parts[s1];
   parts[s1] = parts[s2];
   parts[s2] = s;
 
   /* this vector holds the target position of all the involved piece
    * as long as its not in the order 0, 1, 2, ... some pieces must be exchanged
    */
-  std::vector<unsigned int>pos;
+  std::vector<unsigned int> pos;
 
-  pos.resize(p1Count+p2Count);
+  pos.resize(p1Count + p2Count);
 
   for (unsigned int i = 0; i < p1Count; i++)
-    pos[i] = p2Count+i;
+    pos[i] = p2Count + i;
   for (unsigned int i = 0; i < p2Count; i++)
-    pos[p1Count+i] = i;
+    pos[p1Count + i] = i;
 
-  for (unsigned int i = 0; i < p1Count+p2Count-1; i++)
+  for (unsigned int i = 0; i < p1Count + p2Count - 1; i++)
     if (pos[i] != i) {
 
       // search for i
-      unsigned int j = i+1;
-      while ((j < p1Count+p2Count) && (pos[j] != i)) j++;
+      unsigned int j = i + 1;
+      while ((j < p1Count + p2Count) && (pos[j] != i)) j++;
 
-      bt_assert(j < p1Count+p2Count);
+      bt_assert(j < p1Count + p2Count);
 
-      for (unsigned int s = 0; s < solutions.size(); s++)
-        solutions[s]->exchangeShape(p1Start+i, p1Start+j);
+      for (unsigned int s = 0; s < solutions_.size(); s++)
+        solutions_[s]->exchangeShape(p1Start + i, p1Start + j);
 
       pos[j] = pos[i];
       // normally we would also need pos[i] = i; but as we don't touch that field any more let's save that operation
     }
 }
 
-void Problem::setResultId(unsigned int shape)
-{
+void Problem::setResultId(unsigned int shape) {
   bt_assert(shape < puzzle.shapeNumber());
 
-  if (shape != result)
-  {
+  if (shape != result) {
     removeAllSolutions();
     result = shape;
   }
@@ -592,8 +556,7 @@ Voxel *Problem::getResultShape() {
   return puzzle.getShape(result);
 }
 
-void Problem::setShapeMinimum(unsigned int shape, unsigned int count)
-{
+void Problem::setShapeMinimum(unsigned int shape, unsigned int count) {
   bt_assert(shape < puzzle.shapeNumber());
 
   editProblem();
@@ -601,25 +564,18 @@ void Problem::setShapeMinimum(unsigned int shape, unsigned int count)
   unsigned int pieceIdx = 0;
 
   for (unsigned int id = 0; id < parts.size(); id++) {
-    if (parts[id]->shapeId == shape)
-    {
+    if (parts[id]->shapeId == shape) {
       parts[id]->min = count;
       if (parts[id]->min > parts[id]->max)
         setShapeMaximum(shape, count);
 
-      if (count > 0)
-      {
+      if (count > 0) {
         // delete all solutions that have not the required minimum of the pieces
         unsigned int s = 0;
-        while (s < solutions.size())
-        {
-          if (!solutions[s]->getAssembly()->isPlaced(pieceIdx+count-1))
-          {
-            delete solutions[s];
-            solutions.erase(solutions.begin()+s);
-          }
-          else
-          {
+        while (s < solutions_.size()) {
+          if (!solutions_[s]->getAssembly()->isPlaced(pieceIdx + count - 1)) {
+            solutions_.erase(solutions_.begin() + s);
+          } else {
             s++;
           }
         }
@@ -631,61 +587,50 @@ void Problem::setShapeMinimum(unsigned int shape, unsigned int count)
   }
 
   // when we get here there is no piece with the required puzzle shape, so add it
-  if (count)
-  {
+  if (count) {
     parts.push_back(new part_c(shape, count, count, 0));
 
     // add new placements, pieces are not placed
-    for (unsigned int s = 0; s < solutions.size(); s++)
-      solutions[s]->addNonPlacedPieces(pieceNumber(), count);
+    for (unsigned int s = 0; s < solutions_.size(); s++)
+      solutions_[s]->addNonPlacedPieces(pieceNumber(), count);
   }
 }
 
-void Problem::setShapeMaximum(unsigned int shape, unsigned int count)
-{
+void Problem::setShapeMaximum(unsigned int shape, unsigned int count) {
   bt_assert(shape < puzzle.shapeNumber());
 
   unsigned int pieceIdx = 0;
 
-  for (unsigned int id = 0; id < parts.size(); id++)
-  {
-    if (parts[id]->shapeId == shape)
-    {
+  for (unsigned int id = 0; id < parts.size(); id++) {
+    if (parts[id]->shapeId == shape) {
       // remove the shape
-      if (count == 0)
-      {
+      if (count == 0) {
         editProblem();
 
         unsigned int s = 0;
 
-        while (s < solutions.size())
-        {
-          if (solutions[s]->getAssembly()->isPlaced(pieceIdx))
-          {
-            delete solutions[s];
-            solutions.erase(solutions.begin()+s);
-          }
-          else
-          {
-            solutions[s]->removePieces(pieceIdx, parts[id]->max);
+        while (s < solutions_.size()) {
+          if (solutions_[s]->getAssembly()->isPlaced(pieceIdx)) {
+            solutions_.erase(solutions_.begin() + s);
+          } else {
+            solutions_[s]->removePieces(pieceIdx, parts[id]->max);
             s++;
           }
         }
 
-        parts.erase(parts.begin()+id);
+        parts.erase(parts.begin() + id);
 
         return;
       }
 
       // increase the maximum
-      if (count > parts[id]->max)
-      {
+      if (count > parts[id]->max) {
         editProblem();
 
-        for (unsigned int s = 0; s < solutions.size(); s++)
-          solutions[s]->addNonPlacedPieces(pieceIdx+parts[id]->max, count-parts[id]->max);
-      }
-      else if (count < parts[id]->max)  // cedrease the maximum
+        for (unsigned int s = 0; s < solutions_.size(); s++)
+          solutions_[s]->addNonPlacedPieces(pieceIdx + parts[id]->max,
+                                           count - parts[id]->max);
+      } else if (count < parts[id]->max)  // cedrease the maximum
       {
         editProblem();
         // go through all solutions, those solutions that use more
@@ -694,17 +639,14 @@ void Problem::setShapeMaximum(unsigned int shape, unsigned int count)
         // the other solutions may stay, but require some
         // placements removed
         unsigned int s = 0;
-        while (s < solutions.size())
-        {
-          if (solutions[s]->getAssembly()->isPlaced(pieceIdx+parts[id]->max-1))
-          {
+        while (s < solutions_.size()) {
+          if (solutions_[s]->getAssembly()->isPlaced(
+              pieceIdx + parts[id]->max - 1)) {
             // too many pieces placed -> delete solution
-            delete solutions[s];
-            solutions.erase(solutions.begin()+s);
-          }
-          else
-          {
-            solutions[s]->removePieces(pieceIdx+count, parts[id]->max-count);
+            solutions_.erase(solutions_.begin() + s);
+          } else {
+            solutions_[s]->removePieces(pieceIdx + count,
+                                       parts[id]->max - count);
             s++;
           }
         }
@@ -719,13 +661,12 @@ void Problem::setShapeMaximum(unsigned int shape, unsigned int count)
     pieceIdx += parts[id]->max;
   }
 
-  if (count)
-  {
+  if (count) {
     parts.push_back(new part_c(shape, 0, count, 0));
 
     // add new placements, pieces are not placed
-    for (unsigned int s = 0; s < solutions.size(); s++)
-      solutions[s]->addNonPlacedPieces(pieceIdx, count);
+    for (unsigned int s = 0; s < solutions_.size(); s++)
+      solutions_[s]->addNonPlacedPieces(pieceIdx, count);
   }
 }
 
@@ -810,39 +751,51 @@ unsigned int Problem::getShapeMax(unsigned int shapeID) const {
   return parts[shapeID]->max;
 }
 
-void Problem::addSolution(Assembly * assm) {
+void Problem::addSolution(Assembly *assm) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 
-  solutions.push_back(new solution_c(assm, numAssemblies));
+  solutions_.push_back(std::make_unique<Solution>(assm, numAssemblies));
 }
 
-void Problem::addSolution(Assembly * assm, Separation * disasm, unsigned int pos) {
+void Problem::addSolution(Assembly *assm,
+                          Separation *disasm,
+                          unsigned int pos) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 
   // if the given index is behind the number of solutions add at the end
-  if (pos < solutions.size())
-    solutions.insert(solutions.begin()+pos, new solution_c(assm, numAssemblies, disasm, numSolutions));
+  if (pos < solutions_.size())
+    solutions_.insert(solutions_.begin() + pos,
+                      std::make_unique<Solution>(assm, numAssemblies, disasm,
+                                                 numSolutions));
   else
-    solutions.push_back(new solution_c(assm, numAssemblies, disasm, numSolutions));
+    solutions_.push_back(std::make_unique<Solution>(assm,
+                                                    numAssemblies,
+                                                    disasm,
+                                                    numSolutions));
 }
 
-void Problem::addSolution(Assembly * assm, separationInfo_c * disasm, unsigned int pos) {
+void Problem::addSolution(Assembly *assm,
+                          SeparationInfo *disasm,
+                          unsigned int pos) {
   bt_assert(assm);
   bt_assert(solveState == SS_SOLVING);
 
   // if the given index is behind the number of solutions add at the end
-  if (pos < solutions.size())
-    solutions.insert(solutions.begin()+pos, new solution_c(assm, numAssemblies, disasm, numSolutions));
+  if (pos < solutions_.size())
+    solutions_.insert(solutions_.begin() + pos,
+                      std::make_unique<Solution>(assm, numAssemblies, disasm,
+                                                 numSolutions));
   else
-    solutions.push_back(new solution_c(assm, numAssemblies, disasm, numSolutions));
+    solutions_.push_back(std::make_unique<Solution>(assm,
+                                                    numAssemblies,
+                                                    disasm,
+                                                    numSolutions));
 }
 
 void Problem::removeAllSolutions() {
-  for (unsigned int i = 0; i < solutions.size(); i++)
-    delete solutions[i];
-  solutions.clear();
+  solutions_.clear();
   delete assm;
   assm = 0;
   assemblerState = "";
@@ -853,20 +806,19 @@ void Problem::removeAllSolutions() {
 }
 
 void Problem::removeSolution(unsigned int sol) {
-  bt_assert(sol < solutions.size());
-  delete solutions[sol];
-  solutions.erase(solutions.begin()+sol);
+  bt_assert(sol < solutions_.size());
+  solutions_.erase(solutions_.begin() + sol);
 }
 
-AssemblerInterface::errState Problem::setAssembler(AssemblerInterface * assm) {
-
+AssemblerInterface::errState Problem::setAssembler(AssemblerInterface *assm) {
 
   if (assemblerState.length()) {
 
     bt_assert(solveState == SS_SOLVING);
 
     // if we have some assembler position data, try to load that
-    AssemblerInterface::errState err = assm->setPosition(assemblerState.c_str(), assemblerVersion.c_str());
+    AssemblerInterface::errState err =
+        assm->setPosition(assemblerState.c_str(), assemblerVersion.c_str());
 
     // when we could not load, return with error and reset to unsolved
     if (err != AssemblerInterface::ERR_NONE) {
@@ -892,7 +844,9 @@ AssemblerInterface::errState Problem::setAssembler(AssemblerInterface * assm) {
   return AssemblerInterface::ERR_NONE;
 }
 
-void Problem::setShapeGroup(unsigned int shapeID, unsigned short group, unsigned short count) {
+void Problem::setShapeGroup(unsigned int shapeID,
+                            unsigned short group,
+                            unsigned short count) {
   bt_assert(shapeID < parts.size());
 
   // not first look, if we already have this group number in our list
@@ -903,7 +857,7 @@ void Problem::setShapeGroup(unsigned int shapeID, unsigned short group, unsigned
       if (count)
         parts[shapeID]->groups[i].count = count;
       else
-        parts[shapeID]->groups.erase(parts[shapeID]->groups.begin()+i);
+        parts[shapeID]->groups.erase(parts[shapeID]->groups.begin() + i);
       return;
     }
 
@@ -918,14 +872,16 @@ unsigned short Problem::getShapeGroupNumber(unsigned int shapeID) const {
   return parts[shapeID]->groups.size();
 }
 
-unsigned short Problem::getShapeGroup(unsigned int shapeID, unsigned int groupID) const {
+unsigned short Problem::getShapeGroup(unsigned int shapeID,
+                                      unsigned int groupID) const {
   bt_assert(shapeID < parts.size());
   bt_assert(groupID < parts[shapeID]->groups.size());
 
   return parts[shapeID]->groups[groupID].group;
 }
 
-unsigned short Problem::getShapeGroupCount(unsigned int shapeID, unsigned int groupID) const {
+unsigned short Problem::getShapeGroupCount(unsigned int shapeID,
+                                           unsigned int groupID) const {
   bt_assert(shapeID < parts.size());
   bt_assert(groupID < parts[shapeID]->groups.size());
 
@@ -965,46 +921,30 @@ unsigned int Problem::pieceToSubShape(unsigned int piece) const {
 const GridType *Problem::getGridType(void) const { return puzzle.getGridType(); }
 GridType *Problem::getGridType() { return puzzle.getGridType(); }
 
-
-static bool comp_0_assembly(const solution_c * s1, const solution_c * s2)
-{
-  return s1->getAssemblyNumber() < s2->getAssemblyNumber();
-}
-
-static bool comp_1_level(solution_c * s1, solution_c * s2)
-{
-  return s1->getDisassemblyInfo() && s2->getDisassemblyInfo() &&
-      (s1->getDisassemblyInfo()->compare(s2->getDisassemblyInfo()) < 0);
-}
-
-static bool comp_2_moves(solution_c * s1, solution_c * s2)
-{
-  return s1->getDisassemblyInfo() && s2->getDisassemblyInfo() &&
-      (s1->getDisassemblyInfo()->sumMoves() < s2->getDisassemblyInfo()->sumMoves());
-}
-
-static bool comp_3_pieces(const solution_c * s1, const solution_c * s2)
-{
-  return s1->getAssembly()->comparePieces(s2->getAssembly()) > 0;
-}
-
 void Problem::sortSolutions(int by) {
-  switch (by) {
-    case 0: stable_sort(solutions.begin(), solutions.end(), comp_0_assembly); break;
-    case 1: stable_sort(solutions.begin(), solutions.end(), comp_1_level   ); break;
-    case 2: stable_sort(solutions.begin(), solutions.end(), comp_2_moves   ); break;
-    case 3: stable_sort(solutions.begin(), solutions.end(), comp_3_pieces  ); break;
-  }
+  stable_sort(solutions_.begin(), solutions_.end(), [by](auto &s1, auto &s2) {
+    switch (by) {
+      case 0:
+        return s1->getAssemblyNumber() < s2->getAssemblyNumber();
+      case 1:
+        return s1->getDisassemblyInfo() && s2->getDisassemblyInfo() &&
+               s1->getDisassemblyInfo()->compare(s2->getDisassemblyInfo()) < 0;
+      case 2:
+        return s1->getDisassemblyInfo() && s2->getDisassemblyInfo() &&
+               s1->getDisassemblyInfo()->sumMoves() <
+               s2->getDisassemblyInfo()->sumMoves();
+      case 3:
+        return s1->getAssembly()->comparePieces(s2->getAssembly()) > 0;
+    }
+  });
 }
 
-void Problem::editProblem(void)
-{
+void Problem::editProblem(void) {
   if (solveState == SS_SOLVING || solveState == SS_SOLVED)
     makeUnknown();
 }
 
-void Problem::makeUnknown(void)
-{
+void Problem::makeUnknown(void) {
   solveState = SS_UNKNOWN;
 
   if (assm) delete assm;

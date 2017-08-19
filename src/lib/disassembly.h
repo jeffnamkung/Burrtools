@@ -33,57 +33,54 @@
 class XmlWriter;
 class XmlParser;
 
-
 /** the disassembly is a common base class for the
  * separation and separationInfo classes.
  */
-class Disassembly
-{
-  public:
-    Disassembly() {}
-    virtual ~Disassembly() {}
+class Disassembly {
+ public:
+  Disassembly() {}
+  virtual ~Disassembly() {}
 
-    /**
-     * the number of moves to completely disassemble the puzzle, including
-     * all sub separations
-     */
-    virtual unsigned int sumMoves(void) const = 0;
-    /**
-     * fill a string with dot separated numbers containing the moves
-     * required to disassemble the puzzle
-     * not more than len characters are written
-     */
-    virtual void movesText(char * txt, int len) const = 0;
+  /**
+   * the number of moves to completely disassemble the puzzle, including
+   * all sub separations
+   */
+  virtual unsigned int sumMoves(void) const = 0;
+  /**
+   * fill a string with dot separated numbers containing the moves
+   * required to disassemble the puzzle
+   * not more than len characters are written
+   */
+  virtual void movesText(char *txt, int len) const = 0;
 
-    /**
-     * compares this and the given separation, for a higher level.
-     * one separation is bigger than the other if all levels
-     * up to branch n are equal and on n+1 the level is larger then
-     * the level of the other
-     * if this assembly is bigger >0 is returned
-     * if this assembler is smaller <0 is returned
-     * if they are both equal =0 is returned
-     */
-    int compare(const Disassembly * s2) const;
+  /**
+   * compares this and the given separation, for a higher level.
+   * one separation is bigger than the other if all levels
+   * up to branch n are equal and on n+1 the level is larger then
+   * the level of the other
+   * if this assembly is bigger >0 is returned
+   * if this assembler is smaller <0 is returned
+   * if they are both equal =0 is returned
+   */
+  int compare(const Disassembly *s2) const;
 
-  protected:
+ protected:
 
-    /**
-     * helper function used for "compare" to get the number of moves for
-     * the x-th place in the string
-     */
-    virtual unsigned int getSequenceLength(unsigned int x) const = 0;
+  /**
+   * helper function used for "compare" to get the number of moves for
+   * the x-th place in the string
+   */
+  virtual unsigned int getSequenceLength(unsigned int x) const = 0;
 
-    /** helper function used for "compare" to get the number of move sequences */
-    virtual unsigned int getNumSequences(void) const = 0;
+  /** helper function used for "compare" to get the number of move sequences */
+  virtual unsigned int getNumSequences(void) const = 0;
 
-  private:
+ private:
 
-    // no copying and assigning
-    Disassembly(const Disassembly&);
-    void operator=(const Disassembly&);
+  // no copying and assigning
+  Disassembly(const Disassembly &);
+  void operator=(const Disassembly &);
 };
-
 
 /**
  * defines one step in the separation process.
@@ -103,7 +100,7 @@ class State {
   unsigned int piecenumber;
 #endif
 
-public:
+ public:
 
   /**
    * create a new spate for pn pieces. you can not add more
@@ -112,15 +109,15 @@ public:
   State(unsigned int pn);
 
   /** copy constructor */
-  State(const State * cpy, unsigned int pn);
+  State(const State *cpy, unsigned int pn);
 
   /** load from an xml node */
-  State(XmlParser & pars, unsigned int pn);
+  State(XmlParser &pars, unsigned int pn);
 
   ~State();
 
   /** save into an xml node */
-  void save(XmlWriter & xml, unsigned int piecenumber) const;
+  void save(XmlWriter &xml, unsigned int piecenumber) const;
 
   /** set the position of a piece */
   void set(unsigned int piece, int x, int y, int z);
@@ -149,12 +146,11 @@ public:
   unsigned int getPiecenumber(void) const { return piecenumber; }
 #endif
 
-private:
+ private:
   // no copying and assigning
-  State(const State&) = delete;
-  void operator=(const State&) = delete;
+  State(const State &) = delete;
+  void operator=(const State &) = delete;
 };
-
 
 /**
  * A list of states that lead to a separation of the
@@ -164,8 +160,7 @@ private:
  * puzzle and the lower parts divide the puzzle more and more until only
  * single pieces are left
  */
-class Separation : public Disassembly
-{
+class Separation : public Disassembly {
 
   /**
    * this array is here to identify the piecenumber for the given pieces
@@ -186,13 +181,13 @@ class Separation : public Disassembly
    * for the root node the first state represents the assembles puzzle
    * with all values 0
    */
-  std::deque <State *> states;
+  std::deque<State *> states;
 
   /* the 2 parts the puzzle gets divided with the
    * last move. If one of this parts consists of only
    * one piece there will be a null pointer
    */
-  Separation * removed, *left;
+  Separation *removed, *left;
 
   /** used in movesText to find out if a branch has a movesequence longer than 1 */
   bool containsMultiMoves(void);
@@ -203,24 +198,26 @@ class Separation : public Disassembly
   unsigned int numSequences;
 
   /** helper function for movesTxt */
-  int movesText2(char * txt, int len) const;
+  int movesText2(char *txt, int len) const;
 
-public:
+ public:
 
   /**
    * create a separation with sub separations r and l
    * and the pieces in the array pcs
    */
-  Separation(Separation * r, Separation * l, const std::vector<unsigned int> & pcs);
+  Separation(Separation *r,
+             Separation *l,
+             const std::vector<unsigned int> &pcs);
 
   /** load a separation from an xml node */
-  Separation(XmlParser & pars, unsigned int pieces);
+  Separation(XmlParser &pars, unsigned int pieces);
 
   /** copy constructor */
-  Separation(const Separation * cpy);
+  Separation(const Separation *cpy);
 
   /* save into an xml node, please always call with just xml, the type is for internal use */
-  void save(XmlWriter & xml, int type = 0) const;
+  void save(XmlWriter &xml, int type = 0) const;
 
   ~Separation();
 
@@ -231,16 +228,16 @@ public:
   unsigned int getMoves(void) const { return states.size() - 1; }
 
   /** get one state from the separation process */
-  const State * getState(unsigned int num) const {
+  const State *getState(unsigned int num) const {
     bt_assert(num < states.size());
     return states[num];
   }
 
   /** get the separation for the pieces that were removed */
-  const Separation * getLeft(void) const { return left; }
+  const Separation *getLeft(void) const { return left; }
 
   /** get the separation for the pieces that were left over */
-  const Separation * getRemoved(void) const { return removed; }
+  const Separation *getRemoved(void) const { return removed; }
 
   /**
    * add a new state to the FRONT of the current state list.
@@ -268,16 +265,16 @@ public:
   virtual unsigned int getSequenceLength(unsigned int x) const;
   virtual unsigned int getNumSequences(void) const;
   virtual unsigned int sumMoves(void) const;
-  virtual void movesText(char * txt, int len) const { movesText2(txt, len); }
+  virtual void movesText(char *txt, int len) const { movesText2(txt, len); }
 
   void removePieces(unsigned int from, unsigned int cnt);
   void addNonPlacedPieces(unsigned int from, unsigned int cnt);
 
-private:
+ private:
 
   // no copying and assigning
-  Separation(const Separation&);
-  void operator=(const Separation&);
+  Separation(const Separation &);
+  void operator=(const Separation &);
 };
 
 /**
@@ -285,58 +282,57 @@ private:
  * is used as a memory efficient replacement for the basic information
  * in separation_c without the detailed disassembly instructions
  */
-class separationInfo_c : public Disassembly {
+class SeparationInfo : public Disassembly {
 
-  private:
+ private:
 
-    /**
-     * this array contains the whole disassembly tree in prefix order, root, left, removed.
-     * When a certain subtree is empty a zero is included, otherwise the number is the number
-     * of states within this tree node
-     *
-     * example:
-     * \verbatim
-       3 2 1 0 0 0 0     tree root 3 --> 2 --> 1 \endverbatim
-     *
-     * another example
-     *
-     * \verbatim
-       3 1 1 0 0 0 1 1 0 0 0   tree root  3 --> 1 --> 1
-                                           \--> 1 --> 1 \endverbatim
-     */
-    std::vector<unsigned int> values;
+  /**
+   * this array contains the whole disassembly tree in prefix order, root, left, removed.
+   * When a certain subtree is empty a zero is included, otherwise the number is the number
+   * of states within this tree node
+   *
+   * example:
+   * \verbatim
+     3 2 1 0 0 0 0     tree root 3 --> 2 --> 1 \endverbatim
+   *
+   * another example
+   *
+   * \verbatim
+     3 1 1 0 0 0 1 1 0 0 0   tree root  3 --> 1 --> 1
+                                         \--> 1 --> 1 \endverbatim
+   */
+  std::vector<unsigned int> values;
 
-    /** used in movesText to find out if a branch has a movesequence longer than 1 */
-    bool containsMultiMoves(unsigned int root) const;
+  /** used in movesText to find out if a branch has a movesequence longer than 1 */
+  bool containsMultiMoves(unsigned int root) const;
 
-    /** used in constructor for create separationInfo from normal separation */
-    void recursiveConstruction(const Separation * sep);
+  /** used in constructor for create separationInfo from normal separation */
+  void recursiveConstruction(const Separation *sep);
 
-    int movesText2(char * txt, int len, unsigned int idx) const;
+  int movesText2(char *txt, int len, unsigned int idx) const;
 
-  public:
+ public:
 
-    /** load separationInfo from parser */
-    separationInfo_c(XmlParser & pars);
+  /** load separationInfo from parser */
+  SeparationInfo(XmlParser &pars);
 
-    /** create a separation infor from a normal separation */
-    separationInfo_c(const Separation * sep);
+  /** create a separation infor from a normal separation */
+  SeparationInfo(const Separation *sep);
 
-    /** save into an xml node */
-    void save(XmlWriter & xml) const;
+  /** save into an xml node */
+  void save(XmlWriter &xml) const;
 
-    /* implement abstract functions */
-    virtual unsigned int sumMoves(void) const;
-    virtual void movesText(char * txt, int len) const { movesText2(txt, len, 0); }
-    virtual unsigned int getSequenceLength(unsigned int x) const;
-    virtual unsigned int getNumSequences(void) const;
+  /* implement abstract functions */
+  virtual unsigned int sumMoves(void) const;
+  virtual void movesText(char *txt, int len) const { movesText2(txt, len, 0); }
+  virtual unsigned int getSequenceLength(unsigned int x) const;
+  virtual unsigned int getNumSequences(void) const;
 
-  private:
+ private:
 
-    // no copying and assigning
-    separationInfo_c(const separationInfo_c&);
-    void operator=(const separationInfo_c&);
+  // no copying and assigning
+  SeparationInfo(const SeparationInfo &);
+  void operator=(const SeparationInfo &);
 };
-
 
 #endif

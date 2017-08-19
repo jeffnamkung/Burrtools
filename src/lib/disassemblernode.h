@@ -48,7 +48,7 @@ class Assembly;
  */
 class disassemblerNode_c {
 
-private:
+ private:
 
   /**
    * Maximum possible distance from the original position.
@@ -63,7 +63,7 @@ private:
    * node. So each node saves where the way to the start is. The root
    * node obviously has a NULL pointer here.
    */
-  disassemblerNode_c * comefrom;
+  disassemblerNode_c *comefrom;
 
   /**
    * Number of pieces this node is handling
@@ -84,7 +84,7 @@ private:
    * then the data fields also contain the direction, not the
    * position of the piece
    */
-  int16_t * dat;
+  int16_t *dat;
 
   /**
    * A reference counter for automatic deletion of the node.
@@ -132,7 +132,7 @@ private:
    */
   unsigned int waylength;
 
-public:
+ public:
 
   /**
    * Create a new node.
@@ -142,10 +142,14 @@ public:
    * Thepsize is added to the waylength of the come-from pointer and the result will be
    * saved in our waylength value
    */
-  disassemblerNode_c(unsigned int pn, disassemblerNode_c * comf, int _dir, int _amount, int step = 1);
+  disassemblerNode_c(unsigned int pn,
+                     disassemblerNode_c *comf,
+                     int _dir,
+                     int _amount,
+                     int step = 1);
 
   /** creates a root node from an assembly */
-  disassemblerNode_c(const Assembly * assm);
+  disassemblerNode_c(const Assembly *assm);
 
   /** create a new root node with pn pieces */
   disassemblerNode_c(unsigned int pn);
@@ -202,30 +206,30 @@ public:
    * relative to each other because all nodes with all pieces
    * shifted by the same mount do are equal
    */
-  bool operator == (const disassemblerNode_c &b) const;
+  bool operator==(const disassemblerNode_c &b) const;
 
   /** return x-position of piece i */
   int getX(unsigned int i) const {
     bt_assert(i < piecenumber);
-    return dat[4*i+0];
+    return dat[4 * i + 0];
   }
 
   /** return y-position of piece i */
   int getY(unsigned int i) const {
     bt_assert(i < piecenumber);
-    return dat[4*i+1];
+    return dat[4 * i + 1];
   }
 
   /** return z-position of piece i */
   int getZ(unsigned int i) const {
     bt_assert(i < piecenumber);
-    return dat[4*i+2];
+    return dat[4 * i + 2];
   }
 
   /** return orientation of piece i */
   unsigned int getTrans(unsigned int i) const {
     bt_assert(i < piecenumber);
-    return (unsigned char)dat[4*i+3];
+    return (unsigned char) dat[4 * i + 3];
   }
 
   /** return the number of pieces that are handled in this node */
@@ -243,10 +247,10 @@ public:
     bt_assert(i < piecenumber);
     bt_assert(abs(x) < maxMove && abs(y) < maxMove && abs(z) < maxMove);
 
-    dat[4*i+0] = x;
-    dat[4*i+1] = y;
-    dat[4*i+2] = z;
-    dat[4*i+3] = (int16_t)0xFFFF;
+    dat[4 * i + 0] = x;
+    dat[4 * i + 1] = y;
+    dat[4 * i + 2] = z;
+    dat[4 * i + 3] = (int16_t) 0xFFFF;
     hashValue = 0;
   }
 
@@ -257,28 +261,27 @@ public:
     bt_assert(i < piecenumber);
     bt_assert(abs(x) < maxMove && abs(y) < maxMove && abs(z) < maxMove);
 
-    dat[4*i+0] = x;
-    dat[4*i+1] = y;
-    dat[4*i+2] = z;
-    dat[4*i+3] = (int16_t)tr;
+    dat[4 * i + 0] = x;
+    dat[4 * i + 1] = y;
+    dat[4 * i + 2] = z;
+    dat[4 * i + 3] = (int16_t) tr;
     hashValue = 0;
   }
 
   /**
    * set position of piece i in this node relative to the position in the come-from node
    */
-  void set(unsigned int i, int tx, int ty, int tz)
-  {
+  void set(unsigned int i, int tx, int ty, int tz) {
     bt_assert(i < piecenumber);
     bt_assert(comefrom);
-    bt_assert(abs(comefrom->dat[4*i+0]+tx) < maxMove &&
-              abs(comefrom->dat[4*i+1]+ty) < maxMove &&
-              abs(comefrom->dat[4*i+2]+tz) < maxMove);
+    bt_assert(abs(comefrom->dat[4 * i + 0] + tx) < maxMove &&
+        abs(comefrom->dat[4 * i + 1] + ty) < maxMove &&
+        abs(comefrom->dat[4 * i + 2] + tz) < maxMove);
 
-    dat[4*i+0] = comefrom->dat[4*i+0]+tx;
-    dat[4*i+1] = comefrom->dat[4*i+1]+ty;
-    dat[4*i+2] = comefrom->dat[4*i+2]+tz;
-    dat[4*i+3] = comefrom->dat[4*i+3];
+    dat[4 * i + 0] = comefrom->dat[4 * i + 0] + tx;
+    dat[4 * i + 1] = comefrom->dat[4 * i + 1] + ty;
+    dat[4 * i + 2] = comefrom->dat[4 * i + 2] + tz;
+    dat[4 * i + 3] = comefrom->dat[4 * i + 3];
     hashValue = 0;
   }
 
@@ -287,7 +290,7 @@ public:
    */
   bool is_piece_removed(unsigned int nr) const {
     bt_assert(nr < piecenumber);
-    return (dat[4*nr+3] == (int16_t)0xFFFF);
+    return (dat[4 * nr + 3] == (int16_t) 0xFFFF);
   }
 
   /**
@@ -296,7 +299,7 @@ public:
   bool is_separation() const;
 
   /** get the come-from node */
-  const disassemblerNode_c * getComefrom(void) const {
+  const disassemblerNode_c *getComefrom(void) const {
     return comefrom;
   }
 
@@ -322,13 +325,13 @@ public:
    * those tables we need a next-pointer to save lists of nodes
    * that go into the same hash-bucket
    */
-  disassemblerNode_c * next;
+  disassemblerNode_c *next;
 
-private:
+ private:
 
   // no copying and assigning
-  disassemblerNode_c(const disassemblerNode_c&);
-  void operator=(const disassemblerNode_c&);
+  disassemblerNode_c(const disassemblerNode_c &);
+  void operator=(const disassemblerNode_c &);
 };
 
 #endif

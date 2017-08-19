@@ -25,10 +25,6 @@
 
 #include "../tools/xml.h"
 
-#include <vector>
-#include <stdio.h>
-#include <algorithm>
-
 /** \page xmpuzzleFormat The xmpuzzle format
  *
  * I will try to explain some of the features of the xmpuzzle file format. But please keep
@@ -88,7 +84,7 @@
  *
  */
 
-Puzzle::Puzzle(const Puzzle * orig) {
+Puzzle::Puzzle(const Puzzle *orig) {
 
   gt = new GridType(*orig->gt);
 
@@ -116,10 +112,13 @@ Puzzle::~Puzzle() {
   delete gt;
 }
 
-unsigned int Puzzle::addColor(unsigned char r, unsigned char g, unsigned char b) {
-  bt_assert(colors.size() < 63);  // only 63 colors are allowed, color 0 is special
-  colors.push_back(r | (uint32_t)g << 8 | (uint32_t)b << 16);
-  return colors.size()-1;
+unsigned int Puzzle::addColor(unsigned char r,
+                              unsigned char g,
+                              unsigned char b) {
+  bt_assert(
+      colors.size() < 63);  // only 63 colors are allowed, color 0 is special
+  colors.push_back(r | (uint32_t) g << 8 | (uint32_t) b << 16);
+  return colors.size() - 1;
 }
 
 void Puzzle::removeColor(unsigned int col) {
@@ -133,7 +132,7 @@ void Puzzle::removeColor(unsigned int col) {
         if (shapes[i]->getColor(p) == col)
           shapes[i]->setColor(p, 0);
         else if (shapes[i]->getColor(p) > col)
-          shapes[i]->setColor(p, shapes[i]->getColor(p)-1);
+          shapes[i]->setColor(p, shapes[i]->getColor(p) - 1);
       }
 
   // remove colour constraint rules that include this colour
@@ -144,55 +143,59 @@ void Puzzle::removeColor(unsigned int col) {
     }
 
     /* we need to decrease the colors with numbers > col */
-    for (unsigned int c1 = col+1; c1 <= colors.size(); c1++)
-      for (unsigned int c2 = 0;  c2 <= colors.size(); c2++)
+    for (unsigned int c1 = col + 1; c1 <= colors.size(); c1++)
+      for (unsigned int c2 = 0; c2 <= colors.size(); c2++)
         if (problems[i]->placementAllowed(c1, c2)) {
           problems[i]->disallowPlacement(c1, c2);
-          problems[i]->allowPlacement(c1-1, c2);
+          problems[i]->allowPlacement(c1 - 1, c2);
         }
 
-    for (unsigned int c1 = col+1; c1 <= colors.size(); c1++)
-      for (unsigned int c2 = 0;  c2 <= colors.size(); c2++)
+    for (unsigned int c1 = col + 1; c1 <= colors.size(); c1++)
+      for (unsigned int c2 = 0; c2 <= colors.size(); c2++)
         if (problems[i]->placementAllowed(c2, c1)) {
           problems[i]->disallowPlacement(c2, c1);
-          problems[i]->allowPlacement(c2, c1-1);
+          problems[i]->allowPlacement(c2, c1 - 1);
         }
   }
 
   colors.erase(colors.begin() + (col - 1));
 }
 
-void Puzzle::changeColor(unsigned int idx, unsigned char r, unsigned char g, unsigned char b) {
+void Puzzle::changeColor(unsigned int idx,
+                         unsigned char r,
+                         unsigned char g,
+                         unsigned char b) {
 
   bt_assert(idx < colors.size());
 
-  colors[idx] = r | (uint32_t)g << 8 | (uint32_t)b << 16;
+  colors[idx] = r | (uint32_t) g << 8 | (uint32_t) b << 16;
 }
 
-void Puzzle::getColor(unsigned int idx, unsigned char * r, unsigned char * g, unsigned char * b) const {
+void Puzzle::getColor(unsigned int idx,
+                      unsigned char *r,
+                      unsigned char *g,
+                      unsigned char *b) const {
 
   bt_assert(idx < colors.size());
 
-  *r = (colors[idx] >>  0) & 0xFF;
-  *g = (colors[idx] >>  8) & 0xFF;
+  *r = (colors[idx] >> 0) & 0xFF;
+  *g = (colors[idx] >> 8) & 0xFF;
   *b = (colors[idx] >> 16) & 0xFF;
 }
 
-void Puzzle::save(XmlWriter & xml) const
-{
+void Puzzle::save(XmlWriter &xml) const {
   xml.newTag("puzzle");
   xml.newAttrib("version", "2");
 
   gt->save(xml);
 
   xml.newTag("colors");
-  for (unsigned int i = 0; i < colors.size(); i++)
-  {
+  for (unsigned int i = 0; i < colors.size(); i++) {
     xml.newTag("color");
 
-    xml.newAttrib("red",   (colors[i] >>  0) & 0xFF);
-    xml.newAttrib("green", (colors[i] >>  8) & 0xFF);
-    xml.newAttrib("blue",  (colors[i] >> 16) & 0xFF);
+    xml.newAttrib("red", (colors[i] >> 0) & 0xFF);
+    xml.newAttrib("green", (colors[i] >> 8) & 0xFF);
+    xml.newAttrib("blue", (colors[i] >> 16) & 0xFF);
 
     xml.endTag("color");
   }
@@ -209,8 +212,7 @@ void Puzzle::save(XmlWriter & xml) const
   xml.endTag("problems");
 
   xml.newTag("comment");
-  if (comment.length())
-  {
+  if (comment.length()) {
     if (commentPopup)
       xml.newAttrib("popup", "");
     xml.addContent(comment);
@@ -220,8 +222,7 @@ void Puzzle::save(XmlWriter & xml) const
   xml.endTag("puzzle");
 }
 
-Puzzle::Puzzle(XmlParser & pars)
-{
+Puzzle::Puzzle(XmlParser &pars) {
   pars.nextTag();
 
   pars.require(XmlParser::START_TAG, "puzzle");
@@ -244,28 +245,27 @@ Puzzle::Puzzle(XmlParser & pars)
     if (state == XmlParser::END_TAG) break;
     pars.require(XmlParser::START_TAG, "");
 
-    if (pars.getName() == "gridType")
-    {
+    if (pars.getName() == "gridType") {
       if (gt != 0)
-        pars.exception("only one gridtype can be defined, and it must be before the first shape");
+        pars.exception(
+            "only one gridtype can be defined, and it must be before the first shape");
 
       gt = new GridType(pars);
-    }
-    else if (pars.getName() == "colors")
-    {
-      do
-      {
+    } else if (pars.getName() == "colors") {
+      do {
         state = pars.nextTag();
 
         if (state == XmlParser::END_TAG) break;
         pars.require(XmlParser::START_TAG, "");
 
-        if (pars.getName() == "color")
-        {
+        if (pars.getName() == "color") {
           colors.push_back(
-              (((uint32_t)atoi(pars.getAttributeValue("red").c_str()) & 0xFF) <<  0) |
-              (((uint32_t)atoi(pars.getAttributeValue("green").c_str()) & 0xFF) <<  8) |
-              (((uint32_t)atoi(pars.getAttributeValue("blue").c_str()) & 0xFF) << 16));
+              (((uint32_t) atoi(pars.getAttributeValue("red").c_str()) & 0xFF)
+                  << 0) |
+                  (((uint32_t) atoi(pars.getAttributeValue("green").c_str())
+                      & 0xFF) << 8) |
+                  (((uint32_t) atoi(pars.getAttributeValue("blue").c_str())
+                      & 0xFF) << 16));
         }
 
         pars.skipSubTree();
@@ -273,69 +273,55 @@ Puzzle::Puzzle(XmlParser & pars)
       } while (true);
 
       pars.require(XmlParser::END_TAG, "colors");
-    }
-    else if (pars.getName() == "shapes")
-    {
+    } else if (pars.getName() == "shapes") {
       // if no gridtype has been defined, we assume cubes
       if (!gt) gt = new GridType(GridType::GT_BRICKS);
 
-      do
-      {
+      do {
         state = pars.nextTag();
 
         if (state == XmlParser::END_TAG) break;
         pars.require(XmlParser::START_TAG, "");
 
-        if (pars.getName() == "voxel")
-        {
+        if (pars.getName() == "voxel") {
           shapes.push_back(gt->getVoxel(pars));
           pars.require(XmlParser::END_TAG, "voxel");
-        }
-        else
+        } else
           pars.skipSubTree();
 
       } while (true);
 
       pars.require(XmlParser::END_TAG, "shapes");
-    }
-    else if (pars.getName() == "problems")
-    {
-      do
-      {
+    } else if (pars.getName() == "problems") {
+      do {
         state = pars.nextTag();
 
         if (state == XmlParser::END_TAG) break;
         if (state != XmlParser::START_TAG)
           pars.exception("a new tag required, but something else found");
 
-        if (pars.getName() == "problem")
-        {
+        if (pars.getName() == "problem") {
           problems.push_back(new Problem(*this, pars));
           pars.require(XmlParser::END_TAG, "problem");
-        }
-        else
+        } else
           pars.skipSubTree();
 
       } while (true);
 
       pars.require(XmlParser::END_TAG, "problems");
-    }
-    else if (pars.getName() == "comment")
-    {
+    } else if (pars.getName() == "comment") {
       for (int a = 0; a < pars.getAttributeCount(); a++)
         if (pars.getAttributeName(a) == "popup")
           commentPopup = true;
 
       state = pars.next();
-      if (state == XmlParser::TEXT)
-      {
+      if (state == XmlParser::TEXT) {
         comment = pars.getText();
         state = pars.next();
       }
 
       pars.require(XmlParser::END_TAG, "comment");
-    }
-    else
+    } else
       pars.skipSubTree();
 
     pars.require(XmlParser::END_TAG, "");
@@ -345,16 +331,18 @@ Puzzle::Puzzle(XmlParser & pars)
   pars.require(XmlParser::END_TAG, "puzzle");
 }
 
-unsigned int Puzzle::addShape(Voxel * p) {
+unsigned int Puzzle::addShape(Voxel *p) {
   bt_assert(gt->getType() == p->getGridType()->getType());
   shapes.push_back(p);
-  return shapes.size()-1;
+  return shapes.size() - 1;
 }
 
 /* add empty shape of given size */
-unsigned int Puzzle::addShape(unsigned int sx, unsigned int sy, unsigned int sz) {
+unsigned int Puzzle::addShape(unsigned int sx,
+                              unsigned int sy,
+                              unsigned int sz) {
   shapes.push_back(gt->getVoxel(sx, sy, sz, Voxel::VX_EMPTY));
-  return shapes.size()-1;
+  return shapes.size() - 1;
 }
 
 /* remove the num-th shape
@@ -369,7 +357,7 @@ void Puzzle::removeShape(unsigned int idx) {
 
   /* now get rid of the voxel space */
   delete shapes[idx];
-  shapes.erase(shapes.begin()+idx);
+  shapes.erase(shapes.begin() + idx);
 
 }
 
@@ -377,7 +365,7 @@ void Puzzle::exchangeShape(unsigned int s1, unsigned int s2) {
   bt_assert(s1 < shapes.size());
   bt_assert(s2 < shapes.size());
 
-  Voxel * v = shapes[s1];
+  Voxel *v = shapes[s1];
   shapes[s1] = shapes[s2];
   shapes[s2] = v;
 
@@ -390,21 +378,21 @@ void Puzzle::exchangeShape(unsigned int s1, unsigned int s2) {
  */
 unsigned int Puzzle::addProblem() {
   problems.push_back(new Problem(*this));
-  return problems.size()-1;
+  return problems.size() - 1;
 }
 
-unsigned int Puzzle::addProblem(const Problem * prob) {
+unsigned int Puzzle::addProblem(const Problem *prob) {
 
   problems.push_back(new Problem(prob, *this));
 
-  return problems.size()-1;
+  return problems.size() - 1;
 }
 
 /* remove one problem */
 void Puzzle::removeProblem(unsigned int idx) {
   bt_assert(idx < problems.size());
   delete problems[idx];
-  problems.erase(problems.begin()+idx);
+  problems.erase(problems.begin() + idx);
 }
 
 void Puzzle::exchangeProblem(unsigned int p1, unsigned int p2) {
@@ -412,7 +400,7 @@ void Puzzle::exchangeProblem(unsigned int p1, unsigned int p2) {
   bt_assert(p1 < problems.size());
   bt_assert(p2 < problems.size());
 
-  Problem * p = problems[p1];
+  Problem *p = problems[p1];
   problems[p1] = problems[p2];
   problems[p2] = p;
 }

@@ -46,7 +46,7 @@ class XmlParser;
  */
 class Puzzle {
 
-private:
+ private:
 
   /** The gridtype of the puzzle.
    * each puzzle has exactly one grid type, this is it
@@ -86,30 +86,30 @@ private:
    */
   bool commentPopup;
 
-public:
+ public:
 
   /**
    * copy constructor this will NOT copy the labels and solutions of
    * the problems.
    */
-  Puzzle(const Puzzle * orig);
+  Puzzle(const Puzzle *orig);
 
   /**
    * Constructor for empty puzzle. no shape, no problem and no colours
    * ownership of the given gridtype is taken over, the memory
    * is freed on destruction of this class
    */
-  Puzzle(GridType * g) : gt(g) , commentPopup(false) { }
+  Puzzle(GridType *g) : gt(g), commentPopup(false) {}
 
   /**
    * load the puzzle from the XML file
    */
-  Puzzle(XmlParser & pars);
+  Puzzle(XmlParser &pars);
 
   /**
    * save the puzzle into a XML node that is returned
    */
-  void save(XmlWriter & xml) const;
+  void save(XmlWriter &xml) const;
 
   /**
    * Destructor.
@@ -119,8 +119,8 @@ public:
 
   /** \name some functions to get the current set grid type for this puzzle */
   //@{
-  const GridType * getGridType(void) const { return gt; }
-  GridType * getGridType() { return gt; }
+  const GridType *getGridType(void) const { return gt; }
+  GridType *getGridType() { return gt; }
   //@}
 
 
@@ -130,15 +130,21 @@ public:
    * The space is taken over, and freed when the puzzle is destroyed
    * Returns the index of the new shape
    */
-  unsigned int addShape(Voxel * p);
+  unsigned int addShape(Voxel *p);
   /** add an empty shape of the given size return the index of the new shape */
   unsigned int addShape(unsigned int sx, unsigned int sy, unsigned int sz);
   /** return how many shapes there are in the puzzle */
   unsigned int shapeNumber(void) const { return shapes.size(); }
   /** get a shape */
-  const Voxel * getShape(unsigned int idx) const { bt_assert(idx < shapes.size()); return shapes[idx]; }
+  const Voxel *getShape(unsigned int idx) const {
+    bt_assert(idx < shapes.size());
+    return shapes[idx];
+  }
   /** get a shape */
-  Voxel * getShape(unsigned int idx) { bt_assert(idx < shapes.size()); return shapes[idx]; }
+  Voxel *getShape(unsigned int idx) {
+    bt_assert(idx < shapes.size());
+    return shapes[idx];
+  }
   /**
    * remove the num-th shape.
    * be careful this changes all ids and so all problems must be updated
@@ -168,9 +174,15 @@ public:
    */
   void removeColor(unsigned int idx);
   /** change the RGB value of one color */
-  void changeColor(unsigned int idx, unsigned char r, unsigned char g, unsigned char b);
+  void changeColor(unsigned int idx,
+                   unsigned char r,
+                   unsigned char g,
+                   unsigned char b);
   /** get the RGB value of one color */
-  void getColor(unsigned int idx, unsigned char * r, unsigned char * g, unsigned char * b) const;
+  void getColor(unsigned int idx,
+                unsigned char *r,
+                unsigned char *g,
+                unsigned char *b) const;
   /** return the number of defined colors */
   unsigned int colorNumber(void) const { return colors.size(); }
   //@}
@@ -183,7 +195,7 @@ public:
   /** add a new problem as copy from another problem (from another puzzle).
    * A copy of the provided problem is created
    */
-  unsigned int addProblem(const Problem * prob);
+  unsigned int addProblem(const Problem *prob);
   /** return the number of problems within this puzzle */
   unsigned int problemNumber(void) const { return problems.size(); }
   /** remove problem with the given index freeing all its ressources */
@@ -191,25 +203,31 @@ public:
   /** exchange problem at indes p1 with problem at index p2 */
   void exchangeProblem(unsigned int p1, unsigned int p2);
   /** get the problem at index p */
-  const Problem * getProblem(unsigned int p) const { bt_assert(p < problems.size()); return problems[p]; }
+  const Problem *getProblem(unsigned int p) const {
+    bt_assert(p < problems.size());
+    return problems[p];
+  }
   /** get the problem at index p */
-  Problem * getProblem(unsigned int p) { bt_assert(p < problems.size()); return problems[p]; }
+  Problem *getProblem(unsigned int p) {
+    bt_assert(p < problems.size());
+    return problems[p];
+  }
   //@}
 
 
   /** \name the puzzle comment functions */
   //@{
   /** set comment there is no limitation in size or characters.  */
-  void setComment(const std::string & com) { comment = com; }
+  void setComment(const std::string &com) { comment = com; }
   /** get comment */
-  const std::string & getComment(void) const { return comment; }
+  const std::string &getComment(void) const { return comment; }
   /** find out if the comment popup flas is set */
   bool getCommentPopup(void) const { return commentPopup; }
   /** set or reset comment popup flag */
   void setCommentPopup(bool val) { commentPopup = val; }
   //@}
 
-private:
+ private:
 
   // no copying and assigning
   Puzzle(const Puzzle &);

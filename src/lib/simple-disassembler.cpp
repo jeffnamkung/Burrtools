@@ -41,7 +41,8 @@
  * A lof of stuff happens automatically, e.g the disassemblerNode_c class is reference counted
  * and the nodeHashs will automatically decrease that count and free the nodes
  */
-Separation *SimpleDisassembler::disassemble_rec(const std::vector<unsigned int> &pieces, disassemblerNode_c * start) {
+Separation *SimpleDisassembler::disassemble_rec(const std::vector<unsigned int> &pieces,
+                                                disassemblerNode_c *start) {
 
   // openlist is a list of nodes that need to be analyzed. They wew found
   // as neighbours of nodes that were analyzed and not yet known
@@ -94,20 +95,21 @@ Separation *SimpleDisassembler::disassemble_rec(const std::vector<unsigned int> 
   while (!openlist[curListFront].empty()) {
 
     /* remove the node from the open list and start examining */
-    disassemblerNode_c * node = openlist[curListFront].front();
+    disassemblerNode_c *node = openlist[curListFront].front();
     openlist[curListFront].pop();
 
     // initialize a movement analysis for the current node
     init_find(node, pieces);
 
-    disassemblerNode_c * st;
+    disassemblerNode_c *st;
 
     while ((st = find())) {
 
       /* check the different fronts and also try to insert into the new
        * front, if it is known in either front, ...
        */
-      if (closed[oldFront].contains(st) || closed[curFront].contains(st) || closed[newFront].insert(st)) {
+      if (closed[oldFront].contains(st) || closed[curFront].contains(st)
+          || closed[newFront].insert(st)) {
 
         /* the new node is already here. We have found a new longer or equal long way to that
          * node, so we can safely delete the new node and continue to the next
@@ -142,7 +144,7 @@ Separation *SimpleDisassembler::disassemble_rec(const std::vector<unsigned int> 
       /* when we get here the new found node is a solution */
 
       /* check the possible sub problems, this function call disassemble rec recursivly */
-      Separation * res = checkSubproblems(st, pieces);
+      Separation *res = checkSubproblems(st, pieces);
 
       if (st->decRefCount())
         delete st;

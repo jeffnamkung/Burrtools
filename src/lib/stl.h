@@ -31,11 +31,11 @@ class Polyhedron;
 /** this class gets thrown when something in the export went wrong */
 class stlException_c {
 
-  public:
+ public:
 
-    const char * comment;
+  const char *comment;
 
-    stlException_c(const char * c) : comment(c) {}
+  stlException_c(const char *c) : comment(c) {}
 
 };
 
@@ -51,61 +51,61 @@ class stlException_c {
 class faceList_c;
 class stlExporter_c {
 
-  public:
+ public:
 
-    /** create new exporter, defaults to binary mode active */
-    stlExporter_c(void) : binaryMode(true) {}
-    virtual ~stlExporter_c() {}
+  /** create new exporter, defaults to binary mode active */
+  stlExporter_c(void) : binaryMode(true) {}
+  virtual ~stlExporter_c() {}
 
-    /**
-     * This function exports one shape.
-     */
-    void write(const char * basename, const Voxel & shape, const faceList_c & holes);
+  /**
+   * This function exports one shape.
+   */
+  void write(const char *basename, const Voxel &shape, const faceList_c &holes);
 
-    /** parameters can have different type
-     * this enum lists all supported types
-     */
-    typedef enum
-    {
-        PAR_TYP_DOUBLE,
-        PAR_TYP_POS_DOUBLE,
-        PAR_TYP_POS_INTEGER,
-        PAR_TYP_SWITCH
-    } parameterTypes;
+  /** parameters can have different type
+   * this enum lists all supported types
+   */
+  typedef enum {
+    PAR_TYP_DOUBLE,
+    PAR_TYP_POS_DOUBLE,
+    PAR_TYP_POS_INTEGER,
+    PAR_TYP_SWITCH
+  } parameterTypes;
 
-    /* some functions to set some parameters for the output all parameters mus tbe double
-     * values
-     */
+  /* some functions to set some parameters for the output all parameters mus tbe double
+   * values
+   */
 
-    /** return the number of parameters for the concrete exporter */
-    virtual unsigned int numParameters(void) const = 0;
-    /** return a text to display to the user about the parameter x */
-    virtual const char * getParameterName(unsigned int idx) const = 0;
-    /** get the tooltip text for this parameter */
-    virtual const char * getParameterTooltip(unsigned int /*idx*/) const { return ""; }
-    /** get the parameter type for this parameter */
-    virtual parameterTypes getParameterType(unsigned int /*idx*/) const { return PAR_TYP_DOUBLE; }
-    /** get the value of a parameter */
-    virtual double getParameter(unsigned int idx) const = 0;
-    /** set the value of a parameter */
-    virtual void setParameter(unsigned int idx, double value) = 0;
+  /** return the number of parameters for the concrete exporter */
+  virtual unsigned int numParameters(void) const = 0;
+  /** return a text to display to the user about the parameter x */
+  virtual const char *getParameterName(unsigned int idx) const = 0;
+  /** get the tooltip text for this parameter */
+  virtual const char *getParameterTooltip(unsigned int /*idx*/) const { return ""; }
+  /** get the parameter type for this parameter */
+  virtual parameterTypes getParameterType(unsigned int /*idx*/) const { return PAR_TYP_DOUBLE; }
+  /** get the value of a parameter */
+  virtual double getParameter(unsigned int idx) const = 0;
+  /** set the value of a parameter */
+  virtual void setParameter(unsigned int idx, double value) = 0;
 
-    /** select whether to use binary mode or not */
-    void setBinaryMode(bool on) { binaryMode = on; }
-    /** find out if binary mode is active */
-    bool getBinaryMode() { return binaryMode; }
+  /** select whether to use binary mode or not */
+  void setBinaryMode(bool on) { binaryMode = on; }
+  /** find out if binary mode is active */
+  bool getBinaryMode() { return binaryMode; }
 
-    virtual Polyhedron * getMesh(const Voxel & v, const faceList_c & holes) const = 0;
+  virtual Polyhedron *getMesh(const Voxel &v,
+                              const faceList_c &holes) const = 0;
 
-  private:
+ private:
 
-    bool binaryMode;              ///< binary STL export active or not
+  bool binaryMode;              ///< binary STL export active or not
 
-  private:
+ private:
 
-    // no copying and assigning
-    stlExporter_c(const stlExporter_c&);
-    void operator=(const stlExporter_c&);
+  // no copying and assigning
+  stlExporter_c(const stlExporter_c &);
+  void operator=(const stlExporter_c &);
 };
 
 #endif

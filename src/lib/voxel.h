@@ -50,7 +50,7 @@ class Polyhedron;
  */
 class Voxel {
 
-protected:
+ protected:
 
   /**
    * each voxel needs to know the parameters for its space grid
@@ -73,7 +73,7 @@ protected:
    * and deleted on destruction. The position of a voxel
    * inside this 1-dimensional structure is \f$ x + sx*(y + sy*z) \f$
    */
-  voxel_type * space;
+  voxel_type *space;
 
   /** \page BoundingBox Bounding Box
    *
@@ -88,7 +88,8 @@ protected:
   unsigned int by2; ///< upper y-coordinate of the \ref BoundingBox
   unsigned int bz1; ///< lower z-coordinate of the \ref BoundingBox
   unsigned int bz2; ///< upper z-coordinate of the \ref BoundingBox
-  bool doRecalc;    ///< bounding box recalculation is only done when this is true
+  bool
+      doRecalc;    ///< bounding box recalculation is only done when this is true
 
   /**
    * the self symmetries of this voxel space.
@@ -156,9 +157,9 @@ protected:
    * the first 3 values are the hot spot position and the following 6 the
    * bounding box for the given transformation
    */
-  int * BbHsCache;
+  int *BbHsCache;
 
-protected:
+ protected:
 
   /**
    * updates the bounding box to fit the current shape inside the space.
@@ -175,7 +176,7 @@ protected:
    */
   void recalcBoundingBox(void);
 
-public:
+ public:
 
   /**
    * this enumeration defines some values that are used for some of the voxel spaces.
@@ -209,30 +210,34 @@ public:
     }
   }
 
-public:
+ public:
 
   /**
    * Creates a new voxel space. Its of given size and
    * initializes all values to init.
    */
-  Voxel(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0);
+  Voxel(unsigned int x,
+        unsigned int y,
+        unsigned int z,
+        const GridType *gt,
+        voxel_type init = 0);
 
   /**
    * Load a voxel space from xml node
    */
-  Voxel(XmlParser & pars, const GridType * gt);
+  Voxel(XmlParser &pars, const GridType *gt);
 
   /**
    * Copy constructor using reference. Transformation allows to
    * have a rotated version of this voxel space
    */
-  Voxel(const Voxel & orig);
+  Voxel(const Voxel &orig);
 
   /**
    * Copy constructor using pointer. Transformation allows to
    * have a rotated version of this voxel space
    */
-  Voxel(const Voxel * orig);
+  Voxel(const Voxel *orig);
 
   /**
    * Destructor.
@@ -244,19 +249,19 @@ public:
    * make this voxelspace be identical to the one given. except for the name field
    * everything is copied
    */
-  void copy(const Voxel * orig);
+  void copy(const Voxel *orig);
 
   unsigned int getX(void) const { return sx; } ///< Return x-size of the voxel space
   unsigned int getY(void) const { return sy; } ///< Return y-size of the voxel space
   unsigned int getZ(void) const { return sz; } ///< Return z-size of the voxel space
 
   /** get the gridtype of this voxel space */
-  const GridType * getGridType(void) const { return gt; }
+  const GridType *getGridType(void) const { return gt; }
 
   /**
    * Returns the squared diagonal of the space
    */
-  unsigned int getDiagonal(void) const { return sx*sx + sy*sy + sz*sz; }
+  unsigned int getDiagonal(void) const { return sx * sx + sy * sy + sz * sz; }
 
   /**
    * Returns the value of the biggest out of getX, getY or getZ.
@@ -267,11 +272,10 @@ public:
         return sz;
       else
         return sx;
+    else if (sz > sy)
+      return sz;
     else
-      if (sz > sy)
-        return sz;
-      else
-        return sy;
+      return sy;
   }
 
   /**
@@ -283,7 +287,7 @@ public:
    * This function returns the index for a given triple of x, y and z
    */
   int getIndex(unsigned int x, unsigned int y, unsigned int z) const {
-    bt_assert((x<sx)&&(y<sy)&&(z<sz));
+    bt_assert((x < sx) && (y < sy) && (z < sz));
     return x + sx * (y + sy * z);
   }
 
@@ -291,7 +295,10 @@ public:
    *
    * For a given index the x, y and z coordinates inside this voxel space is returned
    */
-  bool indexToXYZ(unsigned int index, unsigned int *x, unsigned int *y, unsigned int *z) const;
+  bool indexToXYZ(unsigned int index,
+                  unsigned int *x,
+                  unsigned int *y,
+                  unsigned int *z) const;
 
   /**
    * Get the value of the voxel at position \f$(x; y; z)\f$
@@ -305,7 +312,8 @@ public:
    * the space
    */
   voxel_type get2(int x, int y, int z) const {
-    if ((x>=0)&&(y>=0)&&(z>=0)&&((long)x<(long)sx)&&((long)y<(long)sy)&&((long)z<(long)sz))
+    if ((x >= 0) && (y >= 0) && (z >= 0) && ((long) x < (long) sx)
+        && ((long) y < (long) sy) && ((long) z < (long) sz))
       return space[getIndex(x, y, z)];
     else
       return VX_EMPTY;
@@ -320,7 +328,7 @@ public:
    * and this function for access
    */
   voxel_type get(unsigned int p) const {
-    bt_assert(p<voxels);
+    bt_assert(p < voxels);
     return space[p];
   }
 
@@ -342,7 +350,14 @@ public:
    * This function is different for different grids. There is no default implementation, so each grid
    * has to define its own version of this function
    */
-  virtual bool getNeighbor(unsigned int idx, unsigned int typ, int x, int y, int z, int * xn, int *yn, int *zn) const = 0;
+  virtual bool getNeighbor(unsigned int idx,
+                           unsigned int typ,
+                           int x,
+                           int y,
+                           int z,
+                           int *xn,
+                           int *yn,
+                           int *zn) const = 0;
 
   /**
    * the x, y, z variant of the set function.
@@ -357,7 +372,7 @@ public:
    * The 1-dimensional variant of the set function.
    */
   void set(unsigned int p, voxel_type val) {
-    bt_assert(p<voxels);
+    bt_assert(p < voxels);
     space[p] = val;
     recalcBoundingBox();
     symmetries = symmetryInvalid();
@@ -382,7 +397,10 @@ public:
    * this function transforms the given point by the given transformation
    * around the origin
    */
-  virtual void transformPoint(int * x, int * y, int * z, unsigned int trans) const = 0;
+  virtual void transformPoint(int *x,
+                              int *y,
+                              int *z,
+                              unsigned int trans) const = 0;
 
   /**
    * shift the space around. Voxels that go over the
@@ -413,7 +431,13 @@ public:
    *
    * If the return pointers are 0 the value is not returned
    */
-  bool getBoundingBox(unsigned char trans, int * x1, int * y1, int * z1, int * x2 = 0, int * y2 = 0, int * z2 = 0) const;
+  bool getBoundingBox(unsigned char trans,
+                      int *x1,
+                      int *y1,
+                      int *z1,
+                      int *x2 = 0,
+                      int *y2 = 0,
+                      int *z2 = 0) const;
 
   /**
    * Comparison of two voxel spaces.
@@ -421,7 +445,7 @@ public:
    * their sizes are the same and
    * all their voxel values are identical
    */
-  bool operator == (const Voxel & op) const;
+  bool operator==(const Voxel &op) const;
 
   /**
    * Comparison of two voxel spaces.
@@ -437,7 +461,7 @@ public:
    * alignment along a bigger grid) so this function can be overloaded.
    * The default implementation simply treats all voxels equal
    */
-  virtual bool identicalInBB(const Voxel * op, bool includeColors = true) const;
+  virtual bool identicalInBB(const Voxel *op, bool includeColors = true) const;
 
   /**
    * comparison of 2 voxel spaces.
@@ -455,7 +479,9 @@ public:
    * comparison, meaning when the colours differ the
    * shapes are not equal
    */
-  bool identicalWithRots(const Voxel * op, bool includeMirror, bool includeColors) const;
+  bool identicalWithRots(const Voxel *op,
+                         bool includeMirror,
+                         bool includeColors) const;
 
   /**
    * this function returns the transformation, that transforms this voxel space into the
@@ -465,7 +491,7 @@ public:
    *
    * if no transformation can be found, return 0
    */
-  unsigned char getMirrorTransform(const Voxel * op) const;
+  unsigned char getMirrorTransform(const Voxel *op) const;
 
   /**
    * resizes the voxelspace. preserving the lower part
@@ -473,7 +499,10 @@ public:
    * adding new voxels at the upper end, if the new space
    * is bigger
    */
-  void resize(unsigned int nsx, unsigned int nsy, unsigned int nsz, voxel_type filler);
+  void resize(unsigned int nsx,
+              unsigned int nsy,
+              unsigned int nsz,
+              voxel_type filler);
 
   /**
    * resizes and translates the space so that the the given voxel can be included
@@ -482,7 +511,7 @@ public:
    * Each grid has to implement it's own version because there are different
    * kinds of supergrids that are imposed on the normal grid
    */
-  virtual void resizeInclude(int & px, int & py, int & pz) = 0;
+  virtual void resizeInclude(int &px, int &py, int &pz) = 0;
 
   /**
    * scale the space, making x by x by x cubes out of single cubes
@@ -510,7 +539,7 @@ public:
    */
   virtual bool scaleDown(unsigned char by, bool action);
 
-  private:
+ private:
 
   /**
    * This function is used by conneced and fill holes.
@@ -521,9 +550,13 @@ public:
    * value: which voxels to work on
    * outsiudeZ: how to tread the Z direction outside: as empty for 3D pieces or as non existent for 2D pieces
    */
-  void unionFind(int * tree, char type, bool inverse, voxel_type value, bool outsideZ) const;
+  void unionFind(int *tree,
+                 char type,
+                 bool inverse,
+                 voxel_type value,
+                 bool outsideZ) const;
 
-  public:
+ public:
 
   /**
    * checks the voxelspace for connectedness. It is checked
@@ -542,7 +575,10 @@ public:
    * of the shape may be merged with the outside, this can be suppressed
    * for the z-axis by setting outsideZ to false
    */
-  bool connected(char type, bool inverse, voxel_type value, bool outsideZ = true) const;
+  bool connected(char type,
+                 bool inverse,
+                 voxel_type value,
+                 bool outsideZ = true) const;
 
   /**
    * fills in all empty voxels that are completely surrounded by non empty voxels,
@@ -577,18 +613,23 @@ public:
     return gt->getSymmetries()->minimizeTransformation(selfSymmetries(), trans);
   }
 
-
-public:
+ public:
 
   //@{
   /**
    * Functions to get the voxel state or color of a single voxel
    */
-  int getState(unsigned int x, unsigned int y, unsigned int z) const { return get(x, y, z) & 0x3; }
+  int getState(unsigned int x, unsigned int y, unsigned int z) const {
+    return get(x, y, z) & 0x3;
+  }
   int getState2(int x, int y, int z) const { return get2(x, y, z) & 0x3; }
   int getState(unsigned int i) const { return get(i) & 0x3; }
-  unsigned int getColor(unsigned int x, unsigned int y, unsigned int z) const { return get(x, y, z) >> 2; }
-  unsigned int getColor2(int x, int y, int z) const { return get2(x, y, z) >> 2; }
+  unsigned int getColor(unsigned int x,
+                        unsigned int y,
+                        unsigned int z) const { return get(x, y, z) >> 2; }
+  unsigned int getColor2(int x, int y, int z) const {
+    return get2(x, y, z) >> 2;
+  }
   unsigned int getColor(unsigned int i) const { return get(i) >> 2; }
   //@}
 
@@ -596,14 +637,26 @@ public:
   /**
    * Functions to ask, if a voxel has a certain state
    */
-  bool isEmpty(unsigned int x, unsigned int y, unsigned int z) const { return getState(x, y, z) == VX_EMPTY; }
-  bool isEmpty2(int x, int y, int z) const { return getState2(x, y, z) == VX_EMPTY; }
+  bool isEmpty(unsigned int x, unsigned int y, unsigned int z) const {
+    return getState(x, y, z) == VX_EMPTY;
+  }
+  bool isEmpty2(int x, int y, int z) const {
+    return getState2(x, y, z) == VX_EMPTY;
+  }
   bool isEmpty(unsigned int i) const { return getState(i) == VX_EMPTY; }
-  bool isFilled(unsigned int x, unsigned int y, unsigned int z) const { return getState(x, y, z) == VX_FILLED; }
-  bool isFilled2(int x, int y, int z) const { return getState2(x, y, z) == VX_FILLED; }
+  bool isFilled(unsigned int x, unsigned int y, unsigned int z) const {
+    return getState(x, y, z) == VX_FILLED;
+  }
+  bool isFilled2(int x, int y, int z) const {
+    return getState2(x, y, z) == VX_FILLED;
+  }
   bool isFilled(unsigned int i) const { return getState(i) == VX_FILLED; }
-  bool isVariable(unsigned int x, unsigned int y, unsigned int z) const { return getState(x, y, z) == VX_VARIABLE; }
-  bool isVariable2(int x, int y, int z) const { return getState2(x, y, z) == VX_VARIABLE; }
+  bool isVariable(unsigned int x, unsigned int y, unsigned int z) const {
+    return getState(x, y, z) == VX_VARIABLE;
+  }
+  bool isVariable2(int x, int y, int z) const {
+    return getState2(x, y, z) == VX_VARIABLE;
+  }
   bool isVariable(unsigned int i) const { return getState(i) == VX_VARIABLE; }
   //@}
 
@@ -612,10 +665,22 @@ public:
    * Functions to set the state or color of a certain voxel.
    * The position is either given as a coordinate or as an index
    */
-  void setState(unsigned int x, unsigned int y, unsigned int z, int state) { set(x, y, z, (get(x, y, z) & ~0x3) | state); }
-  void setColor(unsigned int x, unsigned int y, unsigned int z, unsigned int color) { bt_assert(color < 64); set(x, y, z, (get(x, y, z) & 0x3) | color << 2); }
+  void setState(unsigned int x,
+                unsigned int y,
+                unsigned int z,
+                int state) { set(x, y, z, (get(x, y, z) & ~0x3) | state); }
+  void setColor(unsigned int x,
+                unsigned int y,
+                unsigned int z,
+                unsigned int color) {
+    bt_assert(color < 64);
+    set(x, y, z, (get(x, y, z) & 0x3) | color << 2);
+  }
   void setState(unsigned int i, int state) { set(i, (get(i) & ~0x3) | state); }
-  void setColor(unsigned int i, unsigned int color) { bt_assert(color < 64); set(i, (get(i) & 0x3) | color << 2); }
+  void setColor(unsigned int i, unsigned int color) {
+    bt_assert(color < 64);
+    set(i, (get(i) & 0x3) | color << 2);
+  }
   //@}
 
   /**
@@ -648,7 +713,7 @@ public:
   /**
    *  used to save to XML
    */
-  void save(XmlWriter & xml) const;
+  void save(XmlWriter &xml) const;
 
   int getHx(void) const { return hx; } ///< Get the hotspot
   int getHy(void) const { return hy; } ///< Get the hotspot
@@ -670,16 +735,16 @@ public:
   /**
    * this function returns the hotspot of the rotated space.
    */
-  bool getHotspot(unsigned char trans, int * x, int * y, int * z) const;
+  bool getHotspot(unsigned char trans, int *x, int *y, int *z) const;
 
   /** function to get the name */
-  const std::string & getName(void) const { return name; }
+  const std::string &getName(void) const { return name; }
 
   /**
    * Set the name for this voxel space.
    * if you give 0 or an empty string the name will be removed
    */
-  void setName(const std::string & n) { name = n; }
+  void setName(const std::string &n) { name = n; }
 
   int getWeight(void) const { return weight; } ///< get the weight of this space
   void setWeight(int w) { weight = w; }        ///< set the weight of this space
@@ -699,9 +764,9 @@ public:
    * it returns true, if there were voxels added
    */
   bool unionintersect(
-      const Voxel * va, int xa, int ya, int za,
-      const Voxel * vb, int xb, int yb, int zb
-      );
+      const Voxel *va, int xa, int ya, int za,
+      const Voxel *vb, int xb, int yb, int zb
+  );
 
   /**
    * this function is used to find out if the given
@@ -721,12 +786,13 @@ public:
    * delete it, when you no longer need it
    *
    */
-  virtual Polyhedron * getMesh(double bevel, double offset) const;
+  virtual Polyhedron *getMesh(double bevel, double offset) const;
 
   /* return true, when the given parameters will result in a usable
    * polyhedron, when offset or bevel gets too big return false
    */
-  virtual bool meshParamsValid(double /*bevel*/, double /*offset*/) const { return true; }
+  virtual bool meshParamsValid(double /*bevel*/,
+                               double /*offset*/) const { return true; }
 
   /**
    * returns the drawing mesh. ATTENTION for the sake of speed this mesh
@@ -734,12 +800,12 @@ public:
    * they don't have a pair, which is invalid and makes some
    * functions not work, but it is ok for drawing
    */
-  virtual Polyhedron * getDrawingMesh(void) const;
+  virtual Polyhedron *getDrawingMesh(void) const;
 
   /**
    * returns the drawing mesh for wrireframe mode.
    */
-  virtual Polyhedron * getWireframeMesh(void) const;
+  virtual Polyhedron *getWireframeMesh(void) const;
 
   /**
    * this function must return a polygon that is the connecting face to the neighbor n for the
@@ -747,19 +813,32 @@ public:
    * The function is used by the default implementation of getMesh to generate the default basis mesh
    * it is also used by the 3D cursor drawing code
    */
-  virtual void getConnectionFace(int /*x*/, int /*y*/, int /*z*/, int /*n*/, double /*bevel*/, double /*offset*/, std::vector<float> & /*faceCorners*/) const {};
+  virtual void getConnectionFace(int /*x*/,
+                                 int /*y*/,
+                                 int /*z*/,
+                                 int /*n*/,
+                                 double /*bevel*/,
+                                 double /*offset*/,
+                                 std::vector<float> & /*faceCorners*/) const {};
 
   /**
    * calculate the size, that the returned mesh has
    */
-  virtual void calculateSize(float * x, float * y, float * z) const { *x = 0; *y = 0; *z = 0; }
+  virtual void calculateSize(float *x, float *y, float *z) const {
+    *x = 0;
+    *y = 0;
+    *z = 0;
+  }
 
+  virtual void recalcSpaceCoordinates(float * /*x*/,
+                                      float * /*y*/,
+                                      float * /*z*/) const {}
 
-  virtual void recalcSpaceCoordinates(float * /*x*/, float * /*y*/, float * /*z*/) const {}
+ private:
 
-private:
-
-  virtual Polyhedron * getMeshInternal(double bevel, double offset, bool fast) const;
+  virtual Polyhedron *getMeshInternal(double bevel,
+                                      double offset,
+                                      bool fast) const;
 
   // no copying and assigning
   void operator=(const Voxel &);

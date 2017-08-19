@@ -40,17 +40,27 @@ bool voxel_4_c::transform(unsigned int nr) {
     int sy = getY();
     int sz = getZ();
 
-    sx += 5; sx -= sx % 6;
-    sy += 5; sy -= sy % 6;
-    sz += 5; sz -= sz % 6;
+    sx += 5;
+    sx -= sx % 6;
+    sy += 5;
+    sy -= sy % 6;
+    sz += 5;
+    sz -= sz % 6;
 
     resize(sx, sy, sz, 0);
   }
 
-  return voxel_0_c::transform(nr);
+  return CubeVoxel::transform(nr);
 }
 
-bool voxel_4_c::getNeighbor(unsigned int idx, unsigned int typ, int x, int y, int z, int * xn, int *yn, int *zn) const {
+bool voxel_4_c::getNeighbor(unsigned int idx,
+                            unsigned int typ,
+                            int x,
+                            int y,
+                            int z,
+                            int *xn,
+                            int *yn,
+                            int *zn) const {
 
   /* index 0, position of voxel
    * index 1, cube type (position even or not)
@@ -59,86 +69,99 @@ bool voxel_4_c::getNeighbor(unsigned int idx, unsigned int typ, int x, int y, in
    */
 
   static const int faceNeighbors[5][2][5][3] = {
-    {
-      { {1, 1, 1}, /* cube position */ {1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}, {1, 1, 1} },
-      { {1, 1, 1}, /* cube position */ {-1, -1, -1}, {1, 1, -1}, {1, -1, 1}, {-1, 1, 1} }
-    },
-    {
-      { {2, 0, 0}, /* cube position */ {-1, 1, 1}, {0, 0, -1}, {1, 0, 0}, {0, -1, 0} },
-      { {0, 0, 0}, /* cube position */ {1, 1, 1}, {0, 0, -1}, {0, -1, 0}, {-1, 0, 0} }
-    },
-    {
-      { {0, 2, 0}, /* cube position */ {1, -1, 1}, {0, 0, -1}, {0, 1, 0}, {-1, 0, 0} },
-      { {2, 2, 0}, /* cube position */ {-1, -1, 1}, {0, 0, -1}, {1, 0, 0}, {0, 1, 0} }
-    },
-    {
-      { {0, 0, 2}, /* cube position */ {0, -1, 0}, {-1, 0, 0}, {1, 1, -1}, {0, 0, 1} },
-      { {2, 0, 2}, /* cube position */ {0, -1, 0}, {1, 0, 0}, {-1, 1, -1}, {0, 0, 1} }
-    },
-    {
-      { {2, 2, 2}, /* cube position */ {1, 0, 0}, {0, 1, 0}, {-1, -1, -1}, {0, 0, 1} },
-      { {0, 2, 2}, /* cube position */ {-1, 0, 0}, {0, 1, 0}, {1, -1, -1}, {0, 0, 1} }
-    },
+      {
+          {{1, 1, 1}, /* cube position */ {1, -1, -1}, {-1, 1, -1}, {-1, -1, 1},
+           {1, 1, 1}},
+          {{1, 1, 1}, /* cube position */ {-1, -1, -1}, {1, 1, -1}, {1, -1, 1},
+           {-1, 1, 1}}
+      },
+      {
+          {{2, 0, 0}, /* cube position */ {-1, 1, 1}, {0, 0, -1}, {1, 0, 0},
+           {0, -1, 0}},
+          {{0, 0, 0}, /* cube position */ {1, 1, 1}, {0, 0, -1}, {0, -1, 0},
+           {-1, 0, 0}}
+      },
+      {
+          {{0, 2, 0}, /* cube position */ {1, -1, 1}, {0, 0, -1}, {0, 1, 0},
+           {-1, 0, 0}},
+          {{2, 2, 0}, /* cube position */ {-1, -1, 1}, {0, 0, -1}, {1, 0, 0},
+           {0, 1, 0}}
+      },
+      {
+          {{0, 0, 2}, /* cube position */ {0, -1, 0}, {-1, 0, 0}, {1, 1, -1},
+           {0, 0, 1}},
+          {{2, 0, 2}, /* cube position */ {0, -1, 0}, {1, 0, 0}, {-1, 1, -1},
+           {0, 0, 1}}
+      },
+      {
+          {{2, 2, 2}, /* cube position */ {1, 0, 0}, {0, 1, 0}, {-1, -1, -1},
+           {0, 0, 1}},
+          {{0, 2, 2}, /* cube position */ {-1, 0, 0}, {0, 1, 0}, {1, -1, -1},
+           {0, 0, 1}}
+      },
   };
 
   // the following table was created with a helper function
   // and the edge detection code in the voxeldrawer_a
-  static const int edgeNeighbors[24][18+1][3] = {
-    { {0, 0, 2}, /* cube position */
-      {0, -1, 1}, {0, 2, -2}, {-1, 0, 1}, {-1, -1, 0}, {1, 1, 2}, {1, -2, -1},
-      {-1, 2, -2}, {2, 0, -2}, {-2, 1, -1}, {2, -1, -2}, {2, 2, 0}, {2, 2, 1},
-    },
-    { {0, 2, 0}, /* cube position */
-      {0, 1, -1}, {0, -2, 2}, {-1, 0, -1}, {-1, 1, 0}, {1, -1, -2}, {1, 2, 1},
-      {-1, -2, 2}, {2, 0, 2}, {-2, -1, 1}, {2, 1, 2}, {2, -2, 0}, {2, -2, -1},
-    },
-    { {1, 1, 1}, /* cube position */
-      {0, 0, 3}, {0, 0, -3}, {0, -3, 0}, {0, 3, 0}, {-1, -1, 2}, {-1, 1, -2},
-      {1, -1, -2}, {1, 1, 2}, {-1, -2, 1}, {-1, 2, -1}, {1, -2, -1}, {1, 2, 1},
-      {-2, -1, 1}, {-2, 1, -1}, {2, -1, -1}, {2, 1, 1}, {-3, 0, 0}, {3, 0, 0},
-    },
-    { {2, 0, 0}, /* cube position */
-      {0, -1, -1}, {0, 2, 2}, {1, 0, -1}, {1, -1, 0}, {-1, 1, -2}, {-1, -2, 1},
-      {1, 2, 2}, {-2, 0, 2}, {2, 1, 1}, {-2, -1, 2}, {-2, 2, 0}, {-2, 2, -1},
-    },
-    { {2, 2, 2}, /* cube position */
-      {0, 1, 1}, {0, -2, -2}, {1, 0, 1}, {1, 1, 0}, {-1, -1, 2}, {-1, 2, -1},
-      {1, -2, -2}, {-2, 0, -2}, {2, -1, -1}, {-2, 1, -2}, {-2, -2, 0}, {-2, -2, 1},
-    },
+  static const int edgeNeighbors[24][18 + 1][3] = {
+      {{0, 0, 2}, /* cube position */
+       {0, -1, 1}, {0, 2, -2}, {-1, 0, 1}, {-1, -1, 0}, {1, 1, 2}, {1, -2, -1},
+       {-1, 2, -2}, {2, 0, -2}, {-2, 1, -1}, {2, -1, -2}, {2, 2, 0}, {2, 2, 1},
+      },
+      {{0, 2, 0}, /* cube position */
+       {0, 1, -1}, {0, -2, 2}, {-1, 0, -1}, {-1, 1, 0}, {1, -1, -2}, {1, 2, 1},
+       {-1, -2, 2}, {2, 0, 2}, {-2, -1, 1}, {2, 1, 2}, {2, -2, 0}, {2, -2, -1},
+      },
+      {{1, 1, 1}, /* cube position */
+       {0, 0, 3}, {0, 0, -3}, {0, -3, 0}, {0, 3, 0}, {-1, -1, 2}, {-1, 1, -2},
+       {1, -1, -2}, {1, 1, 2}, {-1, -2, 1}, {-1, 2, -1}, {1, -2, -1}, {1, 2, 1},
+       {-2, -1, 1}, {-2, 1, -1}, {2, -1, -1}, {2, 1, 1}, {-3, 0, 0}, {3, 0, 0},
+      },
+      {{2, 0, 0}, /* cube position */
+       {0, -1, -1}, {0, 2, 2}, {1, 0, -1}, {1, -1, 0}, {-1, 1, -2}, {-1, -2, 1},
+       {1, 2, 2}, {-2, 0, 2}, {2, 1, 1}, {-2, -1, 2}, {-2, 2, 0}, {-2, 2, -1},
+      },
+      {{2, 2, 2}, /* cube position */
+       {0, 1, 1}, {0, -2, -2}, {1, 0, 1}, {1, 1, 0}, {-1, -1, 2}, {-1, 2, -1},
+       {1, -2, -2}, {-2, 0, -2}, {2, -1, -1}, {-2, 1, -2}, {-2, -2, 0},
+       {-2, -2, 1},
+      },
 
-
-    { {3, 0, 0}, /* cube position */
-      {0, -1, -1}, {0, 2, 2}, {-1, 0, -1}, {-1, -1, 0}, {1, 1, -2}, {1, -2, 1},
-      {-1, 2, 2}, {2, 0, 2}, {-2, 1, 1}, {2, -1, 2}, {2, 2, 0}, {2, 2, -1},
-    },
-    { {3, 2, 2}, /* cube position */
-      {0, 1, 1}, {0, -2, -2}, {-1, 0, 1}, {-1, 1, 0}, {1, -1, 2}, {1, 2, -1},
-      {-1, -2, -2}, {2, 0, -2}, {-2, -1, -1}, {2, 1, -2}, {2, -2, 0}, {2, -2, 1},
-    },
-    { {4, 1, 1}, /* cube position */
-      {0, 0, 3}, {0, 0, -3}, {0, -3, 0}, {0, 3, 0}, {-1, -1, -2}, {-1, 1, 2},
-      {1, -1, 2}, {1, 1, -2}, {-1, -2, -1}, {-1, 2, 1}, {1, -2, 1}, {1, 2, -1},
-      {-2, -1, -1}, {-2, 1, 1}, {2, -1, 1}, {2, 1, -1}, {-3, 0, 0}, {3, 0, 0},
-    },
-    { {5, 0, 2}, /* cube position */
-      {0, -1, 1}, {0, 2, -2}, {1, 0, 1}, {1, -1, 0}, {-1, 1, 2}, {-1, -2, -1},
-      {1, 2, -2}, {-2, 0, -2}, {2, 1, -1}, {-2, -1, -2}, {-2, 2, 0}, {-2, 2, 1},
-    },
-    { {5, 2, 0}, /* cube position */
-      {0, 1, -1}, {0, -2, 2}, {1, 0, -1}, {1, 1, 0}, {-1, -1, -2}, {-1, 2, 1},
-      {1, -2, 2}, {-2, 0, 2}, {2, -1, 1}, {-2, 1, 2}, {-2, -2, 0}, {-2, -2, -1},
-    }
+      {{3, 0, 0}, /* cube position */
+       {0, -1, -1}, {0, 2, 2}, {-1, 0, -1}, {-1, -1, 0}, {1, 1, -2}, {1, -2, 1},
+       {-1, 2, 2}, {2, 0, 2}, {-2, 1, 1}, {2, -1, 2}, {2, 2, 0}, {2, 2, -1},
+      },
+      {{3, 2, 2}, /* cube position */
+       {0, 1, 1}, {0, -2, -2}, {-1, 0, 1}, {-1, 1, 0}, {1, -1, 2}, {1, 2, -1},
+       {-1, -2, -2}, {2, 0, -2}, {-2, -1, -1}, {2, 1, -2}, {2, -2, 0},
+       {2, -2, 1},
+      },
+      {{4, 1, 1}, /* cube position */
+       {0, 0, 3}, {0, 0, -3}, {0, -3, 0}, {0, 3, 0}, {-1, -1, -2}, {-1, 1, 2},
+       {1, -1, 2}, {1, 1, -2}, {-1, -2, -1}, {-1, 2, 1}, {1, -2, 1}, {1, 2, -1},
+       {-2, -1, -1}, {-2, 1, 1}, {2, -1, 1}, {2, 1, -1}, {-3, 0, 0}, {3, 0, 0},
+      },
+      {{5, 0, 2}, /* cube position */
+       {0, -1, 1}, {0, 2, -2}, {1, 0, 1}, {1, -1, 0}, {-1, 1, 2}, {-1, -2, -1},
+       {1, 2, -2}, {-2, 0, -2}, {2, 1, -1}, {-2, -1, -2}, {-2, 2, 0},
+       {-2, 2, 1},
+      },
+      {{5, 2, 0}, /* cube position */
+       {0, 1, -1}, {0, -2, 2}, {1, 0, -1}, {1, 1, 0}, {-1, -1, -2}, {-1, 2, 1},
+       {1, -2, 2}, {-2, 0, 2}, {2, -1, 1}, {-2, 1, 2}, {-2, -2, 0},
+       {-2, -2, -1},
+      }
   };
 
   int xc = intdiv_inf(x, 3);
   int yc = intdiv_inf(y, 3);
   int zc = intdiv_inf(z, 3);
 
-  int xs = x - 3*xc;
-  int ys = y - 3*yc;
-  int zs = z - 3*zc;
+  int xs = x - 3 * xc;
+  int ys = y - 3 * yc;
+  int zs = z - 3 * zc;
 
-  int cubeType = (xc+yc+zc) & 1;
+  int cubeType = (xc + yc + zc) & 1;
 
   switch (typ) {
 
@@ -150,9 +173,9 @@ bool voxel_4_c::getNeighbor(unsigned int idx, unsigned int typ, int x, int y, in
         if (faceNeighbors[i][cubeType][0][0] == xs &&
             faceNeighbors[i][cubeType][0][1] == ys &&
             faceNeighbors[i][cubeType][0][2] == zs) {
-          *xn = x + faceNeighbors[i][cubeType][idx+1][0];
-          *yn = y + faceNeighbors[i][cubeType][idx+1][1];
-          *zn = z + faceNeighbors[i][cubeType][idx+1][2];
+          *xn = x + faceNeighbors[i][cubeType][idx + 1][0];
+          *yn = y + faceNeighbors[i][cubeType][idx + 1][1];
+          *zn = z + faceNeighbors[i][cubeType][idx + 1][2];
           return true;
         }
 
@@ -166,15 +189,15 @@ bool voxel_4_c::getNeighbor(unsigned int idx, unsigned int typ, int x, int y, in
         if (idx >= 12) return false;
       }
 
-      if (cubeType) xs+= 3;
+      if (cubeType) xs += 3;
 
       for (int i = 0; i < 24; i++)
         if (edgeNeighbors[i][0][0] == xs &&
             edgeNeighbors[i][0][1] == ys &&
             edgeNeighbors[i][0][2] == zs) {
-          *xn = x + edgeNeighbors[i][idx+1][0];
-          *yn = y + edgeNeighbors[i][idx+1][1];
-          *zn = z + edgeNeighbors[i][idx+1][2];
+          *xn = x + edgeNeighbors[i][idx + 1][0];
+          *yn = y + edgeNeighbors[i][idx + 1][1];
+          *zn = z + edgeNeighbors[i][idx + 1][2];
           return true;
         }
 
@@ -195,34 +218,34 @@ void voxel_4_c::scale(unsigned int amount, bool /*grid*/) {
 
   /* the coordinates of the valid voxels */
   static int voxelCoords[2][5][3] = {
-    { { 1, 1, 1 }, { 0, 2, 0 }, { 2, 0, 0 }, { 0, 0, 2 }, { 2, 2, 2 } },
-    { { 1, 1, 1 }, { 0, 0, 0 }, { 2, 2, 0 }, { 2, 0, 2 }, { 0, 2, 2 } },
+      {{1, 1, 1}, {0, 2, 0}, {2, 0, 0}, {0, 0, 2}, {2, 2, 2}},
+      {{1, 1, 1}, {0, 0, 0}, {2, 2, 0}, {2, 0, 2}, {0, 2, 2}},
   };
 
   /* the 2x4 cutting planes */
   static int planes[2][4][3] = {
-    { {-1, 1, -1}, {1, -1, -1}, {-1, -1, 1}, {1, 1, 1} },
-    { {1, 1, -1}, {-1, -1, -1}, {-1, 1, 1}, {1, -1, 1} },
+      {{-1, 1, -1}, {1, -1, -1}, {-1, -1, 1}, {1, 1, 1}},
+      {{1, 1, -1}, {-1, -1, -1}, {-1, 1, 1}, {1, -1, 1}},
   };
 
-  unsigned int nsx = ((sx+2)/3)*amount*3;
-  unsigned int nsy = ((sy+2)/3)*amount*3;
-  unsigned int nsz = ((sz+2)/3)*amount*3;
-  voxel_type * s2 = new voxel_type[nsx*nsy*nsz];
-  memset(s2, VX_EMPTY, nsx*nsy*nsz);
+  unsigned int nsx = ((sx + 2) / 3) * amount * 3;
+  unsigned int nsy = ((sy + 2) / 3) * amount * 3;
+  unsigned int nsz = ((sz + 2) / 3) * amount * 3;
+  voxel_type *s2 = new voxel_type[nsx * nsy * nsz];
+  memset(s2, VX_EMPTY, nsx * nsy * nsz);
 
   // we scale each 3x3x3 block
 
-  unsigned int bsx = ((sx+2)/3);
-  unsigned int bsy = ((sy+2)/3);
-  unsigned int bsz = ((sz+2)/3);
+  unsigned int bsx = ((sx + 2) / 3);
+  unsigned int bsy = ((sy + 2) / 3);
+  unsigned int bsz = ((sz + 2) / 3);
 
   for (unsigned bx = 0; bx < bsx; bx++)
     for (unsigned by = 0; by < bsy; by++)
       for (unsigned bz = 0; bz < bsz; bz++) {
 
         /* blocktype for the source block */
-        unsigned int blockType = (bx+by+bz) & 1;
+        unsigned int blockType = (bx + by + bz) & 1;
 
         /* for all voxels of the source block */
         for (unsigned int voxels1 = 0; voxels1 < 5; voxels1++) {
@@ -231,17 +254,17 @@ void voxel_4_c::scale(unsigned int amount, bool /*grid*/) {
           int y = voxelCoords[blockType][voxels1][1];
           int z = voxelCoords[blockType][voxels1][2];
 
-          if (get2(3*bx+x, 3*by+y, 3*bz+z)) {
+          if (get2(3 * bx + x, 3 * by + y, 3 * bz + z)) {
 
             /* calculate relative position of the source voxel
              * to the cutting planes
              */
             int planeMask = 0;
             for (int i = 0; i < 4; i++) {
-              if ((x-1)*planes[blockType][i][0] +
-                  (y-1)*planes[blockType][i][1] +
-                  (z-1)*planes[blockType][i][2] <= 1)
-                planeMask |= 1<<i;
+              if ((x - 1) * planes[blockType][i][0] +
+                  (y - 1) * planes[blockType][i][1] +
+                  (z - 1) * planes[blockType][i][2] <= 1)
+                planeMask |= 1 << i;
             }
 
             /* for all possible destination blocks of that source block */
@@ -250,22 +273,25 @@ void voxel_4_c::scale(unsigned int amount, bool /*grid*/) {
                 for (unsigned int amz = 0; amz < amount; amz++) {
 
                   /* find out the block type of that block */
-                  unsigned int blockType2 = (amount*(bx+by+bz)+amx+amy+amz) & 1;
+                  unsigned int blockType2 =
+                      (amount * (bx + by + bz) + amx + amy + amz) & 1;
 
                   /* for all voxels of that block */
                   for (unsigned int voxel2 = 0; voxel2 < 5; voxel2++) {
 
                     /* find out the coordinates of that voxel */
-                    int ax = 3*amx + voxelCoords[blockType2][voxel2][0];
-                    int ay = 3*amy + voxelCoords[blockType2][voxel2][1];
-                    int az = 3*amz + voxelCoords[blockType2][voxel2][2];
+                    int ax = 3 * amx + voxelCoords[blockType2][voxel2][0];
+                    int ay = 3 * amy + voxelCoords[blockType2][voxel2][1];
+                    int az = 3 * amz + voxelCoords[blockType2][voxel2][2];
 
                     bool useVoxel = true;
 
                     for (int i = 0; i < 4; i++) {
-                      if (((ax-1.5*amount+0.5)*planes[blockType][i][0] +
-                           (ay-1.5*amount+0.5)*planes[blockType][i][1] +
-                           (az-1.5*amount+0.5)*planes[blockType][i][2] < (1.5*amount-0.5)) != (((planeMask & (1<<i)) != 0))) {
+                      if (((ax - 1.5 * amount + 0.5) * planes[blockType][i][0] +
+                          (ay - 1.5 * amount + 0.5) * planes[blockType][i][1] +
+                          (az - 1.5 * amount + 0.5) * planes[blockType][i][2]
+                          < (1.5 * amount - 0.5))
+                          != (((planeMask & (1 << i)) != 0))) {
 
                         useVoxel = false;
                         break;
@@ -273,7 +299,9 @@ void voxel_4_c::scale(unsigned int amount, bool /*grid*/) {
                     }
 
                     if (useVoxel) {
-                      s2[(bx*amount*3+ax) + nsx * ((by*amount*3+ay) + nsy * (bz*amount*3+az))] = get(3*bx+x, 3*by+y, 3*bz+z);
+                      s2[(bx * amount * 3 + ax) + nsx * ((by * amount * 3 + ay)
+                          + nsy * (bz * amount * 3 + az))] =
+                          get(3 * bx + x, 3 * by + y, 3 * bz + z);
                     }
                   }
                 }
@@ -281,7 +309,7 @@ void voxel_4_c::scale(unsigned int amount, bool /*grid*/) {
         }
       }
 
-  delete [] space;
+  delete[] space;
   space = s2;
 
   sx = nsx;
@@ -290,7 +318,7 @@ void voxel_4_c::scale(unsigned int amount, bool /*grid*/) {
 
   hx = hy = hz = 0;
 
-  voxels = sx*sy*sz;
+  voxels = sx * sy * sz;
 
   recalcBoundingBox();
 
@@ -313,7 +341,7 @@ bool voxel_4_c::scaleDown(unsigned char /*by*/, bool /*action*/) {
  * make sure that we add a multiple of 6, when we add at the base
  * that's all there is to it
  */
-void voxel_4_c::resizeInclude(int & px, int & py, int & pz) {
+void voxel_4_c::resizeInclude(int &px, int &py, int &pz) {
 
   int nsx = getX();
   int nsy = getY();
@@ -340,13 +368,13 @@ void voxel_4_c::resizeInclude(int & px, int & py, int & pz) {
     tz += 6;
     pz += 6;
   }
-  if (px >= (int)getX()) nsx += (px-getX()+1);
-  if (py >= (int)getY()) nsy += (py-getY()+1);
-  if (pz >= (int)getZ()) nsz += (pz-getZ()+1);
+  if (px >= (int) getX()) nsx += (px - getX() + 1);
+  if (py >= (int) getY()) nsy += (py - getY() + 1);
+  if (pz >= (int) getZ()) nsz += (pz - getZ() + 1);
 
-  if (nsx % 6) nsx += 6-nsx%6;
-  if (nsy % 6) nsy += 6-nsy%6;
-  if (nsz % 6) nsz += 6-nsz%6;
+  if (nsx % 6) nsx += 6 - nsx % 6;
+  if (nsy % 6) nsy += 6 - nsy % 6;
+  if (nsz % 6) nsz += 6 - nsz % 6;
 
   resize(nsx, nsy, nsz, 0);
   translate(tx, ty, tz, 0);
@@ -364,13 +392,16 @@ void voxel_4_c::minimizePiece() {
   Voxel::minimizePiece();
 
   if (x || y || z) {
-    resize(sx+x, sy+y, sz+z, 0);
+    resize(sx + x, sy + y, sz + z, 0);
     translate(x, y, z, 0);
   }
 
   /* make sure that the new size is a multiple of 3 */
-  if (sx%3 || sy%3 || sz%3)
-    resize(sx+(3-sx%3)%3, sy+(3-sy%3)%3, sz+(3-sz%3)%3, 0);
+  if (sx % 3 || sy % 3 || sz % 3)
+    resize(sx + (3 - sx % 3) % 3,
+           sy + (3 - sy % 3) % 3,
+           sz + (3 - sz % 3) % 3,
+           0);
 }
 
 bool voxel_4_c::validCoordinate(int x, int y, int z) const {
@@ -379,122 +410,133 @@ bool voxel_4_c::validCoordinate(int x, int y, int z) const {
   int yc = intdiv_inf(y, 3);
   int zc = intdiv_inf(z, 3);
 
-  int xs = x - 3*xc;
-  int ys = y - 3*yc;
-  int zs = z - 3*zc;
+  int xs = x - 3 * xc;
+  int ys = y - 3 * yc;
+  int zs = z - 3 * zc;
 
   if (xs == 1 && ys == 1 && zs == 1) return true;
 
   if ((xc + yc + zc) & 1) {
 
     return ((xs == 0 && ys == 0 && zs == 0) ||
-            (xs == 2 && ys == 2 && zs == 0) ||
-            (xs == 0 && ys == 2 && zs == 2) ||
-            (xs == 2 && ys == 0 && zs == 2));
+        (xs == 2 && ys == 2 && zs == 0) ||
+        (xs == 0 && ys == 2 && zs == 2) ||
+        (xs == 2 && ys == 0 && zs == 2));
 
   } else {
 
     return ((xs == 2 && ys == 0 && zs == 0) ||
-            (xs == 0 && ys == 2 && zs == 0) ||
-            (xs == 2 && ys == 2 && zs == 2) ||
-            (xs == 0 && ys == 0 && zs == 2));
+        (xs == 0 && ys == 2 && zs == 0) ||
+        (xs == 2 && ys == 2 && zs == 2) ||
+        (xs == 0 && ys == 0 && zs == 2));
 
   }
 }
 
-bool voxel_4_c::identicalInBB(const Voxel * op, bool includeColors) const {
+bool voxel_4_c::identicalInBB(const Voxel *op, bool includeColors) const {
 
   // only when the lower corner of the bounding box is within the right box type and within that 3x3x3 box within the
   // same place can we have an identical shape
-  return bx1 % 3 == op->boundX1() % 3 && by1 % 3 == op->boundY1() % 3 && bz1 % 3 == op->boundZ1() % 3 &&
-    ((bx1/3 + by1/3 + bz1/3) & 1) == ((op->boundX1()/3 + op->boundY1()/3 + op->boundZ1()/3) & 1) &&
-    Voxel::identicalInBB(op, includeColors);
+  return bx1 % 3 == op->boundX1() % 3 && by1 % 3 == op->boundY1() % 3
+      && bz1 % 3 == op->boundZ1() % 3 &&
+      ((bx1 / 3 + by1 / 3 + bz1 / 3) & 1)
+          == ((op->boundX1() / 3 + op->boundY1() / 3 + op->boundZ1() / 3) & 1)
+      &&
+          Voxel::identicalInBB(op, includeColors);
 }
 
 bool voxel_4_c::onGrid(int x, int y, int z) const {
 
   // the shape doesn't fit, when not within the 3 raster or the cube parity doesn't match
-  return x%3 == 0 && y%3 == 0 && z%3 == 0 && (((x/3 + y/3 + z/3) & 1) == 0);
+  return x % 3 == 0 && y % 3 == 0 && z % 3 == 0
+      && (((x / 3 + y / 3 + z / 3) & 1) == 0);
 }
 
-
-void voxel_4_c::getConnectionFace(int x, int y, int z, int n, double bevel, double offset, std::vector<float> & faceCorners) const
-{
+void voxel_4_c::getConnectionFace(int x,
+                                  int y,
+                                  int z,
+                                  int n,
+                                  double bevel,
+                                  double offset,
+                                  std::vector<float> &faceCorners) const {
   static const int voxels[] = {
-    -1, -1,  2,   3, -1, -1,
-    -1, -1, -1,  -1, -1, -1,
-     4, -1, -1,  -1, -1,  5,
+      -1, -1, 2, 3, -1, -1,
+      -1, -1, -1, -1, -1, -1,
+      4, -1, -1, -1, -1, 5,
 
-    -1, -1, -1,  -1, -1, -1,
-    -1,  0, -1,  -1,  1, -1,
-    -1, -1, -1,  -1, -1, -1,
+      -1, -1, -1, -1, -1, -1,
+      -1, 0, -1, -1, 1, -1,
+      -1, -1, -1, -1, -1, -1,
 
-     6, -1, -1,  -1, -1,  7,
-    -1, -1, -1,  -1, -1, -1,
-    -1, -1,  8,   9, -1, -1,
+      6, -1, -1, -1, -1, 7,
+      -1, -1, -1, -1, -1, -1,
+      -1, -1, 8, 9, -1, -1,
   };
 
   int xc = intdiv_inf(x, 3);
   int yc = intdiv_inf(y, 3);
   int zc = intdiv_inf(z, 3);
 
-  int xs = x - 3*xc;
-  int ys = y - 3*yc;
-  int zs = z - 3*zc;
+  int xs = x - 3 * xc;
+  int ys = y - 3 * yc;
+  int zs = z - 3 * zc;
 
-  if ((xc+yc+zc) & 1) xs += 3;
+  if ((xc + yc + zc) & 1) xs += 3;
 
-  int p = voxels[xs+6*(ys + 3*zs)];
+  int p = voxels[xs + 6 * (ys + 3 * zs)];
 
   bt_assert(p != -1);
 
-  if (n < 0)
-  {
-    n = -1-n;
+  if (n < 0) {
+    n = -1 - n;
 
-    if (n < 10)
-    {
-      for (int i = 0; i < bevelFaces[p][n][0]; i++)
-      {
-        int v = bevelFaces[p][n][i+1];
-        faceCorners.push_back(xc+vertices[v][0][0] + offset*vertices[v][1][0] + bevel*vertices[v][2][0]);
-        faceCorners.push_back(yc+vertices[v][0][1] + offset*vertices[v][1][1] + bevel*vertices[v][2][1]);
-        faceCorners.push_back(zc+vertices[v][0][2] + offset*vertices[v][1][2] + bevel*vertices[v][2][2]);
+    if (n < 10) {
+      for (int i = 0; i < bevelFaces[p][n][0]; i++) {
+        int v = bevelFaces[p][n][i + 1];
+        faceCorners.push_back(
+            xc + vertices[v][0][0] + offset * vertices[v][1][0]
+                + bevel * vertices[v][2][0]);
+        faceCorners.push_back(
+            yc + vertices[v][0][1] + offset * vertices[v][1][1]
+                + bevel * vertices[v][2][1]);
+        faceCorners.push_back(
+            zc + vertices[v][0][2] + offset * vertices[v][1][2]
+                + bevel * vertices[v][2][2]);
       }
     }
-  }
-  else
-  {
-    if (n < 4)
-    {
-      for (int i = 0; i < 3; i++)
-      {
+  } else {
+    if (n < 4) {
+      for (int i = 0; i < 3; i++) {
         int v = normalFaces[p][n][i];
-        faceCorners.push_back(xc+vertices[v][0][0] + offset*vertices[v][1][0] + bevel*vertices[v][2][0]);
-        faceCorners.push_back(yc+vertices[v][0][1] + offset*vertices[v][1][1] + bevel*vertices[v][2][1]);
-        faceCorners.push_back(zc+vertices[v][0][2] + offset*vertices[v][1][2] + bevel*vertices[v][2][2]);
+        faceCorners.push_back(
+            xc + vertices[v][0][0] + offset * vertices[v][1][0]
+                + bevel * vertices[v][2][0]);
+        faceCorners.push_back(
+            yc + vertices[v][0][1] + offset * vertices[v][1][1]
+                + bevel * vertices[v][2][1]);
+        faceCorners.push_back(
+            zc + vertices[v][0][2] + offset * vertices[v][1][2]
+                + bevel * vertices[v][2][2]);
       }
     }
   }
 
-
 }
 
-
-void voxel_4_c::calculateSize(float * x, float * y, float * z) const {
-  *x = (getX()+2)/3;
-  *y = (getY()+2)/3;
-  *z = (getZ()+2)/3;
+void voxel_4_c::calculateSize(float *x, float *y, float *z) const {
+  *x = (getX() + 2) / 3;
+  *y = (getY() + 2) / 3;
+  *z = (getZ() + 2) / 3;
 }
 
-void voxel_4_c::recalcSpaceCoordinates(float * x, float * y, float * z) const {
+void voxel_4_c::recalcSpaceCoordinates(float *x, float *y, float *z) const {
   *x /= 3;
   *y /= 3;
   *z /= 3;
 }
 
 bool voxel_4_c::meshParamsValid(double bevel, double offset) const {
-  if (((bevel/2.678)+(offset/2.1)) > 1)
+  if (((bevel / 2.678) + (offset / 2.1)) > 1)
     return false;
   else
     return true;

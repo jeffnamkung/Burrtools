@@ -24,12 +24,7 @@
 #include "../tools/xml.h"
 
 #include "../halfedge/polyhedron.h"
-#include "../halfedge/vector3.h"
 #include "../halfedge/modifiers.h"
-
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 /** \mainpage The BurrTools Library documentation
  *
@@ -82,7 +77,20 @@
 /// due to an undefined orientation of the piece
 #define BBHSCACHE_NOT_DEF -30001
 
-Voxel::Voxel(unsigned int x, unsigned int y, unsigned int z, const GridType * g, voxel_type init) : gt(g), sx(x), sy(y), sz(z), voxels(x * y * z), hx(0), hy(0), hz(0), weight(1) {
+Voxel::Voxel(unsigned int x,
+             unsigned int y,
+             unsigned int z,
+             const GridType *g,
+             voxel_type init)
+    : gt(g),
+      sx(x),
+      sy(y),
+      sz(z),
+      voxels(x * y * z),
+      hx(0),
+      hy(0),
+      hz(0),
+      weight(1) {
 
   space = new voxel_type[voxels];
   bt_assert(space);
@@ -92,28 +100,37 @@ Voxel::Voxel(unsigned int x, unsigned int y, unsigned int z, const GridType * g,
 
   if (init == 0) {
     bx2 = by2 = bz2 = 0;
-    bx1 = x-1;
-    by1 = y-1;
-    bz1 = z-1;
+    bx1 = x - 1;
+    by1 = y - 1;
+    bz1 = z - 1;
   } else {
     bx1 = by1 = bz1 = 0;
-    bx2 = x-1;
-    by2 = y-1;
-    bz2 = z-1;
+    bx2 = x - 1;
+    by2 = y - 1;
+    bz2 = z - 1;
   }
 
   doRecalc = true;
 
   symmetries = symmetryInvalid();
 
-  BbHsCache = new int[9*gt->getSymmetries()->getNumTransformationsMirror()];
+  BbHsCache = new int[9 * gt->getSymmetries()->getNumTransformationsMirror()];
 
-  for (unsigned int i = 0; i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
-    BbHsCache[9*i+0] = BbHsCache[9*i+3] = BBHSCACHE_UNINIT;
+  for (unsigned int i = 0;
+       i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
+    BbHsCache[9 * i + 0] = BbHsCache[9 * i + 3] = BBHSCACHE_UNINIT;
 }
 
-Voxel::Voxel(const Voxel & orig) : gt(orig.gt), sx(orig.sx), sy(orig.sy), sz(orig.sz),
-                                   voxels(orig.voxels), hx(orig.hx), hy(orig.hy), hz(orig.hz), weight(orig.weight) {
+Voxel::Voxel(const Voxel &orig)
+    : gt(orig.gt),
+      sx(orig.sx),
+      sy(orig.sy),
+      sz(orig.sz),
+      voxels(orig.voxels),
+      hx(orig.hx),
+      hy(orig.hy),
+      hz(orig.hz),
+      weight(orig.weight) {
 
   space = new voxel_type[voxels];
   bt_assert(space);
@@ -131,14 +148,23 @@ Voxel::Voxel(const Voxel & orig) : gt(orig.gt), sx(orig.sx), sy(orig.sy), sz(ori
 
   symmetries = symmetryInvalid();
 
-  BbHsCache = new int[9*gt->getSymmetries()->getNumTransformationsMirror()];
+  BbHsCache = new int[9 * gt->getSymmetries()->getNumTransformationsMirror()];
 
-  for (unsigned int i = 0; i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
-    BbHsCache[9*i+0] = BbHsCache[9*i+3] = BBHSCACHE_UNINIT;
+  for (unsigned int i = 0;
+       i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
+    BbHsCache[9 * i + 0] = BbHsCache[9 * i + 3] = BBHSCACHE_UNINIT;
 }
 
-Voxel::Voxel(const Voxel * orig) : gt(orig->gt), sx(orig->sx), sy(orig->sy), sz(orig->sz),
-                                   voxels(orig->voxels), hx(orig->hx), hy(orig->hy), hz(orig->hz), weight(orig->weight) {
+Voxel::Voxel(const Voxel *orig)
+    : gt(orig->gt),
+      sx(orig->sx),
+      sy(orig->sy),
+      sz(orig->sz),
+      voxels(orig->voxels),
+      hx(orig->hx),
+      hy(orig->hy),
+      hz(orig->hz),
+      weight(orig->weight) {
 
   space = new voxel_type[voxels];
   bt_assert(space);
@@ -156,15 +182,16 @@ Voxel::Voxel(const Voxel * orig) : gt(orig->gt), sx(orig->sx), sy(orig->sy), sz(
 
   symmetries = symmetryInvalid();
 
-  BbHsCache = new int[9*gt->getSymmetries()->getNumTransformationsMirror()];
+  BbHsCache = new int[9 * gt->getSymmetries()->getNumTransformationsMirror()];
 
-  for (unsigned int i = 0; i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
-    BbHsCache[9*i+0] = BbHsCache[9*i+3] = BBHSCACHE_UNINIT;
+  for (unsigned int i = 0;
+       i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
+    BbHsCache[9 * i + 0] = BbHsCache[9 * i + 3] = BBHSCACHE_UNINIT;
 }
 
 Voxel::~Voxel() {
-  delete [] space;
-  delete [] BbHsCache;
+  delete[] space;
+  delete[] BbHsCache;
 }
 
 void Voxel::recalcBoundingBox() {
@@ -172,7 +199,7 @@ void Voxel::recalcBoundingBox() {
   if (!doRecalc)
     return;
 
-  bx1 = by1 = bz1 = sx+sy+sz;
+  bx1 = by1 = bz1 = sx + sy + sz;
   bx2 = by2 = bz2 = 0;
 
   bool empty = true;
@@ -203,11 +230,12 @@ void Voxel::recalcBoundingBox() {
     bx1 = by1 = bz1 = bx2 = by2 = bz2 = 0;
 
   /* we also clear the bounding box and hotspot cache */
-  for (unsigned int i = 0; i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
-    BbHsCache[9*i+0] = BbHsCache[9*i+3] = BBHSCACHE_UNINIT;
+  for (unsigned int i = 0;
+       i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
+    BbHsCache[9 * i + 0] = BbHsCache[9 * i + 3] = BBHSCACHE_UNINIT;
 }
 
-bool Voxel::operator ==(const Voxel & op) const {
+bool Voxel::operator==(const Voxel &op) const {
 
   if (sx != op.sx) return false;
   if (sy != op.sy) return false;
@@ -220,35 +248,41 @@ bool Voxel::operator ==(const Voxel & op) const {
   return true;
 }
 
-bool Voxel::identicalInBB(const Voxel * op, bool includeColors) const {
+bool Voxel::identicalInBB(const Voxel *op, bool includeColors) const {
 
-  if (bx2-bx1 != op->bx2-op->bx1) return false;
-  if (by2-by1 != op->by2-op->by1) return false;
-  if (bz2-bz1 != op->bz2-op->bz1) return false;
+  if (bx2 - bx1 != op->bx2 - op->bx1) return false;
+  if (by2 - by1 != op->by2 - op->by1) return false;
+  if (bz2 - bz1 != op->bz2 - op->bz1) return false;
 
   for (unsigned int x = bx1; x <= bx2; x++)
     for (unsigned int y = by1; y <= by2; y++)
       for (unsigned int z = bz1; z <= bz2; z++)
         if (includeColors) {
-          if (get(x, y, z) != op->get(x-bx1+op->bx1, y-by1+op->by1, z-bz1+op->bz1))
+          if (get(x, y, z) != op->get(x - bx1 + op->bx1,
+                                      y - by1 + op->by1,
+                                      z - bz1 + op->bz1))
             return false;
         } else {
-          if (getState(x, y, z) != op->getState(x-bx1+op->bx1, y-by1+op->by1, z-bz1+op->bz1))
+          if (getState(x, y, z) != op->getState(x - bx1 + op->bx1,
+                                                y - by1 + op->by1,
+                                                z - bz1 + op->bz1))
             return false;
         }
-
 
   return true;
 }
 
-bool Voxel::identicalWithRots(const Voxel * op, bool includeMirror, bool includeColors) const {
+bool Voxel::identicalWithRots(const Voxel *op,
+                              bool includeMirror,
+                              bool includeColors) const {
 
-  const symmetries_c * sym = gt->getSymmetries();
+  const symmetries_c *sym = gt->getSymmetries();
 
-  unsigned int maxTrans = includeMirror ? sym->getNumTransformationsMirror() : sym->getNumTransformations();
+  unsigned int maxTrans = includeMirror ? sym->getNumTransformationsMirror()
+                                        : sym->getNumTransformations();
 
   for (unsigned int t = 0; t < maxTrans; t++) {
-    Voxel * v = gt->getVoxel(op);
+    Voxel *v = gt->getVoxel(op);
 
     if (v->transform(t) && identicalInBB(v, includeColors)) {
       delete v;
@@ -261,12 +295,13 @@ bool Voxel::identicalWithRots(const Voxel * op, bool includeMirror, bool include
   return false;
 }
 
-unsigned char Voxel::getMirrorTransform(const Voxel * op) const {
+unsigned char Voxel::getMirrorTransform(const Voxel *op) const {
 
-  const symmetries_c * sym = gt->getSymmetries();
+  const symmetries_c *sym = gt->getSymmetries();
 
-  for (unsigned int t = sym->getNumTransformations(); t < sym->getNumTransformationsMirror(); t++) {
-    Voxel * v = gt->getVoxel(this);
+  for (unsigned int t = sym->getNumTransformations();
+       t < sym->getNumTransformationsMirror(); t++) {
+    Voxel *v = gt->getVoxel(this);
 
     if (v->transform(t) && v->identicalInBB(op, true)) {
       delete v;
@@ -279,95 +314,94 @@ unsigned char Voxel::getMirrorTransform(const Voxel * op) const {
   return 0;
 }
 
-bool Voxel::getHotspot(unsigned char trans, int * x, int * y, int * z) const {
+bool Voxel::getHotspot(unsigned char trans, int *x, int *y, int *z) const {
 
   bt_assert(trans < gt->getSymmetries()->getNumTransformationsMirror());
   bt_assert(x && y && z);
 
   /* if the cache values don't exist calculate them */
-  if (BbHsCache[9*trans] == BBHSCACHE_UNINIT) {
+  if (BbHsCache[9 * trans] == BBHSCACHE_UNINIT) {
 
     /* this version always works, but also is quite slow
     */
-    Voxel * tmp = gt->getVoxel(this);
+    Voxel *tmp = gt->getVoxel(this);
 
-    if (!tmp->transform(trans))
-    {
-      BbHsCache[9*trans+0] = BBHSCACHE_NOT_DEF;
-      BbHsCache[9*trans+3] = BBHSCACHE_NOT_DEF;
+    if (!tmp->transform(trans)) {
+      BbHsCache[9 * trans + 0] = BBHSCACHE_NOT_DEF;
+      BbHsCache[9 * trans + 3] = BBHSCACHE_NOT_DEF;
     }
 
-    BbHsCache[9*trans+0] = tmp->getHx();
-    BbHsCache[9*trans+1] = tmp->getHy();
-    BbHsCache[9*trans+2] = tmp->getHz();
+    BbHsCache[9 * trans + 0] = tmp->getHx();
+    BbHsCache[9 * trans + 1] = tmp->getHy();
+    BbHsCache[9 * trans + 2] = tmp->getHz();
 
     delete tmp;
   }
 
-  if (BbHsCache[9*trans] == BBHSCACHE_NOT_DEF)
-  {
-     return false;
-  }
-  else
-  {
-    *x = BbHsCache[9*trans+0];
-    *y = BbHsCache[9*trans+1];
-    *z = BbHsCache[9*trans+2];
+  if (BbHsCache[9 * trans] == BBHSCACHE_NOT_DEF) {
+    return false;
+  } else {
+    *x = BbHsCache[9 * trans + 0];
+    *y = BbHsCache[9 * trans + 1];
+    *z = BbHsCache[9 * trans + 2];
     return true;
   }
 }
 
-bool Voxel::getBoundingBox(unsigned char trans, int * x1, int * y1, int * z1, int * x2, int * y2, int * z2) const {
+bool Voxel::getBoundingBox(unsigned char trans,
+                           int *x1,
+                           int *y1,
+                           int *z1,
+                           int *x2,
+                           int *y2,
+                           int *z2) const {
 
   bt_assert(trans < gt->getSymmetries()->getNumTransformationsMirror());
 
   /* if the cache values don't exist calculate them */
-  if (BbHsCache[9*trans+3] == BBHSCACHE_UNINIT) {
+  if (BbHsCache[9 * trans + 3] == BBHSCACHE_UNINIT) {
 
     /* this version always works, but it is quite slow */
-    Voxel * tmp = gt->getVoxel(this);
+    Voxel *tmp = gt->getVoxel(this);
 
-    if (!tmp->transform(trans))
-    {
-      BbHsCache[9*trans+3] = BBHSCACHE_NOT_DEF;
-      BbHsCache[9*trans+0] = BBHSCACHE_NOT_DEF;
-    }
-    else
-    {
-      BbHsCache[9*trans+3] = tmp->boundX1();
-      BbHsCache[9*trans+4] = tmp->boundX2();
-      BbHsCache[9*trans+5] = tmp->boundY1();
-      BbHsCache[9*trans+6] = tmp->boundY2();
-      BbHsCache[9*trans+7] = tmp->boundZ1();
-      BbHsCache[9*trans+8] = tmp->boundZ2();
+    if (!tmp->transform(trans)) {
+      BbHsCache[9 * trans + 3] = BBHSCACHE_NOT_DEF;
+      BbHsCache[9 * trans + 0] = BBHSCACHE_NOT_DEF;
+    } else {
+      BbHsCache[9 * trans + 3] = tmp->boundX1();
+      BbHsCache[9 * trans + 4] = tmp->boundX2();
+      BbHsCache[9 * trans + 5] = tmp->boundY1();
+      BbHsCache[9 * trans + 6] = tmp->boundY2();
+      BbHsCache[9 * trans + 7] = tmp->boundZ1();
+      BbHsCache[9 * trans + 8] = tmp->boundZ2();
     }
 
     delete tmp;
   }
 
-  if (BbHsCache[9*trans+3] == BBHSCACHE_NOT_DEF)
-  {
+  if (BbHsCache[9 * trans + 3] == BBHSCACHE_NOT_DEF) {
     return false;
-  }
-  else
-  {
-    if (x1) *x1 = BbHsCache[9*trans+3];
-    if (x2) *x2 = BbHsCache[9*trans+4];
-    if (y1) *y1 = BbHsCache[9*trans+5];
-    if (y2) *y2 = BbHsCache[9*trans+6];
-    if (z1) *z1 = BbHsCache[9*trans+7];
-    if (z2) *z2 = BbHsCache[9*trans+8];
+  } else {
+    if (x1) *x1 = BbHsCache[9 * trans + 3];
+    if (x2) *x2 = BbHsCache[9 * trans + 4];
+    if (y1) *y1 = BbHsCache[9 * trans + 5];
+    if (y2) *y2 = BbHsCache[9 * trans + 6];
+    if (z1) *z1 = BbHsCache[9 * trans + 7];
+    if (z2) *z2 = BbHsCache[9 * trans + 8];
     return true;
   }
 }
 
-void Voxel::resize(unsigned int nsx, unsigned int nsy, unsigned int nsz, voxel_type filler) {
+void Voxel::resize(unsigned int nsx,
+                   unsigned int nsy,
+                   unsigned int nsz,
+                   voxel_type filler) {
 
   // if size doesn't change, do nothing
   if (nsx == sx && nsy == sy && nsz == sz) return;
 
-  voxel_type * s2 = new voxel_type[nsx*nsy*nsz];
-  memset(s2, filler, nsx*nsy*nsz);
+  voxel_type *s2 = new voxel_type[nsx * nsy * nsz];
+  memset(s2, filler, nsx * nsy * nsz);
 
   unsigned int mx = (sx < nsx) ? sx : nsx;
   unsigned int my = (sy < nsy) ? sy : nsy;
@@ -378,13 +412,13 @@ void Voxel::resize(unsigned int nsx, unsigned int nsy, unsigned int nsz, voxel_t
       for (unsigned int z = 0; z < mz; z++)
         s2[x + nsx * (y + nsy * z)] = get(x, y, z);
 
-  delete [] space;
+  delete[] space;
   space = s2;
 
   sx = nsx;
   sy = nsy;
   sz = nsz;
-  voxels = sx*sy*sz;
+  voxels = sx * sy * sz;
 
   recalcBoundingBox();
 }
@@ -397,12 +431,11 @@ bool Voxel::scaleDown(unsigned char /*by*/, bool /*action*/) {
   return false;
 }
 
-
 unsigned int Voxel::count(voxel_type val) const {
   unsigned int count = 0;
   for (unsigned int i = 0; i < getXYZ(); i++)
     if (get(i) == val)
-      count ++;
+      count++;
   return count;
 }
 
@@ -410,23 +443,23 @@ unsigned int Voxel::countState(int state) const {
   unsigned int count = 0;
   for (unsigned int i = 0; i < getXYZ(); i++)
     if ((get(i) & 3) == state)
-      count ++;
+      count++;
   return count;
 }
 
 void Voxel::translate(int dx, int dy, int dz, voxel_type filler) {
-  voxel_type * s2 = new voxel_type[sx*sy*sz];
-  memset(s2, filler, sx*sy*sz);
+  voxel_type *s2 = new voxel_type[sx * sy * sz];
+  memset(s2, filler, sx * sy * sz);
 
   for (unsigned int x = 0; x < sx; x++)
     for (unsigned int y = 0; y < sy; y++)
       for (unsigned int z = 0; z < sz; z++)
-        if (((int)x+dx >= 0) && ((int)x+dx < (int)sx) &&
-            ((int)y+dy >= 0) && ((int)y+dy < (int)sy) &&
-            ((int)z+dz >= 0) && ((int)z+dz < (int)sz))
-          s2[(x+dx)+sx*((y+dy)+sy*(z+dz))] = get(x, y, z);
+        if (((int) x + dx >= 0) && ((int) x + dx < (int) sx) &&
+            ((int) y + dy >= 0) && ((int) y + dy < (int) sy) &&
+            ((int) z + dz >= 0) && ((int) z + dz < (int) sz))
+          s2[(x + dx) + sx * ((y + dy) + sy * (z + dz))] = get(x, y, z);
 
-  delete [] space;
+  delete[] space;
   space = s2;
 
   // initially I thought I could just shift the bounding box, but this doesn't work
@@ -463,7 +496,11 @@ void Voxel::translate(int dx, int dy, int dz, voxel_type filler) {
  */
 
 /** \ref unionfinddetails */
-void Voxel::unionFind(int * tree, char type, bool inverse, voxel_type value, bool outsideZ) const {
+void Voxel::unionFind(int *tree,
+                      char type,
+                      bool inverse,
+                      voxel_type value,
+                      bool outsideZ) const {
 
   /* union find algorithm:
    * 1. put all voxels that matter in an own set
@@ -472,10 +509,11 @@ void Voxel::unionFind(int * tree, char type, bool inverse, voxel_type value, boo
    */
 
   /* initialize tree */
-  for (unsigned int i = 0; i < voxels+1; i++)
+  for (unsigned int i = 0; i < voxels + 1; i++)
     tree[i] = -1;
 
-  bool merge_outside = ((inverse && (value != 0)) || (!inverse && (value == 0)));
+  bool
+      merge_outside = ((inverse && (value != 0)) || (!inverse && (value == 0)));
 
   /* merge all neighbouring voxels */
   for (unsigned int x = 0; x < sx; x++)
@@ -484,7 +522,7 @@ void Voxel::unionFind(int * tree, char type, bool inverse, voxel_type value, boo
         if (validCoordinate(x, y, z) &&
 
             ((inverse && (get(x, y, z) != value)) ||
-             (!inverse && (get(x, y, z) == value)))) {
+                (!inverse && (get(x, y, z) == value)))) {
 
           int root1 = getIndex(x, y, z);
           while (tree[root1] >= 0) root1 = tree[root1];
@@ -496,8 +534,9 @@ void Voxel::unionFind(int * tree, char type, bool inverse, voxel_type value, boo
             int x2, y2, z2;
             int idx = 0;
             while (getNeighbor(idx, curTyp, x, y, z, &x2, &y2, &z2)) {
-              if ((x2 >= 0) && (x2 < (int)sx) && (y2 >= 0) && (y2 < (int)sy) && (z2 >= 0) && (z2 < (int)sz)) {
-                if ((x2 < (int)x) || (y2 < (int)y) || (z2 < (int)z)) {
+              if ((x2 >= 0) && (x2 < (int) sx) && (y2 >= 0) && (y2 < (int) sy)
+                  && (z2 >= 0) && (z2 < (int) sz)) {
+                if ((x2 < (int) x) || (y2 < (int) y) || (z2 < (int) z)) {
                   if ((inverse && (get(x2, y2, z2) != value)) ||
                       (!inverse && (get(x2, y2, z2) == value))) {
 
@@ -510,7 +549,7 @@ void Voxel::unionFind(int * tree, char type, bool inverse, voxel_type value, boo
                 }
               } else if (merge_outside) {
 
-                if (outsideZ || ((z2 >= 0) && (z2 < (int)sz))) {
+                if (outsideZ || ((z2 >= 0) && (z2 < (int) sz))) {
 
                   int root2 = voxels;
                   while (tree[root2] >= 0) root2 = tree[root2];
@@ -526,24 +565,29 @@ void Voxel::unionFind(int * tree, char type, bool inverse, voxel_type value, boo
         }
 }
 
-bool Voxel::connected(char type, bool inverse, voxel_type value, bool outsideZ) const {
+bool Voxel::connected(char type,
+                      bool inverse,
+                      voxel_type value,
+                      bool outsideZ) const {
 
   /* allocate enough space for all voxels plus one for the outside */
-  int * tree = new int[voxels+1];
+  int *tree = new int[voxels + 1];
 
   unionFind(tree, type, inverse, value, outsideZ);
 
   int root = -1;
 
-  bool merge_outside = ((inverse && (value != 0)) || (!inverse && (value == 0)));
+  bool
+      merge_outside = ((inverse && (value != 0)) || (!inverse && (value == 0)));
 
   /* finally check, if all voxels are in the same set */
-  { for (unsigned int x = 0; x < sx; x++)
+  {
+    for (unsigned int x = 0; x < sx; x++)
       for (unsigned int y = 0; y < sy; y++)
         for (unsigned int z = 0; z < sz; z++)
           if (validCoordinate(x, y, z) &&
               ((inverse && (get(x, y, z) != value)) ||
-               (!inverse && (get(x, y, z) == value)))) {
+                  (!inverse && (get(x, y, z) == value)))) {
             if (root == -1) {
               root = getIndex(x, y, z);
               while (tree[root] >= 0) root = tree[root];
@@ -554,7 +598,7 @@ bool Voxel::connected(char type, bool inverse, voxel_type value, bool outsideZ) 
               while (tree[root2] >= 0) root2 = tree[root2];
 
               if (root2 != root) {
-                delete [] tree;
+                delete[] tree;
                 return false;
               }
             }
@@ -565,20 +609,20 @@ bool Voxel::connected(char type, bool inverse, voxel_type value, bool outsideZ) 
       while (tree[root2] >= 0) root2 = tree[root2];
 
       if (root2 != root) {
-        delete [] tree;
+        delete[] tree;
         return false;
       }
     }
   }
 
-  delete [] tree;
+  delete[] tree;
   return true;
 }
 
 void Voxel::fillHoles(char type) {
 
   /* allocate enough space for all voxels plus one for the outside */
-  int * tree = new int[voxels+1];
+  int *tree = new int[voxels + 1];
 
   unionFind(tree, type, true, VX_FILLED, true);
 
@@ -591,7 +635,7 @@ void Voxel::fillHoles(char type) {
     for (unsigned int y = 0; y < sy; y++)
       for (unsigned int z = 0; z < sz; z++)
         if (validCoordinate(x, y, z) &&
-            get(x, y, z) != VX_FILLED)  {
+            get(x, y, z) != VX_FILLED) {
           int root2 = getIndex(x, y, z);
           while (tree[root2] >= 0) root2 = tree[root2];
 
@@ -600,15 +644,14 @@ void Voxel::fillHoles(char type) {
           }
         }
 
-
-  delete [] tree;
+  delete[] tree;
 }
 
-void Voxel::copy(const Voxel * orig) {
+void Voxel::copy(const Voxel *orig) {
 
-  delete [] space;
+  delete[] space;
 
-  space = new voxel_type [orig->getXYZ()];
+  space = new voxel_type[orig->getXYZ()];
 
   memcpy(space, orig->space, orig->getXYZ());
 
@@ -642,14 +685,14 @@ bool Voxel::neighbour(unsigned int p, voxel_type val) const {
 
   bt_assert(x + sx * (y + sy * z) == p);
 
-  if ((x > 0   ) && (space[p-1] == val)) return true;
-  if ((x < sx-1) && (space[p+1] == val)) return true;
+  if ((x > 0) && (space[p - 1] == val)) return true;
+  if ((x < sx - 1) && (space[p + 1] == val)) return true;
 
-  if ((y > 0   ) && (space[p-sx] == val)) return true;
-  if ((y < sy-1) && (space[p+sx] == val)) return true;
+  if ((y > 0) && (space[p - sx] == val)) return true;
+  if ((y < sy - 1) && (space[p + sx] == val)) return true;
 
-  if ((z > 0   ) && (space[p-sx*sy] == val)) return true;
-  if ((z < sz-1) && (space[p+sx*sy] == val)) return true;
+  if ((z > 0) && (space[p - sx * sy] == val)) return true;
+  if ((z < sz - 1) && (space[p + sx * sy] == val)) return true;
 
   return false;
 }
@@ -657,8 +700,7 @@ bool Voxel::neighbour(unsigned int p, voxel_type val) const {
 symmetries_t Voxel::selfSymmetries(void) const {
 
   // if we have not calculated the symmetries, yet we calclate it
-  if (isSymmetryInvalid(symmetries))
-  {
+  if (isSymmetryInvalid(symmetries)) {
     symmetries = gt->getSymmetries()->calculateSymmetry(this);
   }
 
@@ -690,16 +732,17 @@ void Voxel::minimizePiece() {
   if (x1 > x2)
     return;
 
-  if ((x1 != 0) || (y1 != 0) || (z1 != 0) || (x2 != getX()-1) || (y2 != getY()-1) || (z2 != getZ()-1)) {
+  if ((x1 != 0) || (y1 != 0) || (z1 != 0) || (x2 != getX() - 1)
+      || (y2 != getY() - 1) || (z2 != getZ() - 1)) {
 
     translate(-x1, -y1, -z1, 0);
-    resize(x2-x1+1, y2-y1+1, z2-z1+1, 0);
+    resize(x2 - x1 + 1, y2 - y1 + 1, z2 - z1 + 1, 0);
   }
 }
 
 void Voxel::actionOnSpace(VoxelAction action, bool inside) {
 
-  if (!getX() || !getY() ||!getZ())
+  if (!getX() || !getY() || !getZ())
     return;
 
   for (unsigned int x = 0; x < getX(); x++)
@@ -711,21 +754,25 @@ void Voxel::actionOnSpace(VoxelAction action, bool inside) {
           int idx = 0;
           int nx, ny, nz;
 
-          while (!neighborEmpty && getNeighbor(idx, 0, x, y, z, &nx, &ny, &nz)) {
+          while (!neighborEmpty
+              && getNeighbor(idx, 0, x, y, z, &nx, &ny, &nz)) {
             neighborEmpty |= (getState2(nx, ny, nz) == VX_EMPTY);
             idx++;
           }
 
           if (inside ^ neighborEmpty)
-            switch(action) {
-              case ACT_FIXED: setState(x, y, z, VX_FILLED); break;
-              case ACT_VARIABLE: setState(x, y, z, VX_VARIABLE); break;
-              case ACT_DECOLOR: setColor(x, y, z, 0); break;
+            switch (action) {
+              case ACT_FIXED: setState(x, y, z, VX_FILLED);
+                break;
+              case ACT_VARIABLE: setState(x, y, z, VX_VARIABLE);
+                break;
+              case ACT_DECOLOR: setColor(x, y, z, 0);
+                break;
             }
         }
 }
 
-void Voxel::save(XmlWriter & xml) const {
+void Voxel::save(XmlWriter &xml) const {
 
   xml.newTag("voxel");
 
@@ -746,21 +793,21 @@ void Voxel::save(XmlWriter & xml) const {
   // this might allow us to later add another format
   xml.newAttrib("type", 0);
 
-  std::ostream & str = xml.addContent();
+  std::ostream &str = xml.addContent();
 
-  for (unsigned int i = 0; i < getXYZ(); i++)
-  {
+  for (unsigned int i = 0; i < getXYZ(); i++) {
     // output state
-    switch(getState(i))
-    {
-      case VX_EMPTY:    str << "_"; break;
-      case VX_FILLED:   str << "#"; break;
-      case VX_VARIABLE: str << "+"; break;
+    switch (getState(i)) {
+      case VX_EMPTY: str << "_";
+        break;
+      case VX_FILLED: str << "#";
+        break;
+      case VX_VARIABLE: str << "+";
+        break;
     }
 
     // output color postfix, but only vor nonempty voxels
-    switch(getState(i))
-    {
+    switch (getState(i)) {
       case VX_VARIABLE:
       case VX_FILLED:
         // output color, only when color is not zero
@@ -768,16 +815,15 @@ void Voxel::save(XmlWriter & xml) const {
           str << getColor(i);
         break;
 
-      default:
-        break;
+      default:break;
     }
   }
 
   xml.endTag("voxel");
 }
 
-Voxel::Voxel(XmlParser & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0), weight(1)
-{
+Voxel::Voxel(XmlParser &pars, const GridType *g)
+    : gt(g), hx(0), hy(0), hz(0), weight(1) {
   pars.require(XmlParser::START_TAG, "voxel");
 
   skipRecalcBoundingBox(true);
@@ -806,7 +852,7 @@ Voxel::Voxel(XmlParser & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0),
   unsigned int type = atoi(szStr.c_str());
 
   // set to the correct size
-  voxels = sx*sy*sz;
+  voxels = sx * sy * sz;
 
   szStr = pars.getAttributeValue("hx");
   hx = atoi(szStr.c_str());
@@ -831,37 +877,41 @@ Voxel::Voxel(XmlParser & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0),
   unsigned int idx = 0;
   unsigned int color = 0;
 
-  if (c.length())
-  {
+  if (c.length()) {
     if (type != 0)
       pars.exception("unknown voxel type");
 
-    for (unsigned int pos = 0; pos < c.length(); pos++)
-    {
-      switch (c[pos])
-      {
-        case '#':
-          setState(idx++, VX_FILLED);
+    for (unsigned int pos = 0; pos < c.length(); pos++) {
+      switch (c[pos]) {
+        case '#':setState(idx++, VX_FILLED);
           color = 0;
           break;
-        case '+':
-          setState(idx++, VX_VARIABLE);
+        case '+':setState(idx++, VX_VARIABLE);
           color = 0;
           break;
-        case '_':
-          setState(idx++, VX_EMPTY);
+        case '_':setState(idx++, VX_EMPTY);
           color = 0;
           break;
-        case '0': color = color * 10 + 0; break;
-        case '1': color = color * 10 + 1; break;
-        case '2': color = color * 10 + 2; break;
-        case '3': color = color * 10 + 3; break;
-        case '4': color = color * 10 + 4; break;
-        case '5': color = color * 10 + 5; break;
-        case '6': color = color * 10 + 6; break;
-        case '7': color = color * 10 + 7; break;
-        case '8': color = color * 10 + 8; break;
-        case '9': color = color * 10 + 9; break;
+        case '0': color = color * 10 + 0;
+          break;
+        case '1': color = color * 10 + 1;
+          break;
+        case '2': color = color * 10 + 2;
+          break;
+        case '3': color = color * 10 + 3;
+          break;
+        case '4': color = color * 10 + 4;
+          break;
+        case '5': color = color * 10 + 5;
+          break;
+        case '6': color = color * 10 + 6;
+          break;
+        case '7': color = color * 10 + 7;
+          break;
+        case '8': color = color * 10 + 8;
+          break;
+        case '9': color = color * 10 + 9;
+          break;
         default : pars.exception("unrecognised character in piece voxel space");
       }
 
@@ -869,7 +919,7 @@ Voxel::Voxel(XmlParser & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0),
         pars.exception("constraint color too big > 63");
 
       if (idx > 0)
-        setColor(idx-1, color);
+        setColor(idx - 1, color);
 
       if (idx > getXYZ())
         pars.exception("too many voxels defined for voxelspace");
@@ -879,7 +929,7 @@ Voxel::Voxel(XmlParser & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0),
   }
 
   symmetries = symmetryInvalid();
-  BbHsCache = new int[9*gt->getSymmetries()->getNumTransformationsMirror()];
+  BbHsCache = new int[9 * gt->getSymmetries()->getNumTransformationsMirror()];
 
   skipRecalcBoundingBox(false);
 
@@ -888,17 +938,23 @@ Voxel::Voxel(XmlParser & pars, const GridType * g) : gt(g), hx(0), hy(0), hz(0),
 }
 
 void Voxel::setHotspot(int x, int y, int z) {
-  hx = x; hy = y; hz = z;
+  hx = x;
+  hy = y;
+  hz = z;
 
-  for (unsigned int i = 0; i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
-    BbHsCache[9*i+0] = BBHSCACHE_UNINIT;
+  for (unsigned int i = 0;
+       i < gt->getSymmetries()->getNumTransformationsMirror(); i++)
+    BbHsCache[9 * i + 0] = BBHSCACHE_UNINIT;
 }
 
 void Voxel::initHotspot() {
   setHotspot(0, 0, 0);
 }
 
-bool Voxel::indexToXYZ(unsigned int index, unsigned int *x, unsigned int *y, unsigned int *z) const {
+bool Voxel::indexToXYZ(unsigned int index,
+                       unsigned int *x,
+                       unsigned int *y,
+                       unsigned int *z) const {
 
   *x = index % sx;
   index -= *x;
@@ -914,16 +970,16 @@ bool Voxel::indexToXYZ(unsigned int index, unsigned int *x, unsigned int *y, uns
 }
 
 bool Voxel::unionintersect(
-    const Voxel * va, int xa, int ya, int za,
-    const Voxel * vb, int xb, int yb, int zb
-      ) {
+    const Voxel *va, int xa, int ya, int za,
+    const Voxel *vb, int xb, int yb, int zb
+) {
 
   /* first make sure that the 2 given voxels bounding boxes do overlap
    * if they don't we don't need to to anything
    */
-  if (va->bx1+xa > vb->bx2+xb || va->bx2+xa < vb->bx1+xb) return false;
-  if (va->by1+ya > vb->by2+yb || va->by2+ya < vb->by1+yb) return false;
-  if (va->bz1+za > vb->bz2+zb || va->bz2+za < vb->bz1+zb) return false;
+  if (va->bx1 + xa > vb->bx2 + xb || va->bx2 + xa < vb->bx1 + xb) return false;
+  if (va->by1 + ya > vb->by2 + yb || va->by2 + ya < vb->by1 + yb) return false;
+  if (va->bz1 + za > vb->bz2 + zb || va->bz2 + za < vb->bz1 + zb) return false;
 
   /* first make sure wa can accommodate the complete 2nd voxel space */
   bool do_resize = false;
@@ -931,13 +987,31 @@ bool Voxel::unionintersect(
   int ny = sy;
   int nz = sz;
 
-  if (xa+(int)va->sx > nx) { nx = xa+(int)va->sx; do_resize = true; }
-  if (ya+(int)va->sy > ny) { ny = ya+(int)va->sy; do_resize = true; }
-  if (za+(int)va->sz > nz) { nz = za+(int)va->sz; do_resize = true; }
+  if (xa + (int) va->sx > nx) {
+    nx = xa + (int) va->sx;
+    do_resize = true;
+  }
+  if (ya + (int) va->sy > ny) {
+    ny = ya + (int) va->sy;
+    do_resize = true;
+  }
+  if (za + (int) va->sz > nz) {
+    nz = za + (int) va->sz;
+    do_resize = true;
+  }
 
-  if (xb+(int)vb->sx > nx) { nx = xb+(int)vb->sx; do_resize = true; }
-  if (yb+(int)vb->sy > ny) { ny = yb+(int)vb->sy; do_resize = true; }
-  if (zb+(int)vb->sz > nz) { nz = zb+(int)vb->sz; do_resize = true; }
+  if (xb + (int) vb->sx > nx) {
+    nx = xb + (int) vb->sx;
+    do_resize = true;
+  }
+  if (yb + (int) vb->sy > ny) {
+    ny = yb + (int) vb->sy;
+    do_resize = true;
+  }
+  if (zb + (int) vb->sz > nz) {
+    nz = zb + (int) vb->sz;
+    do_resize = true;
+  }
 
   if (do_resize)
     resize(nx, ny, nz, VX_EMPTY);
@@ -947,8 +1021,8 @@ bool Voxel::unionintersect(
   for (unsigned int x = 0; x < sx; x++)
     for (unsigned int y = 0; y < sy; y++)
       for (unsigned int z = 0; z < sz; z++)
-        if (va->getState2(x-xa, y-ya, z-za) == VX_FILLED &&
-            vb->getState2(x-xb, y-yb, z-zb) == VX_FILLED) {
+        if (va->getState2(x - xa, y - ya, z - za) == VX_FILLED &&
+            vb->getState2(x - xb, y - yb, z - zb) == VX_FILLED) {
           set(x, y, z, VX_FILLED);
           result = true;
         }
@@ -956,9 +1030,10 @@ bool Voxel::unionintersect(
   return result;
 }
 
-Polyhedron *Voxel::getMeshInternal(double bevel, double offset, bool fast) const
-{
-  Polyhedron * res = new Polyhedron();
+Polyhedron *Voxel::getMeshInternal(double bevel,
+                                   double offset,
+                                   bool fast) const {
+  Polyhedron *res = new Polyhedron();
 
   vertexList_c vl(res);
   std::vector<int> face3(3);
@@ -973,82 +1048,75 @@ Polyhedron *Voxel::getMeshInternal(double bevel, double offset, bool fast) const
   for (unsigned int z = 0; z < getZ(); z++)
     for (unsigned int y = 0; y < getY(); y++)
       for (unsigned int x = 0; x < getX(); x++)
-        if (!isEmpty(x, y, z))
-        {
+        if (!isEmpty(x, y, z)) {
           int n;
           int nx, ny, nz;
 
           // we skip generating this voxel for the fast case,
           // when the voxel to generate has no empty neighbors
-          if (fast)
-          {
+          if (fast) {
             bool hasEmptyN = false;
 
             n = 0;
 
-            while (getNeighbor(n, 0, x, y, z, &nx, &ny, &nz))
-            {
-              if (isEmpty2(nx, ny, nz))
-              {
+            while (getNeighbor(n, 0, x, y, z, &nx, &ny, &nz)) {
+              if (isEmpty2(nx, ny, nz)) {
                 hasEmptyN = true;
                 break;
               }
               n++;
             }
 
-            if (!hasEmptyN)
-            {
+            if (!hasEmptyN) {
               continue;
             }
           }
 
-          uint32_t type = (((x+y+z) & 1) == 0) ? FF_COLOR_LIGHT : 0;
+          uint32_t type = (((x + y + z) & 1) == 0) ? FF_COLOR_LIGHT : 0;
           uint32_t idx = getIndex(x, y, z);
 
           // first t the voxel polyhedron that is fixed
 
           n = 1;
 
-          if (bevel > 0)
-          {
+          if (bevel > 0) {
             do {
               faceCorners.clear();
               getConnectionFace(x, y, z, -n, bevel, offset, faceCorners);
 
-              Face * f = 0;
+              Face *f = 0;
 
-              if (faceCorners.size() == 9)
-              {
-                face3[0] = vl.get(faceCorners[0], faceCorners[1], faceCorners[2]);
-                face3[1] = vl.get(faceCorners[3], faceCorners[4], faceCorners[5]);
-                face3[2] = vl.get(faceCorners[6], faceCorners[7], faceCorners[8]);
+              if (faceCorners.size() == 9) {
+                face3[0] =
+                    vl.get(faceCorners[0], faceCorners[1], faceCorners[2]);
+                face3[1] =
+                    vl.get(faceCorners[3], faceCorners[4], faceCorners[5]);
+                face3[2] =
+                    vl.get(faceCorners[6], faceCorners[7], faceCorners[8]);
                 f = res->addFace(face3);
-              }
-              else if (faceCorners.size() == 12)
-              {
-                face4[0] = vl.get(faceCorners[0], faceCorners[1], faceCorners[2]);
-                face4[1] = vl.get(faceCorners[3], faceCorners[4], faceCorners[5]);
-                face4[2] = vl.get(faceCorners[6], faceCorners[7], faceCorners[8]);
-                face4[3] = vl.get(faceCorners[9], faceCorners[10], faceCorners[11]);
+              } else if (faceCorners.size() == 12) {
+                face4[0] =
+                    vl.get(faceCorners[0], faceCorners[1], faceCorners[2]);
+                face4[1] =
+                    vl.get(faceCorners[3], faceCorners[4], faceCorners[5]);
+                face4[2] =
+                    vl.get(faceCorners[6], faceCorners[7], faceCorners[8]);
+                face4[3] =
+                    vl.get(faceCorners[9], faceCorners[10], faceCorners[11]);
                 f = res->addFace(face4);
-              }
-              else if (faceCorners.size() == 0)
-              {
-              }
-              else
-              {
+              } else if (faceCorners.size() == 0) {
+              } else {
                 bt_assert(0);
               }
 
               n++;
 
-              if (f)
-              {
+              if (f) {
                 f->_flags = FF_WIREFRAME | type | FF_BEVEL_FACE;
                 f->_fb_index = idx;
                 f->_fb_face = -1;
                 f->_color = 0;
-              f->_color = getColor(x, y, z);
+                f->_color = getColor(x, y, z);
               }
 
             } while (faceCorners.size() > 0);
@@ -1056,32 +1124,32 @@ Polyhedron *Voxel::getMeshInternal(double bevel, double offset, bool fast) const
 
           n = 0;
 
-          while (getNeighbor(n, 0, x, y, z, &nx, &ny, &nz))
-          {
-            if (isEmpty2(nx, ny, nz))
-            {
+          while (getNeighbor(n, 0, x, y, z, &nx, &ny, &nz)) {
+            if (isEmpty2(nx, ny, nz)) {
               faceCorners.clear();
               getConnectionFace(x, y, z, n, bevel, offset, faceCorners);
 
-              Face * f = 0;
+              Face *f = 0;
 
-              if (faceCorners.size() == 9)
-              {
-                face3[0] = vl.get(faceCorners[0], faceCorners[1], faceCorners[2]);
-                face3[1] = vl.get(faceCorners[3], faceCorners[4], faceCorners[5]);
-                face3[2] = vl.get(faceCorners[6], faceCorners[7], faceCorners[8]);
+              if (faceCorners.size() == 9) {
+                face3[0] =
+                    vl.get(faceCorners[0], faceCorners[1], faceCorners[2]);
+                face3[1] =
+                    vl.get(faceCorners[3], faceCorners[4], faceCorners[5]);
+                face3[2] =
+                    vl.get(faceCorners[6], faceCorners[7], faceCorners[8]);
                 f = res->addFace(face3);
-              }
-              else if (faceCorners.size() == 12)
-              {
-                face4[0] = vl.get(faceCorners[0], faceCorners[1], faceCorners[2]);
-                face4[1] = vl.get(faceCorners[3], faceCorners[4], faceCorners[5]);
-                face4[2] = vl.get(faceCorners[6], faceCorners[7], faceCorners[8]);
-                face4[3] = vl.get(faceCorners[9], faceCorners[10], faceCorners[11]);
+              } else if (faceCorners.size() == 12) {
+                face4[0] =
+                    vl.get(faceCorners[0], faceCorners[1], faceCorners[2]);
+                face4[1] =
+                    vl.get(faceCorners[3], faceCorners[4], faceCorners[5]);
+                face4[2] =
+                    vl.get(faceCorners[6], faceCorners[7], faceCorners[8]);
+                face4[3] =
+                    vl.get(faceCorners[9], faceCorners[10], faceCorners[11]);
                 f = res->addFace(face4);
-              }
-              else
-              {
+              } else {
                 bt_assert(0);
               }
 
@@ -1090,11 +1158,9 @@ Polyhedron *Voxel::getMeshInternal(double bevel, double offset, bool fast) const
               f->_fb_index = idx;
               f->_fb_face = n;
               f->_color = getColor(x, y, z);
-            }
-            else
-            {
-              if (!fast & (offset > 0) && ((nx > x) || (nx == x && ny > y) || (nx == x && ny == y && nz > z)))
-              {
+            } else {
+              if (!fast & (offset > 0) && ((nx > x) || (nx == x && ny > y)
+                  || (nx == x && ny == y && nz > z))) {
                 // add connection prisms
 
                 // first find out which neighbor we are relative to our neighbor n
@@ -1103,10 +1169,8 @@ Polyhedron *Voxel::getMeshInternal(double bevel, double offset, bool fast) const
                 bool found = false;
                 int mx, my, mz;
 
-                while (getNeighbor(n2, 0, nx, ny, nz, &mx, &my, &mz))
-                {
-                  if (mx == x && my == y && mz == z)
-                  {
+                while (getNeighbor(n2, 0, nx, ny, nz, &mx, &my, &mz)) {
+                  if (mx == x && my == y && mz == z) {
                     found = true;
                     break;
                   }
@@ -1126,25 +1190,32 @@ Polyhedron *Voxel::getMeshInternal(double bevel, double offset, bool fast) const
 
                 int corners = faceCorners.size() / 3;
 
-                for (int i = 0; i < corners; i++)
-                {
-                  int f1c1 = 3*i;
-                  int f1c2 = 3*((i+1) % corners);
-                  int f2c1 = 3*((-i+corners) % corners);
-                  int f2c2 = 3*((-i+corners-1) % corners);
+                for (int i = 0; i < corners; i++) {
+                  int f1c1 = 3 * i;
+                  int f1c2 = 3 * ((i + 1) % corners);
+                  int f2c1 = 3 * ((-i + corners) % corners);
+                  int f2c2 = 3 * ((-i + corners - 1) % corners);
 
-                  face4[0] = vl.get(faceCorners[f1c1+0],  faceCorners[f1c1+1],  faceCorners[f1c1+2]);
-                  face4[1] = vl.get(faceCorners[f1c2+0],  faceCorners[f1c2+1],  faceCorners[f1c2+2]);
-                  face4[2] = vl.get(faceCorners2[f2c2+0], faceCorners2[f2c2+1], faceCorners2[f2c2+2]);
-                  face4[3] = vl.get(faceCorners2[f2c1+0], faceCorners2[f2c1+1], faceCorners2[f2c1+2]);
+                  face4[0] = vl.get(faceCorners[f1c1 + 0],
+                                    faceCorners[f1c1 + 1],
+                                    faceCorners[f1c1 + 2]);
+                  face4[1] = vl.get(faceCorners[f1c2 + 0],
+                                    faceCorners[f1c2 + 1],
+                                    faceCorners[f1c2 + 2]);
+                  face4[2] = vl.get(faceCorners2[f2c2 + 0],
+                                    faceCorners2[f2c2 + 1],
+                                    faceCorners2[f2c2 + 2]);
+                  face4[3] = vl.get(faceCorners2[f2c1 + 0],
+                                    faceCorners2[f2c1 + 1],
+                                    faceCorners2[f2c1 + 2]);
 
-                  Face * f = res->addFace(face4);
+                  Face *f = res->addFace(face4);
 
                   f->_flags = FF_WIREFRAME | type | FF_OFFSET_FACE;
                   f->_fb_index = idx;
                   f->_fb_face = -1;
                   f->_color = 0;
-              f->_color = getColor(x, y, z);
+                  f->_color = getColor(x, y, z);
                 }
               }
             }
@@ -1152,27 +1223,23 @@ Polyhedron *Voxel::getMeshInternal(double bevel, double offset, bool fast) const
           }
         }
 
-  if (!fast)
-  {
+  if (!fast) {
     res->finalize();
   }
 
   return res;
 }
 
-Polyhedron *Voxel::getMesh(double bevel, double offset) const
-{
+Polyhedron *Voxel::getMesh(double bevel, double offset) const {
   return getMeshInternal(bevel, offset, false);
 }
 
-Polyhedron *Voxel::getDrawingMesh(void) const
-{
+Polyhedron *Voxel::getDrawingMesh(void) const {
   return getMeshInternal(0.03, 0.005, true);
 }
 
-Polyhedron *Voxel::getWireframeMesh(void) const
-{
-  Polyhedron * p = getMeshInternal(0.03, 0.005, false);
+Polyhedron *Voxel::getWireframeMesh(void) const {
+  Polyhedron *p = getMeshInternal(0.03, 0.005, false);
   fillPolyhedronHoles(*p, 1);
   return p;
 }

@@ -26,22 +26,26 @@
 /** the movement cache for the cube grid */
 class movementCache_0_c : public movementCache_c {
 
-  public:
+ public:
 
-    movementCache_0_c(const Problem * puz);
+  movementCache_0_c(const Problem *puz);
 
-  private:
+ private:
 
-    unsigned int* moCalcValues(const Voxel * sh1, const Voxel * sh2, int dx, int dy, int dz);
+  unsigned int *moCalcValues(const Voxel *sh1,
+                             const Voxel *sh2,
+                             int dx,
+                             int dy,
+                             int dz);
 
-    virtual unsigned int numDirections(void);
-    virtual void getDirection(unsigned int dir, int * x, int * y, int * z);
+  virtual unsigned int numDirections(void);
+  virtual void getDirection(unsigned int dir, int *x, int *y, int *z);
 
-  private:
+ private:
 
-    // no copying and assigning
-    movementCache_0_c(const movementCache_0_c&);
-    void operator=(const movementCache_0_c&);
+  // no copying and assigning
+  movementCache_0_c(const movementCache_0_c &);
+  void operator=(const movementCache_0_c &);
 };
 
 #endif

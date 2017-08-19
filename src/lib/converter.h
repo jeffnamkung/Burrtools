@@ -37,6 +37,6 @@ bool canConvert(GridType::gridType src, GridType::gridType dst);
  * If the conversion can't be done (you should check first with canConvert)
  * a NULL pointer will be returned
  */
-Puzzle * doConvert(Puzzle * p, GridType::gridType type);
+Puzzle *doConvert(Puzzle *p, GridType::gridType type);
 
 #endif

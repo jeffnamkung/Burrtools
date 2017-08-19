@@ -24,9 +24,6 @@
 
 #include "../tools/xml.h"
 
-#include <string.h>
-#include <stdlib.h>
-
 /* template function to get space separated integer values
  * from a string and enter these into an iterator
  * the count of numbers need to exactly fill the range
@@ -39,8 +36,7 @@ void getNumbers(std::string str, iter start, iter end, bool neg_allowed) {
   bool gotNum = false;
   bool negative = false;
 
-  for (unsigned int pos = 0; pos < str.length(); pos++)
-  {
+  for (unsigned int pos = 0; pos < str.length(); pos++) {
     char c = str[pos];
 
     if (c == '-' && neg_allowed) {
@@ -103,17 +99,15 @@ void getNumbers(std::string str, iter start, iter end, bool neg_allowed) {
  * State
  ************************************************************************/
 
-void State::save(XmlWriter & xml, unsigned int piecenumber) const
-{
+void State::save(XmlWriter &xml, unsigned int piecenumber) const {
   xml.newTag("state");
 
   xml.newTag("dx");
   {
-    std::ostream & str = xml.addContent();
-    for (unsigned int ii = 0; ii < piecenumber; ii++)
-    {
+    std::ostream &str = xml.addContent();
+    for (unsigned int ii = 0; ii < piecenumber; ii++) {
       str << dx[ii];
-      if (ii < piecenumber-1)
+      if (ii < piecenumber - 1)
         str << " ";
     }
   }
@@ -121,11 +115,10 @@ void State::save(XmlWriter & xml, unsigned int piecenumber) const
 
   xml.newTag("dy");
   {
-    std::ostream & str = xml.addContent();
-    for (unsigned int ii = 0; ii < piecenumber; ii++)
-    {
+    std::ostream &str = xml.addContent();
+    for (unsigned int ii = 0; ii < piecenumber; ii++) {
       str << dy[ii];
-      if (ii < piecenumber-1)
+      if (ii < piecenumber - 1)
         str << " ";
     }
   }
@@ -133,11 +126,10 @@ void State::save(XmlWriter & xml, unsigned int piecenumber) const
 
   xml.newTag("dz");
   {
-    std::ostream & str = xml.addContent();
-    for (unsigned int ii = 0; ii < piecenumber; ii++)
-    {
+    std::ostream &str = xml.addContent();
+    for (unsigned int ii = 0; ii < piecenumber; ii++) {
       str << dz[ii];
-      if (ii < piecenumber-1)
+      if (ii < piecenumber - 1)
         str << " ";
     }
   }
@@ -146,8 +138,7 @@ void State::save(XmlWriter & xml, unsigned int piecenumber) const
   xml.endTag("state");
 }
 
-State::State(XmlParser & pars, unsigned int pn)
-{
+State::State(XmlParser &pars, unsigned int pn) {
   pars.require(XmlParser::START_TAG, "state");
 
 #ifndef NDEBUG
@@ -156,37 +147,30 @@ State::State(XmlParser & pars, unsigned int pn)
 
   dx = dy = dz = 0;
 
-  try
-  {
-    do
-    {
+  try {
+    do {
       int state = pars.nextTag();
 
       if (state == XmlParser::END_TAG) break;
       if (state != XmlParser::START_TAG)
         pars.exception("expected new tag but dounf something else");
 
-      if (pars.getName() == "dx")
-      {
+      if (pars.getName() == "dx") {
         dx = new int[pn];
         pars.next();
-        getNumbers(pars.getText(), dx, dx+pn, true);
+        getNumbers(pars.getText(), dx, dx + pn, true);
         pars.next();
         pars.require(XmlParser::END_TAG, "dx");
-      }
-      else if (pars.getName() == "dy")
-      {
+      } else if (pars.getName() == "dy") {
         dy = new int[pn];
         pars.next();
-        getNumbers(pars.getText(), dy, dy+pn, true);
+        getNumbers(pars.getText(), dy, dy + pn, true);
         pars.next();
         pars.require(XmlParser::END_TAG, "dy");
-      }
-      else if (pars.getName() == "dz")
-      {
+      } else if (pars.getName() == "dz") {
         dz = new int[pn];
         pars.next();
-        getNumbers(pars.getText(), dz, dz+pn, true);
+        getNumbers(pars.getText(), dz, dz + pn, true);
         pars.next();
         pars.require(XmlParser::END_TAG, "dz");
       }
@@ -196,34 +180,33 @@ State::State(XmlParser & pars, unsigned int pn)
       pars.exception("disassembly state needs dx, dy and dz subnode");
   }
 
-  catch (xmlParserException_c e)
-  {
-    if (dx) delete [] dx;
-    if (dy) delete [] dy;
-    if (dz) delete [] dz;
+  catch (xmlParserException_c e) {
+    if (dx) delete[] dx;
+    if (dy) delete[] dy;
+    if (dz) delete[] dz;
     pars.exception(e.what());
   }
 
   pars.require(XmlParser::END_TAG, "state");
 }
 
-State::State(const State * cpy, unsigned int pn)
+State::State(const State *cpy, unsigned int pn)
 #ifndef NDEBUG
-: piecenumber(pn)
+    : piecenumber(pn)
 #endif
 {
   dx = new int[pn];
   dy = new int[pn];
   dz = new int[pn];
 
-  memcpy(dx, cpy->dx, pn*sizeof(int));
-  memcpy(dy, cpy->dy, pn*sizeof(int));
-  memcpy(dz, cpy->dz, pn*sizeof(int));
+  memcpy(dx, cpy->dx, pn * sizeof(int));
+  memcpy(dy, cpy->dy, pn * sizeof(int));
+  memcpy(dz, cpy->dz, pn * sizeof(int));
 }
 
 State::State(unsigned int pn)
 #ifndef NDEBUG
-: piecenumber(pn)
+    : piecenumber(pn)
 #endif
 {
   dx = new int[pn];
@@ -233,9 +216,9 @@ State::State(unsigned int pn)
 }
 
 State::~State() {
-  delete [] dx;
-  delete [] dy;
-  delete [] dz;
+  delete[] dx;
+  delete[] dy;
+  delete[] dz;
 }
 
 void State::set(unsigned int piece, int x, int y, int z) {
@@ -254,8 +237,7 @@ bool State::pieceRemoved(unsigned int i) const {
  * Disassembly
  ************************************************************************/
 
-int Disassembly::compare(const Disassembly * s2) const
-{
+int Disassembly::compare(const Disassembly *s2) const {
   unsigned int numSeq = std::max(getNumSequences(), s2->getNumSequences());
 
   for (unsigned int i = 0; i < numSeq; i++) {
@@ -266,20 +248,19 @@ int Disassembly::compare(const Disassembly * s2) const
   return 0;
 }
 
-
 /************************************************************************
  * Separation
  ************************************************************************/
 
-void Separation::save(XmlWriter & xml, int type) const
-{
+void Separation::save(XmlWriter &xml, int type) const {
   xml.newTag("separation");
 
-  switch (type)
-  {
+  switch (type) {
     case 0: break;
-    case 1: xml.newAttrib("type", "left"); break;
-    case 2: xml.newAttrib("type", "removed"); break;
+    case 1: xml.newAttrib("type", "left");
+      break;
+    case 2: xml.newAttrib("type", "removed");
+      break;
   }
 
   // first save the pieces array
@@ -288,7 +269,7 @@ void Separation::save(XmlWriter & xml, int type) const
 
   for (unsigned int ii = 0; ii < pieces.size(); ii++) {
     xml.addContent(pieces[ii]);
-    if (ii < pieces.size()-1)
+    if (ii < pieces.size() - 1)
       xml.addContent(" ");
   }
 
@@ -302,13 +283,12 @@ void Separation::save(XmlWriter & xml, int type) const
   // we add an attribute to the node of the subseparations to later distinguish
   // between the removed and the left over separation
   if (removed) removed->save(xml, 2);
-  if (left)    left->save(xml, 1);
+  if (left) left->save(xml, 1);
 
   xml.endTag("separation");
 }
 
-Separation::Separation(XmlParser & pars, unsigned int pieceCnt)
-{
+Separation::Separation(XmlParser &pars, unsigned int pieceCnt) {
   pars.require(XmlParser::START_TAG, "separation");
 
   unsigned int piecenumber = 0;
@@ -316,15 +296,13 @@ Separation::Separation(XmlParser & pars, unsigned int pieceCnt)
   unsigned int removedPc = 0, leftPc = 0;
   removed = left = 0;
 
-  do
-  {
+  do {
     int state = pars.nextTag();
 
     if (state == XmlParser::END_TAG) break;
     pars.require(XmlParser::START_TAG, "");
 
-    if (pars.getName() == "pieces")
-    {
+    if (pars.getName() == "pieces") {
       // load the pieces array
       str = pars.getAttributeValue("count");
       if (!str.length())
@@ -333,18 +311,20 @@ Separation::Separation(XmlParser & pars, unsigned int pieceCnt)
       piecenumber = atoi(str.c_str());
 
       if (piecenumber != pieceCnt)
-        pars.exception("the number of pieces in the count array is not as expected");
+        pars.exception(
+            "the number of pieces in the count array is not as expected");
 
       pieces.resize(piecenumber);
 
       pars.next();
       pars.require(XmlParser::TEXT, "");
-      getNumbers(pars.getText(), pieces.begin(), pieces.begin()+piecenumber, false);
+      getNumbers(pars.getText(),
+                 pieces.begin(),
+                 pieces.begin() + piecenumber,
+                 false);
       pars.next();
       pars.require(XmlParser::END_TAG, "pieces");
-    }
-    else if (pars.getName() == "state")
-    {
+    } else if (pars.getName() == "state") {
       if (piecenumber == 0)
         pars.exception("there must be a pieces array before the states");
 
@@ -353,13 +333,10 @@ Separation::Separation(XmlParser & pars, unsigned int pieceCnt)
 
       // get the states
       states.push_back(new State(pars, piecenumber));
-    }
-    else if (pars.getName() == "separation")
-    {
-      if (removedPc == 0)
-      {
+    } else if (pars.getName() == "separation") {
+      if (removedPc == 0) {
         for (unsigned int i = 0; i < pieceCnt; i++)
-          if (states[states.size()-1]->pieceRemoved(i))
+          if (states[states.size() - 1]->pieceRemoved(i))
             removedPc++;
           else
             leftPc++;
@@ -374,38 +351,37 @@ Separation::Separation(XmlParser & pars, unsigned int pieceCnt)
       if (!str.length())
         pars.exception("sub-sepatations need to have a type field");
 
-      if (str == "left")
-      {
+      if (str == "left") {
         if (left)
           pars.exception("more than one left branch in disassembly");
         left = new Separation(pars, leftPc);
-      }
-      else if (str == "removed")
-      {
+      } else if (str == "removed") {
         if (removed)
           pars.exception("more than one removed branch in disassembly");
         removed = new Separation(pars, removedPc);
-      }
-      else
+      } else
         pars.exception("subnodes must have either left or removed type");
-    }
-    else
+    } else
       pars.skipSubTree();
 
-  } while(true);
+  } while (true);
 
   if (states.size() == 0)
     pars.exception("there are no state nodes in the separation");
 
   pars.require(XmlParser::END_TAG, "separation");
 
-  numSequences = left?left->numSequences:0 + removed?removed->numSequences:0 + 1;
+  numSequences =
+      left ? left->numSequences : 0 + removed ? removed->numSequences : 0 + 1;
 }
 
-Separation::Separation(Separation * r, Separation * l, const std::vector<unsigned int> & pcs) : removed(r), left(l) {
+Separation::Separation(Separation *r,
+                       Separation *l,
+                       const std::vector<unsigned int> &pcs)
+    : removed(r), left(l) {
   pieces = pcs;
 
-  numSequences = l?l->numSequences:0 + r?r->numSequences:0 + 1;
+  numSequences = l ? l->numSequences : 0 + r ? r->numSequences : 0 + 1;
 }
 
 Separation::~Separation() {
@@ -431,7 +407,7 @@ void Separation::addstate(State *st) {
   states.push_front(st);
 }
 
-Separation::Separation(const Separation * cpy) {
+Separation::Separation(const Separation *cpy) {
 
   pieces = cpy->pieces;
 
@@ -451,35 +427,34 @@ Separation::Separation(const Separation * cpy) {
   numSequences = cpy->numSequences;
 }
 
-
 bool Separation::containsMultiMoves() {
   return (states.size() > 2) ||
-    (left && left->containsMultiMoves()) ||
-    (removed && removed->containsMultiMoves());
+      (left && left->containsMultiMoves()) ||
+      (removed && removed->containsMultiMoves());
 }
 
-int Separation::movesText2(char * txt, int len) const {
+int Separation::movesText2(char *txt, int len) const {
 
   bt_assert(states.size() > 0);
 
-  int len2 = snprintf(txt, len, "%u", states.size()-1);
+  int len2 = snprintf(txt, len, "%u", states.size() - 1);
 
-  if (len2+5 > len)
+  if (len2 + 5 > len)
     return len2;
 
   if (left && left->containsMultiMoves()) {
-    snprintf(txt+len2, len-len2, ".");
+    snprintf(txt + len2, len - len2, ".");
     len2++;
-    len2 += left->movesText2(txt+len2, len-len2);
+    len2 += left->movesText2(txt + len2, len - len2);
   }
 
-  if (len2+5 > len)
+  if (len2 + 5 > len)
     return len2;
 
   if (removed && removed->containsMultiMoves()) {
-    snprintf(txt+len2, len-len2, ".");
+    snprintf(txt + len2, len - len2, ".");
     len2++;
-    len2 += removed->movesText2(txt+len2, len-len2);
+    len2 += removed->movesText2(txt + len2, len - len2);
   }
 
   return len2;
@@ -498,23 +473,20 @@ void Separation::exchangeShape(unsigned int s1, unsigned int s2) {
     left->exchangeShape(s1, s2);
 }
 
-unsigned int Separation::getSequenceLength(unsigned int x) const
-{
+unsigned int Separation::getSequenceLength(unsigned int x) const {
   if (x == 0)
     return states.size();
 
   x--;
 
-  if (left)
-  {
+  if (left) {
     if (x < left->numSequences)
       return left->getSequenceLength(x);
 
     x -= left->numSequences;
   }
 
-  if (removed)
-  {
+  if (removed) {
     if (x < removed->numSequences)
       return removed->getSequenceLength(x);
   }
@@ -522,23 +494,20 @@ unsigned int Separation::getSequenceLength(unsigned int x) const
   return 0;
 }
 
-unsigned int Separation::getNumSequences(void) const
-{
+unsigned int Separation::getNumSequences(void) const {
   return numSequences;
 }
 
-void Separation::removePieces(unsigned int from, unsigned int cnt)
-{
+void Separation::removePieces(unsigned int from, unsigned int cnt) {
   /* for the moment we assume, that none of the removed pieces is actually used
    * in this disassembly, because otherwise the whole solution should have been
    * deleted, so all that is left is to recrease the piece counters
    */
 
-  for (unsigned int i = 0; i < pieces.size(); i++)
-  {
-    bt_assert(pieces[i] < from || pieces[i] >= from+cnt);
+  for (unsigned int i = 0; i < pieces.size(); i++) {
+    bt_assert(pieces[i] < from || pieces[i] >= from + cnt);
 
-    if (pieces[i] >= from+cnt)
+    if (pieces[i] >= from + cnt)
       pieces[i] -= cnt;
   }
 
@@ -547,8 +516,7 @@ void Separation::removePieces(unsigned int from, unsigned int cnt)
 
 }
 
-void Separation::addNonPlacedPieces(unsigned int from, unsigned int cnt)
-{
+void Separation::addNonPlacedPieces(unsigned int from, unsigned int cnt) {
   /* increase piece numbers accordingly */
   for (unsigned int i = 0; i < pieces.size(); i++)
     if (pieces[i] >= from)
@@ -558,14 +526,11 @@ void Separation::addNonPlacedPieces(unsigned int from, unsigned int cnt)
   if (removed) removed->addNonPlacedPieces(from, cnt);
 }
 
-
-
 /************************************************************************
  * SeparationInfo
  ************************************************************************/
 
-separationInfo_c::separationInfo_c(XmlParser & pars)
-{
+SeparationInfo::SeparationInfo(XmlParser &pars) {
   pars.require(XmlParser::START_TAG, "separationInfo");
 
   pars.next();
@@ -584,7 +549,7 @@ separationInfo_c::separationInfo_c(XmlParser & pars)
     }
 
     if (str[pos] >= '0' && (str[pos] <= '9'))
-      num = 10*num + str[pos] - '0';
+      num = 10 * num + str[pos] - '0';
 
     pos++;
   }
@@ -620,8 +585,8 @@ separationInfo_c::separationInfo_c(XmlParser & pars)
 }
 
 /* this is a simple recursive function to get the separation tree into pre-order */
-void separationInfo_c::recursiveConstruction(const Separation * sep) {
-  values.push_back(sep->getMoves()+1);
+void SeparationInfo::recursiveConstruction(const Separation *sep) {
+  values.push_back(sep->getMoves() + 1);
 
   if (sep->getLeft())
     recursiveConstruction(sep->getLeft());
@@ -634,26 +599,24 @@ void separationInfo_c::recursiveConstruction(const Separation * sep) {
     values.push_back(0);
 }
 
-separationInfo_c::separationInfo_c(const Separation * sep) {
+SeparationInfo::SeparationInfo(const Separation *sep) {
 
   recursiveConstruction(sep);
 }
 
-void separationInfo_c::save(XmlWriter & xml) const
-{
+void SeparationInfo::save(XmlWriter &xml) const {
   xml.newTag("separationInfo");
 
-  for (unsigned int i = 0; i < values.size(); i++)
-  {
+  for (unsigned int i = 0; i < values.size(); i++) {
     xml.addContent(values[i]);
-    if (i < values.size()-1)
+    if (i < values.size() - 1)
       xml.addContent(" ");
   }
 
   xml.endTag("separationInfo");
 }
 
-unsigned int separationInfo_c::sumMoves(void) const {
+unsigned int SeparationInfo::sumMoves(void) const {
 
   unsigned int erg = 0;
 
@@ -664,22 +627,22 @@ unsigned int separationInfo_c::sumMoves(void) const {
   return erg;
 }
 
-int separationInfo_c::movesText2(char * txt, int len, unsigned int idx) const {
+int SeparationInfo::movesText2(char *txt, int len, unsigned int idx) const {
 
-  int len2 = snprintf(txt, len, "%i", values[idx]-1);
+  int len2 = snprintf(txt, len, "%i", values[idx] - 1);
 
-  if (len2+5 > len)
+  if (len2 + 5 > len)
     return len2;
 
   idx++;
 
   if (values[idx] && containsMultiMoves(idx)) {
-    snprintf(txt+len2, len-len2, ".");
+    snprintf(txt + len2, len - len2, ".");
     len2++;
-    len2 += movesText2(txt+len2, len-len2, idx);
+    len2 += movesText2(txt + len2, len - len2, idx);
   }
 
-  if (len2+5 > len)
+  if (len2 + 5 > len)
     return len2;
 
   /* skip the left tree the idea is described in the xml node constructor above */
@@ -694,15 +657,15 @@ int separationInfo_c::movesText2(char * txt, int len, unsigned int idx) const {
   }
 
   if (values[idx] && containsMultiMoves(idx)) {
-    snprintf(txt+len2, len-len2, ".");
+    snprintf(txt + len2, len - len2, ".");
     len2++;
-    len2 += movesText2(txt+len2, len-len2, idx);
+    len2 += movesText2(txt + len2, len - len2, idx);
   }
 
   return len2;
 }
 
-bool separationInfo_c::containsMultiMoves(unsigned int idx) const {
+bool SeparationInfo::containsMultiMoves(unsigned int idx) const {
 
   unsigned int branches = 1;
 
@@ -721,16 +684,14 @@ bool separationInfo_c::containsMultiMoves(unsigned int idx) const {
   return false;
 }
 
-unsigned int separationInfo_c::getSequenceLength(unsigned int x) const
-{
+unsigned int SeparationInfo::getSequenceLength(unsigned int x) const {
   if (x < values.size())
     return values[x];
   else
     return 0;
 }
 
-unsigned int separationInfo_c::getNumSequences(void) const
-{
+unsigned int SeparationInfo::getNumSequences(void) const {
   return values.size();
 }
 

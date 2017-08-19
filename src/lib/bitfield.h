@@ -37,199 +37,197 @@ template<int bits>
  */
 class bitfield_c {
 
-  private:
+ private:
 
-    uint64_t field[(bits+63)/64]; ///< the bitfield
+  uint64_t field[(bits + 63) / 64]; ///< the bitfield
 
-  public:
+ public:
 
-    /// constructor, all bits are cleared at the beginning
-    bitfield_c() {
-      clear();
-    }
+  /// constructor, all bits are cleared at the beginning
+  bitfield_c() {
+    clear();
+  }
 
-    /// constructor, the bits are initialized to the value of the string
-    bitfield_c(const char * val) {
-      clear();
-      operator=(val);
-    }
+  /// constructor, the bits are initialized to the value of the string
+  bitfield_c(const char *val) {
+    clear();
+    operator=(val);
+  }
 
-    /// copy constructor
-    bitfield_c(const bitfield_c<bits>& orig) {
-      memcpy(field, orig.field, 8*((bits+63)/64));
-    }
+  /// copy constructor
+  bitfield_c(const bitfield_c<bits> &orig) {
+    memcpy(field, orig.field, 8 * ((bits + 63) / 64));
+  }
 
-    /// get a bit
-    bool get(uint16_t pos) const {
-      bt_assert(pos < bits);
-      return field[pos >> 6] & (1ll << (pos & 63));
-    }
+  /// get a bit
+  bool get(uint16_t pos) const {
+    bt_assert(pos < bits);
+    return field[pos >> 6] & (1ll << (pos & 63));
+  }
 
-    /// set a bit to one
-    void set(uint16_t pos) {
-      bt_assert(pos < bits);
-      field[pos >> 6] |= (1ll << (pos & 63));
-    }
+  /// set a bit to one
+  void set(uint16_t pos) {
+    bt_assert(pos < bits);
+    field[pos >> 6] |= (1ll << (pos & 63));
+  }
 
-    /// set a bit to zero
-    void reset(uint16_t pos) {
-      bt_assert(pos < bits);
-      field[pos >> 6] &= ~(1ll << (pos & 63));
-    }
+  /// set a bit to zero
+  void reset(uint16_t pos) {
+    bt_assert(pos < bits);
+    field[pos >> 6] &= ~(1ll << (pos & 63));
+  }
 
-    /// set all bits to zero
-    void clear() {
-      memset(field, 0, 8*((bits+63)/64));
-    }
+  /// set all bits to zero
+  void clear() {
+    memset(field, 0, 8 * ((bits + 63) / 64));
+  }
 
-    /// check, if at least one bit is set to 1
-    bool notNull() {
-      for (int i = 0; i < ((bits+63)/64); i++)
-        if (field[i] > 0)
-          return true;
+  /// check, if at least one bit is set to 1
+  bool notNull() {
+    for (int i = 0; i < ((bits + 63) / 64); i++)
+      if (field[i] > 0)
+        return true;
 
-      return false;
-    }
+    return false;
+  }
 
-    /**
-     *  assign the the string repesentation of a value to
-     *  the bits of this bitfield
-     *
-     *  The string must be a hexadecimal value, no prefix no
-     *  suffix, you can use upper and lower case letters.
-     *
-     *  The string must not be larget than allowed. If the string
-     *  is shorter than necessary the remaining values are left untouched,
-     *  so it's up to you to clear them before calling this function
-     */
-    const bitfield_c<bits> & operator=(const char * val) {
+  /**
+   *  assign the the string repesentation of a value to
+   *  the bits of this bitfield
+   *
+   *  The string must be a hexadecimal value, no prefix no
+   *  suffix, you can use upper and lower case letters.
+   *
+   *  The string must not be larget than allowed. If the string
+   *  is shorter than necessary the remaining values are left untouched,
+   *  so it's up to you to clear them before calling this function
+   */
+  const bitfield_c<bits> &operator=(const char *val) {
 
-      size_t l = strlen(val);
+    size_t l = strlen(val);
 
-      bt_assert(4*l <= bits);
+    bt_assert(4 * l <= bits);
 
-      int fpos = 0;
-      int bitpos = 0;
-      field[0] = 0;
+    int fpos = 0;
+    int bitpos = 0;
+    field[0] = 0;
 
-      for (int i = l-1; i >= 0; i--) {
-        uint64_t cval = 0;
+    for (int i = l - 1; i >= 0; i--) {
+      uint64_t cval = 0;
 
-        if ((val[i] >= '0') && (val[i] <= '9'))
-          cval = val[i]-'0';
-        else if ((val[i] >= 'a') && (val[i] <= 'f'))
-          cval = val[i] - 'a' + 10;
-        else if ((val[i] >= 'A') && (val[i] <= 'F'))
-          cval = val[i] - 'A' + 10;
-        else
-          bt_assert(0);
+      if ((val[i] >= '0') && (val[i] <= '9'))
+        cval = val[i] - '0';
+      else if ((val[i] >= 'a') && (val[i] <= 'f'))
+        cval = val[i] - 'a' + 10;
+      else if ((val[i] >= 'A') && (val[i] <= 'F'))
+        cval = val[i] - 'A' + 10;
+      else bt_assert(0);
 
-        field[fpos] |= cval << bitpos;
+      field[fpos] |= cval << bitpos;
 
-        bitpos += 4;
-        if (bitpos >= 64) {
-          bitpos = 0;
-          fpos++;
-          field[fpos] = 0;
-        }
+      bitpos += 4;
+      if (bitpos >= 64) {
+        bitpos = 0;
+        fpos++;
+        field[fpos] = 0;
       }
-
-      return *this;
     }
 
-    /// comparison of 2 bitfields
-    bool operator==(const bitfield_c<bits> & op) const {
+    return *this;
+  }
 
-      for (int i = 0; i < ((bits+63)/64); i++)
-        if (op.field[i] != field[i])
-          return false;
+  /// comparison of 2 bitfields
+  bool operator==(const bitfield_c<bits> &op) const {
 
-      return true;
+    for (int i = 0; i < ((bits + 63) / 64); i++)
+      if (op.field[i] != field[i])
+        return false;
+
+    return true;
+  }
+
+  /// inequality test of 2 bitfields
+  bool operator!=(const bitfield_c<bits> &op) const {
+
+    for (int i = 0; i < ((bits + 63) / 64); i++)
+      if (op.field[i] != field[i])
+        return true;
+
+    return false;
+  }
+
+  /**
+   * find the number of set bits in the bitfield
+   *
+   * The method add up the number of set bits in
+   * each 64 bit entry of the bitvector. This value is
+   * calculated using a method similar to this:
+   * http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
+   */
+  unsigned int countbits(void) const {
+
+    unsigned int res = 0;
+
+    for (int i = 0; i < ((bits + 63) / 64); i++) {
+      uint64_t s = field[i];
+
+      s -= ((s >> 1) & 0x5555555555555555ll);
+      s = (((s >> 2) & 0x3333333333333333ll) + (s & 0x3333333333333333ll));
+      s = (((s >> 4) + s) & 0x0f0f0f0f0f0f0f0fll);
+      s += (s >> 8);
+      s += (s >> 16);
+      s += (s >> 32);
+
+      res += (s & 0x3f);
     }
 
-    /// inequality test of 2 bitfields
-    bool operator!=(const bitfield_c<bits> & op) const {
+    return res;
+  }
 
-      for (int i = 0; i < ((bits+63)/64); i++)
-        if (op.field[i] != field[i])
-          return true;
+  /** put the value of the bitfield into the string str.
+   * not more than len characters are written
+   */
+  void print(char *str, unsigned int len) const {
 
-      return false;
-    }
+    int idx = 0;
 
-    /**
-     * find the number of set bits in the bitfield
-     *
-     * The method add up the number of set bits in
-     * each 64 bit entry of the bitvector. This value is
-     * calculated using a method similar to this:
-     * http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
-     */
-    unsigned int countbits(void) const {
+    for (int i = ((bits + 63) / 64) - 1; i >= 0; i--)
+      idx += snprintf(str + idx, len - idx, "%016llx", field[i]);
+  }
 
-      unsigned int res = 0;
+  /**
+   * use printf to display the content of the string
+   */
+  void print(void) const {
 
-      for (int i = 0; i < ((bits+63)/64); i++) {
-        uint64_t s = field[i];
+    for (int i = ((bits + 63) / 64) - 1; i >= 0; i--)
+      printf("%016llx", field[i]);
+  }
 
-        s -= ((s >> 1) & 0x5555555555555555ll);
-        s = (((s >> 2) & 0x3333333333333333ll) + (s & 0x3333333333333333ll));
-        s = (((s >> 4) + s) & 0x0f0f0f0f0f0f0f0fll);
-        s += (s >> 8);
-        s += (s >> 16);
-        s += (s >> 32);
+  /**
+   * bitwise and of 2 bitfields
+   */
+  const bitfield_c<bits> operator&(const bitfield_c<bits> &right) const {
+    bitfield_c<bits> res;
 
-        res += (s & 0x3f);
-      }
+    for (int i = 0; i < ((bits + 63) / 64); i++)
+      res.field[i] = field[i] & right.field[i];
 
-      return res;
-    }
+    return res;
+  }
 
-    /** put the value of the bitfield into the string str.
-     * not more than len characters are written
-     */
-    void print(char * str, unsigned int len) const {
+  /**
+   * bitwise or of 2 bitfields
+   */
+  const bitfield_c<bits> operator|(const bitfield_c<bits> &right) const {
+    bitfield_c<bits> res;
 
-      int idx = 0;
+    for (int i = 0; i < ((bits + 63) / 64); i++)
+      res.field[i] = field[i] | right.field[i];
 
-      for (int i = ((bits+63)/64)-1; i >= 0; i--)
-        idx += snprintf(str+idx, len-idx, "%016llx", field[i]);
-    }
-
-    /**
-     * use printf to display the content of the string
-     */
-    void print(void) const {
-
-      for (int i = ((bits+63)/64)-1; i >= 0; i--)
-        printf("%016llx", field[i]);
-    }
-
-    /**
-     * bitwise and of 2 bitfields
-     */
-    const bitfield_c<bits> operator&(const bitfield_c<bits> & right) const {
-      bitfield_c<bits> res;
-
-      for (int i = 0; i < ((bits+63)/64); i++)
-        res.field[i] = field[i] & right.field[i];
-
-      return res;
-    }
-
-    /**
-     * bitwise or of 2 bitfields
-     */
-    const bitfield_c<bits> operator|(const bitfield_c<bits> & right) const {
-      bitfield_c<bits> res;
-
-      for (int i = 0; i < ((bits+63)/64); i++)
-        res.field[i] = field[i] | right.field[i];
-
-      return res;
-    }
+    return res;
+  }
 
 };
-
 
 #endif

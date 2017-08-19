@@ -35,37 +35,44 @@ class assert_log_c {
 
   std::vector<const char *> list;
 
-public:
+ public:
 
-  void addLine(const char * line) {
+  void addLine(const char *line) {
     list.push_back(strdup(line));
   }
 
   unsigned int lines(void) const { return list.size(); }
-  const char * line(unsigned int l) const { return list[l]; }
+  const char *line(unsigned int l) const { return list[l]; }
 
 };
 
 class assert_exception : public std::exception {
 
-public:
+ public:
 
-  const char * expr;
-  const char * file;
-  const char * function;
+  const char *expr;
+  const char *file;
+  const char *function;
   unsigned int line;
 
-  assert_exception(const char * e, const char * f, unsigned int l, const char * fkt) : expr(e), file(f), function(fkt), line(l) {}
+  assert_exception(const char *e,
+                   const char *f,
+                   unsigned int l,
+                   const char *fkt)
+      : expr(e), file(f), function(fkt), line(l) {}
 
   assert_exception(void) : expr(0), file(0), function(0), line(0) {}
 
 };
 
-extern assert_log_c * assert_log;
+extern assert_log_c *assert_log;
 
 void bt_assert_init(void);
 
-void bt_te(const char * expr, const char * file, unsigned int line, const char * funktion);
+void bt_te(const char *expr,
+           const char *file,
+           unsigned int line,
+           const char *funktion);
 
 #ifdef NDEBUG
 

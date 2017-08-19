@@ -23,7 +23,7 @@
 
 class Assembly;
 class Separation;
-class separationInfo_c;
+class SeparationInfo;
 class XmlParser;
 class XmlWriter;
 class GridType;
@@ -33,22 +33,21 @@ class Disassembly;
  * This class stores the information for one solution for a
  * problem.
  */
-class solution_c
-{
+class Solution {
   /* the assembly contains the pieces so that they
    * do assemble into the result shape */
-  Assembly * assembly;
+  Assembly *assembly;
 
   /* the disassembly tree, only not NULL, if we
    * have disassembled the puzzle
    */
-  Separation * tree;
+  Separation *tree;
 
   /* if no separation is given, maybe we have a separationInfo
    * that contains only some of the information of a full separation
    * but requires a lot less memory
    */
-  separationInfo_c * treeInfo;
+  SeparationInfo *treeInfo;
 
   /* as it is now possible to not save all solutions
    * it might be useful to know the exact number and sequence
@@ -59,39 +58,57 @@ class solution_c
   unsigned int assemblyNum;
   unsigned int solutionNum;
 
-public:
+ public:
 
   /** create a solution with a proper separation */
-  solution_c(Assembly * assm, unsigned int assmNum, Separation * t, unsigned int solNum) :
-    assembly(assm), tree(t), treeInfo(0), assemblyNum(assmNum), solutionNum(solNum) {}
+  Solution(Assembly *assm,
+           unsigned int assmNum,
+           Separation *t,
+           unsigned int solNum) :
+      assembly(assm),
+      tree(t),
+      treeInfo(0),
+      assemblyNum(assmNum),
+      solutionNum(solNum) {}
 
   /** create a solution with only separation information */
-  solution_c(Assembly * assm, unsigned int assmNum, separationInfo_c * ti, unsigned int solNum) :
-    assembly(assm), tree(0), treeInfo(ti), assemblyNum(assmNum), solutionNum(solNum) {}
+  Solution(Assembly *assm,
+           unsigned int assmNum,
+           SeparationInfo *ti,
+           unsigned int solNum) :
+      assembly(assm),
+      tree(0),
+      treeInfo(ti),
+      assemblyNum(assmNum),
+      solutionNum(solNum) {}
 
   /** creat a solution with assembly only, no disassembly */
-  solution_c(Assembly * assm, unsigned int assmNum) :
-    assembly(assm), tree(0), treeInfo(0), assemblyNum(assmNum), solutionNum(0) {}
+  Solution(Assembly *assm, unsigned int assmNum) :
+      assembly(assm),
+      tree(0),
+      treeInfo(0),
+      assemblyNum(assmNum),
+      solutionNum(0) {}
 
   /** load a solution from file */
-  solution_c(XmlParser & pars, unsigned int pieces, const GridType * gt);
+  Solution(XmlParser &pars, unsigned int pieces, const GridType *gt);
 
-  ~solution_c(void);
+  ~Solution(void);
 
   /** save the solution to the XML file */
-  void save(XmlWriter & xml) const;
+  void save(XmlWriter &xml) const;
 
   /** get the assembly from this solution, it will always be not NULL */
-  Assembly * getAssembly() { return assembly; }
-  const Assembly * getAssembly(void) const { return assembly; }
+  Assembly *getAssembly() { return assembly; }
+  const Assembly *getAssembly(void) const { return assembly; }
 
   /** get the full disassembly or 0 if there is none */
-  Separation * getDisassembly() { return tree; }
-  const Separation * getDisassembly(void) const { return tree; }
+  Separation *getDisassembly() { return tree; }
+  const Separation *getDisassembly(void) const { return tree; }
 
   /** get either the disassembly or the disassembly information or nothing */
-  Disassembly * getDisassemblyInfo(void);
-  const Disassembly * getDisassemblyInfo(void) const;
+  Disassembly *getDisassemblyInfo(void);
+  const Disassembly *getDisassemblyInfo(void) const;
 
   /** get the assembly number */
   unsigned int getAssemblyNumber(void) const { return assemblyNum; }
@@ -103,7 +120,7 @@ public:
   /** add a new disassembly to this solution, deleting an old one, in
    * case such an old exists
    */
-  void setDisassembly(Separation * sep);
+  void setDisassembly(Separation *sep);
 
   /** change the solution so that shape s1 and s2 are swapped */
   void exchangeShape(unsigned int s1, unsigned int s2);

@@ -23,7 +23,6 @@
 
 class disassemblerNode_c;
 
-
 /**
  * This is a hashtable that stores disassemblerNode_c pointer
  *
@@ -32,45 +31,43 @@ class disassemblerNode_c;
  */
 class nodeHash {
 
-  private:
+ private:
 
-    /** current table size */
-    unsigned long tab_size;
+  /** current table size */
+  unsigned long tab_size;
 
-    /** current number of entries */
-    unsigned long tab_entries;
+  /** current number of entries */
+  unsigned long tab_entries;
 
-    /** the hashtable */
-    disassemblerNode_c ** tab;
+  /** the hashtable */
+  disassemblerNode_c **tab;
 
-  public:
+ public:
 
-    nodeHash(void);
+  nodeHash(void);
 
-    ~nodeHash(void);
+  ~nodeHash(void);
 
-    /** delete all nodes and empty table for new usage */
-    void clear(void);
+  /** delete all nodes and empty table for new usage */
+  void clear(void);
 
-    /**
-     * add a new node.
-     *
-     * Returns
-     * the node pointer of the identical node found or 0
-     */
-    const disassemblerNode_c * insert(disassemblerNode_c * n);
+  /**
+   * add a new node.
+   *
+   * Returns
+   * the node pointer of the identical node found or 0
+   */
+  const disassemblerNode_c *insert(disassemblerNode_c *n);
 
-    /** check, if a node is in the hashtable */
-    bool contains(const disassemblerNode_c * n) const;
+  /** check, if a node is in the hashtable */
+  bool contains(const disassemblerNode_c *n) const;
 
-  private:
+ private:
 
-    // no copying and assigning
-    nodeHash(const nodeHash&);
-    void operator=(const nodeHash&);
+  // no copying and assigning
+  nodeHash(const nodeHash &);
+  void operator=(const nodeHash &);
 };
-
-
 
 /**
  * Hastable like nodeHash with the additional feature
@@ -84,81 +81,81 @@ class nodeHash {
  */
 class countingNodeHash {
 
-  private:
+ private:
 
-    /** current table size */
-    unsigned long tab_size;
-    /** current number of entries */
-    unsigned long tab_entries;
+  /** current table size */
+  unsigned long tab_size;
+  /** current number of entries */
+  unsigned long tab_entries;
 
-    /**
-     * hash node data structur
-     *
-     * this hash table is non intrusive, it stores a pointer
-     * to the disassembler node.
-     *
-     * This is more suitable here because the nodes normally live only
-     * a short time inside this table, while they stay for a very long
-     * time in the other table
-     */
-    struct hashNode {
-      /** the data of the node */
-      disassemblerNode_c * dat;
-      /** next entry in the bucket list */
-      hashNode * next;
-      /** the next entry of the all element link list */
-      hashNode * link;
-    };
+  /**
+   * hash node data structur
+   *
+   * this hash table is non intrusive, it stores a pointer
+   * to the disassembler node.
+   *
+   * This is more suitable here because the nodes normally live only
+   * a short time inside this table, while they stay for a very long
+   * time in the other table
+   */
+  struct hashNode {
+    /** the data of the node */
+    disassemblerNode_c *dat;
+    /** next entry in the bucket list */
+    hashNode *next;
+    /** the next entry of the all element link list */
+    hashNode *link;
+  };
 
-    /** the hash table */
-    hashNode ** tab;
-    /** pointer to the inverse linked list of all added elements */
-    hashNode * linkStart;
+  /** the hash table */
+  hashNode **tab;
+  /** pointer to the inverse linked list of all added elements */
+  hashNode *linkStart;
 
-    /** current scan position */
-    hashNode * scanPtr;
-    /** is there a scan active? */
-    bool scanActive;
+  /** current scan position */
+  hashNode *scanPtr;
+  /** is there a scan active? */
+  bool scanActive;
 
-  public:
+ public:
 
-    countingNodeHash(void);
-    ~countingNodeHash(void);
+  countingNodeHash(void);
+  ~countingNodeHash(void);
 
-    /** delete all nodes and empty table for new usage */
-    void clear(void);
+  /** delete all nodes and empty table for new usage */
+  void clear(void);
 
-    /**
-     * add a new node.
-     *
-     * Returns
-     * true, if the given node has already been in the table and nothing has changed
-     * false if the node is inserted
-     */
-    bool insert(disassemblerNode_c * n);
+  /**
+   * add a new node.
+   *
+   * Returns
+   * true, if the given node has already been in the table and nothing has changed
+   * false if the node is inserted
+   */
+  bool insert(disassemblerNode_c *n);
 
-    /** initialize a new scan.
-     *
-     * You can only do that one the currently active scan is
-     * over
-     * */
-    void initScan(void);
+  /** initialize a new scan.
+   *
+   * You can only do that one the currently active scan is
+   * over
+   * */
+  void initScan(void);
 
-    /**
-     * return next disassembler node of the current scan.
-     *
-     * The nodes are returned one after the other in reverse order.
-     * Once the last node has been returned you will get NULL. Then
-     * you must not call this function any mode. You may then start
-     * a new scan with initScan
-     */
-    const disassemblerNode_c * nextScan(void);
+  /**
+   * return next disassembler node of the current scan.
+   *
+   * The nodes are returned one after the other in reverse order.
+   * Once the last node has been returned you will get NULL. Then
+   * you must not call this function any mode. You may then start
+   * a new scan with initScan
+   */
+  const disassemblerNode_c *nextScan(void);
 
-  private:
+ private:
 
-    // no copying and assigning
-    countingNodeHash(const countingNodeHash&);
-    void operator=(const countingNodeHash&);
+  // no copying and assigning
+  countingNodeHash(const countingNodeHash &);
+  void operator=(const countingNodeHash &);
 };
 
 #endif

@@ -28,7 +28,7 @@
 #include "assembly.h"
 #include "disassembly.h"
 
-BaseDisassembler::BaseDisassembler(const Problem * puz) :
+BaseDisassembler::BaseDisassembler(const Problem *puz) :
     DisassemblerInterface(), puzzle(puz) {
 
   /* initialize the grouping class */
@@ -51,7 +51,7 @@ BaseDisassembler::BaseDisassembler(const Problem * puz) :
 
 BaseDisassembler::~BaseDisassembler() {
   delete groups;
-  delete [] piece2shape;
+  delete[] piece2shape;
 
   delete analyse;
 }
@@ -59,7 +59,12 @@ BaseDisassembler::~BaseDisassembler() {
 /* create all the necessary parameters for one of the two possible subproblems
  * our current problems divides into
  */
-static void create_new_params(const disassemblerNode_c * st, disassemblerNode_c ** n, std::vector<unsigned int> & pn, const std::vector<unsigned int> & pieces, int part, bool cond) {
+static void create_new_params(const disassemblerNode_c *st,
+                              disassemblerNode_c **n,
+                              std::vector<unsigned int> &pn,
+                              const std::vector<unsigned int> &pieces,
+                              int part,
+                              bool cond) {
 
   *n = new disassemblerNode_c(part);
 
@@ -85,9 +90,13 @@ static void create_new_params(const disassemblerNode_c * st, disassemblerNode_c 
   bt_assert(num == part);
 }
 
-Separation *BaseDisassembler::checkSubproblem(int pieceCount, const std::vector<unsigned int> & pieces, const disassemblerNode_c * st, bool left, bool * ok) {
+Separation *BaseDisassembler::checkSubproblem(int pieceCount,
+                                              const std::vector<unsigned int> &pieces,
+                                              const disassemblerNode_c *st,
+                                              bool left,
+                                              bool *ok) {
 
-  Separation * res = 0;
+  Separation *res = 0;
 
   if (pieceCount == 1) {
     *ok = true;
@@ -109,13 +118,14 @@ Separation *BaseDisassembler::checkSubproblem(int pieceCount, const std::vector<
   return res;
 }
 
-Separation *BaseDisassembler::checkSubproblems(const disassemblerNode_c * st, const std::vector<unsigned int> &pieces) {
+Separation *BaseDisassembler::checkSubproblems(const disassemblerNode_c *st,
+                                               const std::vector<unsigned int> &pieces) {
 
   /* if we get here we have found a node that separated the puzzle into
    * 2 pieces. So we recursively solve the subpuzzles and create a tree
    * with them that needs to be returned
    */
-  Separation * erg = 0;
+  Separation *erg = 0;
 
   /* count the pieces in both parts */
   int part1 = 0, part2 = 0;
@@ -131,7 +141,7 @@ Separation *BaseDisassembler::checkSubproblems(const disassemblerNode_c * st, co
    */
   bt_assert((part1 > 0) && (part2 > 0));
 
-  Separation * left, *remove;
+  Separation *left, *remove;
   bool left_ok = false;
   bool remove_ok = false;
   left = remove = 0;
@@ -157,7 +167,7 @@ Separation *BaseDisassembler::checkSubproblems(const disassemblerNode_c * st, co
     /* both subproblems are solvable -> construct tree */
     erg = new Separation(left, remove, pieces);
 
-    const disassemblerNode_c * st2 = st;
+    const disassemblerNode_c *st2 = st;
 
     do {
       State *s = new State(pieces.size());
@@ -171,16 +181,16 @@ Separation *BaseDisassembler::checkSubproblems(const disassemblerNode_c * st, co
            */
           bt_assert(st2->getComefrom());
 
-          s->set(i, st2->getComefrom()->getX(i) + 20000*st2->getX(i),
-              st2->getComefrom()->getY(i) + 20000*st2->getY(i),
-              st2->getComefrom()->getZ(i) + 20000*st2->getZ(i));
+          s->set(i, st2->getComefrom()->getX(i) + 20000 * st2->getX(i),
+                 st2->getComefrom()->getY(i) + 20000 * st2->getY(i),
+                 st2->getComefrom()->getZ(i) + 20000 * st2->getZ(i));
 
         } else
           s->set(i, st2->getX(i), st2->getY(i), st2->getZ(i));
 
-        erg->addstate(s);
+      erg->addstate(s);
 
-        st2 = st2->getComefrom();
+      st2 = st2->getComefrom();
     } while (st2);
 
   } else {
@@ -195,24 +205,19 @@ Separation *BaseDisassembler::checkSubproblems(const disassemblerNode_c * st, co
   return erg;
 }
 
-unsigned short BaseDisassembler::subProbGroup(const disassemblerNode_c * st, const std::vector<unsigned int> & pn, bool cond) {
+unsigned short BaseDisassembler::subProbGroup(const disassemblerNode_c *st,
+                                              const std::vector<unsigned int> &pn,
+                                              bool cond) {
 
   unsigned short group = 0;
 
-  for (unsigned int i = 0; i < pn.size(); i++)
-  {
-    if (st->is_piece_removed(i) == cond)
-    {
-      if (puzzle->getShapeGroupNumber(piece2shape[pn[i]]) != 1)
-      {
+  for (unsigned int i = 0; i < pn.size(); i++) {
+    if (st->is_piece_removed(i) == cond) {
+      if (puzzle->getShapeGroupNumber(piece2shape[pn[i]]) != 1) {
         return 0;
-      }
-      else if (group == 0)
-      {
+      } else if (group == 0) {
         group = puzzle->getShapeGroup(piece2shape[pn[i]], 0);
-      }
-      else if (group != puzzle->getShapeGroup(piece2shape[pn[i]], 0))
-      {
+      } else if (group != puzzle->getShapeGroup(piece2shape[pn[i]], 0)) {
         return 0;
       }
     }
@@ -221,7 +226,7 @@ unsigned short BaseDisassembler::subProbGroup(const disassemblerNode_c * st, con
   return group;
 }
 
-bool BaseDisassembler::subProbGrouping(const std::vector<unsigned int> & pn) {
+bool BaseDisassembler::subProbGrouping(const std::vector<unsigned int> &pn) {
 
   groups->newSet();
 
@@ -232,12 +237,12 @@ bool BaseDisassembler::subProbGrouping(const std::vector<unsigned int> & pn) {
   return true;
 }
 
-Separation *BaseDisassembler::disassemble(const Assembly * assembly) {
+Separation *BaseDisassembler::disassemble(const Assembly *assembly) {
 
   bt_assert(puzzle->pieceNumber() == assembly->placementCount());
   groups->reSet();
 
-  disassemblerNode_c * start = new disassemblerNode_c(assembly);
+  disassemblerNode_c *start = new disassemblerNode_c(assembly);
 
   if (start->getPiecenumber() < 2) {
     delete start;
@@ -254,7 +259,7 @@ Separation *BaseDisassembler::disassemble(const Assembly * assembly) {
     if (assembly->isPlaced(j))
       pieces.push_back(j);
 
-  Separation * s = disassemble_rec(pieces, start);
+  Separation *s = disassemble_rec(pieces, start);
 
   if (start->decRefCount())
     delete start;

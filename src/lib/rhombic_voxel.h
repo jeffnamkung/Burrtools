@@ -21,7 +21,7 @@
 #ifndef __VOXEL_3_H__
 #define __VOXEL_3_H__
 
-#include "voxel_0.h"
+#include "cube_voxel.h"
 
 /**
  * Voxel class for the rhombic grid.
@@ -52,37 +52,54 @@
  * of 5 in each direction to ensure voxels don't change parity when the shape is rotated.
  * Also translations can only be done in multiples of 5 and so on...
  */
-class voxel_3_c : public voxel_0_c {
+class RhombicVoxel : public CubeVoxel {
 
-  public:
+ public:
 
-    voxel_3_c(unsigned int x, unsigned int y, unsigned int z, const GridType * gt, voxel_type init = 0) : voxel_0_c(x, y, z, gt, init) {}
-    voxel_3_c(XmlParser & pars, const GridType * gt) : voxel_0_c(pars, gt) {}
-    voxel_3_c(const Voxel & orig) : voxel_0_c(orig) { }
-    voxel_3_c(const Voxel * orig) : voxel_0_c(orig) { }
+  RhombicVoxel(unsigned int x,
+               unsigned int y,
+               unsigned int z,
+               const GridType *gt,
+               voxel_type init = 0) : CubeVoxel(x, y, z, gt, init) {}
+  RhombicVoxel(XmlParser &pars, const GridType *gt) : CubeVoxel(pars, gt) {}
+  RhombicVoxel(const Voxel &orig) : CubeVoxel(orig) {}
+  RhombicVoxel(const Voxel *orig) : CubeVoxel(orig) {}
 
-    virtual bool transform(unsigned int nr);
+  virtual bool transform(unsigned int nr);
 
-    bool getNeighbor(unsigned int idx, unsigned int typ, int x, int y, int z, int * xn, int *yn, int *zn) const;
+  bool getNeighbor(unsigned int idx,
+                   unsigned int typ,
+                   int x,
+                   int y,
+                   int z,
+                   int *xn,
+                   int *yn,
+                   int *zn) const;
 
-    void scale(unsigned int amount, bool grid);
-    bool scaleDown(unsigned char by, bool action);
-    void resizeInclude(int & px, int & py, int & pz);
-    void minimizePiece(void);
+  void scale(unsigned int amount, bool grid);
+  bool scaleDown(unsigned char by, bool action);
+  void resizeInclude(int &px, int &py, int &pz);
+  void minimizePiece(void);
 
-    virtual bool validCoordinate(int x, int y, int z) const;
-    bool identicalInBB(const Voxel * op, bool includeColors = true) const;
-    bool onGrid(int x, int y, int z) const;
+  virtual bool validCoordinate(int x, int y, int z) const;
+  bool identicalInBB(const Voxel *op, bool includeColors = true) const;
+  bool onGrid(int x, int y, int z) const;
 
-    virtual bool meshParamsValid(double bevel, double offset) const;
-    void getConnectionFace(int x, int y, int z, int n, double bevel, double offset, std::vector<float> & faceCorners) const;
-    void calculateSize(float * x, float * y, float * z) const;
-    void recalcSpaceCoordinates(float * x, float * y, float * z) const;
+  virtual bool meshParamsValid(double bevel, double offset) const;
+  void getConnectionFace(int x,
+                         int y,
+                         int z,
+                         int n,
+                         double bevel,
+                         double offset,
+                         std::vector<float> &faceCorners) const;
+  void calculateSize(float *x, float *y, float *z) const;
+  void recalcSpaceCoordinates(float *x, float *y, float *z) const;
 
-  private:
+ private:
 
-    // no copying and assigning
-    void operator=(const voxel_3_c&);
+  // no copying and assigning
+  void operator=(const RhombicVoxel &);
 };
 
 #endif

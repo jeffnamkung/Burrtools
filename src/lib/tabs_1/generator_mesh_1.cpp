@@ -26,8 +26,7 @@
 #include <vector>
 
 // contains the information for a plane
-typedef struct plane
-{
+typedef struct plane {
   double nx, ny, nz, d;
 } plane;
 
@@ -39,56 +38,60 @@ plane calcPlane(
 
   plane p;
 
-  double a1 = x2-x1;
-  double a2 = y2-y1;
-  double a3 = z2-z1;
+  double a1 = x2 - x1;
+  double a2 = y2 - y1;
+  double a3 = z2 - z1;
 
-  double b1 = x3-x1;
-  double b2 = y3-y1;
-  double b3 = z3-z1;
+  double b1 = x3 - x1;
+  double b2 = y3 - y1;
+  double b3 = z3 - z1;
 
   // cross product of the 2 vectors
 
-  p.nx = a2*b3-a3*b2;
-  p.ny = a3*b1-a1*b3;
-  p.nz = a1*b2-a2*b1;
+  p.nx = a2 * b3 - a3 * b2;
+  p.ny = a3 * b1 - a1 * b3;
+  p.nz = a1 * b2 - a2 * b1;
 
   // for the rest to properly work, we
   // need a normalized normal
-  double len = sqrt(p.nx*p.nx + p.ny*p.ny + p.nz*p.nz);
+  double len = sqrt(p.nx * p.nx + p.ny * p.ny + p.nz * p.nz);
   p.nx /= len;
   p.ny /= len;
   p.nz /= len;
 
-  p.d = x1*p.nx+y1*p.ny+z1*p.nz;
+  p.d = x1 * p.nx + y1 * p.ny + z1 * p.nz;
 
   return p;
 }
 
-void planeIntersect(plane p1, plane p2, plane p3, double * x, double * y, double * z)
-{
+void planeIntersect(plane p1,
+                    plane p2,
+                    plane p3,
+                    double *x,
+                    double *y,
+                    double *z) {
   // solve equation system
   //  p1n x (x, y, z) = p1d
   //  p2n x (x, y, z) = p2d
   //  p3n x (x, y, z) = p3d
 
-  double det = p1.nx*p2.ny*p3.nz+p1.ny*p2.nz*p3.nx+p1.nz*p2.nx*p3.ny-
-               p1.nz*p2.ny*p3.nx-p1.ny*p2.nx*p3.nz-p1.nx*p2.nz*p3.ny;
+  double det =
+      p1.nx * p2.ny * p3.nz + p1.ny * p2.nz * p3.nx + p1.nz * p2.nx * p3.ny -
+          p1.nz * p2.ny * p3.nx - p1.ny * p2.nx * p3.nz - p1.nx * p2.nz * p3.ny;
 
-  if (fabs(det) < 10e-5)
-  {
-    printf ("oops unsolvable plane intersection\n");
+  if (fabs(det) < 10e-5) {
+    printf("oops unsolvable plane intersection\n");
     return;
   }
 
-  *x = p1.d*p2.ny*p3.nz+p1.ny*p2.nz*p3.d+p1.nz*p2.d*p3.ny-
-       p1.nz*p2.ny*p3.d-p1.ny*p2.d*p3.nz-p1.d*p2.nz*p3.ny;
+  *x = p1.d * p2.ny * p3.nz + p1.ny * p2.nz * p3.d + p1.nz * p2.d * p3.ny -
+      p1.nz * p2.ny * p3.d - p1.ny * p2.d * p3.nz - p1.d * p2.nz * p3.ny;
 
-  *y = p1.nx*p2.d*p3.nz+p1.d*p2.nz*p3.nx+p1.nz*p2.nx*p3.d-
-       p1.nz*p2.d*p3.nx-p1.d*p2.nx*p3.nz-p1.nx*p2.nz*p3.d;
+  *y = p1.nx * p2.d * p3.nz + p1.d * p2.nz * p3.nx + p1.nz * p2.nx * p3.d -
+      p1.nz * p2.d * p3.nx - p1.d * p2.nx * p3.nz - p1.nx * p2.nz * p3.d;
 
-  *z = p1.nx*p2.ny*p3.d+p1.ny*p2.d*p3.nx+p1.d*p2.nx*p3.ny-
-       p1.d*p2.ny*p3.nx-p1.ny*p2.nx*p3.d-p1.nx*p2.d*p3.ny;
+  *z = p1.nx * p2.ny * p3.d + p1.ny * p2.d * p3.nx + p1.d * p2.nx * p3.ny -
+      p1.d * p2.ny * p3.nx - p1.ny * p2.nx * p3.d - p1.nx * p2.d * p3.ny;
 
   *x /= det;
   *y /= det;
@@ -99,68 +102,64 @@ void planeIntersect(plane p1, plane p2, plane p3, double * x, double * y, double
 #define NUM_VERTICES 12
 #define HEIGHT sqrt(3)/2
 double vertices[NUM_VERTICES][3] =
-{
-  { 0,      0, 0 },   // 0
-  { 0.5, HEIGHT, 0 },   // 1
-  { 1,      0, 0 },   // 2
-  { 0,      0, 1 },   // 3
-  { 0.5, HEIGHT, 1 },   // 4
-  { 1,      0, 1 },   // 5
+    {
+        {0, 0, 0},   // 0
+        {0.5, HEIGHT, 0},   // 1
+        {1, 0, 0},   // 2
+        {0, 0, 1},   // 3
+        {0.5, HEIGHT, 1},   // 4
+        {1, 0, 1},   // 5
 
-  { 0,   HEIGHT, 0 },  // 6
-  { 0.5,    0 , 0 },   // 7
-  { 1,   HEIGHT, 0 },  // 8
-  { 0,   HEIGHT, 1 },  // 9
-  { 0.5,   0, 1 },     // 10
-  { 1,   HEIGHT, 1 },  // 11
-};
+        {0, HEIGHT, 0},  // 6
+        {0.5, 0, 0},   // 7
+        {1, HEIGHT, 0},  // 8
+        {0, HEIGHT, 1},  // 9
+        {0.5, 0, 1},     // 10
+        {1, HEIGHT, 1},  // 11
+    };
 
 #define NUM_FACES 5
 int faces[NUM_POLYHEDRA][NUM_FACES][5] =
-{
-  {
-    { 4,   0, 3, 4, 1 },
-    { 4,   1, 4, 5, 2 },
-    { 3,   1, 2, 0 },
-    { 3,   4, 3, 5 },
-    { 4,   0, 2, 5, 3 },
-  },
-  {
-    { 4,   6, 7, 10, 9 },
-    { 4,   7, 8, 11, 10 },
-    { 3,   6, 8, 7 },
-    { 3,   9, 10, 11 },
-    { 4,   6, 9, 11, 8 },
-  }
-};
+    {
+        {
+            {4, 0, 3, 4, 1},
+            {4, 1, 4, 5, 2},
+            {3, 1, 2, 0},
+            {3, 4, 3, 5},
+            {4, 0, 2, 5, 3},
+        },
+        {
+            {4, 6, 7, 10, 9},
+            {4, 7, 8, 11, 10},
+            {3, 6, 8, 7},
+            {3, 9, 10, 11},
+            {4, 6, 9, 11, 8},
+        }
+    };
 
 int faces2[NUM_POLYHEDRA][NUM_FACES][5];
 
-void printNumber(FILE * f, double num)
-{
+void printNumber(FILE *f, double num) {
   static const struct {
     double val;
-    const char * text;
+    const char *text;
   } values[] = {
-    { 0, "0" },
-    { 1, "1" },
-    { 2, "2" },
-    { sqrt(0.75), "sqrt(3.0/4)" },
-    { 0.5, "0.5" },
-    { sqrt(3), "sqrt(3)" },
-    { sqrt(1.0/3), "sqrt(1.0/3)" },
-    { sqrt(4.0/3), "sqrt(4.0/3)" },
+      {0, "0"},
+      {1, "1"},
+      {2, "2"},
+      {sqrt(0.75), "sqrt(3.0/4)"},
+      {0.5, "0.5"},
+      {sqrt(3), "sqrt(3)"},
+      {sqrt(1.0 / 3), "sqrt(1.0/3)"},
+      {sqrt(4.0 / 3), "sqrt(4.0/3)"},
   };
 
-  for (int i = 0; i < 8; i++)
-  {
-    if (fabs(num-values[i].val) < 0.0001)
-    {
+  for (int i = 0; i < 8; i++) {
+    if (fabs(num - values[i].val) < 0.0001) {
       fprintf(f, values[i].text);
       return;
     }
-    if (fabs(num+values[i].val) < 0.0001)
-    {
+    if (fabs(num + values[i].val) < 0.0001) {
       fprintf(f, "-%s", values[i].text);
       return;
     }
@@ -173,27 +172,22 @@ void printNumber(FILE * f, double num)
 // idea is to use proper mathematics and intersect the planes to find
 // the real points for some values and extrapolate the movement vectors out of that
 // assuming they are linearly used
-void beveloffset(void)
-{
-  FILE * out = fopen("meshverts.inc", "w");
+void beveloffset(void) {
+  FILE *out = fopen("meshverts.inc", "w");
   fprintf(out, "static const double vertices[][3][3] = {\n");
 
   // for each vertex we must calculate for each plane that has a corner at that vertex a
 
   int newVertexNumber = 0;
 
-
-  for (int pl = 0; pl < NUM_POLYHEDRA; pl++)
-  {
-    for (int v = 0; v < NUM_VERTICES; v++)
-    {
+  for (int pl = 0; pl < NUM_POLYHEDRA; pl++) {
+    for (int v = 0; v < NUM_VERTICES; v++) {
       // find all faces that have a corner at the current vertex
       std::vector<int> vfaces;
       std::vector<int> vertexNumber;
       for (int f = 0; f < NUM_FACES; f++)
         for (int i = 0; i < faces[pl][f][0]; i++)
-          if (faces[pl][f][i+1] == v)
-          {
+          if (faces[pl][f][i + 1] == v) {
             vfaces.push_back(f);
             vertexNumber.push_back(i);
             break;
@@ -203,9 +197,9 @@ void beveloffset(void)
         continue;
 
       // right now we can only handle exactly 3 faces for each vertex
-      if (vfaces.size() != 3)
-      {
-        printf("oops not valid number of faces at a vertex, aborting %i\n", vfaces.size());
+      if (vfaces.size() != 3) {
+        printf("oops not valid number of faces at a vertex, aborting %i\n",
+               vfaces.size());
         return;
       }
 
@@ -213,12 +207,17 @@ void beveloffset(void)
 
       plane p[3];
 
-      for (int i = 0; i < vfaces.size(); i++)
-      {
+      for (int i = 0; i < vfaces.size(); i++) {
         p[i] = calcPlane(
-            vertices[faces[pl][vfaces[i]][1]][0], vertices[faces[pl][vfaces[i]][1]][1], vertices[faces[pl][vfaces[i]][1]][2],
-            vertices[faces[pl][vfaces[i]][2]][0], vertices[faces[pl][vfaces[i]][2]][1], vertices[faces[pl][vfaces[i]][2]][2],
-            vertices[faces[pl][vfaces[i]][3]][0], vertices[faces[pl][vfaces[i]][3]][1], vertices[faces[pl][vfaces[i]][3]][2]);
+            vertices[faces[pl][vfaces[i]][1]][0],
+            vertices[faces[pl][vfaces[i]][1]][1],
+            vertices[faces[pl][vfaces[i]][1]][2],
+            vertices[faces[pl][vfaces[i]][2]][0],
+            vertices[faces[pl][vfaces[i]][2]][1],
+            vertices[faces[pl][vfaces[i]][2]][2],
+            vertices[faces[pl][vfaces[i]][3]][0],
+            vertices[faces[pl][vfaces[i]][3]][1],
+            vertices[faces[pl][vfaces[i]][3]][2]);
       }
 
       // starting point
@@ -229,8 +228,7 @@ void beveloffset(void)
       // the result should be reasonable close to the original vertex
       if (fabs(vertices[v][0] - xs) > 10e-5 ||
           fabs(vertices[v][1] - ys) > 10e-5 ||
-          fabs(vertices[v][2] - zs) > 10e-5)
-      {
+          fabs(vertices[v][2] - zs) > 10e-5) {
         printf("oops safety check failes\n");
         return;
       }
@@ -263,8 +261,7 @@ void beveloffset(void)
       // the plane, where the bevel will be, that results in 3 different
       // bevel vectors, one for each plane involved in the operation
 
-      for (int i = 0; i < vfaces.size(); i++)
-      {
+      for (int i = 0; i < vfaces.size(); i++) {
         for (int j = 0; j < vfaces.size(); j++)
           if (i != j)
             p[j].d -= 0.1;
@@ -287,23 +284,40 @@ void beveloffset(void)
         yb *= 10;
         zb *= 10;
 
-
         fprintf(out, "  { { ");
-        printNumber(out, vertices[v][0]); fprintf(out, ", ");
-        printNumber(out, vertices[v][1]); fprintf(out, ", ");
-        printNumber(out, vertices[v][2]); fprintf(out, "}, {");
+        printNumber(out, vertices[v][0]);
+        fprintf(out, ", ");
+        printNumber(out, vertices[v][1]);
+        fprintf(out, ", ");
+        printNumber(out, vertices[v][2]);
+        fprintf(out, "}, {");
 
-        printNumber(out, xo); fprintf(out, ", ");
-        printNumber(out, yo); fprintf(out, ", ");
-        printNumber(out, zo); fprintf(out, "}, {");
+        printNumber(out, xo);
+        fprintf(out, ", ");
+        printNumber(out, yo);
+        fprintf(out, ", ");
+        printNumber(out, zo);
+        fprintf(out, "}, {");
 
-        printNumber(out, xb); fprintf(out, ", ");
-        printNumber(out, yb); fprintf(out, ", ");
-        printNumber(out, zb); fprintf(out, "} },\n");
+        printNumber(out, xb);
+        fprintf(out, ", ");
+        printNumber(out, yb);
+        fprintf(out, ", ");
+        printNumber(out, zb);
+        fprintf(out, "} },\n");
 
-        printf(" %f %f %f  -> + o*(%f %f %f) + b*(%f %f %f)\n", vertices[v][0], vertices[v][1], vertices[v][2], xo, yo, zo, xb, yb, zb);
+        printf(" %f %f %f  -> + o*(%f %f %f) + b*(%f %f %f)\n",
+               vertices[v][0],
+               vertices[v][1],
+               vertices[v][2],
+               xo,
+               yo,
+               zo,
+               xb,
+               yb,
+               zb);
 
-        faces2[pl][vfaces[i]][vertexNumber[i]+1] = newVertexNumber;
+        faces2[pl][vfaces[i]][vertexNumber[i] + 1] = newVertexNumber;
         newVertexNumber++;
       }
     }
@@ -318,15 +332,22 @@ void beveloffset(void)
   // the bevel faces.
   fprintf(out, "static const int normalFaces[2][5][5] = {\n");
 
-  for (int p = 0; p < NUM_POLYHEDRA; p++)
-  {
+  for (int p = 0; p < NUM_POLYHEDRA; p++) {
     fprintf(out, "  {\n");
-    for (int i = 0; i < NUM_FACES; i++)
-    {
+    for (int i = 0; i < NUM_FACES; i++) {
       if (faces[p][i][0] == 3)
-        fprintf(out, "    { 3, %i, %i, %i },\n", faces2[p][i][1], faces2[p][i][2], faces2[p][i][3]);
+        fprintf(out,
+                "    { 3, %i, %i, %i },\n",
+                faces2[p][i][1],
+                faces2[p][i][2],
+                faces2[p][i][3]);
       else
-        fprintf(out, "    { 4, %i, %i, %i, %i },\n", faces2[p][i][1], faces2[p][i][2], faces2[p][i][3], faces2[p][i][4]);
+        fprintf(out,
+                "    { 4, %i, %i, %i, %i },\n",
+                faces2[p][i][1],
+                faces2[p][i][2],
+                faces2[p][i][3],
+                faces2[p][i][4]);
     }
     fprintf(out, "  },\n");
   }
@@ -335,8 +356,7 @@ void beveloffset(void)
 
   fprintf(out, "static const int bevelFaces[2][15][5] = {\n");
 
-  for (int p = 0; p < NUM_POLYHEDRA; p++)
-  {
+  for (int p = 0; p < NUM_POLYHEDRA; p++) {
 
     fprintf(out, "  {\n");
 
@@ -344,43 +364,36 @@ void beveloffset(void)
     // the triangles must be oriented, we save that within this array for
     // each vertex
     int vertexdir[NUM_VERTICES];
-    for (int i = 0; i < NUM_VERTICES; i++)
-    {
+    for (int i = 0; i < NUM_VERTICES; i++) {
       vertexdir[i] = -1;
     }
 
 
     // first let us output the edge bevel faces
-    for (int i = 0; i < NUM_VERTICES; i++)
-    {
-      for (int j = i+1; j < NUM_VERTICES; j++)
-      {
+    for (int i = 0; i < NUM_VERTICES; i++) {
+      for (int j = i + 1; j < NUM_VERTICES; j++) {
         int f = 0;
 
         // ontains the found faces that use edge i-j
         int facecorners[20][3];
         int foundfaces = 0;
 
-        for (int f = 0; f < NUM_FACES; f++)
-        {
+        for (int f = 0; f < NUM_FACES; f++) {
 
-          for (int e = 0; e < faces[p][f][0]; e++)
-          {
-            if (faces[p][f][1+(e % faces[p][f][0])] == i &&
-                faces[p][f][1+((e+1) % faces[p][f][0])] == j)
-            {
+          for (int e = 0; e < faces[p][f][0]; e++) {
+            if (faces[p][f][1 + (e % faces[p][f][0])] == i &&
+                faces[p][f][1 + ((e + 1) % faces[p][f][0])] == j) {
               facecorners[foundfaces][0] = f;
               facecorners[foundfaces][1] = e;
-              facecorners[foundfaces][2] = (e+1) % faces[p][f][0];
+              facecorners[foundfaces][2] = (e + 1) % faces[p][f][0];
               foundfaces++;
             }
 
-            if (faces[p][f][1+(e % faces[p][f][0])] == j &&
-                faces[p][f][1+((e+1) % faces[p][f][0])] == i)
-            {
+            if (faces[p][f][1 + (e % faces[p][f][0])] == j &&
+                faces[p][f][1 + ((e + 1) % faces[p][f][0])] == i) {
               facecorners[foundfaces][0] = f;
               facecorners[foundfaces][1] = e;
-              facecorners[foundfaces][2] = (e+1) % faces[p][f][0];
+              facecorners[foundfaces][2] = (e + 1) % faces[p][f][0];
               foundfaces++;
             }
           }
@@ -389,65 +402,70 @@ void beveloffset(void)
         if (foundfaces == 0)
           continue;
 
-        if (foundfaces != 2)
-        {
+        if (foundfaces != 2) {
           printf("oops too many faces on one edge, only 2 allowed\n");
         }
 
         if (
-            faces[p][facecorners[0][0]][1+facecorners[0][1]] !=
-            faces[p][facecorners[1][0]][1+facecorners[1][2]]
-            ||
-            faces[p][facecorners[0][0]][1+facecorners[0][2]] !=
-            faces[p][facecorners[1][0]][1+facecorners[1][1]])
-        {
+            faces[p][facecorners[0][0]][1 + facecorners[0][1]] !=
+                faces[p][facecorners[1][0]][1 + facecorners[1][2]]
+                ||
+                    faces[p][facecorners[0][0]][1 + facecorners[0][2]] !=
+                        faces[p][facecorners[1][0]][1 + facecorners[1][1]]) {
           printf("oops not the right corners %i %i    %i %i\n",
-              faces[p][facecorners[0][0]][1+facecorners[0][1]],
-              faces[p][facecorners[1][0]][1+facecorners[0][2]],
-              faces[p][facecorners[0][0]][1+facecorners[1][1]],
-              faces[p][facecorners[1][0]][1+facecorners[1][2]]);
+                 faces[p][facecorners[0][0]][1 + facecorners[0][1]],
+                 faces[p][facecorners[1][0]][1 + facecorners[0][2]],
+                 faces[p][facecorners[0][0]][1 + facecorners[1][1]],
+                 faces[p][facecorners[1][0]][1 + facecorners[1][2]]);
         }
 
         fprintf(out, "    { 4,  %i, %i, %i, %i },\n",
-            faces2[p][facecorners[0][0]][1+facecorners[0][2]],
-            faces2[p][facecorners[0][0]][1+facecorners[0][1]],
-            faces2[p][facecorners[1][0]][1+facecorners[1][2]],
-            faces2[p][facecorners[1][0]][1+facecorners[1][1]]);
+                faces2[p][facecorners[0][0]][1 + facecorners[0][2]],
+                faces2[p][facecorners[0][0]][1 + facecorners[0][1]],
+                faces2[p][facecorners[1][0]][1 + facecorners[1][2]],
+                faces2[p][facecorners[1][0]][1 + facecorners[1][1]]);
 
         if (
-            ((faces2[p][facecorners[0][0]][1+facecorners[0][1]] + 1) ==
-             faces2[p][facecorners[1][0]][1+facecorners[1][2]])
-            ||
-            ((faces2[p][facecorners[0][0]][1+facecorners[0][1]] - 2) ==
-             faces2[p][facecorners[1][0]][1+facecorners[1][2]])
-           )
+            ((faces2[p][facecorners[0][0]][1 + facecorners[0][1]] + 1) ==
+                faces2[p][facecorners[1][0]][1 + facecorners[1][2]])
+                ||
+                    ((faces2[p][facecorners[0][0]][1 + facecorners[0][1]] - 2)
+                        ==
+                            faces2[p][facecorners[1][0]][1 + facecorners[1][2]])
+            )
 
-          vertexdir[faces[p][facecorners[0][0]][1+facecorners[0][1]]] = 2;
+          vertexdir[faces[p][facecorners[0][0]][1 + facecorners[0][1]]] = 2;
         else
-          vertexdir[faces[p][facecorners[0][0]][1+facecorners[0][1]]] = 1;
+          vertexdir[faces[p][facecorners[0][0]][1 + facecorners[0][1]]] = 1;
 
         if (
-            ((faces2[p][facecorners[0][0]][1+facecorners[0][2]]) ==
-             faces2[p][facecorners[1][0]][1+facecorners[1][1]] + 1)
-            ||
-            ((faces2[p][facecorners[0][0]][1+facecorners[0][2]]) ==
-             faces2[p][facecorners[1][0]][1+facecorners[1][1]] - 2)
-           )
-          vertexdir[faces[p][facecorners[1][0]][1+facecorners[1][1]]] = 2;
+            ((faces2[p][facecorners[0][0]][1 + facecorners[0][2]]) ==
+                faces2[p][facecorners[1][0]][1 + facecorners[1][1]] + 1)
+                ||
+                    ((faces2[p][facecorners[0][0]][1 + facecorners[0][2]]) ==
+                        faces2[p][facecorners[1][0]][1 + facecorners[1][1]] - 2)
+            )
+          vertexdir[faces[p][facecorners[1][0]][1 + facecorners[1][1]]] = 2;
         else
-          vertexdir[faces[p][facecorners[1][0]][1+facecorners[1][1]]] = 1;
+          vertexdir[faces[p][facecorners[1][0]][1 + facecorners[1][1]]] = 1;
       }
     }
 
     // first let's output the corner faces
-    for (int i = 0; i < NUM_VERTICES; i++)
-    {
-      if (vertexdir[i] != -1)
-      {
+    for (int i = 0; i < NUM_VERTICES; i++) {
+      if (vertexdir[i] != -1) {
         if (vertexdir[i] == 1)
-          fprintf(out, "    { 3,  %i, %i, %i },\n", 3*i, 3*i+1, 3*i+2);
+          fprintf(out,
+                  "    { 3,  %i, %i, %i },\n",
+                  3 * i,
+                  3 * i + 1,
+                  3 * i + 2);
         else
-          fprintf(out, "    { 3,  %i, %i, %i },\n", 3*i, 3*i+2, 3*i+1);
+          fprintf(out,
+                  "    { 3,  %i, %i, %i },\n",
+                  3 * i,
+                  3 * i + 2,
+                  3 * i + 1);
       }
     }
 
@@ -459,7 +477,7 @@ void beveloffset(void)
   fclose(out);
 }
 
-int main(int /*argv*/, char** /*args[]*/) {
+int main(int /*argv*/, char ** /*args[]*/) {
 
   beveloffset();
 }

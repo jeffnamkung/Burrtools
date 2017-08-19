@@ -27,42 +27,43 @@
 /** stl exporter for spheres */
 class stlExporter_2_c : public stlExporter_c {
 
-  public:
+ public:
 
-    stlExporter_2_c(void) : sphere_rad(10), offset(0), round(1.0), connection_rad(0.75),
-      recursion(2.0), inner_rad(0), hole_diam(0), square_hole(false) {}
+  stlExporter_2_c(void)
+      : sphere_rad(10), offset(0), round(1.0), connection_rad(0.75),
+        recursion(2.0), inner_rad(0), hole_diam(0), square_hole(false) {}
 
-    virtual Polyhedron * getMesh(const Voxel & v, const faceList_c & holes) const;
+  virtual Polyhedron *getMesh(const Voxel &v, const faceList_c &holes) const;
 
-    /* some functions to set some parameters for the output,
-     * all parameters must be double values.
-     */
+  /* some functions to set some parameters for the output,
+   * all parameters must be double values.
+   */
 
-    /* return a text to display to the user about the parameter x */
-    virtual unsigned int numParameters(void) const { return 8; }
-    virtual const char * getParameterName(unsigned int idx) const;
-    virtual double getParameter(unsigned int idx) const;
-    virtual void setParameter(unsigned int idx, double value);
-    virtual const char * getParameterTooltip(unsigned int idx) const;
-    virtual parameterTypes getParameterType(unsigned int idx) const;
+  /* return a text to display to the user about the parameter x */
+  virtual unsigned int numParameters(void) const { return 8; }
+  virtual const char *getParameterName(unsigned int idx) const;
+  virtual double getParameter(unsigned int idx) const;
+  virtual void setParameter(unsigned int idx, double value);
+  virtual const char *getParameterTooltip(unsigned int idx) const;
+  virtual parameterTypes getParameterType(unsigned int idx) const;
 
-  private:
+ private:
 
-    /* parameters */
-    double sphere_rad;
-    double offset;
-    double round;
-    double connection_rad;
-    double recursion;
-    double inner_rad;
-    double hole_diam;
-    bool square_hole;
+  /* parameters */
+  double sphere_rad;
+  double offset;
+  double round;
+  double connection_rad;
+  double recursion;
+  double inner_rad;
+  double hole_diam;
+  bool square_hole;
 
-  private:
+ private:
 
-    // no copying and assigning
-    stlExporter_2_c(const stlExporter_2_c&);
-    void operator=(const stlExporter_2_c&);
+  // no copying and assigning
+  stlExporter_2_c(const stlExporter_2_c &);
+  void operator=(const stlExporter_2_c &);
 };
 
 #endif

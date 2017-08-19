@@ -22,18 +22,19 @@
 
 #include "../tools/xml.h"
 
-AssemblerInterface::errState AssemblerInterface::createMatrix(const Problem * /*puz*/, bool /*keepMirror*/, bool /*keepRotations*/, bool /*complete*/)
-{
+AssemblerInterface::errState AssemblerInterface::createMatrix(const Problem * /*puz*/,
+                                                              bool /*keepMirror*/,
+                                                              bool /*keepRotations*/,
+                                                              bool /*complete*/) {
   return ERR_NONE;
 }
 
-AssemblerInterface::errState AssemblerInterface::setPosition(const char * /*string*/, const char * /*version*/)
-{
+AssemblerInterface::errState AssemblerInterface::setPosition(const char * /*string*/,
+                                                             const char * /*version*/) {
   return ERR_CAN_NOT_RESTORE_VERSION;
 }
 
-void AssemblerInterface::save(XmlWriter & xml) const
-{
+void AssemblerInterface::save(XmlWriter &xml) const {
   xml.newTag("assembler");
   xml.endTag("assembler");
 }

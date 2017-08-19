@@ -37,10 +37,10 @@
  */
 void movementAnalysator_c::prepare() {
 
-  unsigned int * idx = matrix;
+  unsigned int *idx = matrix;
 
   int idxCol = cache->numDirections();
-  int idxRow = cache->numDirections() * (piecenumber- pieces->size());
+  int idxRow = cache->numDirections() * (piecenumber - pieces->size());
 
   for (unsigned int j = 0; j < pieces->size(); j++) {
     for (unsigned int i = 0; i < pieces->size(); i++) {
@@ -70,8 +70,8 @@ void movementAnalysator_c::prepare() {
   /* second part of Bills algorithm. */
 
   unsigned int dirs = cache->numDirections();
-  unsigned int rowStep = dirs*piecenumber;
-  unsigned int size = dirs*pieces->size();
+  unsigned int rowStep = dirs * piecenumber;
+  unsigned int size = dirs * pieces->size();
 
   bool again = false;
 
@@ -112,16 +112,16 @@ void movementAnalysator_c::prepare() {
         }
 #endif
 
-      unsigned int * pos1 = matrix + d;           // y * piecenumber;
+      unsigned int *pos1 = matrix + d;           // y * piecenumber;
       unsigned int idx, i;
 
-      for (unsigned int y = 0; y < size; y+=dirs) {
-        unsigned int * pos2 = matrix + d;           // x
+      for (unsigned int y = 0; y < size; y += dirs) {
+        unsigned int *pos2 = matrix + d;           // x
 
-        for (unsigned int x = 0; x < size; x+=dirs) {
+        for (unsigned int x = 0; x < size; x += dirs) {
           unsigned int min = *pos2 + *pos1;
 
-          for (i = dirs, idx = rowStep; i < size; i+=dirs, idx += rowStep) {
+          for (i = dirs, idx = rowStep; i < size; i += dirs, idx += rowStep) {
             unsigned int l = pos2[idx] + pos1[i];
             if (l < min) min = l;
           }
@@ -131,9 +131,9 @@ void movementAnalysator_c::prepare() {
 
             if (!again) {
 
-              unsigned int * pos3 = matrix + d;
+              unsigned int *pos3 = matrix + d;
 
-              for (i = 0; i < y; i+=dirs) {
+              for (i = 0; i < y; i += dirs) {
                 if (min + pos3[y] < pos3[x]) {
                   again = true;
                   break;
@@ -143,9 +143,9 @@ void movementAnalysator_c::prepare() {
 
               if (!again) {
 
-                pos3 = matrix + d + piecenumber*x;
+                pos3 = matrix + d + piecenumber * x;
 
-                for (i = 0; i < x; i+=dirs)
+                for (i = 0; i < x; i += dirs)
                   if (pos3[i] + min < pos1[i]) {
                     again = true;
                     break;
@@ -153,7 +153,7 @@ void movementAnalysator_c::prepare() {
               }
             }
           }
-          pos2+=dirs;
+          pos2 += dirs;
         }
 
         pos1 += rowStep;
@@ -175,7 +175,8 @@ void movementAnalysator_c::prepare() {
  * to distinguish "good" and "bad" moves the function returns true, if less maxPieces
  * have to be moved, this value should not be larger than halve of the pieces in the puzzle
  */
-bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int nextstep) {
+bool movementAnalysator_c::checkmovement(unsigned int maxPieces,
+                                         unsigned int nextstep) {
 
   /* we count the number of pieces that need to be moved, if this number
    * gets bigger than halve of the pieces of the current problem we
@@ -199,9 +200,9 @@ bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int ne
   unsigned int nd = nextdir >> 1;
   unsigned int dirs = cache->numDirections();
   bt_assert(nd < dirs);
-  unsigned int rowIdx = (piecenumber-next_pn)*dirs;
-  unsigned int rowIdx2 = piecenumber*dirs;
-  unsigned int rowIdx3 = (piecenumber*next_pn-1)*dirs;
+  unsigned int rowIdx = (piecenumber - next_pn) * dirs;
+  unsigned int rowIdx2 = piecenumber * dirs;
+  unsigned int rowIdx3 = (piecenumber * next_pn - 1) * dirs;
 
   // the idea here is the following, if we want to move
   // a piece the matrix tells us if we can do that with respecto to
@@ -215,17 +216,14 @@ bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int ne
     do {
 
       finished = true;
-      unsigned int * idx = matrix + nd;
+      unsigned int *idx = matrix + nd;
 
       // go over all pieces
-      for (int i = 0; i < next_pn; i++)
-      {
+      for (int i = 0; i < next_pn; i++) {
         // if the piece needs to be checked
-        if (check[i])
-        {
+        if (check[i]) {
           // check it against all other pieces
-          for (int j = 0; j < next_pn; j++)
-          {
+          for (int j = 0; j < next_pn; j++) {
             // if it is another piece that is still stationary (if it is already
             // moving it moves by the same amount as the other piece, so there
             // will be no problems here
@@ -233,7 +231,8 @@ bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int ne
               // if the requested movement is more than the matrix alows
               // we must also move the new piece
 
-              if (movement[i] > *idx) {  // idx points to matrix[(j+piecenumber*i)*dirs+nd]
+              if (movement[i]
+                  > *idx) {  // idx points to matrix[(j+piecenumber*i)*dirs+nd]
                 // count the number of moved pieces, if there are more
                 // than halve, we bail out because it doesn't make sense
                 // to move more than that amount
@@ -254,9 +253,7 @@ bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int ne
           // the current piece is now checked, so we don't need to do that again
           check[i] = false;
           idx += rowIdx;
-        }
-        else
-        {
+        } else {
           idx += rowIdx2;
         }
       }
@@ -267,15 +264,14 @@ bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int ne
     do {
 
       finished = true;
-      unsigned int * idx = matrix + nd;
+      unsigned int *idx = matrix + nd;
 
-      for (int i = 0; i < next_pn; i++)
-      {
-        if (check[i])
-        {
+      for (int i = 0; i < next_pn; i++) {
+        if (check[i]) {
           for (int j = 0; j < next_pn; j++) {
             if ((i != j) && (movement[j] == 0)) {
-              if (movement[i] > *idx) {  // idx should point to matrix[(i + piecenumber * j)*dirs+nr]
+              if (movement[i]
+                  > *idx) {  // idx should point to matrix[(i + piecenumber * j)*dirs+nr]
                 moved_pieces++;
                 if (moved_pieces > maxPieces)
                   return false;
@@ -289,9 +285,7 @@ bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int ne
           }
           check[i] = false;
           idx -= rowIdx3;
-        }
-        else
-        {
+        } else {
           idx += dirs;
         }
       }
@@ -302,8 +296,8 @@ bool movementAnalysator_c::checkmovement(unsigned int maxPieces, unsigned int ne
   return true;
 }
 
-movementAnalysator_c::movementAnalysator_c(const Problem * puz) :
-  piecenumber(puz->pieceNumber()), maxstep((unsigned int) -1) {
+movementAnalysator_c::movementAnalysator_c(const Problem *puz) :
+    piecenumber(puz->pieceNumber()), maxstep((unsigned int) -1) {
 
   cache = puz->getGridType()->getMovementCache(puz);
   /* we assert that there must be a cache, otherwise no disassembly
@@ -316,7 +310,10 @@ movementAnalysator_c::movementAnalysator_c(const Problem * puz) :
   movement = new unsigned int[piecenumber];
 
   matrix = new unsigned int[cache->numDirections() * piecenumber * piecenumber];
-  memset(matrix, 0, cache->numDirections() * piecenumber * piecenumber * sizeof(unsigned int));
+  memset(matrix,
+         0,
+         cache->numDirections() * piecenumber * piecenumber
+             * sizeof(unsigned int));
 
   /* create the weights array */
   weights = new int[puz->pieceNumber()];
@@ -333,11 +330,11 @@ movementAnalysator_c::movementAnalysator_c(const Problem * puz) :
 
 movementAnalysator_c::~movementAnalysator_c() {
 
-  delete [] movement;
-  delete [] matrix;
+  delete[] movement;
+  delete[] matrix;
 
   delete cache;
-  delete [] weights;
+  delete[] weights;
   delete nodes;
 }
 
@@ -347,7 +344,7 @@ static int max(int a, int b) { if (a > b) return a; else return b; }
  * where the pieces move by amount in direction nextdir
  * staring point is the searchnode
  */
-disassemblerNode_c * movementAnalysator_c::newNode(unsigned int amount) {
+disassemblerNode_c *movementAnalysator_c::newNode(unsigned int amount) {
 
   // calculate the weight of the all the stationary and all the
   // moving pieces
@@ -383,7 +380,8 @@ disassemblerNode_c * movementAnalysator_c::newNode(unsigned int amount) {
     nd ^= 1;
   }
 
-  disassemblerNode_c * n = new disassemblerNode_c(pieces->size(), searchnode, nd, amount);
+  disassemblerNode_c
+      *n = new disassemblerNode_c(pieces->size(), searchnode, nd, amount);
 
   /* create a new state with the pieces moved */
   for (unsigned int i = 0; i < pieces->size(); i++) {
@@ -441,7 +439,8 @@ disassemblerNode_c * movementAnalysator_c::newNode(unsigned int amount) {
  * also the amount must be identical in both nodes, so if piece a moves 1 unit
  * in node n0 and andother piece move 2 units in node n1 0 is returned
  */
-disassemblerNode_c * movementAnalysator_c::newNodeMerge(const disassemblerNode_c *n0, const disassemblerNode_c *n1) {
+disassemblerNode_c *movementAnalysator_c::newNodeMerge(const disassemblerNode_c *n0,
+                                                       const disassemblerNode_c *n1) {
 
   // assert that direction are along the same axis
   bt_assert((nextdir | 1) == (n0->getDirection() | 1));
@@ -466,11 +465,11 @@ disassemblerNode_c * movementAnalysator_c::newNodeMerge(const disassemblerNode_c
     // calculate the movement of the merged node by first finding out if the
     // piece has been moved within one node
     move0 = ((n0->getX(i) != searchnode->getX(i)) ||
-             (n0->getY(i) != searchnode->getY(i)) ||
-             (n0->getZ(i) != searchnode->getZ(i))) ^ invert0;
+        (n0->getY(i) != searchnode->getY(i)) ||
+        (n0->getZ(i) != searchnode->getZ(i))) ^ invert0;
     move1 = ((n1->getX(i) != searchnode->getX(i)) ||
-             (n1->getY(i) != searchnode->getY(i)) ||
-             (n1->getZ(i) != searchnode->getZ(i))) ^ invert1;
+        (n1->getY(i) != searchnode->getY(i)) ||
+        (n1->getZ(i) != searchnode->getZ(i))) ^ invert1;
 
     // and if it has been moved in one of them, it needs
     // to be moved in the new node
@@ -495,8 +494,8 @@ disassemblerNode_c * movementAnalysator_c::newNodeMerge(const disassemblerNode_c
   return newNode(amount);
 }
 
-
-void movementAnalysator_c::init_find(disassemblerNode_c * nd, const std::vector<unsigned int> & pcs) {
+void movementAnalysator_c::init_find(disassemblerNode_c *nd,
+                                     const std::vector<unsigned int> &pcs) {
 
   /* initialize the state machine for the find routine
    */
@@ -527,9 +526,9 @@ void movementAnalysator_c::init_find(disassemblerNode_c * nd, const std::vector<
  * the next thing to do is to check if something can be removed, and finally we look for longer
  * movements in the actual direction
  */
-disassemblerNode_c * movementAnalysator_c::find() {
+disassemblerNode_c *movementAnalysator_c::find() {
 
-  disassemblerNode_c * n = 0;
+  disassemblerNode_c *n = 0;
 
   // repeat until we either find a movement or have checked everything
   while (!n) {
@@ -544,7 +543,7 @@ disassemblerNode_c * movementAnalysator_c::find() {
         if (nextpiece >= next_pn) {
           nextpiece = 0;
           nextdir++;
-          if (nextdir >= 2*cache->numDirections()) {
+          if (nextdir >= 2 * cache->numDirections()) {
             nextstate++;
             nextdir = 0;
           }
@@ -552,14 +551,14 @@ disassemblerNode_c * movementAnalysator_c::find() {
         break;
       case 1:
         // check, if a group of pieces can be removed
-        if (checkmovement(next_pn/2, 30000))
+        if (checkmovement(next_pn / 2, 30000))
           n = newNode(30000);
 
         nextpiece++;
         if (nextpiece >= next_pn) {
           nextpiece = 0;
           nextdir++;
-          if (nextdir >= 2*cache->numDirections()) {
+          if (nextdir >= 2 * cache->numDirections()) {
             nextstate++;
             nextdir = 0;
             nodes->clear();
@@ -568,7 +567,7 @@ disassemblerNode_c * movementAnalysator_c::find() {
         break;
       case 2:
         // check, if pieces can be moved
-        if ((nextstep <= maxstep) && checkmovement(next_pn/2, nextstep)) {
+        if ((nextstep <= maxstep) && checkmovement(next_pn / 2, nextstep)) {
           n = newNode(nextstep);
           bt_assert(n);
 
@@ -602,7 +601,7 @@ disassemblerNode_c * movementAnalysator_c::find() {
             nextpiece = 0;
             nextdir++;
             nodes->clear();
-            if (nextdir >= 2*cache->numDirections()) {
+            if (nextdir >= 2 * cache->numDirections()) {
               nextstate++;
             }
           }
@@ -622,22 +621,22 @@ disassemblerNode_c * movementAnalysator_c::find() {
         // one another the code above alone wont find movements where both pieces are moved at
         // the same time but rather one after the other
 
-        {
-          const disassemblerNode_c * nd2 = nodes->nextScan();
+      {
+        const disassemblerNode_c *nd2 = nodes->nextScan();
 
-          if (nd2) {
-            n = newNodeMerge(state99node, nd2);
+        if (nd2) {
+          n = newNodeMerge(state99node, nd2);
 
-            // if the node is valid check if we already know that node, if so
-            // delete it
-            if (n && nodes->insert(n)) {
-              delete n;
-              n = 0;
-            }
+          // if the node is valid check if we already know that node, if so
+          // delete it
+          if (n && nodes->insert(n)) {
+            delete n;
+            n = 0;
+          }
 
-          } else
-            nextstate = state99nextState;
-        }
+        } else
+          nextstate = state99nextState;
+      }
 
         break;
 
@@ -655,7 +654,13 @@ disassemblerNode_c * movementAnalysator_c::find() {
   involve the indicated piece and be in the indicated direction
   and we'll do the preparation call from within this routine too, so we only have to call one routine from outside
 */
-disassemblerNode_c * movementAnalysator_c::findMatching(disassemblerNode_c * nd, const std::vector<unsigned int> & pcs, unsigned int piece, int dx, int dy, int dz) {
+disassemblerNode_c *movementAnalysator_c::findMatching(disassemblerNode_c *nd,
+                                                       const std::vector<
+                                                           unsigned int> &pcs,
+                                                       unsigned int piece,
+                                                       int dx,
+                                                       int dy,
+                                                       int dz) {
 
   /* note that a language with lightweight threads and pipes could have done the find method as a generator instead of a state machine,
   and then we wouldn't be passing arguments around in these instance variables */
@@ -690,8 +695,7 @@ disassemblerNode_c * movementAnalysator_c::findMatching(disassemblerNode_c * nd,
   // this routine is presently only called once in response to a user action, so this is fine
   {
     unsigned int i = 0;
-    while (i < pcs.size())
-    {
+    while (i < pcs.size()) {
       if (pcs[i] == piece) break;
       i++;
     }
@@ -709,9 +713,9 @@ disassemblerNode_c * movementAnalysator_c::findMatching(disassemblerNode_c * nd,
   // calculate the movement matrices
   prepare();
 
-  if (checkmovement(next_pn/2, nextstep)) {
+  if (checkmovement(next_pn / 2, nextstep)) {
     // we found a move
-    disassemblerNode_c * n = newNode(nextstep);
+    disassemblerNode_c *n = newNode(nextstep);
     bt_assert(n);
     return n;
   }
@@ -720,7 +724,9 @@ disassemblerNode_c * movementAnalysator_c::findMatching(disassemblerNode_c * nd,
   return 0;
 }
 
-void movementAnalysator_c::completeFind(disassemblerNode_c * searchnode, const std::vector<unsigned int> & pieces, std::vector<disassemblerNode_c*> * result) {
+void movementAnalysator_c::completeFind(disassemblerNode_c *searchnode,
+                                        const std::vector<unsigned int> &pieces,
+                                        std::vector<disassemblerNode_c *> *result) {
 
   init_find(searchnode, pieces);
 
@@ -728,11 +734,11 @@ void movementAnalysator_c::completeFind(disassemblerNode_c * searchnode, const s
     delete (*result)[i];
   result->clear();
 
-  disassemblerNode_c * nd;
+  disassemblerNode_c *nd;
 
   maxstep = 1;
 
-  std::vector<disassemblerNode_c*> toremove;
+  std::vector<disassemblerNode_c *> toremove;
 
   while ((nd = find()) != 0) {
     for (unsigned int i = 0; i < result->size(); i++) {
@@ -747,7 +753,7 @@ void movementAnalysator_c::completeFind(disassemblerNode_c * searchnode, const s
       result->push_back(nd);
   }
 
-  maxstep = (unsigned int)-1;
+  maxstep = (unsigned int) -1;
 
   for (unsigned int i = 0; i < toremove.size(); i++)
     delete toremove[i];

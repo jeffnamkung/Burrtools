@@ -23,17 +23,20 @@
 #include "disassembly.h"
 #include "disassemblernode.h"
 
-DisassemblyToMoves::DisassemblyToMoves(const Separation * tr, unsigned int sz, unsigned int max) : size(sz), maxPieceName(max) {
+DisassemblyToMoves::DisassemblyToMoves(const Separation *tr,
+                                       unsigned int sz,
+                                       unsigned int max)
+    : size(sz), maxPieceName(max) {
 
   tree = new Separation(tr);
 
-  moves = new float[maxPieceName*4];
+  moves = new float[maxPieceName * 4];
   mv = new bool[maxPieceName];
 }
 
 DisassemblyToMoves::~DisassemblyToMoves() {
-  delete [] moves;
-  delete [] mv;
+  delete[] moves;
+  delete[] mv;
   delete tree;
 }
 
@@ -43,7 +46,7 @@ void DisassemblyToMoves::setStep(float step, bool fadeOut, bool center_active) {
   float frac = step - s;
 
   // a temporary array, used to save the 2nd placement for the interpolation */
-  float * moves2 = new float[maxPieceName*4];
+  float *moves2 = new float[maxPieceName * 4];
 
   for (unsigned int i = 0; i < 4 * maxPieceName; i++) {
     moves[i] = moves2[i] = 0;
@@ -57,42 +60,48 @@ void DisassemblyToMoves::setStep(float step, bool fadeOut, bool center_active) {
   if (tree) {
 
     /* get the 2 possible positions between we have to interpolate */
-    doRecursive(tree, s  , moves, center_active, 0, 0, 0);
-    doRecursive(tree, s+1, moves2, center_active, 0, 0, 0);
+    doRecursive(tree, s, moves, center_active, 0, 0, 0);
+    doRecursive(tree, s + 1, moves2, center_active, 0, 0, 0);
 
     // interpolate and check, which piece moves right now
     for (unsigned int i = 0; i < maxPieceName; i++) {
-      mv[i] = ((moves[4*i+0] != moves2[4*i+0]) || (moves[4*i+1] != moves2[4*i+1]) || (moves[4*i+2] != moves2[4*i+2]));
-      moves[4*i+0] = (1-frac)*moves[4*i+0] + frac*moves2[4*i+0];
-      moves[4*i+1] = (1-frac)*moves[4*i+1] + frac*moves2[4*i+1];
-      moves[4*i+2] = (1-frac)*moves[4*i+2] + frac*moves2[4*i+2];
-      moves[4*i+3] = (1-frac)*moves[4*i+3] + frac*moves2[4*i+3];
+      mv[i] = ((moves[4 * i + 0] != moves2[4 * i + 0])
+          || (moves[4 * i + 1] != moves2[4 * i + 1])
+          || (moves[4 * i + 2] != moves2[4 * i + 2]));
+      moves[4 * i + 0] =
+          (1 - frac) * moves[4 * i + 0] + frac * moves2[4 * i + 0];
+      moves[4 * i + 1] =
+          (1 - frac) * moves[4 * i + 1] + frac * moves2[4 * i + 1];
+      moves[4 * i + 2] =
+          (1 - frac) * moves[4 * i + 2] + frac * moves2[4 * i + 2];
+      moves[4 * i + 3] =
+          (1 - frac) * moves[4 * i + 3] + frac * moves2[4 * i + 3];
     }
 
     if (!fadeOut)
       for (unsigned int i = 0; i < maxPieceName; i++)
-        if (moves[4*i+3] > 0) moves[4*i+3] = 1;
+        if (moves[4 * i + 3] > 0) moves[4 * i + 3] = 1;
 
   }
 
-  delete [] moves2;
+  delete[] moves2;
 }
 
 float DisassemblyToMoves::getX(unsigned int piece) {
   bt_assert(piece < maxPieceName);
-  return moves[4*piece+0];
+  return moves[4 * piece + 0];
 }
 float DisassemblyToMoves::getY(unsigned int piece) {
   bt_assert(piece < maxPieceName);
-  return moves[4*piece+1];
+  return moves[4 * piece + 1];
 }
 float DisassemblyToMoves::getZ(unsigned int piece) {
   bt_assert(piece < maxPieceName);
-  return moves[4*piece+2];
+  return moves[4 * piece + 2];
 }
 float DisassemblyToMoves::getA(unsigned int piece) {
   bt_assert(piece < maxPieceName);
-  return moves[4*piece+3];
+  return moves[4 * piece + 3];
 }
 bool DisassemblyToMoves::moving(unsigned int piece) {
   bt_assert(piece < maxPieceName);
@@ -107,7 +116,7 @@ static int mabs(int a) {
 }
 
 static int mmax(int a, int b) {
-  if (a>b)
+  if (a > b)
     return a;
   else
     return b;
@@ -124,7 +133,13 @@ static int mmax(int a, int b) {
  *                values are multiplied by this value and then the 2 end points are added
  *    cx, cy, cz are the centre to display the current tree
  */
-int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * array, bool center_active, int cx, int cy, int cz) {
+int DisassemblyToMoves::doRecursive(const Separation *tree,
+                                    int step,
+                                    float *array,
+                                    bool center_active,
+                                    int cx,
+                                    int cy,
+                                    int cz) {
 
   bt_assert(tree);
 
@@ -137,7 +152,7 @@ int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * a
    *
    * in the state the removed part would be removed by 10000 units
    */
-  if ((step >= 0) && ((unsigned int)step >= tree->getMoves())) {
+  if ((step >= 0) && ((unsigned int) step >= tree->getMoves())) {
 
     /* so, this is the path for after the current node, the first thing
      * is to find out in which directions the pieces that are removed
@@ -152,7 +167,7 @@ int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * a
      * take the last state, in this state the removed pieces have a
      * distance grater 1000
      */
-    const State * s = tree->getState(tree->getMoves());
+    const State *s = tree->getState(tree->getMoves());
 
     /* find one of the removed pieces and one of the left pieces */
     unsigned int pc, pc2;
@@ -170,12 +185,12 @@ int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * a
 
     dx = dy = dz = 0;
 
-    if (s->getX(pc) >  10000) dx = size;
-    if (s->getX(pc) < -10000) dx = - size;
-    if (s->getY(pc) >  10000) dy = size;
-    if (s->getY(pc) < -10000) dy = - size;
-    if (s->getZ(pc) >  10000) dz = size;
-    if (s->getZ(pc) < -10000) dz = - size;
+    if (s->getX(pc) > 10000) dx = size;
+    if (s->getX(pc) < -10000) dx = -size;
+    if (s->getY(pc) > 10000) dy = size;
+    if (s->getY(pc) < -10000) dy = -size;
+    if (s->getZ(pc) > 10000) dz = size;
+    if (s->getZ(pc) < -10000) dz = -size;
 
     int steps, steps2;
 
@@ -188,25 +203,40 @@ int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * a
        * otherwise we place the removed part somewhere out of the way
        */
       if (center_active)
-        steps = doRecursive(tree->getRemoved(), step - (int)tree->getMoves(), array, center_active,
-            tree->getState(tree->getMoves()-1)->getX(pc) + cx - tree->getRemoved()->getState(0)->getX(0),
-            tree->getState(tree->getMoves()-1)->getY(pc) + cy - tree->getRemoved()->getState(0)->getY(0),
-            tree->getState(tree->getMoves()-1)->getZ(pc) + cz - tree->getRemoved()->getState(0)->getZ(0));
+        steps = doRecursive(tree->getRemoved(),
+                            step - (int) tree->getMoves(),
+                            array,
+                            center_active,
+                            tree->getState(tree->getMoves() - 1)->getX(pc) + cx
+                                - tree->getRemoved()->getState(0)->getX(0),
+                            tree->getState(tree->getMoves() - 1)->getY(pc) + cy
+                                - tree->getRemoved()->getState(0)->getY(0),
+                            tree->getState(tree->getMoves() - 1)->getZ(pc) + cz
+                                - tree->getRemoved()->getState(0)->getZ(0));
       else
-        steps = doRecursive(tree->getRemoved(), step - (int)tree->getMoves(), array, center_active, cx+dx, cy+dy, cz+dz);
+        steps = doRecursive(tree->getRemoved(),
+                            step - (int) tree->getMoves(),
+                            array,
+                            center_active,
+                            cx + dx,
+                            cy + dy,
+                            cz + dz);
 
     } else {
 
-      const State * s2 = tree->getState(tree->getMoves()-1);
+      const State *s2 = tree->getState(tree->getMoves() - 1);
 
       /* if there is no removed tree, the pieces need to vanish */
       if (array)
         for (unsigned int p = 0; p < tree->getPieceNumber(); p++)
           if (s->pieceRemoved(p)) {
-            array[4*tree->getPieceName(p)+0] += dx+cx+((mabs(s->getX(p))<10000)?(s->getX(p)):(s2->getX(p)));
-            array[4*tree->getPieceName(p)+1] += dy+cy+((mabs(s->getY(p))<10000)?(s->getY(p)):(s2->getY(p)));
-            array[4*tree->getPieceName(p)+2] += dz+cz+((mabs(s->getZ(p))<10000)?(s->getZ(p)):(s2->getZ(p)));
-            array[4*tree->getPieceName(p)+3] += 0;
+            array[4 * tree->getPieceName(p) + 0] += dx + cx
+                + ((mabs(s->getX(p)) < 10000) ? (s->getX(p)) : (s2->getX(p)));
+            array[4 * tree->getPieceName(p) + 1] += dy + cy
+                + ((mabs(s->getY(p)) < 10000) ? (s->getY(p)) : (s2->getY(p)));
+            array[4 * tree->getPieceName(p) + 2] += dz + cz
+                + ((mabs(s->getZ(p)) < 10000) ? (s->getZ(p)) : (s2->getZ(p)));
+            array[4 * tree->getPieceName(p) + 3] += 0;
           }
 
       steps = 0;
@@ -221,19 +251,33 @@ int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * a
        *
        * if we don't use the center_active option, the left over part stays in the middle
        */
-      if (center_active && (step - (int)tree->getMoves() < steps) && (tree->getRemoved()))
-        steps2 = doRecursive(tree->getLeft(), step - (int)tree->getMoves() - steps, array, center_active, cx-dx, cy-dy, cz-dz);
+      if (center_active && (step - (int) tree->getMoves() < steps)
+          && (tree->getRemoved()))
+        steps2 = doRecursive(tree->getLeft(),
+                             step - (int) tree->getMoves() - steps,
+                             array,
+                             center_active,
+                             cx - dx,
+                             cy - dy,
+                             cz - dz);
       else
-        steps2 = doRecursive(tree->getLeft(), step - (int)tree->getMoves() - steps, array, center_active, cx, cy, cz);
+        steps2 = doRecursive(tree->getLeft(),
+                             step - (int) tree->getMoves() - steps,
+                             array,
+                             center_active,
+                             cx,
+                             cy,
+                             cz);
 
       /* if the steps tell us that we are currenlty animating the removed part
        * and there actually _is_ a removed animation, we hide all
        * pieces that are not removed
        */
-      if (array && center_active && (step - (int)tree->getMoves() < steps) && (tree->getRemoved())) {
+      if (array && center_active && (step - (int) tree->getMoves() < steps)
+          && (tree->getRemoved())) {
         for (unsigned int p = 0; p < tree->getPieceNumber(); p++)
           if (!s->pieceRemoved(p)) {
-            array[4*tree->getPieceName(p)+3] = 0;
+            array[4 * tree->getPieceName(p) + 3] = 0;
           }
       }
 
@@ -242,10 +286,10 @@ int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * a
       if (array)
         for (unsigned int p = 0; p < tree->getPieceNumber(); p++)
           if (!s->pieceRemoved(p)) {
-            array[4*tree->getPieceName(p)+0] += cx+s->getX(p);
-            array[4*tree->getPieceName(p)+1] += cy+s->getY(p);
-            array[4*tree->getPieceName(p)+2] += cz+s->getZ(p);
-            array[4*tree->getPieceName(p)+3] += 0;
+            array[4 * tree->getPieceName(p) + 0] += cx + s->getX(p);
+            array[4 * tree->getPieceName(p) + 1] += cy + s->getY(p);
+            array[4 * tree->getPieceName(p) + 2] += cz + s->getZ(p);
+            array[4 * tree->getPieceName(p) + 3] += 0;
           }
 
       steps2 = 0;
@@ -260,29 +304,37 @@ int DisassemblyToMoves::doRecursive(const Separation * tree, int step, float * a
    * we also have to place the pieces at their initial position, when we are
    * before the current node
    */
-  const State * s = tree->getState(mmax(step, 0));
+  const State *s = tree->getState(mmax(step, 0));
 
   if (array)
     for (unsigned int i = 0; i < tree->getPieceNumber(); i++) {
-      array[4*tree->getPieceName(i)+0] += cx+s->getX(i);
-      array[4*tree->getPieceName(i)+1] += cy+s->getY(i);
-      array[4*tree->getPieceName(i)+2] += cz+s->getZ(i);
-      array[4*tree->getPieceName(i)+3] += 1;
+      array[4 * tree->getPieceName(i) + 0] += cx + s->getX(i);
+      array[4 * tree->getPieceName(i) + 1] += cy + s->getY(i);
+      array[4 * tree->getPieceName(i) + 2] += cz + s->getZ(i);
+      array[4 * tree->getPieceName(i) + 3] += 1;
     }
 
-  int steps  = tree->getRemoved() ? doRecursive(tree->getRemoved(), step - tree->getMoves()        , 0, center_active, 0, 0, 0) : 0;
-  int steps2 = tree->getLeft()    ? doRecursive(tree->getLeft()   , step - tree->getMoves() - steps, 0, center_active, 0, 0, 0) : 0;
+  int steps = tree->getRemoved() ? doRecursive(tree->getRemoved(),
+                                               step - tree->getMoves(),
+                                               0,
+                                               center_active,
+                                               0,
+                                               0,
+                                               0) : 0;
+  int steps2 = tree->getLeft() ? doRecursive(tree->getLeft(),
+                                             step - tree->getMoves() - steps,
+                                             0,
+                                             center_active,
+                                             0,
+                                             0,
+                                             0) : 0;
 
   return tree->getMoves() + steps + steps2;
 }
 
-
-
-
-
-
-
-FixedPositions::FixedPositions(const disassemblerNode_c * nd, const std::vector<unsigned int> & pc, unsigned int pcs) {
+FixedPositions::FixedPositions(const disassemblerNode_c *nd,
+                               const std::vector<unsigned int> &pc,
+                               unsigned int pcs) {
 
   pieces = pcs;
   x = new int[pieces];
@@ -301,15 +353,15 @@ FixedPositions::FixedPositions(const disassemblerNode_c * nd, const std::vector<
 
     bt_assert(pi < pieces);
 
-    x[pi] = (int)nd->getX(p);
-    y[pi] = (int)nd->getY(p);
-    z[pi] = (int)nd->getZ(p);
+    x[pi] = (int) nd->getX(p);
+    y[pi] = (int) nd->getY(p);
+    z[pi] = (int) nd->getZ(p);
 
     visible[pi] = true;
   }
 }
 
-FixedPositions::FixedPositions(const FixedPositions * nd) {
+FixedPositions::FixedPositions(const FixedPositions *nd) {
 
   pieces = nd->pieces;
   x = new int[pieces];
@@ -326,15 +378,26 @@ FixedPositions::FixedPositions(const FixedPositions * nd) {
 }
 
 FixedPositions::~FixedPositions() {
-  delete [] x;
-  delete [] y;
-  delete [] z;
-  delete [] visible;
+  delete[] x;
+  delete[] y;
+  delete[] z;
+  delete[] visible;
 }
 
-float FixedPositions::getX(unsigned int piece) { bt_assert(piece < pieces); return x[piece]; }
-float FixedPositions::getY(unsigned int piece) { bt_assert(piece < pieces); return y[piece]; }
-float FixedPositions::getZ(unsigned int piece) { bt_assert(piece < pieces); return z[piece]; }
-float FixedPositions::getA(unsigned int piece) { return visible[piece] ? 1 : 0; }
+float FixedPositions::getX(unsigned int piece) {
+  bt_assert(piece < pieces);
+  return x[piece];
+}
+float FixedPositions::getY(unsigned int piece) {
+  bt_assert(piece < pieces);
+  return y[piece];
+}
+float FixedPositions::getZ(unsigned int piece) {
+  bt_assert(piece < pieces);
+  return z[piece];
+}
+float FixedPositions::getA(unsigned int piece) {
+  return visible[piece] ? 1 : 0;
+}
 bool FixedPositions::moving(unsigned int /*piece*/) { return false; }
 

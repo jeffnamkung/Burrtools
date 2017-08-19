@@ -25,23 +25,31 @@
 #include "problem.h"
 #include "disassembly.h"
 #include "assembly.h"
-#include "assert.h"
 
-void print(const Voxel * v, char base) {
+void print(const Voxel *v, char base) {
   for (unsigned int z = 0; z < v->getZ(); z++) {
     printf(" +");
     for (unsigned int x = 0; x < v->getX(); x++)
       printf("-");
     printf("+");
   }
-  printf(" bx %i-%i by %i-%i bz %i-%i h: %i %i %i \n", v->boundX1(), v->boundX2(), v->boundY1(), v->boundY2(), v->boundZ1(), v->boundZ2(), v->getHx(), v->getHy(), v->getHz());
+  printf(" bx %i-%i by %i-%i bz %i-%i h: %i %i %i \n",
+         v->boundX1(),
+         v->boundX2(),
+         v->boundY1(),
+         v->boundY2(),
+         v->boundZ1(),
+         v->boundZ2(),
+         v->getHx(),
+         v->getHy(),
+         v->getHz());
 
   for (unsigned int y = 0; y < v->getY(); y++) {
     for (unsigned int z = 0; z < v->getZ(); z++) {
       printf(" !");
       for (unsigned int x = 0; x < v->getX(); x++)
         if (v->get(x, y, z) != 0)
-          printf("%c", base + v->get(x, y, z)-1);
+          printf("%c", base + v->get(x, y, z) - 1);
         else
           printf(" ");
       printf("!");
@@ -49,7 +57,8 @@ void print(const Voxel * v, char base) {
     printf("\n");
   }
 
-  { for (unsigned int z = 0; z < v->getZ(); z++) {
+  {
+    for (unsigned int z = 0; z < v->getZ(); z++) {
       printf(" +");
       for (unsigned int x = 0; x < v->getX(); x++)
         printf("-");
@@ -59,7 +68,7 @@ void print(const Voxel * v, char base) {
   printf("\n");
 }
 
-void print(const Puzzle * p) {
+void print(const Puzzle *p) {
 
   for (unsigned int s = 0; s < p->shapeNumber(); s++) {
     printf("shape %i:\n", s);
@@ -70,7 +79,7 @@ void print(const Puzzle * p) {
 
   for (unsigned int pr = 0; pr < p->problemNumber(); pr++) {
 
-    const Problem * prob = p->getProblem(pr);
+    const Problem *prob = p->getProblem(pr);
 
     printf("problem %i (%s):\n", pr, prob->getName().c_str());
     if (!prob->resultValid())
@@ -80,9 +89,14 @@ void print(const Puzzle * p) {
 
     for (unsigned int sh = 0; sh < prob->partNumber(); sh++)
       if (prob->getShapeMin(sh) != prob->getShapeMax(sh))
-        printf(" piece shape: %i-%i times shape number %i\n", prob->getShapeMin(sh), prob->getShapeMax(sh), prob->getShape(sh));
+        printf(" piece shape: %i-%i times shape number %i\n",
+               prob->getShapeMin(sh),
+               prob->getShapeMax(sh),
+               prob->getShape(sh));
       else if (prob->getShapeMin(sh) != 1)
-        printf(" piece shape: %i times shape number %i\n", prob->getShapeMin(sh), prob->getShape(sh));
+        printf(" piece shape: %i times shape number %i\n",
+               prob->getShapeMin(sh),
+               prob->getShape(sh));
       else
         printf(" piece shape: %i\n", prob->getShape(sh));
 
@@ -90,30 +104,36 @@ void print(const Puzzle * p) {
   }
 }
 
-static void print_rec(const Separation * s, Voxel ** pieces, int sx, int sy, int sz, unsigned int * pieceNum) {
+static void print_rec(const Separation *s,
+                      Voxel **pieces,
+                      int sx,
+                      int sy,
+                      int sz,
+                      unsigned int *pieceNum) {
 
   for (unsigned int i = 0; i <= s->getMoves(); i++) {
 
-    const State * st = s->getState(i);
+    const State *st = s->getState(i);
 
-    for (int z = -sz/2; z < sz+sz/2; z++) {
+    for (int z = -sz / 2; z < sz + sz / 2; z++) {
       printf(" +");
-      for (int x = -sx/2; x < sx+sx/2; x++)
+      for (int x = -sx / 2; x < sx + sx / 2; x++)
         printf("-");
       printf("+");
     }
     printf("\n");
 
-    for (int y = -sy/2; y < sy+sy/2; y++) {
-      for (int z = -sz/2; z < sz+sz/2; z++) {
+    for (int y = -sy / 2; y < sy + sy / 2; y++) {
+      for (int z = -sz / 2; z < sz + sz / 2; z++) {
         printf(" !");
-        for (int x = -sx/2; x < sx+sx/2; x++) {
+        for (int x = -sx / 2; x < sx + sx / 2; x++) {
           char c = ' ';
 
           for (unsigned int pc = 0; pc < s->getPieceNumber(); pc++)
             if (pieces[pc]->isFilled2(x - (st->getX(pc) - pieces[pc]->getHx()),
                                       y - (st->getY(pc) - pieces[pc]->getHy()),
-                                      z - (st->getZ(pc) - pieces[pc]->getHz()))) {
+                                      z - (st->getZ(pc)
+                                          - pieces[pc]->getHz()))) {
               c = 'a' + pieceNum[pc];
               break;
             }
@@ -125,9 +145,10 @@ static void print_rec(const Separation * s, Voxel ** pieces, int sx, int sy, int
       printf("\n");
     }
 
-    { for (int z = -sz/2; z < sz+sz/2; z++) {
+    {
+      for (int z = -sz / 2; z < sz + sz / 2; z++) {
         printf(" +");
-        for (int x = -sx/2; x < sx+sx/2; x++)
+        for (int x = -sx / 2; x < sx + sx / 2; x++)
           printf("-");
         printf("+");
       }
@@ -139,7 +160,7 @@ static void print_rec(const Separation * s, Voxel ** pieces, int sx, int sy, int
 
   if (s->getRemoved()) {
 
-    unsigned int * pieceNum2 = new unsigned int [s->getPieceNumber()];
+    unsigned int *pieceNum2 = new unsigned int[s->getPieceNumber()];
 
     int pos = 0;
     for (unsigned int i = 0; i < s->getPieceNumber(); i++)
@@ -148,11 +169,11 @@ static void print_rec(const Separation * s, Voxel ** pieces, int sx, int sy, int
 
     print_rec(s->getRemoved(), pieces, sx, sy, sz, pieceNum2);
 
-    delete [] pieceNum2;
+    delete[] pieceNum2;
   }
   if (s->getLeft()) {
 
-    unsigned int * pieceNum2 = new unsigned int [s->getPieceNumber()];
+    unsigned int *pieceNum2 = new unsigned int[s->getPieceNumber()];
 
     int pos = 0;
     for (unsigned int i = 0; i < s->getPieceNumber(); i++)
@@ -161,17 +182,17 @@ static void print_rec(const Separation * s, Voxel ** pieces, int sx, int sy, int
 
     print_rec(s->getLeft(), pieces, sx, sy, sz, pieceNum2);
 
-    delete [] pieceNum2;
+    delete[] pieceNum2;
   }
 }
 
-void print(const Separation * s, const Assembly * a, const Problem * p) {
+void print(const Separation *s, const Assembly *a, const Problem *p) {
 
   bt_assert(p->resultValid());
 
-  const Voxel * res = p->getResultShape();
+  const Voxel *res = p->getResultShape();
 
-  Voxel ** pieces = new Voxel *[a->placementCount()];
+  Voxel **pieces = new Voxel *[a->placementCount()];
 
   unsigned int pc = 0;
 
@@ -183,7 +204,7 @@ void print(const Separation * s, const Assembly * a, const Problem * p) {
       pc++;
     }
 
-  unsigned int * pieceNum = new unsigned int [a->placementCount()];
+  unsigned int *pieceNum = new unsigned int[a->placementCount()];
   for (unsigned int i = 0; i < a->placementCount(); i++)
     pieceNum[i] = i;
 
@@ -192,17 +213,17 @@ void print(const Separation * s, const Assembly * a, const Problem * p) {
   for (unsigned int pc = 0; pc < a->placementCount(); pc++)
     delete pieces[pc];
 
-  delete [] pieceNum;
-  delete [] pieces;
+  delete[] pieceNum;
+  delete[] pieces;
 }
 
-void print(const Assembly * a, const Problem * p) {
+void print(const Assembly *a, const Problem *p) {
 
   bt_assert(p->resultValid());
 
-  const Voxel * res = p->getResultShape();
+  const Voxel *res = p->getResultShape();
 
-  Voxel ** pieces = new Voxel *[a->placementCount()];
+  Voxel **pieces = new Voxel *[a->placementCount()];
 
   unsigned int pc = 0;
 
@@ -255,7 +276,8 @@ void print(const Assembly * a, const Problem * p) {
     printf("\n");
   }
 
-  { for (unsigned int z = 0; z < res->getZ(); z++) {
+  {
+    for (unsigned int z = 0; z < res->getZ(); z++) {
       printf(" +");
       for (unsigned int x = 0; x < res->getX(); x++)
         printf("-");
@@ -268,5 +290,5 @@ void print(const Assembly * a, const Problem * p) {
     if (pieces[pc])
       delete pieces[pc];
 
-  delete [] pieces;
+  delete[] pieces;
 }

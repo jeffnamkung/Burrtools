@@ -28,21 +28,20 @@
 #include "bt_assert.h"
 
 #include <stdint.h>
+#include <memory>
 #include <vector>
 #include <set>
 #include <string>
 
-#include <stdint.h>
-
 class Voxel;
 class Separation;
-class separationInfo_c;
+class SeparationInfo;
 class Disassembly;
 class Assembly;
 class GridType;
 class Puzzle;
 class part_c;
-class solution_c;
+class Solution;
 class XmlWriter;
 class XmlParser;
 
@@ -56,7 +55,6 @@ typedef enum {
   SS_UNKNOWN
 } solveState_e;
 
-
 /**
  * This class defines a problem,
  *
@@ -69,12 +67,12 @@ typedef enum {
  */
 class Problem {
 
-private:
+ private:
 
   /**
    * the puzzle this problem belongs to, it must always be there
    */
-  Puzzle & puzzle;
+  Puzzle &puzzle;
 
   /**
    * the pieces for this problem and how many of the pieces
@@ -93,7 +91,7 @@ private:
    * in this vector if the user decides to only count, or not keep them
    * all. This vector contains the solutions that were kept
    */
-  std::vector<solution_c*> solutions;
+  std::vector<std::unique_ptr<Solution>> solutions_;
 
   /**
    * this set contains the pairs of colours that are allowed when a piece
@@ -108,7 +106,7 @@ private:
    * if the pointer is 0 we have never started an assembly process within this session
    * statistics can be found in the assembler, too
    */
-  AssemblerInterface * assm;
+  AssemblerInterface *assm;
 
   /**
    * the name of the problem, so that the user can easily select one
@@ -167,20 +165,20 @@ private:
   /** called, when the problem gets changed */
   void editProblem(void);
 
-public:
+ public:
 
   /**
    * constructor: create new empty problem for the given puzzle
    */
-  Problem(Puzzle & puz);
+  Problem(Puzzle &puz);
   /**
    * constructor: load a problem from the given XML node for the given puzzle
    */
-  Problem(Puzzle & puz, XmlParser & pars);
+  Problem(Puzzle &puz, XmlParser &pars);
   /**
    * constructor: copy the given problem, except for label and solutions
    */
-  Problem(const Problem * prob, Puzzle & puz);
+  Problem(const Problem *prob, Puzzle &puz);
 
   /**
    * destructor: free all resources
@@ -190,23 +188,23 @@ public:
   /**
    * save the problem into the returned XML node
    */
-  void save(XmlWriter & xml) const;
+  void save(XmlWriter &xml) const;
 
   /**
    * return the current set grid type for this puzzle.
    * the grid type is taken from the puzzle this problem belongs to
    */
-  const GridType * getGridType(void) const;
+  const GridType *getGridType(void) const;
   /**
    * return the current set grid type for this puzzle.
    * the grid type is taken from the puzzle this problem belongs to
    */
-  GridType * getGridType(void);
+  GridType *getGridType(void);
 
   /**
    * get the name of the problem.
    */
-  const std::string & getName(void) const { return name; }
+  const std::string &getName(void) const { return name; }
   /**
    * set the name of the problem.
    */
@@ -233,12 +231,12 @@ public:
    * get the voxel space of the result shape.
    * Make sure to only call getResultId[Shape] when you know that the shape is valid
    */
-  const Voxel * getResultShape(void) const;
+  const Voxel *getResultShape(void) const;
   /**
    * get the voxel space of the result shape.
    * Make sure to only call getResultId[Shape] when you know that the shape is valid
    */
-  Voxel * getResultShape(void);
+  Voxel *getResultShape(void);
   //@}
 
   /** \name problem piece handling
@@ -297,9 +295,9 @@ public:
   /** piece number that shape has in this problem */
   unsigned int getShapeId(unsigned int shape) const;
   /** get the voxel space for a given piece */
-  const Voxel * getShapeShape(unsigned int piece) const;
+  const Voxel *getShapeShape(unsigned int piece) const;
   /** get the voxel space for a given piece */
-  Voxel * getShapeShape(unsigned int piece);
+  Voxel *getShapeShape(unsigned int piece);
   /** swap the 2 pieces in the piece list of the problem */
   void exchangeShape(unsigned int p1, unsigned int p2);
   /** the 2 shapes have been swapped in the puzzle, swap them here as well */
@@ -346,13 +344,16 @@ public:
    */
   //@{
   /** set the group and a count for the piece */
-  void setShapeGroup(unsigned int piece, unsigned short group, unsigned short count);
+  void setShapeGroup(unsigned int piece,
+                     unsigned short group,
+                     unsigned short count);
   /** get the number of groups that a piece is a member of */
   unsigned short getShapeGroupNumber(unsigned int piece) const;
   /** get the x-th group that a piece is a member of */
   unsigned short getShapeGroup(unsigned int piece, unsigned int groupID) const;
   /** find out how many instances of the piece may be a member of the x-th group */
-  unsigned short getShapeGroupCount(unsigned int piece, unsigned int groupID) const;
+  unsigned short getShapeGroupCount(unsigned int piece,
+                                    unsigned int groupID) const;
   //@}
 
   /** \name functions to limit the number of holes a solution is allowed to have. */
@@ -360,9 +361,15 @@ public:
   /** find out the the number is defined, if not there is no limit */
   bool maxHolesDefined(void) const { return maxHoles != 0xFFFFFFFF; }
   /** get the number (only when it is defined) */
-  unsigned int getMaxHoles(void) const { bt_assert(maxHoles != 0xFFFFFFFF); return maxHoles; }
+  unsigned int getMaxHoles(void) const {
+    bt_assert(maxHoles != 0xFFFFFFFF);
+    return maxHoles;
+  }
   /** set the number to a valid value */
-  void setMaxHoles(unsigned int value) { bt_assert(value < 0xFFFFFFFF); maxHoles = value; }
+  void setMaxHoles(unsigned int value) {
+    bt_assert(value < 0xFFFFFFFF);
+    maxHoles = value;
+  }
   /** invalidate the value */
   void setMaxHolesInvalid() { maxHoles = 0xFFFFFFFF; }
   //@}
@@ -409,27 +416,40 @@ public:
    * The set assembler will be reset to a saved state, when that information is
    * available. If not simply set the assembler
    */
-  AssemblerInterface::errState setAssembler(AssemblerInterface * assm);
+  AssemblerInterface::errState setAssembler(AssemblerInterface *assm);
   /** get the assembler */
-  AssemblerInterface * getAssembler() { return assm; }
+  AssemblerInterface *getAssembler() { return assm; }
   /** get the assembler */
-  const AssemblerInterface * getAssembler(void) const { return assm; }
+  const AssemblerInterface *getAssembler(void) const { return assm; }
   /** call this for each found assembly */
-  void incNumAssemblies() { bt_assert(solveState == SS_SOLVING); numAssemblies++; }
+  void incNumAssemblies() {
+    bt_assert(solveState == SS_SOLVING);
+    numAssemblies++;
+  }
   /** call this for each found solution */
-  void incNumSolutions() { bt_assert(solveState == SS_SOLVING); numSolutions++; }
+  void incNumSolutions() {
+    bt_assert(solveState == SS_SOLVING);
+    numSolutions++;
+  }
   /** add time used to solve the puzzle (in seconds) the value is added to the already accumulated time. */
-  void addTime(unsigned long time) { bt_assert(solveState == SS_SOLVING); usedTime += time; }
+  void addTime(unsigned long time) {
+    bt_assert(solveState == SS_SOLVING);
+    usedTime += time;
+  }
   /** add an assembly as a solution */
-  void addSolution(Assembly * assm);
+  void addSolution(Assembly *assm);
   /** add an assembly with disassembly information as a solution.
    * You can give the index, where to add it. This defaults to the end of the list
    */
-  void addSolution(Assembly * assm, separationInfo_c * disasm, unsigned int pos = 0xFFFFFFFF);
+  void addSolution(Assembly *assm,
+                   SeparationInfo *disasm,
+                   unsigned int pos = 0xFFFFFFFF);
   /** add an assembly with disassembly proper as a solution.
    * You can give the index, where to add it. This defaults to the end of the list
    */
-  void addSolution(Assembly * assm, Separation * disasm, unsigned int pos = 0xFFFFFFFF);
+  void addSolution(Assembly *assm,
+                   Separation *disasm,
+                   unsigned int pos = 0xFFFFFFFF);
   /** once finished analysing call finishedSolving for finish off all actions.
    * After that call no more modifications are possible, no more addSOlution, incNumAssemblies and so on.
    * */
@@ -452,20 +472,35 @@ public:
   /** find out if we have an idea about the number of assemblies */
   bool numAssembliesKnown(void) const { return solveState != SS_UNSOLVED; }
   /** get number of assemblies found so far. Throws an exception, when not known */
-  unsigned long getNumAssemblies(void) const { bt_assert(solveState != SS_UNSOLVED); return numAssemblies; }
+  unsigned long getNumAssemblies(void) const {
+    bt_assert(solveState != SS_UNSOLVED);
+    return numAssemblies;
+  }
   /** find out if we have an idea about the number of solutions */
   bool numSolutionsKnown(void) const { return solveState != SS_UNSOLVED; }
   /** get number of solutions found so far. Throws an exception, when not known */
-  unsigned long getNumSolutions(void) const { bt_assert(solveState != SS_UNSOLVED); return numSolutions; }
+  unsigned long getNumSolutions(void) const {
+    bt_assert(solveState != SS_UNSOLVED);
+    return numSolutions;
+  }
   /** find out, if we know something about the time for solving the puzzle */
   bool usedTimeKnown(void) const { return solveState != SS_UNSOLVED; }
   /** find out the time used to solve the puzzle up to the current state. Throws an exception when unknown */
-  unsigned long getUsedTime(void) const { bt_assert(solveState != SS_UNSOLVED); return usedTime; }
+  unsigned long getUsedTime(void) const {
+    bt_assert(solveState != SS_UNSOLVED);
+    return usedTime;
+  }
   /** get number of solutions that were stored */
-  unsigned int solutionNumber(void) const { return solutions.size(); }
+  unsigned int solutionNumber(void) const { return solutions_.size(); }
 
-  const solution_c * getSolution(unsigned int sol) const { bt_assert(sol < solutions.size()); return solutions[sol]; }
-  solution_c * getSolution(unsigned int sol) { bt_assert(sol < solutions.size()); return solutions[sol]; }
+  const Solution *getSolution(unsigned int sol) const {
+    bt_assert(sol < solutions_.size());
+    return solutions_[sol].get();
+  }
+  Solution *getSolution(unsigned int sol) {
+    bt_assert(sol < solutions_.size());
+    return solutions_[sol].get();
+  }
   //@}
 
 
@@ -478,7 +513,7 @@ public:
   void sortSolutions(int by);
   //@}
 
-private:
+ private:
 
   // no copying and assigning
   Problem(const Problem &);

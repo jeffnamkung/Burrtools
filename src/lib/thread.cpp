@@ -25,8 +25,7 @@ Thread::~Thread() {
   kill();
 }
 
-void Thread::start_thread(void)
-{
+void Thread::start_thread(void) {
   running = true;
   run();
   running = false;
@@ -39,8 +38,7 @@ bool Thread::start() {
 
   bool result = thread.get_id() != boost::thread::id();
 
-  if (!result)
-  {
+  if (!result) {
     running = false;
   }
 

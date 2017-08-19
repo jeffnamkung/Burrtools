@@ -42,24 +42,24 @@ static int transMult[NUM_TRANSFORMATIONS_MIRROR][NUM_TRANSFORMATIONS_MIRROR];
 /* this array contains all possible symmetry groups, meaning bitmasks with exactly the bits set
  * that correspond to transformations tha reorient the piece so that it looks identical
  */
-static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> symmetries[NUM_SYMMETRY_GROUPS] = {
+static const bitfield_c<NUM_TRANSFORMATIONS_MIRROR>
+    symmetries[NUM_SYMMETRY_GROUPS] = {
 #include "symmetries.inc"
 };
 
-const char * longlong2string(unsigned long long s) {
+const char *longlong2string(unsigned long long s) {
   char hex[17] = "0123456789ABCDEF";
   static char output[100];
 
-
   for (int i = 0; i < 12; i++)
-     output[11-i] = hex[(s >> (4*i)) & 0xF];
+    output[11 - i] = hex[(s >> (4 * i)) & 0xF];
 
   output[12] = 0;
 
   return output;
 }
 
-unsigned char ssss(int trans, const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> & s) {
+unsigned char ssss(int trans, const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> &s) {
   for (int t = 0; t < trans; t++)
     for (int t2 = 0; t2 < NUM_TRANSFORMATIONS_MIRROR; t2++)
       if (s.get(t2)) {
@@ -72,20 +72,19 @@ unsigned char ssss(int trans, const bitfield_c<NUM_TRANSFORMATIONS_MIRROR> & s) 
   return trans;
 }
 
-
 /* this function creates the lookup table for the function in the symmetry c-file */
 void outputMinimumSymmetries() {
 
-  FILE * out = fopen("transformmini.inc", "w");
+  FILE *out = fopen("transformmini.inc", "w");
 
   for (int sy = 0; sy < NUM_SYMMETRY_GROUPS; sy++) {
     fprintf(out, "  {");
     for (int trans = 0; trans < NUM_TRANSFORMATIONS_MIRROR; trans++) {
-      fprintf(out,"%2i", ssss(trans, symmetries[sy]));
-      if (trans < NUM_TRANSFORMATIONS_MIRROR-1)
+      fprintf(out, "%2i", ssss(trans, symmetries[sy]));
+      if (trans < NUM_TRANSFORMATIONS_MIRROR - 1)
         fprintf(out, ",");
     }
-    if (sy < NUM_SYMMETRY_GROUPS-1)
+    if (sy < NUM_SYMMETRY_GROUPS - 1)
       fprintf(out, "},\n");
     else
       fprintf(out, "}\n");
@@ -102,7 +101,7 @@ void outputMinimumSymmetries() {
 
 void outputCompleteSymmetries() {
 
-  FILE * fout = fopen("unifiedsym.inc", "w");
+  FILE *fout = fopen("unifiedsym.inc", "w");
 
   for (int sy = 0; sy < NUM_SYMMETRY_GROUPS; sy++) {
 
@@ -139,8 +138,7 @@ void outputCompleteSymmetries() {
     char line[100];
     out.print(line, 100);
 
-
-    fprintf(fout, "  \"%s\",\n", line+4);
+    fprintf(fout, "  \"%s\",\n", line + 4);
   }
 
   fclose(fout);
@@ -151,7 +149,7 @@ void outputCompleteSymmetries() {
  */
 void outputUniqueSymmetries() {
 
-  FILE * fout = fopen("uniquesym.inc", "w");
+  FILE *fout = fopen("uniquesym.inc", "w");
 
   for (int sy = 0; sy < NUM_SYMMETRY_GROUPS; sy++) {
 
@@ -159,16 +157,12 @@ void outputUniqueSymmetries() {
     bitfield_c<NUM_TRANSFORMATIONS_MIRROR> ttt;
     bitfield_c<NUM_TRANSFORMATIONS_MIRROR> out;
 
-    for (int r = 0; r < NUM_TRANSFORMATIONS_MIRROR; r++)
-    {
-      if (!ttt.get(r))
-      {
+    for (int r = 0; r < NUM_TRANSFORMATIONS_MIRROR; r++) {
+      if (!ttt.get(r)) {
         out.set(r);
 
-        for (int r2 = 0; r2 < NUM_TRANSFORMATIONS_MIRROR; r2++)
-        {
-          if (s.get(r2))
-          {
+        for (int r2 = 0; r2 < NUM_TRANSFORMATIONS_MIRROR; r2++) {
+          if (s.get(r2)) {
             if (transMult[r2][r] >= 0)
               ttt.set(transMult[r2][r]);
           }
@@ -178,19 +172,19 @@ void outputUniqueSymmetries() {
     char line[100];
     out.print(line, 100);
 
-    fprintf(fout, "  \"%s\",\n", line+4);
+    fprintf(fout, "  \"%s\",\n", line + 4);
   }
 
   fclose(fout);
 }
 
-
-
 /* this function creates a decision tree for symmetry creation trying to optimize for the
  * lowest number of checks (6-7 should be possible, if we can subdivide each time#
  * with nearly equal subparts
  */
-void makeSymmetryTree(bitfield_c<NUM_TRANSFORMATIONS_MIRROR> taken,bitfield_c<NUM_TRANSFORMATIONS_MIRROR> val, FILE * out) {
+void makeSymmetryTree(bitfield_c<NUM_TRANSFORMATIONS_MIRROR> taken,
+                      bitfield_c<NUM_TRANSFORMATIONS_MIRROR> val,
+                      FILE *out) {
 
   /* greedy implementation: find the subdivision that is most equal */
   int best_div = -100;
@@ -218,13 +212,16 @@ void makeSymmetryTree(bitfield_c<NUM_TRANSFORMATIONS_MIRROR> taken,bitfield_c<NU
         return;
       }
 
-      if ((b2 > 0) && (b1-b2>0) && (abs(b1/2 - best_div) > abs(b1/2 - b2))) {
+      if ((b2 > 0) && (b1 - b2 > 0)
+          && (abs(b1 / 2 - best_div) > abs(b1 / 2 - b2))) {
         best_div = b2;
         best_bit = t;
       }
     }
 
-  fprintf(out, "voxel_2_c v(pp);\nif (v.transform(%i) && pp->identicalInBB(&v)) {\n", best_bit);
+  fprintf(out,
+          "voxel_2_c v(pp);\nif (v.transform(%i) && pp->identicalInBB(&v)) {\n",
+          best_bit);
 
   taken.set(best_bit);
   val.set(best_bit);
@@ -239,15 +236,15 @@ void makeSymmetryTree(bitfield_c<NUM_TRANSFORMATIONS_MIRROR> taken,bitfield_c<NU
 
 }
 
-void mmult(double * m, int num) {
+void mmult(double *m, int num) {
 
   double n[9];
 
   for (int x = 0; x < 3; x++)
     for (int y = 0; y < 3; y++) {
-      n[y*3+x] = 0;
+      n[y * 3 + x] = 0;
       for (int c = 0; c < 3; c++) {
-        n[y*3+x] += m[c*3+x]*matrix[num][y*3+c];
+        n[y * 3 + x] += m[c * 3 + x] * matrix[num][y * 3 + c];
       }
     }
 
@@ -258,20 +255,18 @@ void mmult(double * m, int num) {
 bool mequal(double *m, int num) {
 
   for (int i = 0; i < 9; i++)
-    if (fabs(m[i]-matrix[num][i]) > 0.00001)
+    if (fabs(m[i] - matrix[num][i]) > 0.00001)
       return false;
 
   return true;
 }
 
-
 void multTranformationsMatrix() {
 
-  FILE * out = fopen("transmult.inc", "w");
+  FILE *out = fopen("transmult.inc", "w");
 
   for (int tr1 = 0; tr1 < NUM_TRANSFORMATIONS_MIRROR; tr1++) {
     fprintf(out, "{");
-
 
     for (int tr2 = 0; tr2 < NUM_TRANSFORMATIONS_MIRROR; tr2++) {
 
@@ -287,7 +282,7 @@ void multTranformationsMatrix() {
       for (int t = 0; t < NUM_TRANSFORMATIONS_MIRROR; t++) {
 
         if (mequal(m, t)) {
-          if (tr2 < NUM_TRANSFORMATIONS_MIRROR-1)
+          if (tr2 < NUM_TRANSFORMATIONS_MIRROR - 1)
             fprintf(out, "%3i,", t);
           else
             fprintf(out, "%3i", t);
@@ -298,7 +293,7 @@ void multTranformationsMatrix() {
       }
 
       if (!found) {
-        if (tr2 < NUM_TRANSFORMATIONS_MIRROR-1)
+        if (tr2 < NUM_TRANSFORMATIONS_MIRROR - 1)
           fprintf(out, "TND,");
         else
           fprintf(out, "TND");
@@ -306,7 +301,7 @@ void multTranformationsMatrix() {
       }
 
     }
-    if (tr1 < NUM_TRANSFORMATIONS_MIRROR-1)
+    if (tr1 < NUM_TRANSFORMATIONS_MIRROR - 1)
       fprintf(out, "},\n");
     else
       fprintf(out, "}\n");
@@ -314,14 +309,14 @@ void multTranformationsMatrix() {
   fclose(out);
 }
 
-int main(int /*argv*/, char** /*args[]*/) {
+int main(int /*argv*/, char ** /*args[]*/) {
 
   multTranformationsMatrix();
   outputMinimumSymmetries();
   outputCompleteSymmetries();
   outputUniqueSymmetries();
 
-  FILE * out = fopen("symcalc.inc", "w");
+  FILE *out = fopen("symcalc.inc", "w");
   makeSymmetryTree("0", "0", out);
   fclose(out);
 }

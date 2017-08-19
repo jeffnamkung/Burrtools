@@ -36,7 +36,7 @@ class disassemblerNode_c;
  */
 class SimpleDisassembler : public BaseDisassembler {
 
-private:
+ private:
 
   /**
    * The real disassembly routine.
@@ -49,14 +49,15 @@ private:
    * pieces contains the names of all the pieces that are still inside the
    * subpuzzle puzzle, start defines the starting position of these pieces
    */
-  Separation * disassemble_rec(const std::vector<unsigned int> & pieces, disassemblerNode_c * start);
+  Separation *disassemble_rec(const std::vector<unsigned int> &pieces,
+                              disassemblerNode_c *start);
 
-public:
+ public:
 
-  SimpleDisassembler(const Problem * puz) : BaseDisassembler(puz) { }
-  ~SimpleDisassembler() { }
+  SimpleDisassembler(const Problem *puz) : BaseDisassembler(puz) {}
+  ~SimpleDisassembler() {}
 
-private:
+ private:
 
   // no copying and assigning
   SimpleDisassembler(const SimpleDisassembler &);

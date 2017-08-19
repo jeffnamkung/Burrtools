@@ -27,22 +27,21 @@ nodeHash::nodeHash() {
   tab_size = 11;
   tab_entries = 0;
 
-  tab = new disassemblerNode_c* [tab_size];
+  tab = new disassemblerNode_c *[tab_size];
 
-  memset(tab, 0, tab_size*sizeof(disassemblerNode_c*));
+  memset(tab, 0, tab_size * sizeof(disassemblerNode_c *));
 }
 
 nodeHash::~nodeHash() {
   clear();
 
-  delete [] tab;
+  delete[] tab;
 }
 
-void nodeHash::clear(void)
-{
+void nodeHash::clear(void) {
   for (unsigned int i = 0; i < tab_size; i++) {
     while (tab[i]) {
-      disassemblerNode_c * n = tab[i];
+      disassemblerNode_c *n = tab[i];
       tab[i] = n->next;
 
       if (n->decRefCount())
@@ -53,11 +52,11 @@ void nodeHash::clear(void)
   tab_entries = 0;
 }
 
-const disassemblerNode_c * nodeHash::insert(disassemblerNode_c * n) {
+const disassemblerNode_c *nodeHash::insert(disassemblerNode_c *n) {
 
   unsigned long h = n->hash() % tab_size;
 
-  disassemblerNode_c * hn = tab[h];
+  disassemblerNode_c *hn = tab[h];
 
   while (hn) {
     if (*hn == *n) {
@@ -86,12 +85,12 @@ const disassemblerNode_c * nodeHash::insert(disassemblerNode_c * n) {
 
     unsigned long new_size = tab_size * 4 + 1;
 
-    disassemblerNode_c ** new_tab = new disassemblerNode_c* [new_size];
-    memset(new_tab, 0, new_size*sizeof(disassemblerNode_c*));
+    disassemblerNode_c **new_tab = new disassemblerNode_c *[new_size];
+    memset(new_tab, 0, new_size * sizeof(disassemblerNode_c *));
 
     for (unsigned int i = 0; i < tab_size; i++) {
       while (tab[i]) {
-        disassemblerNode_c * n = tab[i];
+        disassemblerNode_c *n = tab[i];
         tab[i] = n->next;
         unsigned long h = n->hash() % new_size;
         n->next = new_tab[h];
@@ -107,10 +106,10 @@ const disassemblerNode_c * nodeHash::insert(disassemblerNode_c * n) {
   return 0;
 }
 
-bool nodeHash::contains(const disassemblerNode_c * n) const {
+bool nodeHash::contains(const disassemblerNode_c *n) const {
   unsigned long h = n->hash() % tab_size;
 
-  disassemblerNode_c * hn = tab[h];
+  disassemblerNode_c *hn = tab[h];
 
   while (hn) {
     if (*hn == *n)
@@ -122,16 +121,14 @@ bool nodeHash::contains(const disassemblerNode_c * n) const {
   return false;
 }
 
-
-
 countingNodeHash::countingNodeHash() {
 
   tab_size = 100;
   tab_entries = 0;
 
-  tab = new hashNode * [tab_size];
+  tab = new hashNode *[tab_size];
 
-  memset(tab, 0, tab_size*sizeof(hashNode*));
+  memset(tab, 0, tab_size * sizeof(hashNode *));
 
   scanPtr = 0;
   scanActive = false;
@@ -139,19 +136,17 @@ countingNodeHash::countingNodeHash() {
   linkStart = 0;
 }
 
-countingNodeHash::~countingNodeHash(void)
-{
+countingNodeHash::~countingNodeHash(void) {
   clear();
-  delete [] tab;
+  delete[] tab;
 }
 
 /* delete all nodes and empty table for new usage */
-void countingNodeHash::clear(void)
-{
-  hashNode * hn = linkStart;
+void countingNodeHash::clear(void) {
+  hashNode *hn = linkStart;
 
   while (hn) {
-    hashNode * hn2 = hn->link;
+    hashNode *hn2 = hn->link;
 
     if (hn->dat->decRefCount())
       delete hn->dat;
@@ -161,16 +156,16 @@ void countingNodeHash::clear(void)
     hn = hn2;
   }
 
-  memset(tab, 0, tab_size*sizeof(hashNode*));
+  memset(tab, 0, tab_size * sizeof(hashNode *));
   tab_entries = 0;
   linkStart = 0;
 }
 
-bool countingNodeHash::insert(disassemblerNode_c * n) {
+bool countingNodeHash::insert(disassemblerNode_c *n) {
 
   unsigned long h = n->hash() % tab_size;
 
-  hashNode * hn = tab[h];
+  hashNode *hn = tab[h];
 
   while (hn) {
     if (*(hn->dat) == *n)
@@ -196,12 +191,12 @@ bool countingNodeHash::insert(disassemblerNode_c * n) {
 
     unsigned long new_size = tab_size * 4 + 1;
 
-    hashNode ** new_tab = new hashNode* [new_size];
-    memset(new_tab, 0, new_size*sizeof(hashNode*));
+    hashNode **new_tab = new hashNode *[new_size];
+    memset(new_tab, 0, new_size * sizeof(hashNode *));
 
     for (unsigned int i = 0; i < tab_size; i++) {
       while (tab[i]) {
-        hashNode * hn = tab[i];
+        hashNode *hn = tab[i];
         tab[i] = hn->next;
         unsigned long h = hn->dat->hash() % new_size;
         hn->next = new_tab[h];
@@ -225,7 +220,7 @@ void countingNodeHash::initScan() {
   scanActive = true;
 }
 
-const disassemblerNode_c * countingNodeHash::nextScan() {
+const disassemblerNode_c *countingNodeHash::nextScan() {
 
   bt_assert(scanActive);
 
@@ -235,7 +230,7 @@ const disassemblerNode_c * countingNodeHash::nextScan() {
 
   } else {
 
-    disassemblerNode_c * res = scanPtr->dat;
+    disassemblerNode_c *res = scanPtr->dat;
     scanPtr = scanPtr->link;
 
     return res;

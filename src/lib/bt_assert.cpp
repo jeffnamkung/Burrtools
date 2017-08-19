@@ -25,14 +25,16 @@
  */
 #include "bt_assert.h"
 
-assert_log_c * assert_log;
-
+assert_log_c *assert_log;
 
 void bt_assert_init() {
   assert_log = new assert_log_c();
 }
 
-void bt_te(const char * expr, const char * file, unsigned int line, const char * function) {
+void bt_te(const char *expr,
+           const char *file,
+           unsigned int line,
+           const char *function) {
   throw assert_exception(expr, file, line, function);
 }
 

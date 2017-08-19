@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-#include "voxel_2.h"
+#include "sphere_voxel.h"
 
 #include <math.h>
 
@@ -28,7 +28,7 @@ static double rotationMatrices[NUM_TRANSFORMATIONS_MIRROR][9] = {
 #include "tabs_2/rotmatrix.inc"
 };
 
-bool voxel_2_c::transform(unsigned int nr) {
+bool SphereVoxel::transform(unsigned int nr) {
 
   if (nr == 0) return true;
 
@@ -50,7 +50,7 @@ bool voxel_2_c::transform(unsigned int nr) {
     for (unsigned int y = 0; y < sy; y++)
       for (unsigned int x = 0; x < sx; x++) {
 
-        if (((x+y+z) & 1) == 0) {
+        if (((x + y + z) & 1) == 0) {
 
           if (!isEmpty(index)) {
 
@@ -60,9 +60,15 @@ bool voxel_2_c::transform(unsigned int nr) {
 
             // rotate using the rotation matrices from the top
 
-            double xpn = rotationMatrices[nr][0]*xp + rotationMatrices[nr][1]*yp + rotationMatrices[nr][2]*zp;
-            double ypn = rotationMatrices[nr][3]*xp + rotationMatrices[nr][4]*yp + rotationMatrices[nr][5]*zp;
-            double zpn = rotationMatrices[nr][6]*xp + rotationMatrices[nr][7]*yp + rotationMatrices[nr][8]*zp;
+            double xpn =
+                rotationMatrices[nr][0] * xp + rotationMatrices[nr][1] * yp
+                    + rotationMatrices[nr][2] * zp;
+            double ypn =
+                rotationMatrices[nr][3] * xp + rotationMatrices[nr][4] * yp
+                    + rotationMatrices[nr][5] * zp;
+            double zpn =
+                rotationMatrices[nr][6] * xp + rotationMatrices[nr][7] * yp
+                    + rotationMatrices[nr][8] * zp;
 
             xpn /= sqrt(0.5);
             ypn /= sqrt(0.5);
@@ -80,20 +86,20 @@ bool voxel_2_c::transform(unsigned int nr) {
               zpn -= shz;
             }
 
-            int xn = (int)(xpn+(xpn<0?-0.5:0.5));
-            int yn = (int)(ypn+(ypn<0?-0.5:0.5));
-            int zn = (int)(zpn+(zpn<0?-0.5:0.5));
+            int xn = (int) (xpn + (xpn < 0 ? -0.5 : 0.5));
+            int yn = (int) (ypn + (ypn < 0 ? -0.5 : 0.5));
+            int zn = (int) (zpn + (zpn < 0 ? -0.5 : 0.5));
 
             // check errors, it should be small enough, so the calculated
             // new position should fall on a grid position
-            if ((fabs(xpn-xn) > 0.01) ||
-                (fabs(ypn-yn) > 0.01) ||
-                (fabs(zpn-zn) > 0.01)) {
+            if ((fabs(xpn - xn) > 0.01) ||
+                (fabs(ypn - yn) > 0.01) ||
+                (fabs(zpn - zn) > 0.01)) {
               return false;
             }
 
             // is should fall on a valid grid position
-            if (((xn+yn+zn) & 1) != 0) {
+            if (((xn + yn + zn) & 1) != 0) {
               return false;
             }
 
@@ -113,12 +119,12 @@ bool voxel_2_c::transform(unsigned int nr) {
   if (first)
     return true;
 
-  if ((minx+miny+minz) & 1)
+  if ((minx + miny + minz) & 1)
     minx--;
 
-  unsigned int nsx = maxx-minx+1;
-  unsigned int nsy = maxy-miny+1;
-  unsigned int nsz = maxz-minz+1;
+  unsigned int nsx = maxx - minx + 1;
+  unsigned int nsy = maxy - miny + 1;
+  unsigned int nsz = maxz - minz + 1;
 
   // don't make the new space smaller than the old one
   // if the old one was larger center the object inside it
@@ -126,11 +132,11 @@ bool voxel_2_c::transform(unsigned int nr) {
     // we must make sure that we shift so that we don't change the
     // state of the voxels, do (dx+dy+dz)&1 must be 0
 
-    int dx = (nsx < sx) ? (sx-nsx)/2 : 0;
-    int dy = (nsy < sy) ? (sy-nsy)/2 : 0;
-    int dz = (nsz < sz) ? (sz-nsz)/2 : 0;
+    int dx = (nsx < sx) ? (sx - nsx) / 2 : 0;
+    int dy = (nsy < sy) ? (sy - nsy) / 2 : 0;
+    int dz = (nsz < sz) ? (sz - nsz) / 2 : 0;
 
-    if ((dx+dy+dz) & 1) {
+    if ((dx + dy + dz) & 1) {
 
       if (dx > 0)
         dx--;
@@ -148,7 +154,7 @@ bool voxel_2_c::transform(unsigned int nr) {
     nsz = (sz > nsz) ? sz : nsz;
   }
 
-  int voxelsn = nsx*nsy*nsz;
+  int voxelsn = nsx * nsy * nsz;
 
   voxel_type *s = new voxel_type[voxelsn];
   memset(s, VX_EMPTY, voxelsn);
@@ -158,7 +164,7 @@ bool voxel_2_c::transform(unsigned int nr) {
     for (unsigned int y = 0; y < sy; y++)
       for (unsigned int x = 0; x < sx; x++) {
 
-        if (((x+y+z) & 1) == 0) {
+        if (((x + y + z) & 1) == 0) {
 
           if (!isEmpty(index)) {
 
@@ -168,9 +174,15 @@ bool voxel_2_c::transform(unsigned int nr) {
 
             // rotate using the rotation matrices from the top
 
-            double xpn = rotationMatrices[nr][0]*xp + rotationMatrices[nr][1]*yp + rotationMatrices[nr][2]*zp;
-            double ypn = rotationMatrices[nr][3]*xp + rotationMatrices[nr][4]*yp + rotationMatrices[nr][5]*zp;
-            double zpn = rotationMatrices[nr][6]*xp + rotationMatrices[nr][7]*yp + rotationMatrices[nr][8]*zp;
+            double xpn =
+                rotationMatrices[nr][0] * xp + rotationMatrices[nr][1] * yp
+                    + rotationMatrices[nr][2] * zp;
+            double ypn =
+                rotationMatrices[nr][3] * xp + rotationMatrices[nr][4] * yp
+                    + rotationMatrices[nr][5] * zp;
+            double zpn =
+                rotationMatrices[nr][6] * xp + rotationMatrices[nr][7] * yp
+                    + rotationMatrices[nr][8] * zp;
 
             xpn /= sqrt(0.5);
             ypn /= sqrt(0.5);
@@ -180,11 +192,12 @@ bool voxel_2_c::transform(unsigned int nr) {
             ypn -= shy;
             zpn -= shz;
 
-            int xn = (int)(xpn+(xpn<0?-0.5:0.5));
-            int yn = (int)(ypn+(ypn<0?-0.5:0.5));
-            int zn = (int)(zpn+(zpn<0?-0.5:0.5));
+            int xn = (int) (xpn + (xpn < 0 ? -0.5 : 0.5));
+            int yn = (int) (ypn + (ypn < 0 ? -0.5 : 0.5));
+            int zn = (int) (zpn + (zpn < 0 ? -0.5 : 0.5));
 
-            s[(xn-minx) + nsx*((yn-miny) + nsy*(zn-minz))] = space[index];
+            s[(xn - minx) + nsx * ((yn - miny) + nsy * (zn - minz))] =
+                space[index];
           }
         }
         index++;
@@ -192,15 +205,18 @@ bool voxel_2_c::transform(unsigned int nr) {
 
 
   // calculate the new hotspot position
-  bt_assert(((hx+hy+hz) & 1) == 0);
+  bt_assert(((hx + hy + hz) & 1) == 0);
 
   double xp = hx * sqrt(0.5);
   double yp = hy * sqrt(0.5);
   double zp = hz * sqrt(0.5);
 
-  double xpn = rotationMatrices[nr][0]*xp + rotationMatrices[nr][1]*yp + rotationMatrices[nr][2]*zp;
-  double ypn = rotationMatrices[nr][3]*xp + rotationMatrices[nr][4]*yp + rotationMatrices[nr][5]*zp;
-  double zpn = rotationMatrices[nr][6]*xp + rotationMatrices[nr][7]*yp + rotationMatrices[nr][8]*zp;
+  double xpn = rotationMatrices[nr][0] * xp + rotationMatrices[nr][1] * yp
+      + rotationMatrices[nr][2] * zp;
+  double ypn = rotationMatrices[nr][3] * xp + rotationMatrices[nr][4] * yp
+      + rotationMatrices[nr][5] * zp;
+  double zpn = rotationMatrices[nr][6] * xp + rotationMatrices[nr][7] * yp
+      + rotationMatrices[nr][8] * zp;
 
   xpn /= sqrt(0.5);
   ypn /= sqrt(0.5);
@@ -210,18 +226,18 @@ bool voxel_2_c::transform(unsigned int nr) {
   ypn -= shy;
   zpn -= shz;
 
-  hx = (int)(xpn+(xpn<0?-0.5:0.5)) - minx;
-  hy = (int)(ypn+(ypn<0?-0.5:0.5)) - miny;
-  hz = (int)(zpn+(zpn<0?-0.5:0.5)) - minz;
+  hx = (int) (xpn + (xpn < 0 ? -0.5 : 0.5)) - minx;
+  hy = (int) (ypn + (ypn < 0 ? -0.5 : 0.5)) - miny;
+  hz = (int) (zpn + (zpn < 0 ? -0.5 : 0.5)) - minz;
 
-  bt_assert(((hx+hy+hz) & 1) == 0);
+  bt_assert(((hx + hy + hz) & 1) == 0);
 
   // take over new space and new size
   sx = nsx;
   sy = nsy;
   sz = nsz;
 
-  delete [] space;
+  delete[] space;
   space = s;
 
   voxels = voxelsn;
@@ -233,18 +249,24 @@ bool voxel_2_c::transform(unsigned int nr) {
   return true;
 }
 
-void voxel_2_c::transformPoint(int * x, int * y, int * z, unsigned int trans) const {
+void SphereVoxel::transformPoint(int *x,
+                                 int *y,
+                                 int *z,
+                                 unsigned int trans) const {
 
   bt_assert(trans < NUM_TRANSFORMATIONS_MIRROR);
-  bt_assert(((*x+*y+*z) & 1) == 0);
+  bt_assert(((*x + *y + *z) & 1) == 0);
 
   double xp = *x * sqrt(0.5);
   double yp = *y * sqrt(0.5);
   double zp = *z * sqrt(0.5);
 
-  double xpn = rotationMatrices[trans][0]*xp + rotationMatrices[trans][1]*yp + rotationMatrices[trans][2]*zp;
-  double ypn = rotationMatrices[trans][3]*xp + rotationMatrices[trans][4]*yp + rotationMatrices[trans][5]*zp;
-  double zpn = rotationMatrices[trans][6]*xp + rotationMatrices[trans][7]*yp + rotationMatrices[trans][8]*zp;
+  double xpn = rotationMatrices[trans][0] * xp + rotationMatrices[trans][1] * yp
+      + rotationMatrices[trans][2] * zp;
+  double ypn = rotationMatrices[trans][3] * xp + rotationMatrices[trans][4] * yp
+      + rotationMatrices[trans][5] * zp;
+  double zpn = rotationMatrices[trans][6] * xp + rotationMatrices[trans][7] * yp
+      + rotationMatrices[trans][8] * zp;
 
   xpn /= sqrt(0.5);
   ypn /= sqrt(0.5);
@@ -260,60 +282,101 @@ void voxel_2_c::transformPoint(int * x, int * y, int * z, unsigned int trans) co
   // same errror with the rounding below and due to subtration the error cancelles itself out
   // lets cross fingers....
 
-  *x = (int)floor(xpn+0.5);
-  *y = (int)floor(ypn+0.5);
-  *z = (int)floor(zpn+0.5);
+  *x = (int) floor(xpn + 0.5);
+  *y = (int) floor(ypn + 0.5);
+  *z = (int) floor(zpn + 0.5);
 }
 
-bool voxel_2_c::getNeighbor(unsigned int idx, unsigned int typ, int x, int y, int z, int * xn, int *yn, int *zn) const {
+bool SphereVoxel::getNeighbor(unsigned int idx,
+                              unsigned int typ,
+                              int x,
+                              int y,
+                              int z,
+                              int *xn,
+                              int *yn,
+                              int *zn) const {
 
   // spheres have only one type of neighbour
   switch (typ) {
     case 0:
       switch (idx) {
-        case  0: *xn = x-1; *yn = y-1; *zn = z;   break;
-        case  1: *xn = x-1; *yn = y+1; *zn = z;   break;
-        case  2: *xn = x+1; *yn = y-1; *zn = z;   break;
-        case  3: *xn = x+1; *yn = y+1; *zn = z;   break;
-        case  4: *xn = x-1; *yn = y;   *zn = z-1; break;
-        case  5: *xn = x-1; *yn = y;   *zn = z+1; break;
-        case  6: *xn = x+1; *yn = y;   *zn = z-1; break;
-        case  7: *xn = x+1; *yn = y;   *zn = z+1; break;
-        case  8: *xn = x;   *yn = y-1; *zn = z-1; break;
-        case  9: *xn = x;   *yn = y-1; *zn = z+1; break;
-        case 10: *xn = x;   *yn = y+1; *zn = z-1; break;
-        case 11: *xn = x;   *yn = y+1; *zn = z+1; break;
+        case 0: *xn = x - 1;
+          *yn = y - 1;
+          *zn = z;
+          break;
+        case 1: *xn = x - 1;
+          *yn = y + 1;
+          *zn = z;
+          break;
+        case 2: *xn = x + 1;
+          *yn = y - 1;
+          *zn = z;
+          break;
+        case 3: *xn = x + 1;
+          *yn = y + 1;
+          *zn = z;
+          break;
+        case 4: *xn = x - 1;
+          *yn = y;
+          *zn = z - 1;
+          break;
+        case 5: *xn = x - 1;
+          *yn = y;
+          *zn = z + 1;
+          break;
+        case 6: *xn = x + 1;
+          *yn = y;
+          *zn = z - 1;
+          break;
+        case 7: *xn = x + 1;
+          *yn = y;
+          *zn = z + 1;
+          break;
+        case 8: *xn = x;
+          *yn = y - 1;
+          *zn = z - 1;
+          break;
+        case 9: *xn = x;
+          *yn = y - 1;
+          *zn = z + 1;
+          break;
+        case 10: *xn = x;
+          *yn = y + 1;
+          *zn = z - 1;
+          break;
+        case 11: *xn = x;
+          *yn = y + 1;
+          *zn = z + 1;
+          break;
         default: return false;
       }
       break;
-    default:
-      return false;
+    default:return false;
   }
   return true;
 }
 
-
-void voxel_2_c::minimizePiece() {
+void SphereVoxel::minimizePiece() {
   int move_again = (bx1 + by1 + bz1) & 1;
 
   Voxel::minimizePiece();
 
   if (move_again) {
-    resize(sx+1, sy, sz, 0);
+    resize(sx + 1, sy, sz, 0);
     translate(1, 0, 0, 0);
   }
 }
 
-void voxel_2_c::initHotspot() {
+void SphereVoxel::initHotspot() {
 
-  unsigned long best = getX()*getX() + getY()*getY() + getZ()*getZ();
+  unsigned long best = getX() * getX() + getY() * getY() + getZ() * getZ();
 
   // find a sphere as near as possible to the source
   for (unsigned int z = 0; z < getZ(); z++)
     for (unsigned int y = 0; y < getY(); y++)
       for (unsigned int x = 0; x < getX(); x++)
         if (!isEmpty(x, y, z)) {
-          unsigned long diff = x*x + y*y + z*z;
+          unsigned long diff = x * x + y * y + z * z;
           if (diff < best) {
             best = diff;
             setHotspot(x, y, z);
@@ -321,7 +384,7 @@ void voxel_2_c::initHotspot() {
         }
 }
 
-void voxel_2_c::resizeInclude(int & px, int & py, int & pz) {
+void SphereVoxel::resizeInclude(int &px, int &py, int &pz) {
 
   int nsx = getX();
   int nsy = getY();
@@ -335,8 +398,8 @@ void voxel_2_c::resizeInclude(int & px, int & py, int & pz) {
     nsx -= px;
     tx -= px;
     if (px & 1) {
-      nsx ++;
-      tx ++;
+      nsx++;
+      tx++;
     }
   }
   if (py < 0) {
@@ -344,8 +407,8 @@ void voxel_2_c::resizeInclude(int & px, int & py, int & pz) {
     nsy -= py;
     ty -= py;
     if (py & 1) {
-      nsy ++;
-      ty ++;
+      nsy++;
+      ty++;
     }
   }
   if (pz < 0) {
@@ -353,13 +416,13 @@ void voxel_2_c::resizeInclude(int & px, int & py, int & pz) {
     nsz -= pz;
     tz -= pz;
     if (pz & 1) {
-      nsz ++;
-      tz ++;
+      nsz++;
+      tz++;
     }
   }
-  if (px >= (int)getX()) nsx += (px-getX()+1);
-  if (py >= (int)getY()) nsy += (py-getY()+1);
-  if (pz >= (int)getZ()) nsz += (pz-getZ()+1);
+  if (px >= (int) getX()) nsx += (px - getX() + 1);
+  if (py >= (int) getY()) nsy += (py - getY() + 1);
+  if (pz >= (int) getZ()) nsz += (pz - getZ() + 1);
 
   resize(nsx, nsy, nsz, 0);
   translate(tx, ty, tz, 0);
@@ -369,15 +432,15 @@ void voxel_2_c::resizeInclude(int & px, int & py, int & pz) {
   pz += tz;
 }
 
-bool voxel_2_c::validCoordinate(int x, int y, int z) const {
+bool SphereVoxel::validCoordinate(int x, int y, int z) const {
 
-  return ((x+y+z) & 1) == 0;
+  return ((x + y + z) & 1) == 0;
 
 }
 
-bool voxel_2_c::onGrid(int x, int y, int z) const {
+bool SphereVoxel::onGrid(int x, int y, int z) const {
 
   // the shape doesn't fit, when the lower left corner doesn't have the right parity
-  return ((x+y+z) & 1) == 0;
+  return ((x + y + z) & 1) == 0;
 }
 

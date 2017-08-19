@@ -29,10 +29,10 @@
 /* the directions to move one voxel exacly one unit in the diven direction
  */
 const static int dirs[NUM_DIRECTIONS][3] = {
-  {  0,  0,  1 },
-  {  2,  0,  0 },
-  {  1,  1,  0 },
-  { -1,  1,  0 },
+    {0, 0, 1},
+    {2, 0, 0},
+    {1, 1, 0},
+    {-1, 1, 0},
 };
 
 /* this array contains
@@ -44,29 +44,34 @@ const static int dirs[NUM_DIRECTIONS][3] = {
  *   in this case the table was manually created
  */
 const static int checks[NUM_DIRECTIONS][NUM_VOXELTYPES][NUM_CHECKS][3] = {
-  { // direction 0  -> 0 0 1
-    {  { 0,  0,  1}, {-10,  0,  0}  }, // 1 entry
-    {  { 0,  0,  1}, {-10,  0,  0}  }, // 1 entry
-  },
-  { // direction 1  -> 2 0 0
-    {  { 1,  0,  0}, { 2,  0,  0}, {-10,  0,  0}  }, // 2 entries
-    {  { 1,  0,  0}, { 2,  0,  0}, {-10,  0,  0}  }, // 2 entries
-  },
-  { // direction 2  -> 1 1 0
-    {  { 1,  0,  0}, { 1,  1,  0}, {-10,  0,  0}  }, // 2 entries
-    {  { 0,  1,  0}, { 1,  1,  0}, {-10,  0,  0}  }, // 1 entries
-  },
-  { // direction 2  -> -1 1 0
-    {  {-1,  0,  0}, {-1,  1,  0}, {-10,  0,  0}  }, // 2 entries
-    {  { 0,  1,  0}, {-1,  1,  0}, {-10,  0,  0}  }, // 1 entries
-  }
+    { // direction 0  -> 0 0 1
+        {{0, 0, 1}, {-10, 0, 0}}, // 1 entry
+        {{0, 0, 1}, {-10, 0, 0}}, // 1 entry
+    },
+    { // direction 1  -> 2 0 0
+        {{1, 0, 0}, {2, 0, 0}, {-10, 0, 0}}, // 2 entries
+        {{1, 0, 0}, {2, 0, 0}, {-10, 0, 0}}, // 2 entries
+    },
+    { // direction 2  -> 1 1 0
+        {{1, 0, 0}, {1, 1, 0}, {-10, 0, 0}}, // 2 entries
+        {{0, 1, 0}, {1, 1, 0}, {-10, 0, 0}}, // 1 entries
+    },
+    { // direction 2  -> -1 1 0
+        {{-1, 0, 0}, {-1, 1, 0}, {-10, 0, 0}}, // 2 entries
+        {{0, 1, 0}, {-1, 1, 0}, {-10, 0, 0}}, // 1 entries
+    }
 };
 
-movementCache_1_c::movementCache_1_c(const Problem * puz) : movementCache_c(puz) {
+movementCache_1_c::movementCache_1_c(const Problem *puz)
+    : movementCache_c(puz) {
 }
 
 /* calculate the required movement possibilities */
-unsigned int* movementCache_1_c::moCalcValues(const Voxel * sh1, const Voxel * sh2, int dx, int dy, int dz) {
+unsigned int *movementCache_1_c::moCalcValues(const Voxel *sh1,
+                                              const Voxel *sh2,
+                                              int dx,
+                                              int dy,
+                                              int dz) {
 
   /* because the dx, dy and dz values are calculated using the hotspot we need to reverse
    * that process
@@ -75,7 +80,7 @@ unsigned int* movementCache_1_c::moCalcValues(const Voxel * sh1, const Voxel * s
   dy += (sh1->getHy() - sh2->getHy());
   dz += (sh1->getHz() - sh2->getHz());
 
-  unsigned int * move = new unsigned int[NUM_DIRECTIONS];
+  unsigned int *move = new unsigned int[NUM_DIRECTIONS];
 
   for (unsigned int dir = 0; dir < NUM_DIRECTIONS; dir++) {
 
@@ -87,11 +92,11 @@ unsigned int* movementCache_1_c::moCalcValues(const Voxel * sh1, const Voxel * s
 
           if (sh1->isEmpty(x, y, z)) continue;
 
-          int voxel = (x+y) % 2;
+          int voxel = (x + y) % 2;
 
-          int xp = (int)x-dx;
-          int yp = (int)y-dy;
-          int zp = (int)z-dz;
+          int xp = (int) x - dx;
+          int yp = (int) y - dy;
+          int zp = (int) z - dz;
 
           bt_assert(sh2->isEmpty2(xp, yp, zp));
 
@@ -102,17 +107,16 @@ unsigned int* movementCache_1_c::moCalcValues(const Voxel * sh1, const Voxel * s
 
             /* first see, if we are within the bounding box of sh1 and if we ever
              * might get in there */
-            if (dirs[dir][0] > 0 && xp > (int)sh2->boundX2()+2) break;
-            if (dirs[dir][0] < 0 && xp < (int)sh2->boundX1()-2) break;
-            if (dirs[dir][1] > 0 && yp > (int)sh2->boundY2()+2) break;
-            if (dirs[dir][1] < 0 && yp < (int)sh2->boundY1()-2) break;
-            if (dirs[dir][2] > 0 && zp > (int)sh2->boundZ2()+2) break;
-            if (dirs[dir][2] < 0 && zp < (int)sh2->boundZ1()-2) break;
+            if (dirs[dir][0] > 0 && xp > (int) sh2->boundX2() + 2) break;
+            if (dirs[dir][0] < 0 && xp < (int) sh2->boundX1() - 2) break;
+            if (dirs[dir][1] > 0 && yp > (int) sh2->boundY2() + 2) break;
+            if (dirs[dir][1] < 0 && yp < (int) sh2->boundY1() - 2) break;
+            if (dirs[dir][2] > 0 && zp > (int) sh2->boundZ2() + 2) break;
+            if (dirs[dir][2] < 0 && zp < (int) sh2->boundZ1() - 2) break;
 
-            for (const int (*ch)[3] = checks[dir][voxel]; (*ch)[0] != -10; ch++)
-            {
-              if (sh2->isFilled2(xp+ (*ch)[0], yp+ (*ch)[1], zp+ (*ch)[2]))
-              {
+            for (const int (*ch)[3] = checks[dir][voxel]; (*ch)[0] != -10;
+                 ch++) {
+              if (sh2->isFilled2(xp + (*ch)[0], yp + (*ch)[1], zp + (*ch)[2])) {
                 if (d < m) m = d;
                 break;
               }
@@ -139,8 +143,7 @@ unsigned int* movementCache_1_c::moCalcValues(const Voxel * sh1, const Voxel * s
 }
 
 unsigned int movementCache_1_c::numDirections() { return NUM_DIRECTIONS; }
-void movementCache_1_c::getDirection(unsigned int dir, int * x, int * y, int * z)
-{
+void movementCache_1_c::getDirection(unsigned int dir, int *x, int *y, int *z) {
   bt_assert(dir < NUM_DIRECTIONS);
 
   *x = dirs[dir][0];

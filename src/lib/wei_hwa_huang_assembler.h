@@ -46,11 +46,11 @@ class MirrorInfo;
 
 class WeiHwaHuangAssembler : public AssemblerInterface {
 
-protected:
+ protected:
 
-  const Problem * puzzle;
+  const Problem *puzzle;
 
-private:
+ private:
 
   /* this are the members of the node. One array for each member. This
    * accelerates access.
@@ -93,12 +93,13 @@ private:
   std::vector<unsigned int> rows;
   std::vector<unsigned int> finished_a;
   std::vector<unsigned int> finished_b;
-  std::vector<unsigned int> hidden_rows;  // rows that nodes to rows that are currently hidden
+  std::vector<unsigned int>
+      hidden_rows;  // rows that nodes to rows that are currently hidden
   // because there are several batched of rows that need hiding these batches are separated
   // by a zero because the header row will never get hidden...
-  std::vector<unsigned int>task_stack;
-  std::vector<unsigned int>next_row_stack;
-  std::vector<unsigned int>column_stack;
+  std::vector<unsigned int> task_stack;
+  std::vector<unsigned int> next_row_stack;
+  std::vector<unsigned int> column_stack;
 
   unsigned int headerNodes;  // number of nodes within the header
 
@@ -120,12 +121,11 @@ private:
   void remove_column(register unsigned int c);
   unsigned int clumpify(void);
 
-
   /**
    * this function is called by the default implementation of prepare
    * to check, if the piece fits at the given position
    */
-  bool canPlace(const Voxel * piece, int x, int y, int z) const;
+  bool canPlace(const Voxel *piece, int x, int y, int z) const;
 
   /* this function creates the matrix for the search function
    * because we need to know how many nodes we need to allocate the
@@ -145,22 +145,31 @@ private:
   unsigned int piecenumber;
 
   /* the message object that gets called with the solutions as param */
-  AssemblerCallbackInterface * asm_bc;
+  AssemblerCallbackInterface *asm_bc;
 
   /* this vector contains the placement (transformation and position) for
    * a piece in a row
    */
   class piecePosition {
 
-  public:
+   public:
 
     int x, y, z;
     unsigned char transformation;
     unsigned int row;            // first node in this row
     unsigned int piece;
 
-    piecePosition(unsigned int pc_, int x_, int y_, int z_, unsigned char transformation_, unsigned int row_) : x(x_), y(y_), z(z_),
-      transformation(transformation_), row(row_), piece(pc_) {}
+    piecePosition(unsigned int pc_,
+                  int x_,
+                  int y_,
+                  int z_,
+                  unsigned char transformation_,
+                  unsigned int row_) : x(x_),
+                                       y(y_),
+                                       z(z_),
+                                       transformation(transformation_),
+                                       row(row_),
+                                       piece(pc_) {}
   };
   std::vector<piecePosition> piecePositions;
 
@@ -168,7 +177,7 @@ private:
    */
   bool avoidTransformedAssemblies;
   unsigned int avoidTransformedPivot;
-  MirrorInfo * avoidTransformedMirror;
+  MirrorInfo *avoidTransformedMirror;
 
   /// set to true, when complete analysis is requested
   bool complete;
@@ -180,7 +189,7 @@ private:
 
   unsigned long iterations;
 
-protected:
+ protected:
 
   /* as this is only a back end doing the processing on the matrix, there needs to
    * be a front end creating the matrix and evaluating the results. These functions
@@ -201,18 +210,28 @@ protected:
    * the return value is a number that has to be given to the voxel node creation routine
    * it contains the number of the node that is created with this function
    */
-  int AddPieceNode(unsigned int piece, unsigned int rot, unsigned int x, unsigned int y, unsigned int z);
+  int AddPieceNode(unsigned int piece,
+                   unsigned int rot,
+                   unsigned int x,
+                   unsigned int y,
+                   unsigned int z);
 
   /* adds a node with a vertain weight, for piece range node counting
    */
-  void AddRangeNode(unsigned int col, unsigned int piecenode, unsigned int weight);
-
+  void AddRangeNode(unsigned int col,
+                    unsigned int piecenode,
+                    unsigned int weight);
 
   /* this is in a way the inverse of the function above. You give a node number and get
    * the exact piece and placement the line this node belongs to stands for
    * this function is used in the solution function to restore the placement of the piece
    */
-  void getPieceInformation(unsigned int node, unsigned int * piece, unsigned char *tran, int *x, int *y, int *z) const;
+  void getPieceInformation(unsigned int node,
+                           unsigned int *piece,
+                           unsigned char *tran,
+                           int *x,
+                           int *y,
+                           int *z) const;
 
   /* this adds a normal node that represents a used voxel within the solution
    * piecenode is the number that you get from AddPieceNode, col is a number
@@ -228,7 +247,7 @@ protected:
    * information you need to call the callback of the user, use this function to get the
    * callback class
    */
-  AssemblerCallbackInterface * getCallback() { return asm_bc; }
+  AssemblerCallbackInterface *getCallback() { return asm_bc; }
 
   unsigned int getPiecenumber() { return piecenumber; }
 
@@ -242,18 +261,21 @@ protected:
    * rotations it should call this function. This will then add an additional check
    * for each found assembly
    */
-  void checkForTransformedAssemblies(unsigned int pivot, MirrorInfo * mir);
+  void checkForTransformedAssemblies(unsigned int pivot, MirrorInfo *mir);
 
   unsigned int reducePiece;
 
-public:
+ public:
 
   WeiHwaHuangAssembler(void);
   ~WeiHwaHuangAssembler(void);
 
   /* functions that are overloaded from AssemblerInterface, for comments see there */
-  errState createMatrix(const Problem * puz, bool keepMirror, bool keepRotations, bool complete);
-  void assemble(AssemblerCallbackInterface * callback);
+  errState createMatrix(const Problem *puz,
+                        bool keepMirror,
+                        bool keepRotations,
+                        bool complete);
+  void assemble(AssemblerCallbackInterface *callback);
 
   // See AssemblerInterface.
   int getErrorsParam() const override { return errorsParam; }
@@ -261,22 +283,28 @@ public:
   virtual float getFinished(void) const;
   virtual void stop() { abbort = true; }
   virtual bool stopped(void) const { return !running; }
-  virtual errState setPosition(const char * string, const char * version);
-  virtual void save(XmlWriter & xml) const;
+  virtual errState setPosition(const char *string, const char *version);
+  virtual void save(XmlWriter &xml) const;
   virtual void reduce(void);
   virtual unsigned int getReducePiece(void) const { return reducePiece; }
   void debug_step(unsigned long num = 1);
-  Assembly * getAssembly(void);
+  Assembly *getAssembly(void);
 
-  static bool canHandle(const Problem * p);
+  static bool canHandle(const Problem *p);
 
   /* some more special information to find out possible piece placements */
   bool getPiecePlacementSupported(void) const { return true; }
-  unsigned int getPiecePlacement(unsigned int node, int delta, unsigned int piece, unsigned char *tran, int *x, int *y, int *z) const;
+  unsigned int getPiecePlacement(unsigned int node,
+                                 int delta,
+                                 unsigned int piece,
+                                 unsigned char *tran,
+                                 int *x,
+                                 int *y,
+                                 int *z) const;
   unsigned int getPiecePlacementCount(unsigned int piece) const;
   unsigned long getIterations() { return iterations; }
 
-private:
+ private:
 
   // no copying and assigning
   WeiHwaHuangAssembler(const WeiHwaHuangAssembler &);
