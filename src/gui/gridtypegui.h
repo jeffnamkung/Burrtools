@@ -39,23 +39,23 @@ class gridTypeGui_c : public Layouter {
 /* the required elements for the brick grid type */
 class gridTypeGui_0_c : public gridTypeGui_c {
 
-  public:
+ public:
 
-    gridTypeGui_0_c(int x, int y, int w, int h, GridType * gt);
+  gridTypeGui_0_c(int x, int y, int w, int h, GridType *gt);
 };
 
 class gridTypeGui_1_c : public gridTypeGui_c {
 
-  public:
+ public:
 
-    gridTypeGui_1_c(int x, int y, int w, int h, GridType * gt);
+  gridTypeGui_1_c(int x, int y, int w, int h, GridType *gt);
 };
 
 class gridTypeGui_2_c : public gridTypeGui_c {
 
-  public:
+ public:
 
-    gridTypeGui_2_c(int x, int y, int w, int h, GridType * gt);
+  gridTypeGui_2_c(int x, int y, int w, int h, GridType *gt);
 };
 
 /* this window allows you to edit the parameters of one
@@ -63,41 +63,37 @@ class gridTypeGui_2_c : public gridTypeGui_c {
  */
 class gridTypeParameterWindow_c : public LFl_Double_Window {
 
-  public:
+ public:
 
-    /* creates the parameter window for the given gui grid type */
-    gridTypeParameterWindow_c(GuiGridType * ggt);
+  /* creates the parameter window for the given gui grid type */
+  gridTypeParameterWindow_c(GuiGridType *ggt);
 };
 
 /* this class is used in the window below to hold all data necessary
  * for one grid type
  */
-class gridTypeInfos_c;
+class GridTypeInfo;
 
 /* this window allows you to select the grid type and
  * the parameters for the selected type
  */
 
-class gridTypeSelectorWindow_c : public LFl_Double_Window {
+class GridTypeSelectorWindow : public LFl_Double_Window {
+ public:
+  GridTypeSelectorWindow();
+  ~GridTypeSelectorWindow() override;
 
-  private:
+  /* after the window has been close you can get the created grid type with this function
+   */
+  std::unique_ptr<GridType> getGridType();
 
-    std::vector<gridTypeInfos_c*> gti;
+  void select_cb();
 
-    /* currently selected grid type from the vector above */
-    unsigned int current;
+ private:
+  std::vector<std::unique_ptr<GridTypeInfo>> grid_type_infos_;
 
-  public:
-
-    gridTypeSelectorWindow_c(void);
-    ~gridTypeSelectorWindow_c(void);
-
-    /* after the window has been close you can get the created grid type with this function
-     */
-    GridType * getGridType(void);
-
-
-    void select_cb(void);
+  /* currently selected grid type from the vector above */
+  GridTypeInfo* current_grid_type_info_ = nullptr;
 };
 
 #endif

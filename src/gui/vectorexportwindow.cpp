@@ -100,12 +100,12 @@ const char * vectorExportWindow_c::getFileName() {
   return inp->value();
 }
 
-voxelFrame_c::VectorFiletype vectorExportWindow_c::getVectorType() {
+VoxelFrame::VectorFiletype vectorExportWindow_c::getVectorType() {
 
   for (int i = 0; i < radGroup->children(); i++)
     if (((LFl_Radio_Button*)radGroup->child(i))->value() > 0)
-      return (voxelFrame_c::VectorFiletype)i;
+      return (VoxelFrame::VectorFiletype)i;
 
-  return voxelFrame_c::VFT_SVG;
+  return VoxelFrame::VFT_SVG;
 }
 

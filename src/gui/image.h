@@ -23,7 +23,7 @@
 
 #include "tr.h"
 
-class voxelFrame_c;
+class VoxelFrame;
 
 /* this class represents an bitmap image
  * that always has rgb and alpha map
@@ -67,7 +67,7 @@ class image_c {
      *   draw();
      * while (getOpenGlImagePart);
      */
-    void prepareOpenGlImagePart(voxelFrame_c * dr);
+    void prepareOpenGlImagePart(VoxelFrame * dr);
     bool getOpenGlImagePart(void);
 
     /* saves the image into a png file with the given name

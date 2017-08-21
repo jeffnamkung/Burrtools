@@ -40,14 +40,14 @@ class convertWindow_c : public LFl_Double_Window {
 
     bool _ok;
     unsigned int current;
-    std::vector<GridType::gridType> gridTypes;
+    std::vector<GridType::Type> gridTypes;
     std::vector<LFl_Radio_Button*> gti;
 
   public:
 
-    convertWindow_c(GridType::gridType srcType);
+    convertWindow_c(GridType::Type srcType);
 
-    GridType::gridType getTargetType(void);
+    GridType::Type getTargetType(void);
 
     bool okSelected() { return _ok; }
 

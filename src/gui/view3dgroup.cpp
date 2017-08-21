@@ -47,7 +47,7 @@ LView3dGroup::LView3dGroup(int x, int y, int w, int h) : Fl_Group(0, 0, 50, 50),
 
   box(FL_DOWN_BOX);
 
-  View3D = new voxelFrame_c(x, y, w-15, h);
+  View3D = new VoxelFrame(x, y, w-15, h);
   View3D->tooltip(" Rotate the puzzle by dragging with the mouse ");
   View3D->box(FL_NO_BOX);
   View3D->callback(cb_View3dGroupVoxel_stub, this);

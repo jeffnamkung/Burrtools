@@ -35,7 +35,7 @@ class vectorExportWindow_c : public LFl_Double_Window {
     vectorExportWindow_c(void);
 
     const char * getFileName(void);
-    voxelFrame_c::VectorFiletype getVectorType(void);
+    VoxelFrame::VectorFiletype getVectorType(void);
 
     /* callback functions */
     void cb_FileChoose(void);

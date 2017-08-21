@@ -1,6 +1,8 @@
 find_package(FLTK REQUIRED)
 find_package(PNG REQUIRED)
 
+set(CMAKE_CXX_STANDARD 14)
+
 add_definitions(${PNG_DEFINITIONS})
 
 include_directories(${FLTK_INCLUDE_DIR})

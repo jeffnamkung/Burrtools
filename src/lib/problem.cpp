@@ -29,47 +29,45 @@
 #include "../tools/xml.h"
 
 /** internal class of problem storing the grouping information of a shape */
-class group_c {
-
+class Group {
  public:
 
-  group_c(unsigned short gr, unsigned short cnt) : group(gr), count(cnt) {}
+  Group(unsigned short gr, unsigned short cnt) : group(gr), count(cnt) {}
 
   unsigned short group;
   unsigned short count;
 };
 
-/** internal class of problem storing the information attatched to a piece in a problem */
-class part_c {
-
+/** internal class of problem storing the information attached to a piece in
+ * a problem */
+class Part {
  public:
-
-  part_c(unsigned short id,
-         unsigned short mn,
-         unsigned short mx,
-         unsigned short grp) : shapeId(id), min(mn), max(mx) {
+  Part(unsigned short id,
+       unsigned short mn,
+       unsigned short mx,
+       unsigned short grp) : shapeId(id), min(mn), max(mx) {
     if (grp)
-      groups.push_back(group_c(grp, max));
+      groups.push_back(Group(grp, max));
   }
 
-  part_c(unsigned short id, unsigned short mn, unsigned short mx)
+  Part(unsigned short id, unsigned short mn, unsigned short mx)
       : shapeId(id), min(mn), max(mx) {}
 
-  part_c(part_c *orig)
+  Part(Part *orig)
       : shapeId(orig->shapeId),
         min(orig->min),
         max(orig->max),
         groups(orig->groups) {}
 
   void addGroup(unsigned short grp, unsigned short cnt) {
-    groups.push_back(group_c(grp, cnt));
+    groups.push_back(Group(grp, cnt));
   }
 
   unsigned short shapeId;
   unsigned short min;
   unsigned short max;
 
-  std::vector<group_c> groups;
+  std::vector<Group> groups;
 };
 
 Problem::Problem(Puzzle &puz) :
@@ -78,9 +76,6 @@ Problem::Problem(Puzzle &puz) :
     numSolutions(0), usedTime(0), maxHoles(0xFFFFFFFF) {}
 
 Problem::~Problem() {
-  for (unsigned int i = 0; i < parts.size(); i++)
-    delete parts[i];
-
   if (assm)
     delete assm;
 }
@@ -94,8 +89,9 @@ Problem::Problem(const Problem *orig, Puzzle &puz) :
        i != orig->colorConstraints.end(); i++)
     colorConstraints.insert(*i);
 
-  for (unsigned int i = 0; i < orig->parts.size(); i++)
-    parts.push_back(new part_c(orig->parts[i]));
+  for (const auto &part : orig->parts_) {
+    parts_.push_back(std::make_unique<Part>(*part));
+  }
 
   maxHoles = orig->maxHoles;
 
@@ -125,35 +121,36 @@ void Problem::save(XmlWriter &xml) const {
 
   xml.newTag("shapes"); // for historical reasons, parts are saved in an XML-tag called shapes
 
-  for (unsigned int i = 0; i < parts.size(); i++) {
+  for (const auto &part : parts_) {
     xml.newTag("shape");
 
-    xml.newAttrib("id", parts[i]->shapeId);
+    xml.newAttrib("id", part->shapeId);
 
-    if (parts[i]->min == parts[i]->max) {
-      xml.newAttrib("count", parts[i]->min);
+    if (part->min == part->max) {
+      xml.newAttrib("count", part->min);
     } else {
-      xml.newAttrib("min", parts[i]->min);
-      xml.newAttrib("max", parts[i]->max);
+      xml.newAttrib("min", part->min);
+      xml.newAttrib("max", part->max);
     }
 
-    if (parts[i]->groups.size() == 0) {
+    if (part->groups.size() == 0) {
       // do nothing, we don't need to save anything in this case
-    } else if ((parts[i]->groups.size() == 1) &&
-        (parts[i]->groups[0].count == parts[i]->max)) {
+    } else if ((part->groups.size() == 1) &&
+        (part->groups[0].count == part->max)) {
       // this is the case when all pieces are in the same group
       // we only need to save the group, if it is not 0,
       // the loader takes 0 as default anyway
-      if (parts[i]->groups[0].group != 0)
-        xml.newAttrib("group", parts[i]->groups[0].group);
+      if (part->groups[0].group != 0)
+        xml.newAttrib("group", part->groups[0].group);
     } else {
-      for (unsigned int j = 0; j < parts[i]->groups.size(); j++)
-        if (parts[i]->groups[j].group != 0) {
+      for (const auto &group : part->groups) {
+        if (group.group != 0) {
           xml.newTag("group");
-          xml.newAttrib("group", parts[i]->groups[j].group);
-          xml.newAttrib("count", parts[i]->groups[j].count);
+          xml.newAttrib("group", group.group);
+          xml.newAttrib("count", group.count);
           xml.endTag("group");
         }
+      }
     }
     xml.endTag("shape");
   }
@@ -210,7 +207,7 @@ Problem::Problem(Puzzle &puz, XmlParser &pars)
 
   str = pars.getAttributeValue("state");
   if (str.length())
-    solveState = (solveState_e) atoi(str.c_str());
+    solveState = (SolverState) atoi(str.c_str());
 
   if (solveState != SS_UNSOLVED) {
     str = pars.getAttributeValue("assemblies");
@@ -274,7 +271,7 @@ Problem::Problem(Puzzle &puz, XmlParser &pars)
             pars.exception("the shape ids must be for valid shapes");
 
           if (grp) {
-            parts.push_back(new part_c(id, min, max, grp));
+            parts_.push_back(std::make_unique<Part>(id, min, max, grp));
             pars.skipSubTree();
           } else {
             /* OK we have 2 ways to specify groups for pieces, either
@@ -283,7 +280,7 @@ Problem::Problem(Puzzle &puz, XmlParser &pars)
              * tags inside the tag. Each of the group tag gives a
              * group and a count
              */
-            parts.push_back(new part_c(id, min, max));
+            parts_.push_back(std::make_unique<Part>(id, min, max));
 
             do {
               int state = pars.nextTag();
@@ -304,7 +301,7 @@ Problem::Problem(Puzzle &puz, XmlParser &pars)
                       "a group node must have a valid count attribute");
                 unsigned int cnt = atoi(str.c_str());
 
-                (*parts.rbegin())->addGroup(grp, cnt);
+                (*parts_.rbegin())->addGroup(grp, cnt);
               }
 
               pars.skipSubTree();
@@ -413,8 +410,11 @@ void Problem::removeShape(unsigned short idx) {
   /* now check all shapes, and the result, if their id is larger
    * than the deleted shape, if so decrement to update the number
    */
-  for (unsigned int i = 0; i < parts.size(); i++)
-    if (parts[i]->shapeId > idx) parts[i]->shapeId--;
+  for (auto &part : parts_) {
+    if (part->shapeId > idx) {
+      part->shapeId--;
+    }
+  }
 
   if (result > idx)
     result--;
@@ -425,9 +425,13 @@ void Problem::exchangeShapeId(unsigned int s1, unsigned int s2) {
   if (result == s1) result = s2;
   else if (result == s2) result = s1;
 
-  for (unsigned int i = 0; i < parts.size(); i++)
-    if (parts[i]->shapeId == s1) parts[i]->shapeId = s2;
-    else if (parts[i]->shapeId == s2) parts[i]->shapeId = s1;
+  for (auto &part : parts_) {
+    if (part->shapeId == s1) {
+      part->shapeId = s2;
+    } else if (part->shapeId == s2) {
+      part->shapeId = s1;
+    }
+  }
 }
 
 void Problem::allowPlacement(unsigned int pc, unsigned int res) {
@@ -466,8 +470,8 @@ bool Problem::placementAllowed(unsigned int pc, unsigned int res) const {
 }
 
 void Problem::exchangeShape(unsigned int s1, unsigned int s2) {
-  bt_assert(s1 < parts.size());
-  bt_assert(s2 < parts.size());
+  bt_assert(s1 < parts_.size());
+  bt_assert(s2 < parts_.size());
 
   if (s1 == s2) return;
 
@@ -485,19 +489,17 @@ void Problem::exchangeShape(unsigned int s1, unsigned int s2) {
   p1Start = p2Start = 0;
 
   for (unsigned int i = 0; i < s1; i++)
-    p1Start += parts[i]->max;
+    p1Start += parts_[i]->max;
 
   for (unsigned int i = 0; i < s2; i++)
-    p2Start += parts[i]->max;
+    p2Start += parts_[i]->max;
 
-  p1Count = parts[s1]->max;
-  p2Count = parts[s2]->max;
+  p1Count = parts_[s1]->max;
+  p2Count = parts_[s2]->max;
 
   bt_assert(p1Start + p1Count == p2Start);
 
-  part_c *s = parts[s1];
-  parts[s1] = parts[s2];
-  parts[s2] = s;
+  parts_[s1].swap(parts_[s2]);
 
   /* this vector holds the target position of all the involved piece
    * as long as its not in the order 0, 1, 2, ... some pieces must be exchanged
@@ -563,10 +565,10 @@ void Problem::setShapeMinimum(unsigned int shape, unsigned int count) {
 
   unsigned int pieceIdx = 0;
 
-  for (unsigned int id = 0; id < parts.size(); id++) {
-    if (parts[id]->shapeId == shape) {
-      parts[id]->min = count;
-      if (parts[id]->min > parts[id]->max)
+  for (const auto &part : parts_) {
+    if (part->shapeId == shape) {
+      part->min = count;
+      if (part->min > part->max)
         setShapeMaximum(shape, count);
 
       if (count > 0) {
@@ -583,16 +585,17 @@ void Problem::setShapeMinimum(unsigned int shape, unsigned int count) {
 
       return;
     }
-    pieceIdx += parts[id]->max;
+    pieceIdx += part->max;
   }
 
   // when we get here there is no piece with the required puzzle shape, so add it
   if (count) {
-    parts.push_back(new part_c(shape, count, count, 0));
+    parts_.push_back(std::make_unique<Part>(shape, count, count, 0));
 
     // add new placements, pieces are not placed
-    for (unsigned int s = 0; s < solutions_.size(); s++)
-      solutions_[s]->addNonPlacedPieces(pieceNumber(), count);
+    for (const auto &solution : solutions_) {
+      solution->addNonPlacedPieces(pieceNumber(), count);
+    }
   }
 }
 
@@ -601,8 +604,8 @@ void Problem::setShapeMaximum(unsigned int shape, unsigned int count) {
 
   unsigned int pieceIdx = 0;
 
-  for (unsigned int id = 0; id < parts.size(); id++) {
-    if (parts[id]->shapeId == shape) {
+  for (unsigned int id = 0; id < parts_.size(); id++) {
+    if (parts_[id]->shapeId == shape) {
       // remove the shape
       if (count == 0) {
         editProblem();
@@ -613,24 +616,24 @@ void Problem::setShapeMaximum(unsigned int shape, unsigned int count) {
           if (solutions_[s]->getAssembly()->isPlaced(pieceIdx)) {
             solutions_.erase(solutions_.begin() + s);
           } else {
-            solutions_[s]->removePieces(pieceIdx, parts[id]->max);
+            solutions_[s]->removePieces(pieceIdx, parts_[id]->max);
             s++;
           }
         }
 
-        parts.erase(parts.begin() + id);
+        parts_.erase(parts_.begin() + id);
 
         return;
       }
 
       // increase the maximum
-      if (count > parts[id]->max) {
+      if (count > parts_[id]->max) {
         editProblem();
 
         for (unsigned int s = 0; s < solutions_.size(); s++)
-          solutions_[s]->addNonPlacedPieces(pieceIdx + parts[id]->max,
-                                           count - parts[id]->max);
-      } else if (count < parts[id]->max)  // cedrease the maximum
+          solutions_[s]->addNonPlacedPieces(pieceIdx + parts_[id]->max,
+                                            count - parts_[id]->max);
+      } else if (count < parts_[id]->max)  // cedrease the maximum
       {
         editProblem();
         // go through all solutions, those solutions that use more
@@ -641,28 +644,28 @@ void Problem::setShapeMaximum(unsigned int shape, unsigned int count) {
         unsigned int s = 0;
         while (s < solutions_.size()) {
           if (solutions_[s]->getAssembly()->isPlaced(
-              pieceIdx + parts[id]->max - 1)) {
+              pieceIdx + parts_[id]->max - 1)) {
             // too many pieces placed -> delete solution
             solutions_.erase(solutions_.begin() + s);
           } else {
             solutions_[s]->removePieces(pieceIdx + count,
-                                       parts[id]->max - count);
+                                        parts_[id]->max - count);
             s++;
           }
         }
       }
 
-      parts[id]->max = count;
-      if (parts[id]->max < parts[id]->min)
+      parts_[id]->max = count;
+      if (parts_[id]->max < parts_[id]->min)
         setShapeMinimum(shape, count);
 
       return;
     }
-    pieceIdx += parts[id]->max;
+    pieceIdx += parts_[id]->max;
   }
 
   if (count) {
-    parts.push_back(new part_c(shape, 0, count, 0));
+    parts_.push_back(std::make_unique<Part>(shape, 0, count, 0));
 
     // add new placements, pieces are not placed
     for (unsigned int s = 0; s < solutions_.size(); s++)
@@ -673,9 +676,11 @@ void Problem::setShapeMaximum(unsigned int shape, unsigned int count) {
 unsigned int Problem::getShapeMinimum(unsigned int shape) const {
   bt_assert(shape < puzzle.shapeNumber());
 
-  for (unsigned int id = 0; id < parts.size(); id++)
-    if (parts[id]->shapeId == shape)
-      return parts[id]->min;
+  for (const auto &part : parts_) {
+    if (part->shapeId == shape) {
+      return part->min;
+    }
+  }
 
   return 0;
 }
@@ -683,9 +688,11 @@ unsigned int Problem::getShapeMinimum(unsigned int shape) const {
 unsigned int Problem::getShapeMaximum(unsigned int shape) const {
   bt_assert(shape < puzzle.shapeNumber());
 
-  for (unsigned int id = 0; id < parts.size(); id++)
-    if (parts[id]->shapeId == shape)
-      return parts[id]->max;
+  for (const auto &part : parts_) {
+    if (part->shapeId == shape) {
+      return part->max;
+    }
+  }
 
   return 0;
 }
@@ -694,24 +701,25 @@ unsigned int Problem::getShapeMaximum(unsigned int shape) const {
 unsigned int Problem::pieceNumber(void) const {
   unsigned int result = 0;
 
-  for (unsigned int i = 0; i < parts.size(); i++)
-    result += parts[i]->max;
+  for (const auto &part : parts_) {
+    result += part->max;
+  }
 
   return result;
 }
 
 /* return the shape id of the given shape (index into the shape array of the puzzle */
 unsigned int Problem::getShape(unsigned int shapeID) const {
-  bt_assert(shapeID < parts.size());
+  bt_assert(shapeID < parts_.size());
 
-  return parts[shapeID]->shapeId;
+  return parts_[shapeID]->shapeId;
 }
 
 unsigned int Problem::getShapeId(unsigned int shape) const {
   bt_assert(shape < puzzle.shapeNumber());
 
-  for (unsigned int i = 0; i < parts.size(); i++)
-    if (parts[i]->shapeId == shape)
+  for (unsigned int i = 0; i < parts_.size(); i++)
+    if (parts_[i]->shapeId == shape)
       return i;
 
   bt_assert(0);
@@ -722,33 +730,35 @@ bool Problem::usesShape(unsigned int shape) const {
   if (result == shape)
     return true;
 
-  for (unsigned int i = 0; i < parts.size(); i++)
-    if (parts[i]->shapeId == shape)
+  for (const auto &part : parts_) {
+    if (part->shapeId == shape) {
       return true;
+    }
+  }
 
   return false;
 }
 
 const Voxel *Problem::getShapeShape(unsigned int shapeID) const {
-  bt_assert(shapeID < parts.size());
-  return puzzle.getShape(parts[shapeID]->shapeId);
+  bt_assert(shapeID < parts_.size());
+  return puzzle.getShape(parts_[shapeID]->shapeId);
 }
 
 Voxel *Problem::getShapeShape(unsigned int shapeID) {
-  bt_assert(shapeID < parts.size());
-  return puzzle.getShape(parts[shapeID]->shapeId);
+  bt_assert(shapeID < parts_.size());
+  return puzzle.getShape(parts_[shapeID]->shapeId);
 }
 
 /* return the instance count for one shape of the problem */
 unsigned int Problem::getShapeMin(unsigned int shapeID) const {
-  bt_assert(shapeID < parts.size());
+  bt_assert(shapeID < parts_.size());
 
-  return parts[shapeID]->min;
+  return parts_[shapeID]->min;
 }
 unsigned int Problem::getShapeMax(unsigned int shapeID) const {
-  bt_assert(shapeID < parts.size());
+  bt_assert(shapeID < parts_.size());
 
-  return parts[shapeID]->max;
+  return parts_[shapeID]->max;
 }
 
 void Problem::addSolution(Assembly *assm) {
@@ -847,57 +857,57 @@ AssemblerInterface::errState Problem::setAssembler(AssemblerInterface *assm) {
 void Problem::setShapeGroup(unsigned int shapeID,
                             unsigned short group,
                             unsigned short count) {
-  bt_assert(shapeID < parts.size());
+  bt_assert(shapeID < parts_.size());
 
   // not first look, if we already have this group number in our list
-  for (unsigned int i = 0; i < parts[shapeID]->groups.size(); i++)
-    if (parts[shapeID]->groups[i].group == group) {
+  for (unsigned int i = 0; i < parts_[shapeID]->groups.size(); i++)
+    if (parts_[shapeID]->groups[i].group == group) {
 
       /* if we change count, change it, if we set count to 0 remove that entry */
       if (count)
-        parts[shapeID]->groups[i].count = count;
+        parts_[shapeID]->groups[i].count = count;
       else
-        parts[shapeID]->groups.erase(parts[shapeID]->groups.begin() + i);
+        parts_[shapeID]->groups.erase(parts_[shapeID]->groups.begin() + i);
       return;
     }
 
   // not found add, but only groups not equal to 0
   if (group && count)
-    parts[shapeID]->addGroup(group, count);
+    parts_[shapeID]->addGroup(group, count);
 }
 
 unsigned short Problem::getShapeGroupNumber(unsigned int shapeID) const {
-  bt_assert(shapeID < parts.size());
+  bt_assert(shapeID < parts_.size());
 
-  return parts[shapeID]->groups.size();
+  return parts_[shapeID]->groups.size();
 }
 
 unsigned short Problem::getShapeGroup(unsigned int shapeID,
                                       unsigned int groupID) const {
-  bt_assert(shapeID < parts.size());
-  bt_assert(groupID < parts[shapeID]->groups.size());
+  bt_assert(shapeID < parts_.size());
+  bt_assert(groupID < parts_[shapeID]->groups.size());
 
-  return parts[shapeID]->groups[groupID].group;
+  return parts_[shapeID]->groups[groupID].group;
 }
 
 unsigned short Problem::getShapeGroupCount(unsigned int shapeID,
                                            unsigned int groupID) const {
-  bt_assert(shapeID < parts.size());
-  bt_assert(groupID < parts[shapeID]->groups.size());
+  bt_assert(shapeID < parts_.size());
+  bt_assert(groupID < parts_[shapeID]->groups.size());
 
-  return parts[shapeID]->groups[groupID].count;
+  return parts_[shapeID]->groups[groupID].count;
 }
 
 unsigned int Problem::pieceToShape(unsigned int piece) const {
 
   unsigned int shape = 0;
 
-  bt_assert(shape < parts.size());
+  bt_assert(shape < parts_.size());
 
-  while (piece >= parts[shape]->max) {
-    piece -= parts[shape]->max;
+  while (piece >= parts_[shape]->max) {
+    piece -= parts_[shape]->max;
     shape++;
-    bt_assert(shape < parts.size());
+    bt_assert(shape < parts_.size());
   }
 
   return shape;
@@ -907,12 +917,12 @@ unsigned int Problem::pieceToSubShape(unsigned int piece) const {
 
   unsigned int shape = 0;
 
-  bt_assert(shape < parts.size());
+  bt_assert(shape < parts_.size());
 
-  while (piece >= parts[shape]->max) {
-    piece -= parts[shape]->max;
+  while (piece >= parts_[shape]->max) {
+    piece -= parts_[shape]->max;
     shape++;
-    bt_assert(shape < parts.size());
+    bt_assert(shape < parts_.size());
   }
 
   return piece;
@@ -924,17 +934,15 @@ GridType *Problem::getGridType() { return puzzle.getGridType(); }
 void Problem::sortSolutions(int by) {
   stable_sort(solutions_.begin(), solutions_.end(), [by](auto &s1, auto &s2) {
     switch (by) {
-      case 0:
-        return s1->getAssemblyNumber() < s2->getAssemblyNumber();
+      case 0:return s1->getAssemblyNumber() < s2->getAssemblyNumber();
       case 1:
         return s1->getDisassemblyInfo() && s2->getDisassemblyInfo() &&
-               s1->getDisassemblyInfo()->compare(s2->getDisassemblyInfo()) < 0;
+            s1->getDisassemblyInfo()->compare(s2->getDisassemblyInfo()) < 0;
       case 2:
         return s1->getDisassemblyInfo() && s2->getDisassemblyInfo() &&
-               s1->getDisassemblyInfo()->sumMoves() <
-               s2->getDisassemblyInfo()->sumMoves();
-      case 3:
-        return s1->getAssembly()->comparePieces(s2->getAssembly()) > 0;
+            s1->getDisassemblyInfo()->sumMoves() <
+                s2->getDisassemblyInfo()->sumMoves();
+      case 3:return s1->getAssembly()->comparePieces(s2->getAssembly()) > 0;
     }
   });
 }

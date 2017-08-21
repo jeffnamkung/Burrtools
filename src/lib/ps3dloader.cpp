@@ -30,7 +30,7 @@
 /* either return a puzzle, or nil, when failed */
 Puzzle *loadPuzzlerSolver3D(std::istream *str) {
 
-  Puzzle *p = new Puzzle(new GridType());
+  Puzzle *p = new Puzzle(std::make_unique<GridType>());
 
   Problem *pr = p->getProblem(p->addProblem());
 

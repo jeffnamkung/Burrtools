@@ -64,14 +64,14 @@ void LStatusLine::setText(const char * t) {
   text->copy_label(t);
 }
 
-voxelFrame_c::colorMode LStatusLine::getColorMode(void) const {
+VoxelFrame::colorMode LStatusLine::getColorMode(void) const {
 
   switch (mode->getSelected()) {
-    case 0: return voxelFrame_c::pieceColor;
-    case 1: return voxelFrame_c::paletteColor;
-    case 2: return voxelFrame_c::anaglyphColor;
-    case 3: return voxelFrame_c::anaglyphColorL;
-    default: return voxelFrame_c::pieceColor;
+    case 0: return VoxelFrame::pieceColor;
+    case 1: return VoxelFrame::paletteColor;
+    case 2: return VoxelFrame::anaglyphColor;
+    case 3: return VoxelFrame::anaglyphColorL;
+    default: return VoxelFrame::pieceColor;
   }
 }
 

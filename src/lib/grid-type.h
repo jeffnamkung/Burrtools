@@ -44,9 +44,7 @@ class XmlParser;
  * This is a factory (see http://en.wikipedia.org/wiki/Factory_method_pattern)
  */
 class GridType {
-
  public:
-
   /// the available grid types
   typedef enum {
     GT_BRICKS,                   ///< cubes
@@ -56,7 +54,7 @@ class GridType {
     GT_TETRA_OCTA,               ///< spacegrid for with tetraedra and octrahera, also a cut cube
 
     GT_NUM_GRIDS                 ///< always the last entry, the number of different grids
-  } gridType;
+  } Type;
 
   /// capabilities of a given grid space
   typedef enum {
@@ -64,22 +62,6 @@ class GridType {
     CAP_DISASSEMBLE = 2,         ///< the grid has a disassembler
     CAP_STLEXPORT = 4            ///< the grid can export to SDL
   } capabilities;
-
- protected:
-
-  /// the grid type of this instance
-  gridType type;
-
-  /**
-   * The symmetry object for this grid type.
-   *
-   * As we only need one symmetry object for a grid type we create a local
-   * instance here and just return a pointer to it for the application to
-   * use
-   */
-  mutable symmetries_c *sym;
-
- public:
 
   /**
    * load from xml node
@@ -95,17 +77,17 @@ class GridType {
   /* some specializes constructors */
 
   /** create a cube grid */
-  GridType(void);
+  GridType();
 
   /** create a grid of the given type with its standard parameters */
-  GridType(gridType gt);
+  GridType(Type gt);
 
-  ~GridType(void);
+  ~GridType();
 
   /** get the grid type */
-  gridType getType(void) const { return type; }
+  Type getType() const { return type; }
 
-  unsigned int getCapabilities(void) const;
+  unsigned int getCapabilities() const;
 
   /// return a movement cache instance for this grid type
   movementCache_c *getMovementCache(const Problem *puz) const;
@@ -127,10 +109,10 @@ class GridType {
    * Don't free this instance the ownership stays with the gridType_c class
    * You just use the class and forget about it
    */
-  const symmetries_c *getSymmetries(void) const;
+  const symmetries_c *getSymmetries() const;
 
   /// return an STL exporter for this grid
-  stlExporter_c *getStlExporter(void) const;
+  stlExporter_c *getStlExporter() const;
 
   /**
    * Find a suitable assembler for the given problem.
@@ -144,10 +126,22 @@ class GridType {
    */
   static AssemblerInterface *findAssembler(const Problem *p);
 
- private:
+ protected:
+  /// the grid type of this instance
+  Type type;
 
+  /**
+   * The symmetry object for this grid type.
+   *
+   * As we only need one symmetry object for a grid type we create a local
+   * instance here and just return a pointer to it for the application to
+   * use
+   */
+  mutable symmetries_c *sym;
+
+ private:
   // no copying and assigning
-  void operator=(const GridType &);
+  GridType& operator=(const GridType&);
 };
 
 #endif

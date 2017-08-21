@@ -41,7 +41,7 @@ image_c::image_c(unsigned int w, unsigned int h, unsigned char r, unsigned char 
   }
 }
 
-void image_c::prepareOpenGlImagePart(voxelFrame_c * dr) {
+void image_c::prepareOpenGlImagePart(VoxelFrame * dr) {
 
   if (!tr) {
 

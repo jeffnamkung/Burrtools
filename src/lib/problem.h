@@ -40,7 +40,7 @@ class Disassembly;
 class Assembly;
 class GridType;
 class Puzzle;
-class part_c;
+class Part;
 class Solution;
 class XmlWriter;
 class XmlParser;
@@ -48,12 +48,12 @@ class XmlParser;
 /**
  * this state reflects how far we are with solving this problem
  */
-typedef enum {
+enum SolverState {
   SS_UNSOLVED,    ///< nothing done yet
   SS_SOLVING,     ///< started and not finished in this state assm must contain the assembler
   SS_SOLVED,      ///< finished, the assembler has been destroyed and all the information is available
   SS_UNKNOWN
-} solveState_e;
+};
 
 /**
  * This class defines a problem,
@@ -79,7 +79,7 @@ class Problem {
    * of each shape are there, the shape class contains indices into the
    * shape list of the puzzle and some counters, ...
    */
-  std::vector<part_c *> parts;
+  std::vector<std::unique_ptr<Part>> parts_;
 
   /**
    * the result shape shape as index into the puzzle shapes
@@ -117,7 +117,7 @@ class Problem {
   /**
    * this state reflects how far we are with solving this problem
    */
-  solveState_e solveState;
+  SolverState solveState;
 
   /**
    * Number of found assemblies for the problem.
@@ -279,7 +279,7 @@ class Problem {
    *
    * This is NOT the number of pieces in the problem
    */
-  unsigned int partNumber(void) const { return parts.size(); }
+  unsigned int partNumber(void) const { return parts_.size(); }
   /** get the minimum number of times a shape is used.
    * This similar as the getShapeMinimum function but this time
    * the piece index instead of the shape index
@@ -468,7 +468,7 @@ class Problem {
    */
   //@{
   /** find out how far we are with solving (no, started, finished) */
-  solveState_e getSolveState(void) const { return solveState; }
+  SolverState getSolveState(void) const { return solveState; }
   /** find out if we have an idea about the number of assemblies */
   bool numAssembliesKnown(void) const { return solveState != SS_UNSOLVED; }
   /** get number of assemblies found so far. Throws an exception, when not known */

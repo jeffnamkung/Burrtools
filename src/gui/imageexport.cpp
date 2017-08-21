@@ -58,7 +58,7 @@ class ImageInfo {
 
     // parameters for single
     unsigned int shape;
-    voxelFrame_c::colorMode showColors;
+    VoxelFrame::colorMode showColors;
 
     // parameters for assembly
     unsigned int problem;
@@ -73,21 +73,21 @@ class ImageInfo {
     unsigned int i2aa;
 
     /* the openGL context to draw to */
-    voxelFrame_c * vv;
+    VoxelFrame * vv;
 
   public:
 
     /* create image info to create a single shape image */
-    ImageInfo(Puzzle * p, voxelFrame_c::colorMode color,
-              unsigned int s, voxelFrame_c * v) : setupFunction(SHOW_SINGLE), puzzle(p),
+    ImageInfo(Puzzle * p, VoxelFrame::colorMode color,
+              unsigned int s, VoxelFrame * v) : setupFunction(SHOW_SINGLE), puzzle(p),
                                           shape(s), showColors(color),
                                           i(new image_c(600, 200)), i2(0), vv(v) { }
 
     /* image info for an assembly, if you don't give pos, you will get the standard assembly with
      * no piece shifted
      */
-    ImageInfo(Puzzle * p, voxelFrame_c::colorMode color, unsigned int prob,
-              unsigned int sol, voxelFrame_c * v,
+    ImageInfo(Puzzle * p, VoxelFrame::colorMode color, unsigned int prob,
+              unsigned int sol, VoxelFrame * v,
               DisassemblyToMoves * pos = 0, bool d = false) : setupFunction(SHOW_ASSEMBLY), puzzle(p),
                                                               showColors(color), problem(prob),
                                                               solution(sol), dim(d), positions(pos),
@@ -128,13 +128,13 @@ void ImageInfo::setupContent() {
 
   switch (setupFunction) {
     case SHOW_SINGLE:
-      vv->showSingleShape(puzzle, shape);
-      vv->showColors(puzzle, showColors);
+      vv->showSingleShape(*puzzle, shape);
+      vv->showColors(*puzzle, showColors);
 
       break;
     case SHOW_ASSEMBLY:
       vv->showAssembly(puzzle->getProblem(problem), solution);
-      vv->showColors(puzzle, showColors);
+      vv->showColors(*puzzle, showColors);
 
       if (positions) {
         vv->updatePositions(positions);
@@ -410,18 +410,18 @@ void imageExport_c::cb_Export() {
 
   if (ExpShape->value()) {
 
-    images.push_back(new ImageInfo(puzzle, getColorMode(),
+    images.push_back(new ImageInfo(puzzle_, getColorMode(),
         ShapeSelect->getSelection(), view3D->getView()));
 
   } else if (ExpAssembly->value()) {
 
-    images.push_back(new ImageInfo(puzzle, getColorMode(),
+    images.push_back(new ImageInfo(puzzle_, getColorMode(),
         ProblemSelect->getSelection(), 0, view3D->getView()));
 
   } else if (ExpSolutionDisassm->value()) {
 
     unsigned int prob = ProblemSelect->getSelection();
-    Problem * pr = puzzle->getProblem(prob);
+    Problem * pr = puzzle_->getProblem(prob);
 
     // generate an image for each step (for the moment only for the last solution)
     unsigned int s = pr->solutionNumber() - 1;
@@ -431,14 +431,14 @@ void imageExport_c::cb_Export() {
     for (unsigned int step = 0; step < t->sumMoves(); step++) {
       DisassemblyToMoves * dtm = new DisassemblyToMoves(t, 20, pr->pieceNumber());
       dtm->setStep(step, false, true);
-      images.push_back(new ImageInfo(puzzle, getColorMode(),
+      images.push_back(new ImageInfo(puzzle_, getColorMode(),
            prob, s, view3D->getView(), dtm, DimStatic->value()));
     }
 
   } else if (ExpSolution->value()) {
 
     unsigned int prob = ProblemSelect->getSelection();
-    Problem * pr = puzzle->getProblem(prob);
+    Problem * pr = puzzle_->getProblem(prob);
 
     // generate an image for each step (for the moment only for the last solution)
     unsigned int s = pr->solutionNumber() - 1;
@@ -448,26 +448,26 @@ void imageExport_c::cb_Export() {
     for (unsigned int step = t->sumMoves() - 1; step > 0; step--) {
       DisassemblyToMoves * dtm = new DisassemblyToMoves(t, 20, pr->pieceNumber());
       dtm->setStep(step, false, true);
-      images.push_back(new ImageInfo(puzzle, getColorMode(),
+      images.push_back(new ImageInfo(puzzle_, getColorMode(),
            prob, s, view3D->getView(), dtm, DimStatic->value()));
     }
 
     DisassemblyToMoves * dtm = new DisassemblyToMoves(t, 20, pr->pieceNumber());
     dtm->setStep(0, false, true);
-    images.push_back(new ImageInfo(puzzle, getColorMode(),
+    images.push_back(new ImageInfo(puzzle_, getColorMode(),
           prob, s, view3D->getView(), dtm, false));
 
   } else if (ExpProblem->value()) {
     // generate an image for each piece in the problem
     unsigned int prob = ProblemSelect->getSelection();
-    Problem * pr = puzzle->getProblem(prob);
+    Problem * pr = puzzle_->getProblem(prob);
 
     if (pr->resultValid())
-      images.push_back(new ImageInfo(puzzle, getColorMode(),
+      images.push_back(new ImageInfo(puzzle_, getColorMode(),
             pr->getResultId(), view3D->getView()));
 
     for (unsigned int p = 0; p < pr->partNumber(); p++)
-      images.push_back(new ImageInfo(puzzle, getColorMode(),
+      images.push_back(new ImageInfo(puzzle_, getColorMode(),
             pr->getShape(p), view3D->getView()));
 
   } else
@@ -490,9 +490,9 @@ void imageExport_c::cb_Update3DView() {
   bool solutions = false;
 
   unsigned int prob = ProblemSelect->getSelection();
-  Problem * pr = puzzle->getProblem(prob);
+  Problem * pr = puzzle_->getProblem(prob);
 
-  if (prob < puzzle->problemNumber())
+  if (prob < puzzle_->problemNumber())
     if (pr->solutionNumber() > 0) {
       if (pr->getSolution(0)->getAssembly()) assemblies = true;
       if (pr->getSolution(0)->getDisassembly()) solutions = true;
@@ -516,29 +516,29 @@ void imageExport_c::cb_Update3DView() {
       ExpProblem->setonly();
   } else
     ExpAssembly->activate();
-  if (puzzle->problemNumber() == 0) {
+  if (puzzle_->problemNumber() == 0) {
     ExpProblem->deactivate();
     if (ExpProblem->value())
       ExpShape->setonly();
   } else
     ExpProblem->activate();
-  if (puzzle->shapeNumber() == 0)
+  if (puzzle_->shapeNumber() == 0)
     ExpShape->deactivate();
   else
     ExpShape->activate();
 
   if (ExpShape->value()) {
-    view3D->getView()->showSingleShape(puzzle, ShapeSelect->getSelection());
+    view3D->getView()->showSingleShape(*puzzle_, ShapeSelect->getSelection());
   } else if (ExpAssembly->value()) {
-    view3D->getView()->showAssembly(puzzle->getProblem(ProblemSelect->getSelection()), 0);
+    view3D->getView()->showAssembly(puzzle_->getProblem(ProblemSelect->getSelection()), 0);
   } else if (ExpSolution->value()) {
-    view3D->getView()->showAssembly(puzzle->getProblem(ProblemSelect->getSelection()), 0);
+    view3D->getView()->showAssembly(puzzle_->getProblem(ProblemSelect->getSelection()), 0);
   } else if (ExpSolutionDisassm->value()) {
-    view3D->getView()->showAssembly(puzzle->getProblem(ProblemSelect->getSelection()), 0);
+    view3D->getView()->showAssembly(puzzle_->getProblem(ProblemSelect->getSelection()), 0);
   } else if (ExpProblem->value() && pr->resultValid()) {
-    view3D->getView()->showSingleShape(puzzle, pr->getResultId());
+    view3D->getView()->showSingleShape(*puzzle_, pr->getResultId());
   }
-  view3D->getView()->showColors(puzzle, getColorMode());
+  view3D->getView()->showColors(*puzzle_, getColorMode());
 }
 
 static void cb_ImageExportSzUpdate_stub(Fl_Widget * /*o*/, void *v) { ((imageExport_c*)(v))->cb_SzUpdate(); }
@@ -579,7 +579,7 @@ void imageExport_c::cb_SzUpdate() {
   }
 }
 
-imageExport_c::imageExport_c(Puzzle * p) : LFl_Double_Window(false), puzzle(p), working(false), state(0), i(0) {
+imageExport_c::imageExport_c(Puzzle * p) : LFl_Double_Window(false), puzzle_(p), working(false), state(0), i(0) {
 
   label("Export Images");
 
@@ -727,8 +727,8 @@ imageExport_c::imageExport_c(Puzzle * p) : LFl_Double_Window(false), puzzle(p), 
   {
     Layouter * l = new Layouter(0, 5, 2, 1);
 
-    ShapeSelect = new PieceSelector(0, 0, 20, 20, puzzle);
-    ProblemSelect = new ProblemSelector(0, 0, 20, 20, puzzle);
+    ShapeSelect = new PieceSelector(0, 0, 20, 20, puzzle_);
+    ProblemSelect = new ProblemSelector(0, 0, 20, 20, puzzle_);
 
     ShapeSelect->setSelection(0);
     ProblemSelect->setSelection(0);

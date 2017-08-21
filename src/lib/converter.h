@@ -29,7 +29,7 @@ class Puzzle;
  * returns true, if it is possible to convert this puzzle to the
  * given gridType
  */
-bool canConvert(GridType::gridType src, GridType::gridType dst);
+bool canConvert(GridType::Type src, GridType::Type dst);
 
 /**
  * Create a new puzzle with a new gridtype but identical shapes.
@@ -37,6 +37,6 @@ bool canConvert(GridType::gridType src, GridType::gridType dst);
  * If the conversion can't be done (you should check first with canConvert)
  * a NULL pointer will be returned
  */
-Puzzle *doConvert(Puzzle *p, GridType::gridType type);
+Puzzle* doConvert(const Puzzle& p, GridType::Type type);
 
 #endif

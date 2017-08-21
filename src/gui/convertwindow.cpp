@@ -42,7 +42,7 @@ void convertWindow_c::okay_cb() {
 }
 
 convertWindow_c::convertWindow_c(
-    GridType::gridType srcType) : LFl_Double_Window(false), _ok(false), current(0)
+    GridType::Type srcType) : LFl_Double_Window(false), _ok(false), current(0)
 {
   bool found = false;
   unsigned int yPos = 0;
@@ -52,17 +52,17 @@ convertWindow_c::convertWindow_c(
 
   for (int i = 0; i < GridType::GT_NUM_GRIDS; i++)
   {
-    if (canConvert(srcType, (GridType::gridType)i))
+    if (canConvert(srcType, (GridType::Type)i))
     {
       found = true;
 
-      GridType::gridType g = (GridType::gridType)i;
+      GridType::Type g = (GridType::Type)i;
       GridType gt(g);
       GuiGridType ggt(&gt);
 
 
       gti.push_back(new LFl_Radio_Button(ggt.getName(), 0, yPos, 1, 1));
-      gridTypes.push_back(GridType::gridType(i));
+      gridTypes.push_back(GridType::Type(i));
 
       gti[yPos]->callback(cb_convertSelect_stub, this);
 
@@ -98,7 +98,7 @@ convertWindow_c::convertWindow_c(
   }
 }
 
-GridType::gridType convertWindow_c::getTargetType(void)
+GridType::Type convertWindow_c::getTargetType(void)
 {
   return gridTypes[current];
 }

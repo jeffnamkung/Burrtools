@@ -26,6 +26,7 @@
  */
 
 #include "bt_assert.h"
+#include "grid-type.h"
 
 #include <stdint.h>
 #include <vector>
@@ -34,7 +35,6 @@
 #include <stdint.h>
 
 class Voxel;
-class GridType;
 class Problem;
 class XmlWriter;
 class XmlParser;
@@ -53,7 +53,7 @@ class Puzzle {
    * normally it doesn't change, except if you convert
    * a puzzle of one grid type into an other with a converter
    */
-  GridType *gt;
+  std::unique_ptr<GridType> grid_type_;
 
   /**
    * The vector with the shapes
@@ -92,19 +92,21 @@ class Puzzle {
    * copy constructor this will NOT copy the labels and solutions of
    * the problems.
    */
-  Puzzle(const Puzzle *orig);
+  explicit Puzzle(const Puzzle *orig);
 
   /**
    * Constructor for empty puzzle. no shape, no problem and no colours
    * ownership of the given gridtype is taken over, the memory
    * is freed on destruction of this class
    */
-  Puzzle(GridType *g) : gt(g), commentPopup(false) {}
+  explicit Puzzle(std::unique_ptr<GridType> grid_type)
+      : grid_type_(std::move(grid_type)),
+        commentPopup(false) {}
 
   /**
    * load the puzzle from the XML file
    */
-  Puzzle(XmlParser &pars);
+  explicit Puzzle(XmlParser &pars);
 
   /**
    * save the puzzle into a XML node that is returned
@@ -115,12 +117,12 @@ class Puzzle {
    * Destructor.
    * Deletes all the shapes in the puzzle
    */
-  ~Puzzle(void);
+  ~Puzzle();
 
   /** \name some functions to get the current set grid type for this puzzle */
   //@{
-  const GridType *getGridType(void) const { return gt; }
-  GridType *getGridType() { return gt; }
+  const GridType* getGridType() const { return grid_type_.get(); }
+  GridType* getGridType() { return grid_type_.get(); }
   //@}
 
 
@@ -134,7 +136,7 @@ class Puzzle {
   /** add an empty shape of the given size return the index of the new shape */
   unsigned int addShape(unsigned int sx, unsigned int sy, unsigned int sz);
   /** return how many shapes there are in the puzzle */
-  unsigned int shapeNumber(void) const { return shapes.size(); }
+  unsigned int shapeNumber() const { return shapes.size(); }
   /** get a shape */
   const Voxel *getShape(unsigned int idx) const {
     bt_assert(idx < shapes.size());
@@ -184,20 +186,20 @@ class Puzzle {
                 unsigned char *g,
                 unsigned char *b) const;
   /** return the number of defined colors */
-  unsigned int colorNumber(void) const { return colors.size(); }
+  unsigned int colorNumber() const { return colors.size(); }
   //@}
 
 
   /** \name handle problems */
   //@{
   /** add a new empty problem return its index */
-  unsigned int addProblem(void);
+  unsigned int addProblem();
   /** add a new problem as copy from another problem (from another puzzle).
    * A copy of the provided problem is created
    */
   unsigned int addProblem(const Problem *prob);
   /** return the number of problems within this puzzle */
-  unsigned int problemNumber(void) const { return problems.size(); }
+  unsigned int problemNumber() const { return problems.size(); }
   /** remove problem with the given index freeing all its ressources */
   void removeProblem(unsigned int p);
   /** exchange problem at indes p1 with problem at index p2 */
@@ -220,9 +222,9 @@ class Puzzle {
   /** set comment there is no limitation in size or characters.  */
   void setComment(const std::string &com) { comment = com; }
   /** get comment */
-  const std::string &getComment(void) const { return comment; }
+  const std::string &getComment() const { return comment; }
   /** find out if the comment popup flas is set */
-  bool getCommentPopup(void) const { return commentPopup; }
+  bool getCommentPopup() const { return commentPopup; }
   /** set or reset comment popup flag */
   void setCommentPopup(bool val) { commentPopup = val; }
   //@}

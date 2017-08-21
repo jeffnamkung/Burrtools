@@ -28,17 +28,9 @@ class Puzzle;
 class groupsEditorTab_c;
 
 /* the window that contains the group edit table */
-class groupsEditor_c : public LFl_Double_Window {
-
-  groupsEditorTab_c * tab;
-  LFl_Input * maxHoles;
-  Puzzle * puzzle;
-  unsigned int problem;
-  bool _changed;
-
-public:
-
-  groupsEditor_c(Puzzle * p, unsigned int problem);
+class GroupsEditor : public LFl_Double_Window {
+ public:
+  GroupsEditor(Puzzle* p, unsigned int problem);
 
   void cb_AddGroup(void);
   void cb_CloseWindow(void);
@@ -49,6 +41,14 @@ public:
 
   /* finish editing and close window */
   void hide(void);
+
+ private:
+  groupsEditorTab_c * tab;
+  LFl_Input * maxHoles;
+  Puzzle* puzzle;
+  unsigned int problem;
+  bool _changed;
+
 };
 
 #endif

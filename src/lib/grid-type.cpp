@@ -47,7 +47,7 @@ GridType::GridType(XmlParser &pars) {
     pars.exception("grid type needs a valid 'type' attribute");
 
   // set to the correct size
-  type = (gridType) atoi(typeStr.c_str());
+  type = (Type) atoi(typeStr.c_str());
 
   switch (type) {
 
@@ -82,7 +82,7 @@ GridType::GridType() {
   sym = 0;
 }
 
-GridType::GridType(gridType gt) {
+GridType::GridType(Type gt) {
 
   type = gt;
 

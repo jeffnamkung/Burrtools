@@ -34,17 +34,13 @@
 
 #include "../halfedge/polyhedron.h"
 
-#include <math.h>
-
-#include <FL/Fl.H>
-
 #ifdef WIN32
 #include <GL/glext.h>
 #endif
 
 #include "gl2ps.h"
 
-voxelFrame_c::voxelFrame_c(int x,int y,int w,int h) :
+VoxelFrame::VoxelFrame(int x,int y,int w,int h) :
   Fl_Gl_Window(x,y,w,h),
   curAssembly(0),
   markerType(-1),
@@ -61,7 +57,7 @@ voxelFrame_c::voxelFrame_c(int x,int y,int w,int h) :
   rotMethod = config.rotationMethod();
 };
 
-void voxelFrame_c::setRotaterMethod(int method)
+void VoxelFrame::setRotaterMethod(int method)
 {
   if (method == rotMethod) return;
 
@@ -75,7 +71,7 @@ void voxelFrame_c::setRotaterMethod(int method)
   rotMethod = method;
 }
 
-voxelFrame_c::~voxelFrame_c() {
+VoxelFrame::~VoxelFrame() {
   clearSpaces();
   if (curAssembly) {
     delete curAssembly;
@@ -410,7 +406,7 @@ bool inRegion(int x, int y, int z, int x1, int x2, int y1, int y2, int z1, int z
 
 
 
-void voxelFrame_c::drawVoxelSpace() {
+void VoxelFrame::drawVoxelSpace() {
 
   glShadeModel(GL_FLAT);
 
@@ -744,7 +740,7 @@ void voxelFrame_c::drawVoxelSpace() {
   glDepthMask(GL_TRUE);
 }
 
-unsigned int voxelFrame_c::addSpace(const Voxel * vx) {
+unsigned int VoxelFrame::addSpace(const Voxel * vx) {
   shapeInfo i;
 
   i.r = i.g = i.b = 1;
@@ -767,7 +763,7 @@ unsigned int voxelFrame_c::addSpace(const Voxel * vx) {
   return shapes.size()-1;
 }
 
-void voxelFrame_c::clearSpaces() {
+void VoxelFrame::clearSpaces() {
 
   for (unsigned int i = 0; i < shapes.size(); i++) {
     if (shapes[i].list) glDeleteLists(shapes[i].list, 1);
@@ -780,7 +776,7 @@ void voxelFrame_c::clearSpaces() {
   shapes.clear();
 }
 
-void voxelFrame_c::setSpaceColor(unsigned int nr, float r, float g, float b, float a) {
+void VoxelFrame::setSpaceColor(unsigned int nr, float r, float g, float b, float a) {
 
   shapes[nr].r = r;
   shapes[nr].g = g;
@@ -795,7 +791,7 @@ void voxelFrame_c::setSpaceColor(unsigned int nr, float r, float g, float b, flo
   redraw();
 }
 
-void voxelFrame_c::setSpaceColor(unsigned int nr, float a) {
+void VoxelFrame::setSpaceColor(unsigned int nr, float a) {
 
   if (shapes[nr].a != a) {
 
@@ -808,7 +804,7 @@ void voxelFrame_c::setSpaceColor(unsigned int nr, float a) {
   }
 }
 
-void voxelFrame_c::setSpacePosition(unsigned int nr, float x, float y, float z, float scale) {
+void VoxelFrame::setSpacePosition(unsigned int nr, float x, float y, float z, float scale) {
 
   shapes[nr].shape->recalcSpaceCoordinates(&x, &y, &z);
 
@@ -818,7 +814,7 @@ void voxelFrame_c::setSpacePosition(unsigned int nr, float x, float y, float z, 
   shapes[nr].scale = scale;
 }
 
-void voxelFrame_c::setDrawingMode(unsigned int nr, drawingMode mode) {
+void VoxelFrame::setDrawingMode(unsigned int nr, drawingMode mode) {
 
   if (shapes[nr].mode != mode) {
     shapes[nr].mode = mode;
@@ -838,7 +834,7 @@ void voxelFrame_c::setDrawingMode(unsigned int nr, drawingMode mode) {
   redraw();
 }
 
-void voxelFrame_c::setColorMode(colorMode color) {
+void VoxelFrame::setColorMode(colorMode color) {
   colors = color;
 
   for (unsigned int nr = 0; nr < shapes.size(); nr++) {
@@ -851,7 +847,7 @@ void voxelFrame_c::setColorMode(colorMode color) {
   redraw();
 }
 
-void voxelFrame_c::setMarker(int x1, int y1, int x2, int y2, int z, int mT) {
+void VoxelFrame::setMarker(int x1, int y1, int x2, int y2, int z, int mT) {
   markerType = mT;
   mX1 = x1;
   mY1 = y1;
@@ -861,16 +857,16 @@ void voxelFrame_c::setMarker(int x1, int y1, int x2, int y2, int z, int mT) {
   redraw();
 }
 
-void voxelFrame_c::hideMarker() {
+void VoxelFrame::hideMarker() {
   markerType = -1;
   redraw();
 }
 
-void voxelFrame_c::showNothing() {
+void VoxelFrame::showNothing() {
   clearSpaces();
 }
 
-void voxelFrame_c::setInsideVisible(bool on)
+void VoxelFrame::setInsideVisible(bool on)
 {
   insideVisible = on;
   for (unsigned int nr = 0; nr < shapes.size(); nr++) {
@@ -882,11 +878,11 @@ void voxelFrame_c::setInsideVisible(bool on)
   redraw();
 }
 
-void voxelFrame_c::showSingleShape(const Puzzle * puz, unsigned int shapeNum) {
+void VoxelFrame::showSingleShape(const Puzzle& puz, unsigned int shapeNum) {
 
   hideMarker();
   clearSpaces();
-  unsigned int num = addSpace(puz->getGridType()->getVoxel(puz->getShape(shapeNum)));
+  unsigned int num = addSpace(puz.getGridType()->getVoxel(puz.getShape(shapeNum)));
 
   setSpaceColor(num, pieceColorR(shapeNum), pieceColorG(shapeNum), pieceColorB(shapeNum), 1);
 
@@ -896,7 +892,7 @@ void voxelFrame_c::showSingleShape(const Puzzle * puz, unsigned int shapeNum) {
   redraw();
 }
 
-void voxelFrame_c::showMesh(Polyhedron * poly)
+void VoxelFrame::showMesh(Polyhedron * poly)
 {
   hideMarker();
   clearSpaces();
@@ -943,7 +939,7 @@ void voxelFrame_c::showMesh(Polyhedron * poly)
   redraw();
 }
 
-void voxelFrame_c::showProblem(const Puzzle * puz, unsigned int problem, unsigned int selShape) {
+void VoxelFrame::showProblem(const Puzzle * puz, unsigned int problem, unsigned int selShape) {
 
   hideMarker();
   clearSpaces();
@@ -1035,15 +1031,13 @@ void voxelFrame_c::showProblem(const Puzzle * puz, unsigned int problem, unsigne
   redraw();
 }
 
-void voxelFrame_c::showColors(const Puzzle * puz, colorMode mode) {
-
+void VoxelFrame::showColors(const Puzzle& puz, colorMode mode) {
   if (mode == paletteColor) {
-
     palette.clear();
 
-    for (unsigned int i = 0; i < puz->colorNumber(); i++) {
+    for (unsigned int i = 0; i < puz.colorNumber(); i++) {
       unsigned char r, g, b;
-      puz->getColor(i, &r, &g, &b);
+      puz.getColor(i, &r, &g, &b);
 
       colorInfo ci;
 
@@ -1054,14 +1048,13 @@ void voxelFrame_c::showColors(const Puzzle * puz, colorMode mode) {
       palette.push_back(ci);
     }
     setColorMode(paletteColor);
-
-  } else
+  } else {
     setColorMode(mode);
-
+  }
   redraw();
 }
 
-void voxelFrame_c::showAssembly(const Problem * puz, unsigned int solNum) {
+void VoxelFrame::showAssembly(const Problem * puz, unsigned int solNum) {
 
   bt_assert(puz->resultValid());
 
@@ -1132,7 +1125,7 @@ void voxelFrame_c::showAssembly(const Problem * puz, unsigned int solNum) {
   redraw();
 }
 
-void voxelFrame_c::showAssemblerState(const Problem * puz, const Assembly * assm) {
+void VoxelFrame::showAssemblerState(const Problem * puz, const Assembly * assm) {
 
   bt_assert(puz->resultValid());
 
@@ -1186,7 +1179,7 @@ void voxelFrame_c::showAssemblerState(const Problem * puz, const Assembly * assm
   redraw();
 }
 
-void voxelFrame_c::showPlacement(const Problem * puz, unsigned int piece, unsigned char t, int x, int y, int z)
+void VoxelFrame::showPlacement(const Problem * puz, unsigned int piece, unsigned char t, int x, int y, int z)
 {
   bt_assert(puz->resultValid());
 
@@ -1277,7 +1270,7 @@ void voxelFrame_c::showPlacement(const Problem * puz, unsigned int piece, unsign
 }
 
 
-void voxelFrame_c::updatePositions(PiecePositionsInterface *shifting) {
+void VoxelFrame::updatePositions(PiecePositionsInterface *shifting) {
 
   for (unsigned int p = 0; p < shapes.size()-1; p++) {
     setSpacePosition(p, shifting->getX(p), shifting->getY(p), shifting->getZ(p), 1);
@@ -1287,7 +1280,7 @@ void voxelFrame_c::updatePositions(PiecePositionsInterface *shifting) {
   redraw();
 }
 
-void voxelFrame_c::updatePositionsOverlap(PiecePositionsInterface *shifting) {
+void VoxelFrame::updatePositionsOverlap(PiecePositionsInterface *shifting) {
 
   /* in this case all the positions must be on the raster, so check that first */
   for (unsigned int p = 0; p < shapes.size()-1; p++) {
@@ -1398,7 +1391,7 @@ void voxelFrame_c::updatePositionsOverlap(PiecePositionsInterface *shifting) {
   redraw();
 }
 
-void voxelFrame_c::dimStaticPieces(PiecePositionsInterface *shifting) {
+void VoxelFrame::dimStaticPieces(PiecePositionsInterface *shifting) {
 
   for (unsigned int p = 0; p < shapes.size()-1; p++) {
     if (shapes[p].dim != !shifting->moving(p)) {
@@ -1413,7 +1406,7 @@ void voxelFrame_c::dimStaticPieces(PiecePositionsInterface *shifting) {
   redraw();
 }
 
-void voxelFrame_c::updateVisibility(PieceVisibility * pcvis) {
+void VoxelFrame::updateVisibility(PieceVisibility * pcvis) {
 
   /* savety check, it might be possible to click onto the visibility
    * selector even if no solution is displayed, e.g. when there is no
@@ -1459,7 +1452,7 @@ static void gluPickMatrix(double x, double y, double deltax, double deltay, GLin
   glScalef(viewport[2]/deltax, viewport[3]/deltay, 1.0);
 }
 
-void voxelFrame_c::draw() {
+void VoxelFrame::draw() {
 
   if (!valid()) {
 
@@ -1572,7 +1565,7 @@ void voxelFrame_c::draw() {
     cb->PostDraw();
 }
 
-int voxelFrame_c::handle(int event) {
+int VoxelFrame::handle(int event) {
 
   if (Fl_Gl_Window::handle(event))
     return 1;
@@ -1607,12 +1600,12 @@ int voxelFrame_c::handle(int event) {
   return 0;
 }
 
-void voxelFrame_c::setSize(double sz) {
+void VoxelFrame::setSize(double sz) {
   size = sz;
   redraw();
 }
 
-bool voxelFrame_c::pickShape(int x, int y, unsigned int *shape, unsigned long *voxel, unsigned int *face) {
+bool VoxelFrame::pickShape(int x, int y, unsigned int *shape, unsigned long *voxel, unsigned int *face) {
 
   GLuint sbuffer[500];
 
@@ -1656,7 +1649,7 @@ bool voxelFrame_c::pickShape(int x, int y, unsigned int *shape, unsigned long *v
   return true;
 }
 
-void voxelFrame_c::exportToVector(const char * fname, VectorFiletype vt) {
+void VoxelFrame::exportToVector(const char * fname, VectorFiletype vt) {
 
 
 #if 0

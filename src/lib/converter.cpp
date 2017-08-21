@@ -24,7 +24,7 @@
 #include "problem.h"
 #include "voxel.h"
 
-bool canConvert(GridType::gridType src, GridType::gridType dst) {
+bool canConvert(GridType::Type src, GridType::Type dst) {
   return (
       (src == GridType::GT_BRICKS && dst == GridType::GT_RHOMBIC)
           ||
@@ -37,25 +37,24 @@ bool canConvert(GridType::gridType src, GridType::gridType dst) {
  * the shapes inside the puzzle will be converted and then the
  * gridtype within the puzzle will be changed
  */
-Puzzle *doConvert(Puzzle *p, GridType::gridType type) {
+Puzzle* doConvert(const Puzzle& p, GridType::Type type) {
 
-  if (!canConvert(p->getGridType()->getType(), type)) return 0;
+  if (!canConvert(p.getGridType()->getType(), type)) return 0;
 
   // for now only the conversion from brick to rhombic is available
 
   // create a gridType for the target grid
-  GridType *gt = new GridType(type);
-
-  Puzzle *pNew = new Puzzle(gt);
+  Puzzle *pNew = new Puzzle(std::make_unique<GridType>(type));
+  GridType *gt = pNew->getGridType();
 
   // now convert all shapes
-  for (unsigned int i = 0; i < p->shapeNumber(); i++) {
-    const Voxel *v = p->getShape(i);
+  for (unsigned int i = 0; i < p.shapeNumber(); i++) {
+    const Voxel *v = p.getShape(i);
 
     Voxel *vn = 0;
     // this is now conversion specific....
 
-    if (p->getGridType()->getType() == GridType::GT_BRICKS
+    if (p.getGridType()->getType() == GridType::GT_BRICKS
         && type == GridType::GT_RHOMBIC) {
       vn = gt->getVoxel(v->getX() * 5,
                         v->getY() * 5,
@@ -75,7 +74,7 @@ Puzzle *doConvert(Puzzle *p, GridType::gridType type) {
                     if (vn->validCoordinate(5 * x + ax, 5 * y + ay, 5 * z + az))
                       vn->set(5 * x + ax, 5 * y + ay, 5 * z + az, st);
           }
-    } else if (p->getGridType()->getType() == GridType::GT_BRICKS
+    } else if (p.getGridType()->getType() == GridType::GT_BRICKS
         && type == GridType::GT_TETRA_OCTA) {
       vn = gt->getVoxel(v->getX() * 3,
                         v->getY() * 3,
@@ -103,19 +102,19 @@ Puzzle *doConvert(Puzzle *p, GridType::gridType type) {
   }
 
   // copy over colours
-  for (unsigned int i = 0; i < p->colorNumber(); i++) {
+  for (unsigned int i = 0; i < p.colorNumber(); i++) {
     unsigned char r, g, b;
-    p->getColor(i, &r, &g, &b);
+    p.getColor(i, &r, &g, &b);
     pNew->addColor(r, g, b);
   }
 
   // copy comment
-  pNew->setComment(p->getComment());
-  pNew->setCommentPopup(p->getCommentPopup());
+  pNew->setComment(p.getComment());
+  pNew->setCommentPopup(p.getCommentPopup());
 
   // create the problems as copies from the old puzzle
-  for (unsigned int i = 0; i < p->problemNumber(); i++) {
-    const Problem *prob = p->getProblem(i);
+  for (unsigned int i = 0; i < p.problemNumber(); i++) {
+    const Problem *prob = p.getProblem(i);
     Problem *probNew = pNew->getProblem(pNew->addProblem(prob));
 
     probNew->setName(prob->getName());

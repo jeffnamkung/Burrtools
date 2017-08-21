@@ -27,12 +27,12 @@
 #include <FL/Fl_Slider.H>
 
 class PiecePositionsInterface;
-class voxelFrame_c;
+class VoxelFrame;
 
 // the groups with the 3d view and the zoom slider
 class LView3dGroup : public Fl_Group, public layoutable_c {
 
-  voxelFrame_c * View3D;
+  VoxelFrame * View3D;
   Fl_Slider * slider;
 
 public:
@@ -46,7 +46,7 @@ public:
 
   void redraw(void);
 
-  voxelFrame_c * getView() { return View3D; }
+  VoxelFrame * getView() { return View3D; }
 
   virtual void getMinSize(int * w, int *h) const {
     *w = 40;

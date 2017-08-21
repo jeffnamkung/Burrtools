@@ -61,7 +61,7 @@ class imageExport_c : public LFl_Double_Window, public VoxelViewCallbacks {
   private:
 
     /* the puzzle that is going to be exported */
-    Puzzle * puzzle;
+    Puzzle * puzzle_;
 
     /* The different window elements */
     LView3dGroup *view3D;
@@ -99,8 +99,8 @@ class imageExport_c : public LFl_Double_Window, public VoxelViewCallbacks {
 
     void nextImage(bool finish);
 
-    voxelFrame_c::colorMode getColorMode() {
-      return (ColConst->value() == 1)?(voxelFrame_c::paletteColor):(voxelFrame_c::pieceColor);
+    VoxelFrame::colorMode getColorMode() {
+      return (ColConst->value() == 1)?(VoxelFrame::paletteColor):(VoxelFrame::pieceColor);
     }
 
   public:

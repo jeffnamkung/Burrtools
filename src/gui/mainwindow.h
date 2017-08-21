@@ -61,8 +61,9 @@ class Fl_Choice;
 class Fl_Progress;
 
 class MainWindow : public LFl_Double_Window {
-  Puzzle * puzzle;
-  GuiGridType * ggt;  // this is the guigridtype for the puzzle, is must always be in sync
+  std::unique_ptr<Puzzle> puzzle_;
+  std::unique_ptr<GuiGridType> gui_grid_type_;  // this is the guigridtype for the puzzle, is must
+  // always be in sync
   char * fname;
   DisassemblyToMoves * disassemble;
   SolveThread *assmThread;
@@ -143,17 +144,17 @@ class MainWindow : public LFl_Double_Window {
 
   bool tryToLoad(const char *fname);
 
-  void CreateShapeTab(void);
-  void CreateProblemTab(void);
-  void CreateSolveTab(void);
+  void CreateShapeTab();
+  void CreateProblemTab();
+  void CreateSolveTab();
 
 
   bool is3DViewBig;
   bool shapeEditorWithBig3DView;
 
-  void Toggle3DView(void);
-  void Big3DView(void);
-  void Small3DView(void);
+  void Toggle3DView();
+  void Big3DView();
+  void Small3DView();
 
   void StatPieceInfo(unsigned int pc);
   void StatProblemInfo(unsigned int pr);
@@ -167,15 +168,14 @@ class MainWindow : public LFl_Double_Window {
   void activateShape(unsigned int number);
   void activateProblem(unsigned int prob);
   void activateSolution(unsigned int prob, unsigned int num);
-  void activateClear(void);
+  void activateClear();
 
-  bool threadStopped(void);
+  bool threadStopped();
 
-  void updateInterface(void);
+  void updateInterface();
 
 public:
-
-  MainWindow(GridType * gt);
+  MainWindow(std::unique_ptr<GridType> grid_type);
   virtual ~MainWindow();
 
   int handle(int event);
@@ -183,15 +183,15 @@ public:
   void show(int argn, char ** argv);
 
   // overwrite hide to check for changes in all possible exit situations
-  void hide(void);
+  void hide();
 
   /* this is used on assert to save the current puzzle */
-  const Puzzle * getPuzzle(void) const { return puzzle; }
+  const Puzzle* getPuzzle() const { return puzzle_.get(); }
 
   /* update the interface to represent the latest state of
    * the solving progress, that works in background
    */
-  void update(void);
+  void update();
 
   /* return an index into the main menu array with the given text */
   int findMenuEntry(const char * txt);
@@ -199,102 +199,102 @@ public:
   /* the callback functions, as they are called from normal functions we need
    * to make them public, even though they should not be used from the outside
    */
-  void cb_AddColor(void);
-  void cb_RemoveColor(void);
-  void cb_ChangeColor(void);
+  void cb_AddColor();
+  void cb_RemoveColor();
+  void cb_ChangeColor();
 
-  void cb_NewShape(void);
-  void cb_DeleteShape(void);
-  void cb_CopyShape(void);
-  void cb_NameShape(void);
+  void cb_NewShape();
+  void cb_DeleteShape();
+  void cb_CopyShape();
+  void cb_NameShape();
   void cb_ShapeExchange(int with);
   void cb_WeightChange(int by);
 
-  void cb_NewProblem(void);
-  void cb_DeleteProblem(void);
-  void cb_CopyProblem(void);
-  void cb_RenameProblem(void);
+  void cb_NewProblem();
+  void cb_DeleteProblem();
+  void cb_CopyProblem();
+  void cb_RenameProblem();
   void cb_ProblemExchange(int with);
 
-  void cb_ColorAssSel(void);
-  void cb_ColorConstrSel(void);
+  void cb_ColorAssSel();
+  void cb_ColorConstrSel();
 
-  void cb_ShapeToResult(void);
+  void cb_ShapeToResult();
 
   void cb_TaskSelectionTab(Fl_Tabs*);
 
-  void cb_SelectProblemShape(void);
-  void cb_AddShapeToProblem(void);
-  void cb_SetShapeMinimumToZero(void);
-  void cb_AddAllShapesToProblem(void);
-  void cb_RemoveShapeFromProblem(void);
-  void cb_RemoveAllShapesFromProblem(void);
+  void cb_SelectProblemShape();
+  void cb_AddShapeToProblem();
+  void cb_SetShapeMinimumToZero();
+  void cb_AddAllShapesToProblem();
+  void cb_RemoveShapeFromProblem();
+  void cb_RemoveAllShapesFromProblem();
   void cb_ProbShapeExchange(int with);
 
   void cb_PcSel(LBlockListGroup* reason);
   void cb_ColSel(LBlockListGroup* reason);
   void cb_ProbSel(LBlockListGroup* reason);
 
-  void cb_PiecesClicked(void);
+  void cb_PiecesClicked();
 
-  void cb_TransformPiece(void);
+  void cb_TransformPiece();
   void cb_pieceEdit(VoxelEditGroup* o);
-  void cb_EditChoice(void);
+  void cb_EditChoice();
   void cb_EditSym(int onoff, int value);
-  void cb_EditMode(void);
+  void cb_EditMode();
 
-  void cb_TransformResult(void);
+  void cb_TransformResult();
 
-  void cb_AllowColor(void);
-  void cb_DisallowColor(void);
+  void cb_AllowColor();
+  void cb_DisallowColor();
   void cb_CCSort(bool byResult);
 
-  void cb_BtnPrepare(void);
+  void cb_BtnPrepare();
   void cb_BtnStart(bool prep_only);
   void cb_BtnCont(bool prep_only);
-  void cb_BtnStop(void);
-  void cb_BtnPlacementBrowser(void);
-  void cb_BtnMovementBrowser(void);
-  void cb_BtnAssemblerStep(void);
+  void cb_BtnStop();
+  void cb_BtnPlacementBrowser();
+  void cb_BtnMovementBrowser();
+  void cb_BtnAssemblerStep();
 
   void cb_SolutionSel(Fl_Value_Slider*);
   void cb_SolutionAnim(Fl_Value_Slider*);
 
-  void cb_PcVis(void);
+  void cb_PcVis();
 
-  void cb_Status(void);
-  void cb_3dClick(void);
+  void cb_Status();
+  void cb_3dClick();
 
-  void cb_New(void);
-  void cb_Load(void);
-  void cb_Load_Ps3d(void);
-  void cb_Save(void);
-  void cb_SaveAs(void);
-  void cb_Convert(void);
-  void cb_AssembliesToShapes(void);
-  void cb_Quit(void);
-  void cb_About(void);
-  void cb_Help(void);
-  void cb_Config(void);
-  void cb_Coment(void);
-  void cb_Toggle3D(void);
+  void cb_New();
+  void cb_Load();
+  void cb_Load_Ps3d();
+  void cb_Save();
+  void cb_SaveAs();
+  void cb_Convert();
+  void cb_AssembliesToShapes();
+  void cb_Quit();
+  void cb_About();
+  void cb_Help();
+  void cb_Config();
+  void cb_Coment();
+  void cb_Toggle3D();
   void cb_SolProbSel(LBlockListGroup* reason);
 
-  void cb_ShapeGroup(void);
-  void cb_ImageExport(void);
-  void cb_ImageExportVector(void);
-  void cb_STLExport(void);
-  void cb_StatusWindow(void);
+  void cb_ShapeGroup();
+  void cb_ImageExport();
+  void cb_ImageExportVector();
+  void cb_STLExport();
+  void cb_StatusWindow();
 
   void cb_SortSolutions(unsigned int by);
   void cb_DeleteSolutions(unsigned int which);
 
-  void cb_DeleteDisasm(void);
-  void cb_DeleteAllDisasm(void);
-  void cb_AddDisasm(void);
+  void cb_DeleteDisasm();
+  void cb_DeleteAllDisasm();
+  void cb_AddDisasm();
   void cb_AddAllDisasm(bool all);
 
-  void activateConfigOptions(void);
+  void activateConfigOptions();
 };
 
 #endif

@@ -76,12 +76,12 @@ class VoxelViewCallbacks {
  *
  * additionally pieces can be transparent
  */
-class voxelFrame_c : public Fl_Gl_Window {
+class VoxelFrame : public Fl_Gl_Window {
 
   public:
 
-    voxelFrame_c(int x,int y,int w,int h);
-    virtual ~voxelFrame_c(void);
+    VoxelFrame(int x,int y,int w,int h);
+    virtual ~VoxelFrame(void);
 
     typedef enum {
       pieceColor,
@@ -112,8 +112,8 @@ class voxelFrame_c : public Fl_Gl_Window {
     }
 
     void showNothing(void);
-    void showSingleShape(const Puzzle * puz, unsigned int shapeNum);
-    void showColors(const Puzzle * puz, colorMode mode);
+    void showSingleShape(const Puzzle& puz, unsigned int shapeNum);
+    void showColors(const Puzzle& puz, colorMode mode);
     void showAssembly(const Problem * puz, unsigned int solNum);
     void updatePositions(PiecePositionsInterface *shifting);
     void updatePositionsOverlap(PiecePositionsInterface *shifting);

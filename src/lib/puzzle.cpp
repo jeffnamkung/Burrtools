@@ -86,10 +86,10 @@
 
 Puzzle::Puzzle(const Puzzle *orig) {
 
-  gt = new GridType(*orig->gt);
+  grid_type_ = std::make_unique<GridType>(*orig->grid_type_);
 
   for (unsigned int i = 0; i < orig->shapes.size(); i++)
-    shapes.push_back(gt->getVoxel(orig->shapes[i]));
+    shapes.push_back(grid_type_->getVoxel(orig->shapes[i]));
 
   for (unsigned int i = 0; i < orig->problems.size(); i++)
     problems.push_back(new Problem(orig->problems[i], *this));
@@ -102,14 +102,11 @@ Puzzle::Puzzle(const Puzzle *orig) {
 }
 
 Puzzle::~Puzzle() {
-
   for (unsigned int i = 0; i < shapes.size(); i++)
     delete shapes[i];
 
   for (unsigned int i = 0; i < problems.size(); i++)
     delete problems[i];
-
-  delete gt;
 }
 
 unsigned int Puzzle::addColor(unsigned char r,
@@ -187,7 +184,7 @@ void Puzzle::save(XmlWriter &xml) const {
   xml.newTag("puzzle");
   xml.newAttrib("version", "2");
 
-  gt->save(xml);
+  grid_type_->save(xml);
 
   xml.newTag("colors");
   for (unsigned int i = 0; i < colors.size(); i++) {
@@ -236,7 +233,7 @@ Puzzle::Puzzle(XmlParser &pars) {
   if ((version != 1) && (version != 2))
     pars.exception("can only load files of version 1 and 2");
 
-  gt = 0;
+  grid_type_.reset();
   commentPopup = false;
 
   do {
@@ -246,11 +243,11 @@ Puzzle::Puzzle(XmlParser &pars) {
     pars.require(XmlParser::START_TAG, "");
 
     if (pars.getName() == "gridType") {
-      if (gt != 0)
+      if (grid_type_ != nullptr)
         pars.exception(
             "only one gridtype can be defined, and it must be before the first shape");
 
-      gt = new GridType(pars);
+      grid_type_ = std::make_unique<GridType>(pars);
     } else if (pars.getName() == "colors") {
       do {
         state = pars.nextTag();
@@ -275,7 +272,9 @@ Puzzle::Puzzle(XmlParser &pars) {
       pars.require(XmlParser::END_TAG, "colors");
     } else if (pars.getName() == "shapes") {
       // if no gridtype has been defined, we assume cubes
-      if (!gt) gt = new GridType(GridType::GT_BRICKS);
+      if (!grid_type_) {
+        grid_type_ = std::make_unique<GridType>(GridType::GT_BRICKS);
+      }
 
       do {
         state = pars.nextTag();
@@ -284,7 +283,7 @@ Puzzle::Puzzle(XmlParser &pars) {
         pars.require(XmlParser::START_TAG, "");
 
         if (pars.getName() == "voxel") {
-          shapes.push_back(gt->getVoxel(pars));
+          shapes.push_back(grid_type_->getVoxel(pars));
           pars.require(XmlParser::END_TAG, "voxel");
         } else
           pars.skipSubTree();
@@ -332,7 +331,7 @@ Puzzle::Puzzle(XmlParser &pars) {
 }
 
 unsigned int Puzzle::addShape(Voxel *p) {
-  bt_assert(gt->getType() == p->getGridType()->getType());
+  bt_assert(grid_type_->getType() == p->getGridType()->getType());
   shapes.push_back(p);
   return shapes.size() - 1;
 }
@@ -341,7 +340,7 @@ unsigned int Puzzle::addShape(Voxel *p) {
 unsigned int Puzzle::addShape(unsigned int sx,
                               unsigned int sy,
                               unsigned int sz) {
-  shapes.push_back(gt->getVoxel(sx, sy, sz, Voxel::VX_EMPTY));
+  shapes.push_back(grid_type_->getVoxel(sx, sy, sz, Voxel::VX_EMPTY));
   return shapes.size() - 1;
 }
 

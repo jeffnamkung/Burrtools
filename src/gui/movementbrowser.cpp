@@ -41,6 +41,7 @@
 #include "../flu/Flu_Tree_Browser.h"
 
 #include <math.h>
+#include <cmath>
 
 class AddMovementDialog : public LFl_Double_Window {
 
@@ -188,9 +189,9 @@ LTreeBrowser::Node * movementBrowser_c::addNode(LTreeBrowser::Node *nd, disassem
 
   /* we don't add the removal nodes */
   for (unsigned int i = 0; i < s->pieces.size(); i++)
-    if (fabs(mv->getX(i)) > 10000 ||
-        fabs(mv->getY(i)) > 10000 ||
-        fabs(mv->getZ(i)) > 10000) {
+    if (std::fabs(mv->getX(i)) > 10000 ||
+        std::fabs(mv->getY(i)) > 10000 ||
+        std::fabs(mv->getZ(i)) > 10000) {
       delete mv;
       return 0;
     }

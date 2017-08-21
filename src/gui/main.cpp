@@ -65,29 +65,25 @@ int main(int argc, char ** argv) {
 
   Fl::get_system_colors();
 
-  MainWindow *ui = new MainWindow(new GridType());
+  auto ui = std::make_unique<MainWindow>(std::make_unique<GridType>());
 
   int res = 0;
 
   try {
-
     ui->show(argc, argv);
 
-    res = my_Fl::run(ui);
+    res = my_Fl::run(ui.get());
   }
 
   catch (assert_exception a) {
-
-    assertWindow_c * aw = new assertWindow_c("I'm sorry there is a bug in this program. It needs to be closed.\n"
-                                             "I try to save the current puzzle in '__rescue.xmpuzzle'\n",
-                                             &a);
-
-    aw->show();
-
-    while (aw->visible())
-      Fl::wait();
-
-    delete aw;
+    {
+      auto aw = std::make_unique<assertWindow_c>(
+          "I'm sorry there is a bug in this program. It needs to be closed.\n"
+              "I try to save the current puzzle in '__rescue.xmpuzzle'\n", &a);
+      aw->show();
+      while (aw->visible())
+        Fl::wait();
+    }
 
     ogzstream ostr("__rescue.xmpuzzle");
 
@@ -104,6 +100,5 @@ int main(int argc, char ** argv) {
     printf(" exception\n");
   }
 
-  delete ui;
   return res;
 }

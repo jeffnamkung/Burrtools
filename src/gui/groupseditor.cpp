@@ -379,18 +379,18 @@ void groupsEditorTab_c::finishEdit() {
   }
 }
 
-static void cb_AddGroup_stub(Fl_Widget* /*o*/, void* v) { ((groupsEditor_c*)v)->cb_AddGroup(); }
-void groupsEditor_c::cb_AddGroup() {
+static void cb_AddGroup_stub(Fl_Widget* /*o*/, void* v) { ((GroupsEditor*)v)->cb_AddGroup(); }
+void GroupsEditor::cb_AddGroup() {
   tab->addGroup();
 }
 
-static void cb_CloseWindow_stub(Fl_Widget* /*o*/, void* v) { ((groupsEditor_c*)v)->cb_CloseWindow(); }
-void groupsEditor_c::cb_CloseWindow() {
+static void cb_CloseWindow_stub(Fl_Widget* /*o*/, void* v) { ((GroupsEditor*)v)->cb_CloseWindow(); }
+void GroupsEditor::cb_CloseWindow() {
   hide();
 }
 
-static void cb_UpdateInterface_stub(Fl_Widget* /*o*/, void *v) { ((groupsEditor_c*)v)->cb_UpdateInterface(); }
-void groupsEditor_c::cb_UpdateInterface() {
+static void cb_UpdateInterface_stub(Fl_Widget* /*o*/, void *v) { ((GroupsEditor*)v)->cb_UpdateInterface(); }
+void GroupsEditor::cb_UpdateInterface() {
 
   if (tab->callback_context() != groupsEditorTab_c::CONTEXT_NONE)
     tab->cb_tab();
@@ -412,8 +412,8 @@ void groupsEditor_c::cb_UpdateInterface() {
     maxHoles->deactivate();
 }
 
-static void cb_MaxHoles_stub(Fl_Widget* /*o*/, void* v) { ((groupsEditor_c*)v)->cb_MaxHoles(); }
-void groupsEditor_c::cb_MaxHoles() {
+static void cb_MaxHoles_stub(Fl_Widget* /*o*/, void* v) { ((GroupsEditor*)v)->cb_MaxHoles(); }
+void GroupsEditor::cb_MaxHoles() {
 
   if (maxHoles->value()[0])
     puzzle->getProblem(problem)->setMaxHoles(atoi(maxHoles->value()));
@@ -431,7 +431,7 @@ void groupsEditor_c::cb_MaxHoles() {
 }
 
 /* when hiding the window, first close active editing tasks */
-void groupsEditor_c::hide() {
+void GroupsEditor::hide() {
   tab->finishEdit();
 
   if (maxHoles->value()[0])
@@ -444,7 +444,7 @@ void groupsEditor_c::hide() {
 
 #define SZ_GAP 5                               // gap between elements
 
-groupsEditor_c::groupsEditor_c(Puzzle * p, unsigned int pr) : LFl_Double_Window(true), puzzle(p), problem(pr), _changed(false) {
+GroupsEditor::GroupsEditor(Puzzle * p, unsigned int pr) : LFl_Double_Window(true), puzzle(p), problem(pr), _changed(false) {
 
   tab = new groupsEditorTab_c(0, 0, 1, 1, p, pr);
   tab->pitch(SZ_GAP);
@@ -492,7 +492,7 @@ groupsEditor_c::groupsEditor_c(Puzzle * p, unsigned int pr) : LFl_Double_Window(
 }
 
 
-bool groupsEditor_c::changed() {
+bool GroupsEditor::changed() {
   return tab->getChanged() || _changed;
 }
 
