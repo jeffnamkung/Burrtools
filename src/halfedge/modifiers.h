@@ -23,15 +23,17 @@
 
 #include <vector>
 class Polyhedron;
+
+typedef struct face {
+  long voxel;
+  int faceNum;
+} face;
 /** this class contains a list of faces (voxel+facenumer) pairs */
 class faceList_c {
 
   private:
 
-    typedef struct face {
-      long voxel;
-      int faceNum;
-    } face;
+    struct face f;
 
     std::vector<face> faces;
 
