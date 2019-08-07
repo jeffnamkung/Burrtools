@@ -28,6 +28,8 @@
 
 #include "../tools/xml.h"
 
+#include <algorithm>
+
 /** internal class of problem storing the grouping information of a shape */
 class Group {
  public:
