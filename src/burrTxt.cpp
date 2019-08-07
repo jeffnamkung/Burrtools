@@ -21,10 +21,10 @@
 
 #include "lib/puzzle.h"
 #include "lib/problem.h"
-#include "assembler-interface.h"
+#include "lib/assembler-interface.h"
 #include "lib/assembly.h"
-#include "disassembler-interface.h"
-#include "simple-disassembler.h"
+#include "lib/disassembler-interface.h"
+#include "lib/simple-disassembler.h"
 #include "lib/disassembly.h"
 #include "lib/print.h"
 #include "lib/voxel.h"
