@@ -31,6 +31,7 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 #include <stdint.h>
 
